@@ -1,6 +1,9 @@
 # HW 04
-- Create `CarDao` and `DriverDao` interfaces, and their implementations based on Storage.
-  As an example use ManufacturerDao.
+- Establish connection to your Database.
+
+- Create `ManufacturerService` interface, and its implementation.
+
+- Create `CarDao` and `DriverDao` interfaces, and their implementations.
 
 - Create `CarService` and `DriverService` interfaces, and their implementations.
 
@@ -23,5 +26,5 @@
 
 - In the `main` method create instances of ALL your services and call their CRUD methods.
 
-__Before submitting solution make sure you checked it first with__ [checklist](../checklist/04_MySQL_checklist.md)
+__Before submitting solution make sure you checked it first with__ [checklist](https://mate-academy.github.io/jv-program-common-mistakes/java-JDBC/join/Joins_checklist.html)
 
