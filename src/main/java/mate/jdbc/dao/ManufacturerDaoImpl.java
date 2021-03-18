@@ -100,7 +100,7 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
         }
     }
 
-    static Manufacturer setManufacturer(ResultSet resultSet) throws SQLException {
+    private Manufacturer setManufacturer(ResultSet resultSet) throws SQLException {
         Long newId = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("manufacturer_name");
         String country = resultSet.getString("manufacturer_country");
