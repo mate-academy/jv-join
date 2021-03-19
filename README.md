@@ -12,6 +12,7 @@
     - void removeDriverFromCar(Driver driver, Car car);
     - List<Car> getAllByDriver(Long driverId);
 
+- Add required dependencies in `pom.xml`.
 - Test your solution in the `main` method.
 
 __Before submitting solution make sure you checked it first with__ [checklist](https://mate-academy.github.io/jv-program-common-mistakes/java-JDBC/join/Joins_checklist.html)
