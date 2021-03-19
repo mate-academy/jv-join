@@ -26,14 +26,14 @@ public class DriverDaoImpl implements DriverDao {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenseNumber());
             statement.executeUpdate();
-            ResultSet set = statement.getGeneratedKeys();
-            if (set.next()) {
-                driver.setId(set.getObject(1, Long.class));
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                driver.setId(resultSet.getObject(1, Long.class));
             }
             return driver;
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't create insert "
-                    + driver + " into driversDB. ", throwable);
+            throw new DataProcessingException("Couldn't create "
+                    + driver + ". ", throwable);
         }
     }
 
@@ -46,10 +46,10 @@ public class DriverDaoImpl implements DriverDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            ResultSet set = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
             Driver driver = null;
-            if (set.next()) {
-                driver = setDriver(set);
+            if (resultSet.next()) {
+                driver = getDriver(resultSet);
             }
             return Optional.ofNullable(driver);
         } catch (SQLException throwable) {
@@ -63,9 +63,9 @@ public class DriverDaoImpl implements DriverDao {
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet set = statement.executeQuery();
-            while (set.next()) {
-                drivers.add(setDriver(set));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                drivers.add(getDriver(resultSet));
             }
             return drivers;
         } catch (SQLException throwable) {
@@ -106,12 +106,10 @@ public class DriverDaoImpl implements DriverDao {
         }
     }
 
-    private Driver setDriver(ResultSet resultSet) throws SQLException {
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long newId = resultSet.getObject("driver_id", Long.class);
         String name = resultSet.getString("driver_name");
         String licenseNumber = resultSet.getString("driver_license_number");
-        String driverLogin = resultSet.getString("driver_login");
-        String driverPassword = resultSet.getString("driver_password");
         Driver driver = new Driver(name, licenseNumber);
         driver.setId(newId);
         return driver;
