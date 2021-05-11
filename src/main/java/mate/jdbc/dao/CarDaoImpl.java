@@ -138,14 +138,18 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getCarsByDriverStatement.executeQuery();
             while (resultSet.next()) {
                 Car car = getCarWithManufacturerFromResultSet(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't get cars by drivers id " + driverId,
                     throwable);
         }
+        if (cars.size() != 0) {
+            for (Car car : cars) {
+                car.setDrivers(getDriversForCar(car.getId()));
+            }
+        }
+        return cars;
     }
 
     private void removeDriversRelations(Car car) {
