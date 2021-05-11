@@ -14,49 +14,60 @@ public class Main {
 
     public static void main(String[] args) {
         // test your code here
-        ManufacturerService manufacturerService
-                = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
 
-        Car bmw = new Car();
-        bmw.setName("BMW Super");
-        bmw.setManufacturer(manufacturerService.get(1L));
         List<Driver> bmwDrivers = new ArrayList<>();
-        bmwDrivers.add(driverService.get(1L));
-        bmwDrivers.add(driverService.get(2L));
-        bmw.setDrivers(bmwDrivers);
+        Driver john = new Driver("John", "45698");
+        Driver paul = new Driver("Paul", "77777");
+        driverService.create(john);
+        driverService.create(paul);
+        bmwDrivers.add(john);
+        bmwDrivers.add(paul);
+
+        ManufacturerService manufacturerService
+                = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Car bmw = new Car("BMW Super", manufacturerService.get(1L), bmwDrivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(bmw);
 
-        Car toyota = new Car();
-        toyota.setName("Toyota model one");
-        toyota.setManufacturer(manufacturerService.get(2L));
         List<Driver> toyotaDrivers = new ArrayList<>();
-        toyotaDrivers.add(driverService.get(1L));
-        toyotaDrivers.add(driverService.get(2L));
-        toyota.setDrivers(toyotaDrivers);
+        toyotaDrivers.add(john);
+        toyotaDrivers.add(paul);
+        Car toyota = new Car("Toyota model one", manufacturerService.get(2L), toyotaDrivers);
         carService.create(toyota);
 
-        System.out.println(carService.get(3L));
-        carService.delete(4L);
+        List<Driver> lexusDrivers = new ArrayList<>();
+        lexusDrivers.add(john);
+        lexusDrivers.add(paul);
+        Car lexus = new Car("Lexus", manufacturerService.get(2L), lexusDrivers);
+        carService.create(lexus);
+
+        System.out.println(carService.get(bmw.getId()));
+        carService.delete(toyota.getId());
 
         List<Driver> newBmwDrivers = new ArrayList<>();
-        newBmwDrivers.add(driverService.get(1L));
+        Driver tony = new Driver("Tony", "879123");
+        driverService.create(tony);
+        newBmwDrivers.add(tony);
         bmw.setDrivers(newBmwDrivers);
         System.out.println(carService.update(bmw));
 
         System.out.println();
         System.out.println(carService.get(bmw.getId()));
-        carService.addDriverToCar(driverService.get(2L), bmw);
-        System.out.println(carService.get(bmw.getId()));
-        carService.removeDriverFromCar(driverService.get(2L), bmw);
+        Driver vito = new Driver("Vito", "65486");
+        driverService.create(vito);
+        carService.addDriverToCar(vito, bmw);
+        carService.removeDriverFromCar(paul, bmw);
         System.out.println(carService.get(bmw.getId()));
 
         System.out.println();
-        System.out.println(carService.getAllByDriver(1L));
-        System.out.println(carService.getAll());
+        System.out.println("Bobs car info: " + carService.getAllByDriver(1L));
+        System.out.println("John car info: " + carService.getAllByDriver(john.getId()));
+        System.out.println("Paul car info: " + carService.getAllByDriver(paul.getId()));
+        System.out.println("Tony car info: " + carService.getAllByDriver(tony.getId()));
+        System.out.println("Vito car info: " + carService.getAllByDriver(vito.getId()));
+        System.out.println("All: " + carService.getAll());
     }
 }
