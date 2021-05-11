@@ -128,8 +128,8 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE driver_id = ? AND c.deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-               PreparedStatement getCarsByDriverStatement
-                = connection.prepareStatement(getAllByDriverRequest)){
+                PreparedStatement getCarsByDriverStatement
+                        = connection.prepareStatement(getAllByDriverRequest)) {
             getCarsByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsByDriverStatement.executeQuery();
             while (resultSet.next()) {
