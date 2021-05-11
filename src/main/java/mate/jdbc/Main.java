@@ -48,7 +48,14 @@ public class Main {
         bmw.setDrivers(newBmwDrivers);
         System.out.println(carService.update(bmw));
 
+        System.out.println();
+        System.out.println(carService.get(bmw.getId()));
         carService.addDriverToCar(driverService.get(2L), bmw);
+        System.out.println(carService.get(bmw.getId()));
+        carService.removeDriverFromCar(driverService.get(2L), bmw);
+        System.out.println(carService.get(bmw.getId()));
+
+        System.out.println();
         System.out.println(carService.getAllByDriver(1L));
         System.out.println(carService.getAll());
     }
