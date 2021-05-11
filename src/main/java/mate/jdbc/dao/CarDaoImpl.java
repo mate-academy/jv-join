@@ -89,6 +89,7 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET name = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND deleted = FALSE";
+        List<Driver> drivers;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
@@ -97,14 +98,17 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
             removeDriversRelations(car);
-            for (Driver driver : car.getDrivers()) {
-                addDriverRelationForCar(car, driver);
-            }
-            return car;
+            drivers = car.getDrivers();
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in cars DB.", throwable);
         }
+        if (drivers != null) {
+            for (Driver driver : drivers) {
+                addDriverRelationForCar(car, driver);
+            }
+        }
+        return car;
     }
 
     @Override
