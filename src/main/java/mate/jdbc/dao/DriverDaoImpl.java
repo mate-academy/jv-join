@@ -17,9 +17,8 @@ import mate.jdbc.util.ConnectionUtil;
 public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver create(Driver driver) {
-        String query = "INSERT INTO drivers (driver_name, driver_license_number, "
-                    + "driver_login, driver_password) "
-                + "VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO drivers (driver_name, driver_license_number) "
+                + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
@@ -39,8 +38,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Optional<Driver> get(Long id) {
-        String query = "SELECT driver_id, driver_name, driver_license_number, "
-                    + "driver_login, driver_password "
+        String query = "SELECT driver_id, driver_name, driver_license_number "
                 + "FROM drivers "
                 + "WHERE driver_id = ? AND deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -77,8 +75,7 @@ public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver update(Driver driver) {
         String query = "UPDATE drivers "
-                + "SET driver_name = ?, driver_license_number = ?, "
-                    + "driver_login = ?, driver_password = ? "
+                + "SET driver_name = ?, driver_license_number = ? "
                 + "WHERE driver_id = ? AND deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
