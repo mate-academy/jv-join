@@ -81,11 +81,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB by id ",
                     throwable);
         }
-        if (cars.size() != 0) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
-        }
+        parseDriversToListOfCars(cars);
         return cars;
     }
 
@@ -147,11 +143,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars by drivers id " + driverId,
                     throwable);
         }
-        if (cars.size() != 0) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
-        }
+        parseDriversToListOfCars(cars);
         return cars;
     }
 
@@ -214,6 +206,14 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't get drivers for car with id " + carId,
                     throwable);
+        }
+    }
+
+    private void parseDriversToListOfCars(List<Car> cars) {
+        if (cars.size() != 0) {
+            for (Car car : cars) {
+                car.setDrivers(getDriversForCar(car.getId()));
+            }
         }
     }
 
