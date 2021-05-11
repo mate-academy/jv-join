@@ -20,16 +20,16 @@ public class Main {
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
 
-        Car bwm = new Car();
-        bwm.setName("BMW Super");
-        bwm.setManufacturer(manufacturerService.get(1L));
+        Car bmw = new Car();
+        bmw.setName("BMW Super");
+        bmw.setManufacturer(manufacturerService.get(1L));
         List<Driver> bmwDrivers = new ArrayList<>();
         bmwDrivers.add(driverService.get(1L));
         bmwDrivers.add(driverService.get(2L));
-        bwm.setDrivers(bmwDrivers);
+        bmw.setDrivers(bmwDrivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(bwm);
+        carService.create(bmw);
 
         Car toyota = new Car();
         toyota.setName("Toyota model one");
@@ -42,6 +42,11 @@ public class Main {
 
         System.out.println(carService.get(3L));
         carService.delete(4L);
+
+        List<Driver> newBmwDrivers = new ArrayList<>();
+        newBmwDrivers.add(driverService.get(1L));
+        bmw.setDrivers(newBmwDrivers);
+        System.out.println(carService.update(bmw));
         System.out.println(carService.getAll());
     }
 }
