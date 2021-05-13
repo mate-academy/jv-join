@@ -2,7 +2,6 @@ package mate.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
