@@ -13,10 +13,6 @@ CREATE TABLE IF NOT EXISTS `manufacturers` (
   PRIMARY KEY (`manufacturer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
 
-INSERT INTO manufacturers (manufacturer_name, manufacturer_country) VALUES ('BMW', 'Germany');
-INSERT INTO manufacturers (manufacturer_name, manufacturer_country) VALUES ('Lexus', 'Italia');
-INSERT INTO manufacturers (manufacturer_name, manufacturer_country) VALUES ('Hyndai', 'China');
-
 CREATE TABLE `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -27,9 +23,6 @@ CREATE TABLE `cars` (
   CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`manufacturer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
 
-INSERT INTO `cars`(name, manufacturer_id) VALUES ('Hyndai Accent', 3);
-INSERT INTO `cars`(name, manufacturer_id) VALUES ('BMW X5', 1);
-
 CREATE TABLE `drivers` (
   `driver_id` bigint NOT NULL AUTO_INCREMENT,
   `driver_name` varchar(255) DEFAULT NULL,
@@ -37,9 +30,6 @@ CREATE TABLE `drivers` (
   `deleted` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`driver_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
-
-INSERT INTO drivers (driver_name, driver_license_number) VALUES('Bob', '1234');
-INSERT INTO drivers (driver_name, driver_license_number) VALUES('Alice', '5678');
 
 CREATE TABLE `cars_drivers` (
   `car_id` bigint NOT NULL,
@@ -50,5 +40,3 @@ CREATE TABLE `cars_drivers` (
   CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-INSERT INTO cars_drivers (car_id, driver_id) VALUES(1, 1);
-INSERT INTO cars_drivers (car_id, driver_id) VALUES(1, 2);

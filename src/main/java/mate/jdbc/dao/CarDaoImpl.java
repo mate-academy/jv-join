@@ -190,11 +190,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        String insertRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
+                + "VALUES (?, ?)";
         try (
                 Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertDriversStatement
-                        = connection.prepareStatement(query)) {
+                        = connection.prepareStatement(insertRequest)) {
             insertDriversStatement.setLong(1, car.getId());
             for (Driver driver : car.getDriverList()) {
                 insertDriversStatement.setLong(2, driver.getId());
