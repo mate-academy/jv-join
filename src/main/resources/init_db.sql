@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `manufacturers` (
   PRIMARY KEY (`manufacturer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `cars` (
+CREATE TABLE IF NOT EXISTS `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `deleted` tinyint NOT NULL DEFAULT '0',
@@ -23,7 +23,7 @@ CREATE TABLE `cars` (
   CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`manufacturer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `drivers` (
+CREATE TABLE IF NOT EXISTS `drivers` (
   `driver_id` bigint NOT NULL AUTO_INCREMENT,
   `driver_name` varchar(255) DEFAULT NULL,
   `driver_license_number` varchar(255) DEFAULT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE `drivers` (
   PRIMARY KEY (`driver_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `cars_drivers` (
+CREATE TABLE IF NOT EXISTS `cars_drivers` (
   `car_id` bigint NOT NULL,
   `driver_id` bigint NOT NULL,
   KEY `cars_drivers_cars_fk` (`car_id`),
@@ -39,4 +39,3 @@ CREATE TABLE `cars_drivers` (
   CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
   CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`driver_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
