@@ -55,11 +55,4 @@ public class Driver {
         return Objects.hash(id, name, licenseNumber);
     }
 
-    @Override
-    public String toString() {
-        return "Driver{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\'' + '}';
-    }
 }
