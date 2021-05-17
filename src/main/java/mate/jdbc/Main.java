@@ -29,9 +29,12 @@ public class Main {
         driverService.create(nick);
         driverService.create(pit);
 
-        Car seatLeon = new Car("Leon", seat, new ArrayList<>(Arrays.asList(mark, nick)));
-        Car seatIbiza = new Car("Ibiza", seat, new ArrayList<>(Arrays.asList(pit, mark)));
-        Car acuraMdx = new Car("MDX", acura, new ArrayList<>(Arrays.asList(nick)));
+        Car seatLeon = new Car("Leon", seat);
+        seatLeon.setDrivers(new ArrayList<>(Arrays.asList(mark, nick)));
+        Car seatIbiza = new Car("Ibiza", seat);
+        seatIbiza.setDrivers(new ArrayList<>(Arrays.asList(pit, mark)));
+        Car acuraMdx = new Car("MDX", acura);
+        acuraMdx.setDrivers(new ArrayList<>(Arrays.asList(nick)));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(seatLeon);
         carService.create(seatIbiza);
