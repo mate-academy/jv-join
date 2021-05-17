@@ -5,6 +5,7 @@ import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -27,7 +28,16 @@ public class Main {
 
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Car bmw = new Car("BMW Super", manufacturerService.get(1L), bmwDrivers);
+        Manufacturer bmwManufacturer = new Manufacturer();
+        bmwManufacturer.setName("BMW");
+        bmwManufacturer.setCountry("Germany");
+        manufacturerService.create(bmwManufacturer);
+        Manufacturer toyotaManufacturer = new Manufacturer();
+        toyotaManufacturer.setName("Toyota");
+        toyotaManufacturer.setCountry("Japan");
+        manufacturerService.create(toyotaManufacturer);
+
+        Car bmw = new Car("BMW Super", bmwManufacturer, bmwDrivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(bmw);
@@ -35,13 +45,13 @@ public class Main {
         List<Driver> toyotaDrivers = new ArrayList<>();
         toyotaDrivers.add(john);
         toyotaDrivers.add(paul);
-        Car toyota = new Car("Toyota model one", manufacturerService.get(2L), toyotaDrivers);
+        Car toyota = new Car("Toyota model one", toyotaManufacturer, toyotaDrivers);
         carService.create(toyota);
 
         List<Driver> lexusDrivers = new ArrayList<>();
         lexusDrivers.add(john);
         lexusDrivers.add(paul);
-        Car lexus = new Car("Lexus", manufacturerService.get(2L), lexusDrivers);
+        Car lexus = new Car("Lexus", toyotaManufacturer, lexusDrivers);
         carService.create(lexus);
 
         System.out.println(carService.get(bmw.getId()));

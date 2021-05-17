@@ -42,9 +42,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id as car_id, name, manufacturer_name, "
-                + "m.manufacturer_id as manufacturer_id, manufacturer_country "
-                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.manufacturer_id "
+        String query = "SELECT c.id as car_id, c.name as car_name, m.name as manufacturer_name, "
+                + "m.id as manufacturer_id, m.country as manufacturer_country"
+                + " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -66,10 +66,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id as car_id, name, manufacturer_name, "
-                + "m.manufacturer_id as manufacturer_id,"
-                + " manufacturer_country FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.manufacturer_id WHERE c.deleted = FALSE;";
+        String query = "SELECT c.id as car_id, c.name as car_name, m.name as manufacturer_name, "
+                + "m.id as manufacturer_id,"
+                + " country as manufacturer_country FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id WHERE c.deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCars = connection.prepareStatement(query)) {
@@ -126,9 +126,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT * from cars_drivers cd "
+        String getAllByDriverRequest = "SELECT c.name as car_name, c.id as car_id, "
+                + "m.name as manufacturer_name, m.country as manufacturer_country, "
+                + "m.id as manufacturer_id  from cars_drivers cd "
                 + "LEFT JOIN cars c ON cd.car_id = c.id "
-                + "LEFT JOIN manufacturers m ON c.manufacturer_id = m.manufacturer_id "
+                + "LEFT JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE driver_id = ? AND c.deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -191,9 +193,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String getAllDriversForCarRequest = "SELECT d.driver_id, driver_name, "
-                + "driver_license_number FROM drivers d "
-                + "JOIN cars_drivers cd ON d.driver_id = cd.driver_id WHERE cd.car_id = ?;";
+        String getAllDriversForCarRequest = "SELECT d.id as driver_id, d.name as driver_name, "
+                + "d.license_number FROM drivers d "
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversStatement
                         = connection.prepareStatement(getAllDriversForCarRequest)) {
@@ -220,7 +222,7 @@ public class CarDaoImpl implements CarDao {
 
     private Car getCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setName(resultSet.getString("name"));
+        car.setName(resultSet.getString("car_name"));
         car.setId(resultSet.getObject("car_id", Long.class));
         Manufacturer manufacturer
                 = new Manufacturer(resultSet.getString("manufacturer_name"),
@@ -232,7 +234,7 @@ public class CarDaoImpl implements CarDao {
 
     private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver(resultSet.getString("driver_name"),
-                resultSet.getString("driver_license_number"));
+                resultSet.getString("license_number"));
         driver.setId(resultSet.getObject("driver_id", Long.class));
         return driver;
     }
