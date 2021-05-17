@@ -1,9 +1,4 @@
-CREATE DATABASE `manufacturer_db` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-
-DROP TABLE IF EXISTS `cars_drivers`;
-DROP TABLE IF EXISTS `cars`;
-DROP TABLE IF EXISTS `drivers`;
-DROP TABLE `manufacturers`;
+CREATE DATABASE `manufacturer_db` /*!40100 DEFAULT CHARACTER SET utf8;
 
 CREATE TABLE IF NOT EXISTS `manufacturers` (
   `manufacturer_id` bigint NOT NULL AUTO_INCREMENT,

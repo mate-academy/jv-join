@@ -8,10 +8,7 @@ public class Manufacturer {
     private String country;
 
     public Manufacturer() {
- hw
 
-
- master
     }
 
     public Manufacturer(String name, String country) {
@@ -64,16 +61,9 @@ public class Manufacturer {
 
     @Override
     public String toString() {
- hw
         return "Manufacturer{" + "id=" + id
                 + ", name='" + name + '\''
                 + ", country='" + country + '\'' + '}';
 
-        return "Manufacturer{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", country='" + country + '\''
-                + '}';
- master
     }
 }
