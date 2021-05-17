@@ -12,7 +12,7 @@ public interface CarDao {
 
     List<Car> getAll();
 
-    Car update(Car car) throws SQLException;
+    Car update(Car car);
 
     boolean delete(Long id);
 
