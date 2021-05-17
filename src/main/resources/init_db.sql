@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers`  (
                             `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
                             `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -7,7 +6,6 @@ CREATE TABLE `drivers`  (
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers`  (
                                   `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
                                   `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -16,7 +14,6 @@ CREATE TABLE `manufacturers`  (
                                   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars`  (
                          `id` bigint(0) UNSIGNED NOT NULL AUTO_INCREMENT,
                          `model` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -27,7 +24,6 @@ CREATE TABLE `cars`  (
                          CONSTRAINT `FK_manufacturer_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers`  (
                                  `car_id` bigint(0) UNSIGNED NOT NULL,
                                  `driver_id` bigint(0) UNSIGNED NOT NULL,
