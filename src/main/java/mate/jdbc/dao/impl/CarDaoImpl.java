@@ -92,8 +92,10 @@ public class CarDaoImpl implements CarDao {
         }
         String getAllByDriverRequest = "SELECT * FROM cars_drivers "
                                 + "JOIN cars ON cars_drivers.car_id = cars.id JOIN manufacturers "
-                                + "ON cars.manufacturer_id = manufacturers.id "
-                                + "WHERE driver_id = ? AND cars.is_deleted = false";
+                                + "ON cars.manufacturer_id = manufacturers.id  "
+                                + "JOIN drivers ON drivers.id = driver_id "
+                                + "WHERE driver_id = ? AND cars.is_deleted = false "
+                                + "AND drivers.is_deleted = false";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getByDriversStatement =
