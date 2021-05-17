@@ -8,6 +8,7 @@ public class Driver {
     private String licenseNumber;
 
     public Driver() {
+
     }
 
     public Driver(String name, String licenseNumber) {
@@ -60,10 +61,8 @@ public class Driver {
 
     @Override
     public String toString() {
-        return "Driver{"
-                + "id=" + id
+        return "Driver{" + "id=" + id
                 + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                + ", licenseNumber='" + licenseNumber + '\'' + '}';
     }
 }
