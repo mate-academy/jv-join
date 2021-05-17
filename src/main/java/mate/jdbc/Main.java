@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -55,12 +54,10 @@ public class Main {
         Car charger = new Car();
         charger.setModel("Charger");
         charger.setManufacturer(dodge);
-        charger.setDrivers(new ArrayList<>());
 
         Car db9 = new Car();
         db9.setModel("DB9");
         db9.setManufacturer(astonmartin);
-        db9.setDrivers(new ArrayList<>());
 
         carService.create(charger);
         carService.create(db9);

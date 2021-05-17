@@ -1,6 +1,5 @@
 package mate.jdbc.service;
 
-import java.util.Iterator;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
@@ -52,22 +51,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = dao.getAll();
-        boolean flag = false;
-        Iterator<Car> iterator = cars.iterator();
-        while (iterator.hasNext()) {
-            Car car = iterator.next();
-            for (Driver driver : car.getDrivers()) {
-                if (driver.getId().equals(driverId)) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) {
-                iterator.remove();
-            }
-            flag = false;
-        }
-        return cars;
+        return dao.getAllByDriver(driverId);
     }
 }

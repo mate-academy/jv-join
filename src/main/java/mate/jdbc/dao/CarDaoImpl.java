@@ -78,9 +78,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't get all cars form DB", e);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversToACarFromDB(car));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversToACarFromDB(car)));
         return cars;
     }
 
@@ -114,6 +112,30 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't delete car from DB by Id = " + id, e);
         }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        String selectRequest = "SELECT c.id, c.model, c.manufacturer_id, "
+                + "m.name, m.country, cd.driver_id "
+                + "FROM cars_drivers cd "
+                + "JOIN cars c ON c.id = cd.car_id "
+                + "JOIN manufacturers m ON m.id = c.manufacturer_id "
+                + "WHERE c.is_deleted = false AND driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllCarsByDriverStatement = connection
+                        .prepareStatement(selectRequest)) {
+            getAllCarsByDriverStatement.setLong(1, driverId);
+            ResultSet resultSet = getAllCarsByDriverStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCarFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't get cars by driver Id =" + driverId, e);
+        }
+        cars.forEach(car -> car.setDrivers(getDriversToACarFromDB(car)));
+        return cars;
     }
 
     private void setDriversToACarInDB(Car car) {
