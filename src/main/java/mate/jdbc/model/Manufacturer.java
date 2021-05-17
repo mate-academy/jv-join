@@ -7,6 +7,9 @@ public class Manufacturer {
     private String name;
     private String country;
 
+    public Manufacturer() {
+    }
+
     public Manufacturer(String name, String country) {
         this.name = name;
         this.country = country;
@@ -60,6 +63,8 @@ public class Manufacturer {
         return "Manufacturer{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", country='" + country + '\'' + '}';
+                + ", country='" + country + '\''
+                + '}';
+
     }
 }

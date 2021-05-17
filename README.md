@@ -12,7 +12,6 @@
     - void removeDriverFromCar(Driver driver, Car car); // should only be on service layer
     - List<Car> getAllByDriver(Long driverId);
 
-- Add required dependencies in `pom.xml`.
 - Test your solution in the `main` method.
 - Don't forget about a table's and columns' namings.
 
