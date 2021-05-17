@@ -82,6 +82,10 @@ public class Main {
         List<Car> allCar = carService.getAll();
         System.out.println("Get all car from DB: " + allCar);
         Car getCar = carService.get(w201.getId());
+
+        Long driverId = bill.getId();
+        List<Car> allByDriver = carService.getAllByDriver(driverId);
+        System.out.println(allByDriver);
         //U
         mercedes.setCountry("Ukraine");
         Manufacturer updateMercedes = manufactureService.update(mercedes);
