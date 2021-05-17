@@ -7,6 +7,7 @@ public class Car {
     private Long id;
     private Manufacturer manufacturer;
     private List<Driver> driverList;
+    private String model;
 
     public Car() {
     }
@@ -40,29 +41,34 @@ public class Car {
         this.driverList = driverList;
     }
 
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return id.equals(car.id) && Objects.equals(manufacturer, car.manufacturer)
-                && Objects.equals(driverList, car.driverList);
+        return Objects.equals(id, car.id) && Objects.equals(manufacturer, car.manufacturer) && Objects.equals(driverList, car.driverList) && Objects.equals(model, car.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, manufacturer, driverList);
+        return Objects.hash(id, manufacturer, driverList, model);
     }
 
     @Override
     public String toString() {
-        return "Car{"
-                + "id=" + id
-                + ", manufacturer=" + manufacturer
-                + ", driverList=" + driverList + '}';
+        return "Car{" +
+                "id=" + id +
+                ", manufacturer=" + manufacturer +
+                ", driverList=" + driverList +
+                ", model='" + model + '\'' +
+                '}';
     }
 }

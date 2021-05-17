@@ -41,25 +41,22 @@ public class Main {
         audiEtronGtDrivers.add(alexanderKabanov);
 
         Car audiRs5 = new Car(audi, audiRs5Drivers);
+        audiRs5.setModel("RS5");
         Car audiEtronGt = new Car(audi, audiEtronGtDrivers);
+        audiEtronGt.setModel("E-tron GT");
 
         carService.create(audiEtronGt);
         carService.create(audiRs5);
-        //create Ok
+
         System.out.println("Audi RS5: " + carService.get(audiRs5.getId()));
-        //System.out.println("Audi RS5: " + carService.get(audiRs5.getId() + 1)); get Ok
         System.out.println(carService.delete(audiRs5.getId()));
-        //System.out.println(carService.get(audiRs5.getId())); delete Ok
 
         System.out.println(carService.getAll());
-        //getAll Ok
 
         System.out.println(carService.getAllByDriver(alexanderKabanov.getId()));
-        //getAllByDriver  Ok
         audiEtronGtDrivers.add(yevheniiParchevskiy);
         audiEtronGtDrivers.add(illyaNemykin);
         audiEtronGt.setDriverList(audiEtronGtDrivers);
         System.out.println(carService.update(audiEtronGt));
-        //update Ok
     }
 }

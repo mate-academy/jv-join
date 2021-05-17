@@ -4,10 +4,11 @@ CREATE TABLE `cars` (
                         `id` bigint NOT NULL AUTO_INCREMENT,
                         `manufacturer_id` bigint DEFAULT NULL,
                         `deleted` tinyint NOT NULL DEFAULT '0',
+                        `model` varchar(45) DEFAULT NULL,
                         PRIMARY KEY (`id`),
                         KEY `manufacturer_id_fk` (`manufacturer_id`),
                         CONSTRAINT `manufacturer_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `cars_drivers` (
                                 `car_id` bigint NOT NULL,
