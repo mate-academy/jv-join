@@ -36,7 +36,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create car. " + car + " ",
                     throwable);
         }
-        insertDrivers(car);
+        for (Driver driver : car.getDrivers()) {
+            addDriverRelationForCar(car, driver);
+        }
         return car;
     }
 
@@ -173,21 +175,6 @@ public class CarDaoImpl implements CarDao {
             insertStatement.executeUpdate();
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't delete drivers dependencies for car with id "
-                    + car.getId(), throwable);
-        }
-    }
-
-    private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement insertDriversStatement = connection.prepareStatement(query)) {
-            insertDriversStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                insertDriversStatement.setLong(2, driver.getId());
-                insertDriversStatement.executeUpdate();
-            }
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't insert drivers to car with id "
                     + car.getId(), throwable);
         }
     }
