@@ -20,6 +20,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
+        boolean isCarInserted = false;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement insertStatement =
                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,12 +30,15 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = insertStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
+                isCarInserted = true;
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't create car: "
                     + car + ". ", throwable);
         }
-        saveDrivers(car);
+        if (isCarInserted) {
+            saveDrivers(car);
+        }
         return car;
     }
 
@@ -43,20 +47,21 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id, model, manufacturer_id, name, country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE";
-        List<Driver> drivers = getDriversByCarId(id);
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getByIdStatement = connection.prepareStatement(query)) {
             getByIdStatement.setLong(1, id);
             ResultSet resultSet = getByIdStatement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = getCarFromResultSet(resultSet);
-                car.setDrivers(drivers);
             }
-            return Optional.ofNullable(car);
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't get driver by id " + id, throwable);
         }
+        if (car != null) {
+            car.setDrivers(getDriversByCarId(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -72,12 +77,10 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Can't get a list of cars from DB.",
+            throw new DataProcessingException("Can't get a list of cars from DB. ",
                     throwable);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversByCarId(car.getId()));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
@@ -85,18 +88,21 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ?"
                 + " WHERE id = ? AND is_deleted = FALSE";
+        boolean isUpdated;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateStatement = connection.prepareStatement(query)) {
             updateStatement.setString(1, car.getModel());
             updateStatement.setLong(2, car.getManufacturer().getId());
             updateStatement.setLong(3, car.getId());
-            updateStatement.executeUpdate();
+            isUpdated = updateStatement.executeUpdate() > 0;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't update "
                     + car + " in DB.", throwable);
         }
-        deleteCarDrivers(car.getId());
-        saveDrivers(car);
+        if (isUpdated) {
+            deleteCarDrivers(car.getId());
+            saveDrivers(car);
+        }
         return car;
     }
 
@@ -130,9 +136,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars for driver with id: "
                     + driverId, throwable);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversByCarId(car.getId()));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
