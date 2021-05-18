@@ -63,7 +63,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get Car from DB. ID = " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDriversById(id));
+            car.setDrivers(getDriversByCarId(id));
         }
         return Optional.ofNullable(car);
     }
@@ -87,7 +87,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB.", e);
         }
         cars.stream()
-                .forEach(n -> n.setDrivers(getDriversById(n.getId())));
+                .forEach(n -> n.setDrivers(getDriversByCarId(n.getId())));
         return cars;
     }
 
@@ -119,6 +119,33 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car from DB with id = " + id, e);
         }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> allCarByDriverId = new ArrayList<>();
+        String getAllByDriverRequest = "SELECT cars.id, model, cars.is_deleted, "
+                + "manufacturer_id, name, country "
+                + "FROM cars "
+                + "JOIN cars_drivers cd on cars.id = cd.cars_id "
+                + "JOIN manufacturers m on cars.manufacturer_id = m.id "
+                + "WHERE drivers_id = ? AND m.is_deleted = FALSE;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllStatement =
+                        connection.prepareStatement(getAllByDriverRequest)) {
+            getAllStatement.setLong(1, driverId);
+            ResultSet resultSet = getAllStatement.executeQuery();
+            while (resultSet.next()) {
+                allCarByDriverId.add(createCarObjectWithResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get all cars by driver ID = " + driverId, e);
+        }
+        allCarByDriverId
+                .stream()
+                .forEach(car -> car.setDrivers(
+                        getDriversByCarId(car.getId())));
+        return allCarByDriverId;
     }
 
     private Car createCarObjectWithResultSet(ResultSet resultSet) throws SQLException {
@@ -154,7 +181,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversById(Long carId) {
+    private List<Driver> getDriversByCarId(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String getDriversRequest = "SELECT * "
                 + "FROM drivers d "

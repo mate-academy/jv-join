@@ -46,5 +46,9 @@ public class Main {
 
         carService.delete(car.getId());
         System.out.println(carService.getAll());
+
+        System.out.println(carService.getAllByDriver(driver.getId()));
+        carService.addDriverToCar(driver, car);
+        carService.removeDriverFromCar(driver, car);
     }
 }
