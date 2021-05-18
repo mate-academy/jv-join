@@ -37,6 +37,7 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
         addDriverRelationForCar(car);
+        getDriversForCar(car.getId());
         return car;
     }
 
@@ -172,7 +173,7 @@ public class CarDaoImpl implements CarDao {
                 insertStatement.executeUpdate();
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Can't delete drivers dependencies for car with id "
+            throw new DataProcessingException("Can't add drivers dependencies for car with id "
                     + car.getId(), throwable);
         }
     }
