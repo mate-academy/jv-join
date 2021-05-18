@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
+            throw new DataProcessingException("Can't get a list of cars from carsDB.",
                     throwable);
         }
         for (Car car : cars) {
