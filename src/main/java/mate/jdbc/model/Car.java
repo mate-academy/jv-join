@@ -4,17 +4,15 @@ import java.util.List;
 
 public class Car {
     private Long id;
-    private int year;
-    private String numberPlate;
+    private String model;
     private List<Driver> drivers;
     private Manufacturer manufacturer;
     
     public Car() {
     }
     
-    public Car(int year, String numberPlate, List<Driver> driver, Manufacturer manufacturer) {
-        this.year = year;
-        this.numberPlate = numberPlate;
+    public Car(String model, List<Driver> driver, Manufacturer manufacturer) {
+        this.model = model;
         this.drivers = driver;
         this.manufacturer = manufacturer;
     }
@@ -27,20 +25,12 @@ public class Car {
         this.id = id;
     }
     
-    public int getYear() {
-        return year;
+    public String getModel() {
+        return model;
     }
     
-    public void setYear(int year) {
-        this.year = year;
-    }
-    
-    public String getNumberPlate() {
-        return numberPlate;
-    }
-    
-    public void setNumberPlate(String numberPlate) {
-        this.numberPlate = numberPlate;
+    public void setModel(String model) {
+        this.model = model;
     }
     
     public List<Driver> getDrivers() {
@@ -61,10 +51,7 @@ public class Car {
     
     @Override
     public String toString() {
-        return "Car{" + "id=" + id
-                + ", year=" + year
-                + ", numberPlate='" + numberPlate + '\''
-                + ", driver=" + drivers
+        return "Car{" + "id=" + id + ", model='" + model + '\'' + ", drivers=" + drivers
                 + ", manufacturer=" + manufacturer + '}';
     }
 }

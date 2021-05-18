@@ -18,7 +18,7 @@ public class Main {
     private static final Manufacturer MANUFACTURER = new Manufacturer("Toyota", "Japan");
     private static final Manufacturer MANUFACTURER_2 = new Manufacturer("Honda", "Japan");
     private static final List<Driver> DRIVER_LIST = new ArrayList<>();
-    private static final Car CAR = new Car(1998, "CA9021OP", DRIVER_LIST, MANUFACTURER);
+    private static final Car CAR = new Car("Highlander LE", DRIVER_LIST, MANUFACTURER);
     
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
@@ -35,10 +35,10 @@ public class Main {
         DRIVER_LIST.add(DRIVER);
         carService.create(CAR);
         carService.getAll().forEach(System.out::println);
-        System.out.println(carService.get(4L));
+        System.out.println(carService.get(CAR.getId()));
         
         MANUFACTURER_2.setId(3L);
-        CAR.setYear(2015);
+        CAR.setModel("Accord Sport");
         DRIVER_LIST.add(DRIVER_2);
         CAR.setManufacturer(MANUFACTURER_2);
         System.out.println(carService.update(CAR));
