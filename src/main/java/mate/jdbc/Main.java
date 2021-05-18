@@ -1,6 +1,7 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.DriverDao;
+import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -9,11 +10,8 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Main {
-    private final static Injector injector = Injector.getInstance("mate.jdbc");
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
         ManufacturerDao manufacturerDao = (ManufacturerDao) injector
