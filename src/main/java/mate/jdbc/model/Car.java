@@ -1,8 +1,6 @@
 package mate.jdbc.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Car {
     private Long id;
@@ -13,10 +11,10 @@ public class Car {
     public Car() {
     }
 
-    public Car(String model, Manufacturer manufacturer) {
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
-        this.drivers = new ArrayList<>();
+        this.drivers = drivers;
     }
 
     public Long getId() {
@@ -53,16 +51,11 @@ public class Car {
 
     @Override
     public String toString() {
-        List<String> list = drivers.stream().map(Driver::toString).collect(Collectors.toList());
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String s : list) {
-            stringBuilder.append(s);
-        }
         return "Car{"
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer
-                + ", drivers=" + stringBuilder
+                + ", drivers=" + drivers
                 + '}';
     }
 }

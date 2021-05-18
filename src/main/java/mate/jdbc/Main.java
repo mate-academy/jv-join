@@ -19,37 +19,48 @@ public class Main {
             .getInstance(CarService.class);
 
     public static void main(String[] args) {
-        Car car = new Car();
-        car.setModel("Renault");
-        car.setManufacturer(manufacturerService.get(1L));
+        Manufacturer renaultManufacturer = new Manufacturer();
+        renaultManufacturer.setName("RenaultHolding");
+        renaultManufacturer.setCountry("France");
 
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName("RenaultHolding");
-        manufacturer.setCountry("France");
+        Car renault = new Car();
+        renault.setModel("Renault");
+        renault.setManufacturer(renaultManufacturer);
 
-        Driver driver = new Driver();
-        driver.setName("Nitro");
-        driver.setLicenseNumber("Qu99");
-        Driver savedDriver = driverService.create(driver);
+        Driver firstDriver = new Driver();
+        firstDriver.setName("Nitro");
+        firstDriver.setLicenseNumber("Qu99");
+        Driver secondDriver = new Driver();
+        secondDriver.setName("Havok");
+        secondDriver.setLicenseNumber("Pl57");
 
-        Car savedCar = carService.create(car);
-        carService.get(savedCar.getId());
+        Driver firstSavedDriver = driverService.create(firstDriver);
+        Driver secondSavedDriver = driverService.create(secondDriver);
+        Car savedCar = carService.create(renault);
+
         carService.getAll().forEach(System.out::println);
 
-        carService.addDriverToCar(savedDriver, savedCar);
+        carService.addDriverToCar(firstSavedDriver, savedCar);
+        carService.addDriverToCar(secondSavedDriver, savedCar);
 
-        Car newCar = new Car();
-        newCar.setModel("Mercedes-Benz");
-        newCar.setManufacturer(manufacturerService.get(manufacturer.getId()));
-        newCar.setId(carService.get(car.getId()).getId());
-        carService.update(newCar);
+        Car benz = new Car();
+        benz.setModel("Mercedes-Benz");
+        benz.setManufacturer(manufacturerService.get(renaultManufacturer.getId()));
 
-        List<Car> allByDriver = carService.getAllByDriver(savedDriver.getId());
-        System.out.println(carService.get(newCar.getId()));
-        System.out.println(allByDriver);
+        Car currentCar = carService.get(savedCar.getId());
+        benz.setId(currentCar.getId());
+        carService.update(benz);
 
-        carService.removeDriverFromCar(driverService.get(driver.getId()),
-                carService.get(car.getId()));
-        System.out.println(carService.get(car.getId()));
+        List<Car> allByFirstDriver = carService.getAllByDriver(firstSavedDriver.getId());
+        List<Car> allBySecondDriver = carService.getAllByDriver(secondSavedDriver.getId());
+
+        System.out.println(allByFirstDriver);
+        System.out.println(allBySecondDriver);
+
+        Driver driverForDeleteId = driverService.get(firstSavedDriver.getId());
+        Car carForDelete = carService.get(benz.getId());
+        carService.removeDriverFromCar(driverForDeleteId, carForDelete);
+
+        carService.getAll().forEach(System.out::println);
     }
 }
