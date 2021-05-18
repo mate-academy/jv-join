@@ -46,18 +46,27 @@ public class Main {
         mustang.setModel("Mustang");
         mustang.setManufacturer(ford);
 
+        gto.setDrivers(new ArrayList<>(List.of(bob, susan)));
+        carrera.setDrivers(new ArrayList<>(List.of(nick, susan)));
+        mustang.setDrivers(new ArrayList<>(List.of(bob, nick)));
+
         carService.create(gto);
         carService.create(carrera);
         carService.create(mustang);
 
-        gto.setDrivers(new ArrayList<>(List.of(bob, susan)));
-        carrera.setDrivers(new ArrayList<>(List.of(nick, susan)));
-        mustang.setDrivers(new ArrayList<>(List.of(bob, nick)));
+        System.out.println("Initial list of all cars:");
+        List<Car> initialCars = carService.getAll();
+        initialCars.forEach(System.out::println);
+
+        gto.setDrivers(new ArrayList<>(List.of(bob, susan, nick)));
+        carrera.setDrivers(new ArrayList<>(List.of(nick, susan, bob)));
+        mustang.setDrivers(new ArrayList<>(List.of(bob)));
+
         carService.update(gto);
         carService.update(carrera);
         carService.update(mustang);
 
-        System.out.println("Initial list of all cars:");
+        System.out.println("List of all cars with drivers changed:");
         List<Car> allCars = carService.getAll();
         allCars.forEach(System.out::println);
 
