@@ -89,5 +89,7 @@ public class Main {
         System.out.println("List of all cars after delete:");
         List<Car> allCarsAfterDelete = carService.getAll();
         allCarsAfterDelete.forEach(System.out::println);
+
+        System.out.println(driverService.getAll());
     }
 }

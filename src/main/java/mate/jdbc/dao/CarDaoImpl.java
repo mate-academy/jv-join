@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.lib.Dao;
+import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -17,6 +18,9 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
+    @Inject
+    private ManufacturerDao manufacturerDao;
+
     @Override
     public Car create(Car car) {
         String createCarQuery = "INSERT INTO cars (model, manufacturer_id) "
@@ -140,32 +144,13 @@ public class CarDaoImpl implements CarDao {
         Long id = resultSet.getObject(1, Long.class);
         String model = resultSet.getString("model");
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
-        Manufacturer manufacturer = getManufacturerById(manufacturerId);
+        Manufacturer manufacturer = manufacturerDao.get(manufacturerId).get();
         Car car = new Car();
         car.setId(id);
         car.setModel(model);
         car.setManufacturer(manufacturer);
         car.setDrivers(getDriversForCar(id));
         return car;
-    }
-
-    private Manufacturer getManufacturerById(Long manufacturerId) {
-        String getManufacturer = "SELECT * FROM manufacturers WHERE id = ? and deleted = FALSE;";
-        Manufacturer manufacturer = new Manufacturer();
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getManufacturerStatement = connection
-                        .prepareStatement(getManufacturer)) {
-            getManufacturerStatement.setLong(1, manufacturerId);
-            ResultSet resultSet = getManufacturerStatement.executeQuery();
-            if (resultSet.next()) {
-                manufacturer.setId(manufacturerId);
-                manufacturer.setName(resultSet.getString("name"));
-                manufacturer.setCountry(resultSet.getString("country"));
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't find manufacturer by id " + manufacturerId, e);
-        }
-        return manufacturer;
     }
 
     private List<Driver> getDriversForCar(Long carId) {
