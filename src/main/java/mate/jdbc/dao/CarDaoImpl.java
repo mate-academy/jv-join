@@ -56,7 +56,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get Car object with input ID: " + id, e);
         }
         if (currentCar != null) {
-            currentCar.setDrivers(getDriversForCurrentCar(id));
+            currentCar.setDrivers(getCarDrivers(id));
         }
         return Optional.ofNullable(currentCar);
     }
@@ -79,7 +79,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't select all cars from DB", e);
         }
         for (Car car : cars) {
-            car.setDrivers(getDriversForCurrentCar(car.getId()));
+            car.setDrivers(getCarDrivers(car.getId()));
         }
         return cars;
     }
@@ -98,10 +98,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update Car object by input data: " + car, e);
         }
-        deleteAllRelationBetweenCurrentCarAndDrivers(car.getId());
-        if (car.getDrivers() != null) {
-            insertDrivers(car);
-        }
+        removeCarDrivers(car.getId());
+        insertDrivers(car);
         return car;
     }
 
@@ -121,8 +119,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverID) {
-        String getAllByDriverQuery = "SELECT cars.id AS car_id FROM cars_drivers "
-                + "JOIN cars ON cars_drivers.cars_id = cars.id WHERE drivers_id = ?";
+        String getAllByDriverQuery = "SELECT cars.id AS car_id FROM cars_drivers JOIN cars "
+                + "ON cars_drivers.cars_id = cars.id JOIN drivers "
+                + "ON cars_drivers.drivers_id = drivers.id WHERE drivers_id = ? "
+                + "AND drivers.deleted = FALSE";
         List<Long> carsIDs = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement = connection
@@ -174,14 +174,14 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversForCurrentCar(Long carID) {
+    private List<Driver> getCarDrivers(Long carId) {
         String getDriversQuery = "SELECT drivers.id AS driver_id, drivers.name AS driver_name, "
                 + "drivers.license_number AS driver_license_number FROM drivers JOIN cars_drivers "
-                + "ON drivers.id = cars_drivers.drivers_id WHERE cars_id = ?;";
+                + "ON drivers.id = cars_drivers.drivers_id WHERE cars_id = ? AND drivers.id = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriversStatement = connection
                         .prepareStatement(getDriversQuery)) {
-            getDriversStatement.setLong(1, carID);
+            getDriversStatement.setLong(1, carId);
             ResultSet dataFromDB = getDriversStatement.executeQuery();
             List<Driver> driversList = new ArrayList<>();
             while (dataFromDB.next()) {
@@ -206,17 +206,17 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private boolean deleteAllRelationBetweenCurrentCarAndDrivers(Long carID) {
+    private boolean removeCarDrivers(Long carId) {
         String deleteRelationsQuery = "DELETE FROM cars_drivers WHERE cars_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteRelationsStatement = connection
                         .prepareStatement(deleteRelationsQuery)) {
-            deleteRelationsStatement.setLong(1, carID);
+            deleteRelationsStatement.setLong(1, carId);
             deleteRelationsStatement.executeUpdate();
             return deleteRelationsStatement.executeUpdate() >= 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete relations between"
-                    + " current Car ID: " + carID + " and it's drivers", e);
+                    + " current Car ID: " + carId + " and it's drivers", e);
         }
     }
 }

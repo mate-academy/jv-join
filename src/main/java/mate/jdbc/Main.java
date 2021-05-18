@@ -7,6 +7,7 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
+import mate.jdbc.service.DriverService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +21,14 @@ public class Main {
         Manufacturer manufacturer = new Manufacturer("BMW", "Germany");
         Car car = new Car("coolBMW", manufacturerDao.create(manufacturer));
 
-        DriverDao driverDao = (DriverDao) injector.getInstance(DriverDao.class);
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         List<Driver> drivers = new ArrayList<>();
         Driver firstDriver = new Driver("Johnathan", "1234321442");
         Driver secondDriver = new Driver("Alice", "32958325");
-        drivers.add(driverDao.create(firstDriver));
-        drivers.add(driverDao.create(secondDriver));
+        Driver createdFirstDriver = driverService.create(firstDriver);
+        drivers.add(createdFirstDriver);
+        Driver createdSecondDriver = driverService.create(secondDriver);
+        drivers.add(createdSecondDriver);
         car.setDrivers(drivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
@@ -42,8 +45,7 @@ public class Main {
         manufacturerDao.create(updatedManufacturer);
         Car updatedCar = new Car("notCoolAudi", updatedManufacturer);
         updatedCar.setId(car.getId());
+        updatedCar.setDrivers(driverService.getAll());
         System.out.println(carService.update(updatedCar));
-
-        System.out.println(carService.getAllByDriver(firstDriver.getId()));
     }
 }
