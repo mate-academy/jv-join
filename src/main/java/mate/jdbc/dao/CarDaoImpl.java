@@ -37,7 +37,7 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
         addDriverRelationForCar(car);
-        getDriversForCar(car.getId());
+        car.setDrivers(getDriversForCar(car.getId()));
         return car;
     }
 
