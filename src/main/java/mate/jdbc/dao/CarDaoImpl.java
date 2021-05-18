@@ -36,6 +36,7 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
         insertDrivers(car);
+        getAllDriversByCarId(car.getId());
         return car;
     }
 
@@ -120,8 +121,10 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverRequest = "SELECT * FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "JOIN cars_drivers cd ON c.id = cd.car_id WHERE cd.driver_id = ? "
-                + "AND c.is_deleted = FALSE;";
+                + "JOIN cars_drivers cd ON c.id = cd.car_id "
+                + "JOIN drivers d ON d.id = cd.driver_id "
+                + "WHERE cd.driver_id = ? "
+                + "AND c.is_deleted = FALSE AND d.is_deleted = FALSE;";
         List<Car> carList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement =
