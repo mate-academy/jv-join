@@ -65,5 +65,6 @@ public class Manufacturer {
                 + ", name='" + name + '\''
                 + ", country='" + country + '\''
                 + '}';
+
     }
 }
