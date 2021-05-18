@@ -37,7 +37,7 @@ public class CarDaoImpl implements CarDao {
         }
         insertDrivers(car);
         getAllDriversByCarId(car.getId());
-        return car;
+        return getAllDriversByCarId(car.getId()).get();
     }
 
     @Override
