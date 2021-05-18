@@ -39,17 +39,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        List<Driver> newList = car.getDrivers();
-        newList.add(driver);
-        car.setDrivers(newList);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> newList = car.getDrivers();
-        newList.remove(driver);
-        car.setDrivers(newList);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
