@@ -12,9 +12,8 @@ public class Car {
     public Car() {
     }
 
-    public Car(String model, List<Driver> drivers, Manufacturer manufacturer) {
+    public Car(String model, Manufacturer manufacturer) {
         this.model = model;
-        this.drivers = drivers;
         this.manufacturer = manufacturer;
     }
 
