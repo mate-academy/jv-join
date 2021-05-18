@@ -36,9 +36,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create car. " + car + " ",
                     throwable);
         }
-        for (Driver driver : car.getDrivers()) {
-            addDriverRelationForCar(car, driver);
-        }
+        addDriverRelationForCar(car);
         return car;
     }
 
@@ -106,9 +104,7 @@ public class CarDaoImpl implements CarDao {
         removeDriversRelations(car);
         List<Driver> drivers = car.getDrivers();
         if (drivers != null) {
-            for (Driver driver : drivers) {
-                addDriverRelationForCar(car, driver);
-            }
+            addDriverRelationForCar(car);
         }
         return car;
     }
@@ -164,15 +160,17 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addDriverRelationForCar(Car car, Driver driver) {
+    private void addDriverRelationForCar(Car car) {
         String insertDriverRelation
                 = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertStatement
                         = connection.prepareStatement(insertDriverRelation)) {
             insertStatement.setLong(1, car.getId());
-            insertStatement.setLong(2, driver.getId());
-            insertStatement.executeUpdate();
+            for (Driver driver : car.getDrivers()) {
+                insertStatement.setLong(2, driver.getId());
+                insertStatement.executeUpdate();
+            }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't delete drivers dependencies for car with id "
                     + car.getId(), throwable);
@@ -182,7 +180,8 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDriversForCar(Long carId) {
         String getAllDriversForCarRequest = "SELECT d.id as driver_id, d.name as driver_name, "
                 + "d.license_number FROM drivers d "
-                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?;";
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ? "
+                + "AND d.deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversStatement
                         = connection.prepareStatement(getAllDriversForCarRequest)) {
