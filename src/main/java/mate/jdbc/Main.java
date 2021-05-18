@@ -21,9 +21,9 @@ public class Main {
         Car carLada = new Car();
         Manufacturer manufacturerLada = manufacturerService
                 .create(new Manufacturer("lada", "Ukraine"));
-        Driver driverAlise = driverService.create(new Driver("Max", "1111"));
+        Driver driverMax = driverService.create(new Driver("Max", "1111"));
         Driver driverIra = driverService.create(new Driver("Ira", "2222"));
-        List<Driver> drivers = List.of(driverAlise, driverIra);
+        List<Driver> drivers = List.of(driverMax, driverIra);
 
         carLada.setManufacturer(manufacturerLada);
         carLada.setDriver(drivers);
@@ -40,11 +40,11 @@ public class Main {
         System.out.println("test method update() and addDriverToCar()");
         Driver driverBob = driverService.create(new Driver("Bob", "3333"));
         carService.addDriverToCar(driverBob, carLada);
-        carLada.setModel("newModelLada");
+        carLada.setModel("superLada2000");
         System.out.println(carService.update(carLada));
 
         System.out.println("test method removeDriverFromCar");
-        carService.removeDriverFromCar(driverAlise, carLada);
+        carService.removeDriverFromCar(driverMax, carLada);
         carService.getAll().forEach(System.out::println);
 
         System.out.println("test method getAllCarByDriver()");

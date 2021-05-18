@@ -24,7 +24,6 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement createStatement = connection.prepareStatement(createQuery,
                          Statement.RETURN_GENERATED_KEYS)) {
-
             createStatement.setString(1, car.getModel());
             createStatement.setLong(2, car.getManufacturer().getId());
             createStatement.executeUpdate();
@@ -49,7 +48,6 @@ public class CarDaoImpl implements CarDao {
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarStatement = connection.prepareStatement(getQuery)) {
-
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
@@ -73,21 +71,16 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement getAllDriversStatement = connection
-                         .prepareStatement(getAllQuery)) {
-
+                 PreparedStatement getAllDriversStatement =
+                         connection.prepareStatement(getAllQuery)) {
             ResultSet resultSet = getAllDriversStatement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get all ", e);
+            throw new DataProcessingException("Can't get all cars", e);
         }
-        if (cars != null) {
-            for (Car car: cars) {
-                car.setDriver(getDriversForCar(car.getId()));
-            }
-        }
+        cars.forEach(car -> car.setDriver(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -97,13 +90,12 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE id = ? AND is_deleted = FALSE ";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
-
             updateStatement.setString(1, car.getModel());
             updateStatement.setLong(2, car.getManufacturer().getId());
             updateStatement.setLong(3, car.getId());
             updateStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update " + car, e);
+            throw new DataProcessingException("Can't update car, id: " + car.getId(), e);
         }
         deleteRelationsInCars_drivers(car.getId());
         insetrDrivers(car);
@@ -114,8 +106,8 @@ public class CarDaoImpl implements CarDao {
     public boolean delete(Long id) {
         String deleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement deleteDriverStatement = connection
-                         .prepareStatement(deleteQuery)) {
+                 PreparedStatement deleteDriverStatement =
+                         connection.prepareStatement(deleteQuery)) {
             deleteDriverStatement.setLong(1, id);
             return deleteDriverStatement.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -134,7 +126,6 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsStatement = connection.prepareStatement(getAllQuery)) {
-
             getAllCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
@@ -143,26 +134,23 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all car by driver " + driverId, e);
         }
-        for (Car car: cars) {
-            car.setDriver(getDriversForCar(car.getId()));
-        }
+        cars.forEach(car -> car.setDriver(getDriversForCar(car.getId())));
         return cars;
     }
 
     private void insetrDrivers(Car car) {
         String insetrDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id ) VALUES (?, ?);";
-
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement addDriversToCarStatement = connection
-                         .prepareStatement(insetrDriversQuery)) {
-
+                 PreparedStatement addDriversToCarStatement =
+                         connection.prepareStatement(insetrDriversQuery)) {
             addDriversToCarStatement.setLong(1, car.getId());
             for (Driver driver : car.getDriver()) {
                 addDriversToCarStatement.setLong(2, driver.getId());
                 addDriversToCarStatement.executeUpdate();
             }
         } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't insert car: " + car, throwables);
+            throw new DataProcessingException("Can't insert drivers for car, id: " + car.getId(),
+                    throwables);
         }
     }
 
@@ -197,9 +185,8 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers "
                 + "ON drivers.id = cars_drivers.driver_id WHERE cars_drivers.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement getAllDriversStatement = connection
-                         .prepareStatement(getAllDriversFromCarQuery)) {
-
+                 PreparedStatement getAllDriversStatement =
+                         connection.prepareStatement(getAllDriversFromCarQuery)) {
             getAllDriversStatement.setLong(1, carId);
             ResultSet resultSet = getAllDriversStatement.executeQuery();
             List<Driver> driver = new ArrayList<>();
