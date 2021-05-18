@@ -51,10 +51,15 @@ public class Car {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Car car = (Car) o;
-        return Objects.equals(id, car.id) && Objects.equals(manufacturer, car.manufacturer) && Objects.equals(driverList, car.driverList) && Objects.equals(model, car.model);
+        return Objects.equals(id, car.id) && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(driverList, car.driverList) && Objects.equals(model, car.model);
     }
 
     @Override
@@ -64,11 +69,10 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", manufacturer=" + manufacturer +
-                ", driverList=" + driverList +
-                ", model='" + model + '\'' +
-                '}';
+        return "Car{"
+                + "id=" + id
+                + ", manufacturer=" + manufacturer
+                + ", driverList=" + driverList
+                + ", model='" + model + '\'' + '}';
     }
 }

@@ -43,7 +43,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id as car_id, c.model, m.id as manufacturer_id, "
                 + "m.name, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "WHERE c.id = ? AND c.deleted = FALSE;";
+                + "WHERE c.id = ? AND c.deleted = FALSE AND m.deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -124,7 +124,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars_drivers cd "
+        String query = "SELECT cd.car_id, cd.driver_id, c.manufacturer_id, c.model, "
+                + "m.name, m.country FROM cars_drivers cd "
                 + "JOIN cars c ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE cd.driver_id = ? AND c.deleted = FALSE;";
@@ -148,29 +149,12 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        car.setManufacturer(getManufacturer(resultSet.getObject("manufacturer_id", Long.class)));
+        car.setManufacturer(setManufacturer(resultSet));
         return car;
     }
 
-    private Manufacturer getManufacturer(Long id) {
-        String query = "SELECT * FROM manufacturers WHERE id = "
-                + id + " AND deleted = FALSE";
-        try (Connection connection = ConnectionUtil.getConnection();
-                Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery(query);
-            Manufacturer manufacturer = null;
-            if (resultSet.next()) {
-                manufacturer = setManufacturer(resultSet);
-            }
-            return manufacturer;
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get manufacturer by id " + id + " ",
-                    throwable);
-        }
-    }
-
     private Manufacturer setManufacturer(ResultSet resultSet) throws SQLException {
-        Long newId = resultSet.getObject("id", Long.class);
+        Long newId = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(name, country);
