@@ -33,6 +33,6 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return manufacturerDao.delete(id);
     }
 }
