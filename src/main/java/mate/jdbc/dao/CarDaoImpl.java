@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
@@ -41,13 +40,13 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getQuery = "SELECT c.id AS car_id, model, "
+        String query = "SELECT c.id AS car_id, model, "
                 + "m.id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.id = ? AND c.deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement getCarStatement = connection.prepareStatement(getQuery)) {
+                 PreparedStatement getCarStatement = connection.prepareStatement(query)) {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
@@ -80,7 +79,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
                     throwable);
         }
-        setDriversToListOfDrivers(cars);
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCarId(car.getId()));
+        }
         return cars;
     }
 
@@ -90,7 +91,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id WHERE cd.driver_id = ? "
-                + "AND c.deleted = FALSE;";
+                + "AND c.deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsByDriverStatement
@@ -104,7 +105,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
                     throwable);
         }
-        setDriversToListOfDrivers(cars);
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCarId(car.getId()));
+        }
         return cars;
     }
 
@@ -142,13 +145,13 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversByCarId(Long carId) {
-        String getAllAuthorsForBookQuery = "SELECT * FROM drivers d "
+        String query = "SELECT * FROM drivers d "
                 + "JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id WHERE cd.car_id = ? "
                 + "AND deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllDriversStatement
-                         = connection.prepareStatement(getAllAuthorsForBookQuery)) {
+                         = connection.prepareStatement(query)) {
             getAllDriversStatement.setLong(1, carId);
             ResultSet resultSet = getAllDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
@@ -210,13 +213,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't remove drivers relations "
                     + car, throwable);
-        }
-    }
-
-    private void setDriversToListOfDrivers(List<Car> cars) {
-        if (cars.size() != 0) {
-            IntStream.range(0, cars.size())
-                    .forEach(i -> cars.get(i).setDrivers(getDriversByCarId(cars.get(i).getId())));
         }
     }
 }
