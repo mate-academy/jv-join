@@ -58,5 +58,9 @@ public class Main {
         carService.addDriverToCar(bond, boomer);
         carService.removeDriverFromCar(vinDiesel, boomer);
         System.out.println(carService.get(boomer.getId()));
+
+        System.out.println(carService.getAll());
+
+        System.out.println(carService.getAllByDriver(terminator.getId()));
     }
 }

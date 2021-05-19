@@ -53,7 +53,6 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getDriverStatement = connection.prepareStatement(query)) {
             getDriverStatement.setLong(1, id);
             ResultSet resultSet = getDriverStatement.executeQuery();
-
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
@@ -64,12 +63,16 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getCarDrivers(id));
         }
         return Optional.ofNullable(car);
-
     }
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT * FROM cars WHERE deleted = FALSE";
+        String query = "SELECT c.id as car_id, c.model, "
+                + "m.title, m.id as manufacturer_id, "
+                + "m.country "
+                + "FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement
                         = connection.prepareStatement(query)) {
@@ -78,6 +81,7 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
+            setDriversToCars(cars);
             return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get a list of cars "
@@ -131,7 +135,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN drivers d ON d.id = cd.driver_id WHERE cd.driver_id = ? "
-                + "AND c.is_deleted = FALSE AND d.is_deleted = FALSE;";
+                + "AND c.deleted = FALSE AND d.deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (
                 Connection connection = ConnectionUtil.getConnection();
