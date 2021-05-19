@@ -30,11 +30,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't create " + car + ". ", throwable);
         }
+        insertDrivers(car);
+        return car;
     }
     
     @Override
@@ -91,12 +91,12 @@ public class CarDaoImpl implements CarDao {
             updateDriverStatement.setString(2, car.getModel());
             updateDriverStatement.setLong(3, car.getId());
             updateDriverStatement.executeUpdate();
-            deleteDrivers(car);
-            insertDrivers(car);
-            return car;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update " + car + " in DB.", throwable);
         }
+        deleteDrivers(car);
+        insertDrivers(car);
+        return car;
     }
     
     @Override
