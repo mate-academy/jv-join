@@ -39,8 +39,6 @@ public class Main {
         driverService.create(seniorGuido);
         driverService.create(seniorLuigi);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-
         List<Driver> hornetDrivers = new ArrayList<>();
         hornetDrivers.add(drHornet);
         hornetDrivers.add(mrFillmore);
@@ -61,6 +59,7 @@ public class Main {
         Car isettaMesser = new Car("Isetta Messer", bmw);
         isettaMesser.setDrivers(fiatAndBmwDrivers);
 
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(fabulousHudsonHornet);
         carService.create(volkswagenBus);
         carService.create(fiat500);
