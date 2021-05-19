@@ -103,9 +103,8 @@ public class CarDaoImpl implements CarDao {
         if (result > 0) {
             deleteDriverByCarId(car.getId());
             addDriverToCar(car);
-            return car;
         }
-        throw new DataProcessingException("There is nothing to update");
+        return car;
     }
 
     @Override
