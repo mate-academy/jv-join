@@ -59,7 +59,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getAllDrivers(id));
+            car.setDrivers(getAllDriversByCarId(id));
         }
         return Optional.ofNullable(car);
     }
@@ -81,7 +81,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get list of cars from cars table", e);
         }
         for (Car car : cars) {
-            car.setDrivers(getAllDrivers(car.getId()));
+            car.setDrivers(getAllDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -101,11 +101,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't update car " + car, e);
         }
         if (result > 0) {
-            removeDriverFromCar(car.getId());
+            deleteDriverByCarId(car.getId());
             addDriverToCar(car);
             return car;
         }
-        throw new RuntimeException("There is nothing to update");
+        throw new DataProcessingException("There is nothing to update");
     }
 
     @Override
@@ -140,7 +140,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get list of cars by driverId= " + driverId, e);
         }
         for (Car car : cars) {
-            car.setDrivers(getAllDrivers(car.getId()));
+            car.setDrivers(getAllDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -173,7 +173,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getAllDrivers(Long carId) {
+    private List<Driver> getAllDriversByCarId(Long carId) {
         String query = "SELECT * FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
                      + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -205,7 +205,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void removeDriverFromCar(Long carId) {
+    private void deleteDriverByCarId(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
