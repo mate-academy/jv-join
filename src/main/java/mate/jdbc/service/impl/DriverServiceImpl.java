@@ -22,7 +22,7 @@ public class DriverServiceImpl implements DriverService {
     public Driver get(Long id) {
         return driverDao.get(id)
                 .orElseThrow(()
-                        -> new NoSuchElementException("Can't get driver by id: " + id));
+                        -> new NoSuchElementException("Not found driver by id: " + id));
     }
 
     @Override

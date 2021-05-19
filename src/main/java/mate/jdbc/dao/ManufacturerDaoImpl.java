@@ -17,7 +17,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class ManufacturerDaoImpl implements ManufacturerDao {
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
-        String insertManufacturerRequest = "INSERT INTO manufacturers(name,country) values(?,?)";
+        String insertManufacturerRequest = "INSERT INTO manufacturers(name,country) values(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement createManufacturerStatement =
                          connection.prepareStatement(insertManufacturerRequest,
