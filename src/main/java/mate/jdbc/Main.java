@@ -27,7 +27,7 @@ public class Main {
         Driver driverOleg = new Driver("Oleg", "12345678");
         driverService.create(driverOleg);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
+        final CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carMazda = new Car();
         carMazda.setModel("RX 6");
         carMazda.setManufacturer(manufacturerMazdaCorp);
