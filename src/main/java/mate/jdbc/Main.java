@@ -1,5 +1,7 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -7,9 +9,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -50,8 +49,6 @@ public class Main {
         System.out.println(driverService.get(alice.getId()));
         System.out.println();
 
-        CarService carService =
-                (CarService) injector.getInstance(CarService.class);
         Car gmcCanyon = new Car("Canyon", "123-4567", gmc);
         Car audiA8 = new Car("A8", "978-645", audi);
         Car hondaAccord = new Car("Accord", "456-789", honda);
@@ -62,7 +59,8 @@ public class Main {
         gmcCanyon.setDrivers(gmcCanyonDrivers);
         audiA8.setDrivers(audiA8Drivers);
         hondaAccord.setDrivers(hondaAccordDrivers);
-
+        CarService carService =
+                (CarService) injector.getInstance(CarService.class);
         Car storedGmcCanyon = carService.create(gmcCanyon);
         Car storedAudiA8 = carService.create(audiA8);
         Car storedHondaAccord = carService.create(hondaAccord);
