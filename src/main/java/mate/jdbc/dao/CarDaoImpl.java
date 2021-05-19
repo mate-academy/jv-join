@@ -75,9 +75,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't get all cars from cars table.", throwable);
         }
-        if (!cars.isEmpty()) {
-            cars.forEach(car -> car.setDrivers(getDriversListForCar(car.getId())));
-        }
         return cars;
     }
 
@@ -85,20 +82,18 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String updateQuery = "UPDATE cars SET model = ?, manufacturer = ?"
                 + " WHERE id = ? AND is_deleted = FALSE;";
-        boolean isUpdated;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             updateStatement.setString(1, car.getModel());
             updateStatement.setObject(2, car.getManufacturer().getId());
             updateStatement.setObject(3, car.getId());
-            isUpdated = updateStatement.executeUpdate() > 0;
+            if (updateStatement.executeUpdate() > 0) {
+                deleteDrivers(car);
+                insertDrivers(car);
+            }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't update car " + car
                 + "in the cars table.", throwable);
-        }
-        if (isUpdated) {
-            deleteDrivers(car);
-            insertDrivers(car);
         }
         return car;
     }
