@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Injector;
+import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -18,7 +18,9 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static Injector injector = Injector.getInstance("mate.jdbc");
+    @Inject
+    private DriverDaoImpl driverDao;
+
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
@@ -158,9 +160,8 @@ public class CarDaoImpl implements CarDao {
                         connection.prepareStatement(getAllDriverForCarRequest)) {
             getAllDriverStatement.setObject(1, driverId);
             ResultSet resultSet = getAllDriverStatement.executeQuery();
-            DriverDaoImpl daoDriver = (DriverDaoImpl) injector.getInstance(DriverDao.class);
             while (resultSet.next()) {
-                drivers.add(daoDriver.getDriver(resultSet));
+                drivers.add(driverDao.getDriver(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't get driver for car, id " + driverId, e);
