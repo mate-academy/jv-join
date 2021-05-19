@@ -36,8 +36,8 @@ public class Main {
         manufacturerService.delete(tesla.getId());
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car car1 = new Car(1L, "KIA", kia, driverService.getAll());
-        Car car2 = new Car(2L, "KIA", kia, driverService.getAll());
+        Car car1 = new Car("KIA", kia, driverService.getAll());
+        Car car2 = new Car("KIA", kia, driverService.getAll());
 
         carService.create(car1);
         carService.create(car2);

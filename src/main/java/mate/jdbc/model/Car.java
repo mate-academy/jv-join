@@ -9,8 +9,7 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> driver;
 
-    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> driver) {
-        this.id = id;
+    public Car(String model, Manufacturer manufacturer, List<Driver> driver) {
         this.model = model;
         this.manufacturer = manufacturer;
         this.driver = driver;

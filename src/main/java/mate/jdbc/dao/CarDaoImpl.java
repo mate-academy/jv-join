@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
@@ -60,7 +61,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDriver(getDriverForCar(id));
         }
-        return null;
+        return Optional.ofNullable(car).get();
     }
 
     @Override
@@ -72,7 +73,7 @@ public class CarDaoImpl implements CarDao {
             List<Car> cars = new ArrayList<>();
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCars(resultSet));
+                cars.add(getCarWithManufacturer(resultSet));
             }
             return cars;
         } catch (SQLException throwable) {
@@ -192,13 +193,15 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
-        car.setModel(resultSet.getString("model"));
-        car.setId(resultSet.getObject("id", Long.class));
-        Manufacturer manufacturer
-                = new Manufacturer(resultSet.getString("name"),
+        Long manufacturerId = resultSet.getObject("id", Long.class);
+        Manufacturer manufacturer = new Manufacturer(resultSet.getString("name"),
                 resultSet.getString("country"));
-        manufacturer.setId(resultSet.getObject("id", Long.class));
+        manufacturer.setId(manufacturerId);
+        String carModel = resultSet.getString("model");
+        Long carId = resultSet.getObject("car_id", Long.class);
+        Car car = new Car();
+        car.setModel(carModel);
+        car.setId(carId);
         car.setManufacturer(manufacturer);
         return car;
     }
