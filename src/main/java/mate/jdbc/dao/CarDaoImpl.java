@@ -21,7 +21,6 @@ public class CarDaoImpl implements CarDao {
     public Car create(Car car) {
         String createQuery = "INSERT INTO cars (model, registration_number, manufacturer_id) "
                 + "VALUES (?, ?, ?)";
-        boolean isCreated = false;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement createStatement
                          = connection.prepareStatement(createQuery,
@@ -33,14 +32,11 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = createStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
-                isCreated = true;
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't create car: " + car, throwable);
         }
-        if (isCreated) {
-            addDriversToCar(car);
-        }
+        addDriversToCar(car);
         return car;
     }
 
@@ -92,7 +88,6 @@ public class CarDaoImpl implements CarDao {
         String updateQuery = "UPDATE cars SET model = ?, registration_number = ?, "
                 + "manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        int updateRecordsNumber;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateStatement =
                          connection.prepareStatement(updateQuery)) {
@@ -100,16 +95,13 @@ public class CarDaoImpl implements CarDao {
             updateStatement.setString(2, car.getRegistrationNumber());
             updateStatement.setLong(3, car.getManufacturer().getId());
             updateStatement.setLong(4, car.getId());
-            updateRecordsNumber = updateStatement.executeUpdate();
+            updateStatement.executeUpdate();
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't update car: " + car, throwable);
         }
-        if (updateRecordsNumber > 0) {
-            deleteOldDrivers(car.getId());
-            addDriversToCar(car);
-            return car;
-        }
-        throw new DataProcessingException("Can`t update the car with id = " + car.getId());
+        deleteOldDrivers(car.getId());
+        addDriversToCar(car);
+        return car;
     }
 
     @Override
