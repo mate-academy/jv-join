@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -32,10 +33,17 @@ public class Main {
         driverService.create(driverRoman);
         driverService.create(driverVlad);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
+        List<Driver> audiList = new ArrayList<>();
         Car audiCar = new Car("TT", audi);
+        audiCar.setDriverList(audiList);
+        List<Driver> bmwList = new ArrayList<>();
         Car bmwCar = new Car("X5", bmw);
+        bmwCar.setDriverList(bmwList);
+        List<Driver> fordList = new ArrayList<>();
         Car fordCar = new Car("Mustang GT", ford);
+        fordCar.setDriverList(fordList);
+
+        CarService carService = (CarService) injector.getInstance(CarService.class);
 
         carService.create(audiCar);
         carService.create(bmwCar);
