@@ -59,9 +59,8 @@ public class CarDaoImpl implements CarDao {
         }
         if (car != null) {
             car.setDrivers(getDriversByCarId(car.getId()));
-            return Optional.of(car);
         }
-        return Optional.empty();
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -75,8 +74,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement getAllDriversStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = getAllDriversStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCarWithManufacturer(resultSet);
-                cars.add(car);
+                cars.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
