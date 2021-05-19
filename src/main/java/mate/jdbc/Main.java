@@ -18,7 +18,7 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturerMazdaCorp = new Manufacturer("MazdaCorp", "Japan");
         manufacturerService.create(manufacturerMazdaCorp);
-        Manufacturer manufacturerPorscheCorp = new Manufacturer("PorscheCorp", "Germany");
+        Manufacturer manufacturerPorscheCorp = new Manufacturer("BmwCorp", "Germany");
         manufacturerService.create(manufacturerPorscheCorp);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
