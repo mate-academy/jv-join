@@ -107,9 +107,7 @@ public class CarDaoImpl implements CarDao {
         }
         removeDriversRelations(car);
         List<Driver> drivers = car.getDrivers();
-        if (drivers != null) {
-            addDriverRelationForCar(car);
-        }
+        addDriverRelationForCar(car);
         return car;
     }
 
@@ -217,11 +215,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void parseDriversToListOfCars(List<Car> cars) {
-        if (cars.size() != 0) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
+
     }
 
     private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
