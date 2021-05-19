@@ -37,8 +37,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Optional<Driver> get(Long id) {
-        String query = "SELECT id, name, licence_number "
-                + "FROM drivers "
+        String query = "SELECT * FROM drivers "
                 + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriverStatement = connection.prepareStatement(query)) {
@@ -103,9 +102,9 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long newId = resultSet.getObject("driver_id", Long.class);
-        String name = resultSet.getString("driver_name");
-        String licenseNumber = resultSet.getString("driver_license_number");
+        Long newId = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("licence_number");
         Driver driver = new Driver(name, licenseNumber);
         driver.setId(newId);
         return driver;
