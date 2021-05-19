@@ -18,8 +18,8 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturerMazdaCorp = new Manufacturer("MazdaCorp", "Japan");
         manufacturerService.create(manufacturerMazdaCorp);
-        Manufacturer manufacturerPorscheCorp = new Manufacturer("BmwCorp", "Germany");
-        manufacturerService.create(manufacturerPorscheCorp);
+        Manufacturer manufacturerBmwCorp = new Manufacturer("BmwCorp", "Germany");
+        manufacturerService.create(manufacturerBmwCorp);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver driverLisa = new Driver("Lisa", "12345678");
@@ -35,7 +35,7 @@ public class Main {
         carService.create(carMazda);
         Car carBmv = new Car();
         carBmv.setModel("Feraro");
-        carBmv.setManufacturer(manufacturerPorscheCorp);
+        carBmv.setManufacturer(manufacturerBmwCorp);
         carBmv.setDrivers(new ArrayList<>(Arrays.asList(driverLisa)));
         carService.create(carBmv);
 
