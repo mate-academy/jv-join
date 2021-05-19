@@ -5,13 +5,15 @@ import java.util.Objects;
 
 public class Car {
     private Long id;
+    private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
     public Car() {
     }
 
-    public Car(Manufacturer manufacturer, List<Driver> drivers) {
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
         this.manufacturer = manufacturer;
         this.drivers = drivers;
     }
@@ -22,6 +24,14 @@ public class Car {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public Manufacturer getManufacturer() {
@@ -49,20 +59,24 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return Objects.equals(id, car.id) && Objects.equals(manufacturer, car.manufacturer)
+        return Objects.equals(id, car.id)
+                && Objects.equals(model, car.model)
+                && Objects.equals(manufacturer, car.manufacturer)
                 && Objects.equals(drivers, car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, manufacturer, drivers);
+        return Objects.hash(id, model, manufacturer, drivers);
     }
 
     @Override
     public String toString() {
         return "Car{"
-                + "id=" + id + ", manufacturer="
-                + manufacturer + ", drivers="
-                + drivers + '}';
+                + " id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers
+                + '}';
     }
 }

@@ -19,12 +19,13 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (manufacturer_id) "
-                + " VALUES (?);";
+        String query = "INSERT INTO cars (model, manufacturer_id) "
+                + " VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
                         = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setLong(1, car.getManufacturer().getId());
+            preparedStatement.setLong(2, car.getManufacturer().getId());
             preparedStatement.executeUpdate();
             ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -42,7 +43,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id as car_id, m.name as manufacturer_name, "
+        String query = "SELECT c.id as car_id, c.model, m.name as manufacturer_name, "
                 + "m.id as manufacturer_id, m.country as manufacturer_country"
                 + " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
@@ -66,7 +67,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id as car_id, m.name as manufacturer_name, "
+        String query = "SELECT c.id as car_id, c.model  as car_model, m.name as manufacturer_name, "
                 + "m.id as manufacturer_id,"
                 + " country as manufacturer_country FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE;";
@@ -88,13 +89,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE cars SET manufacturer_id = ? "
+        String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getManufacturer().getId());
-            statement.setLong(2, car.getId());
+            statement.setString(1, car.getModel());
+            statement.setLong(2, car.getManufacturer().getId());
+            statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update "
@@ -123,7 +125,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT c.id as car_id, "
+        String getAllByDriverRequest = "SELECT c.name as car_name, c.id as car_id, "
                 + "m.name as manufacturer_name, m.country as manufacturer_country, "
                 + "m.id as manufacturer_id  from cars_drivers cd "
                 + "LEFT JOIN cars c ON cd.car_id = c.id "
@@ -198,6 +200,7 @@ public class CarDaoImpl implements CarDao {
 
     private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
         Car car = new Car();
+        car.setModel(resultSet.getString("car_model"));
         car.setId(resultSet.getObject("car_id", Long.class));
         Manufacturer manufacturer
                 = new Manufacturer(resultSet.getString("manufacturer_name"),
@@ -208,7 +211,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver parseDriver(ResultSet resultSet) throws SQLException {
-        Driver driver = new Driver(resultSet.getString("licenseNumber"));
+        Driver driver = new Driver(resultSet.getString("driver_name"),
+                resultSet.getString("licenseNumber"));
         driver.setId(resultSet.getObject("driver_id", Long.class));
         return driver;
     }

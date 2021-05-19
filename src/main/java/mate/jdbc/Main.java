@@ -40,7 +40,7 @@ public class Main {
         Manufacturer opelManufacturer = new Manufacturer("Opel", "Germany");
         manufacturerService.create(opelManufacturer);
 
-        Car tesla = new Car(teslaManufacturer, teslaDrivers);
+        Car tesla = new Car("TESLA X", teslaManufacturer, teslaDrivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(tesla);
@@ -48,13 +48,13 @@ public class Main {
         List<Driver> toyotaDrivers = new ArrayList<>();
         toyotaDrivers.add(bob);
         toyotaDrivers.add(omen);
-        Car toyota = new Car(toyotaManufacturer, toyotaDrivers);
+        Car toyota = new Car("TOYOTA COROLLA", toyotaManufacturer, toyotaDrivers);
         carService.create(toyota);
 
         List<Driver> lexusDrivers = new ArrayList<>();
         lexusDrivers.add(bob);
         lexusDrivers.add(omen);
-        Car lexus = new Car(toyotaManufacturer, lexusDrivers);
+        Car lexus = new Car("LEXUS LX", toyotaManufacturer, lexusDrivers);
         carService.create(lexus);
 
         System.out.println(carService.get(tesla.getId()));
