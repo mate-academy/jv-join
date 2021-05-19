@@ -46,19 +46,19 @@ public class CarDaoImpl implements CarDao {
                         + "m.name AS manufacturer_name, m.country AS country "
                         + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                         + "WHERE c.id = ? AND c.is_deleted = FALSE ";
+        Car car = new Car();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement = connection.prepareStatement(query)) {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
-                Car car = getCarFromResultSet(resultSet);
-                car.setDrivers(getDriversList(car.getId()));
-                return Optional.of(car);
+                car = getCarFromResultSet(resultSet);
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get book by id " + id, throwable);
         }
-        return Optional.empty();
+        car.setDrivers(getDriversList(car.getId()));
+        return Optional.of(car);
     }
 
     @Override
@@ -124,8 +124,8 @@ public class CarDaoImpl implements CarDao {
         String getAllByDriverRequest = "SELECT c.model as model, c.id as car_id, "
                 + "m.name as manufacturer_name, m.country as country, "
                 + "m.id as manufacturer_id  from cars_drivers cd "
-                + "LEFT JOIN cars c ON cd.car_id = c.id "
-                + "LEFT JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "JOIN cars c ON cd.car_id = c.id "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();

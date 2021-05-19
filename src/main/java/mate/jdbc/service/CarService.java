@@ -16,9 +16,9 @@ public interface CarService {
 
     boolean delete(Long id);
 
-    void addDriverToCar(Driver driver, Car car); // these two methods
+    void addDriverToCar(Driver driver, Car car);
 
-    void removeDriverFromCar(Driver driver, Car car); // should only be on service layer
+    void removeDriverFromCar(Driver driver, Car car);
 
     List<Car> getAllByDriver(Long driverId);
 }
