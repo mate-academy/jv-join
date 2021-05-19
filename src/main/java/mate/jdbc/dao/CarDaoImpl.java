@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", throwable);
         }
-        return createRelations(car);
+        return insertCarDrivers(car);
     }
 
     @Override
@@ -55,9 +55,8 @@ public class CarDaoImpl implements CarDao {
         }
         if (car != null) {
             car.setDrivers(getAllCarDrivers(id));
-            return Optional.of(car);
         }
-        return Optional.empty();
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class CarDaoImpl implements CarDao {
                 + " m.country, d.driver_id from cars c "
                 + "join manufacturers m on manufacturer_id = m.id "
                 + "join cars_drivers d on car_id = c.id "
-                + "where driver_id = ? and c.deleted = false;";
+                + "where driver_id = ? and c.deleted = false and ;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsStatement
@@ -99,14 +98,16 @@ public class CarDaoImpl implements CarDao {
             Car car;
             while (resultSet.next()) {
                 car = getCar(resultSet);
-                car.setDrivers(getAllCarDrivers(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get a list of cars by Driver id "
                     + driverId, throwable);
         }
+        for (Car car : cars) {
+            car.setDrivers(getAllCarDrivers(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -125,8 +126,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", throwable);
         }
-        deleteAllRelation(car.getId());
-        return createRelations(car);
+        removeCarDrivers(car.getId());
+        return insertCarDrivers(car);
     }
 
     @Override
@@ -141,7 +142,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteAllRelation(Long id) {
+    private void removeCarDrivers(Long id) {
         String deleteQuery = "delete from cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement deleteRelationStatement
@@ -153,7 +154,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Car createRelations(Car car) {
+    private Car insertCarDrivers(Car car) {
         String insertQuery = "insert into cars_drivers (car_id, driver_id) values (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement saveCarStatement = connection.prepareStatement(insertQuery)) {
