@@ -36,7 +36,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create car. " + car + " ",
                     throwable);
         }
-        addDriverToCar(car);
+        addDriversToCar(car);
         car.setDrivers(getDriversList(car.getId()));
         return car;
     }
@@ -83,7 +83,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB by id ",
                     throwable);
         }
-        driversToListOfCars(cars);
+        cars.forEach(car -> car.setDrivers(getDriversList(car.getId())));
         return cars;
     }
 
@@ -104,9 +104,7 @@ public class CarDaoImpl implements CarDao {
         }
         removeDrivers(car);
         List<Driver> drivers = car.getDrivers();
-        if (drivers != null) {
-            addDriverToCar(car);
-        }
+        addDriversToCar(car);
         return car;
     }
 
@@ -116,7 +114,6 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, carId);
-            int numberOfDeletedRows = statement.executeUpdate();
             return statement.executeUpdate() > 0;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't delete car with id " + carId, throwable);
@@ -144,11 +141,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars by drivers id " + driverId,
                     throwable);
         }
-        driversToListOfCars(cars);
+        cars.forEach(car -> car.setDrivers(getDriversList(car.getId())));
         return cars;
     }
 
-    private void addDriverToCar(Car car) {
+    private void addDriversToCar(Car car) {
         String insertDriverRelation
                 = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -215,9 +212,5 @@ public class CarDaoImpl implements CarDao {
                 resultSet.getString("licenseNumber"));
         driver.setId(resultSet.getObject("driver_id", Long.class));
         return driver;
-    }
-
-    private void driversToListOfCars(List<Car> cars) {
-        cars.forEach(car -> car.setDrivers(getDriversList(car.getId())));
     }
 }
