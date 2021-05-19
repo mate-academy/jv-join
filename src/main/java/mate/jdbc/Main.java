@@ -16,8 +16,8 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer hudsonMotor = new Manufacturer("Hudson Motor",
-                "United States of America");
+
+        Manufacturer hudsonMotor = new Manufacturer("Hudson Motor", "USA");
         Manufacturer volkswagen = new Manufacturer("Volkswagen", "Germany");
         Manufacturer fiat = new Manufacturer("Fiat", "Italy");
         Manufacturer bmw = new Manufacturer("BMW", "Germany");
@@ -28,6 +28,7 @@ public class Main {
         manufacturerService.create(bmw);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+
         Driver drHornet = new Driver("Dc Johnson", "11111");
         Driver mrFillmore = new Driver("Mr Fillmore", "12321");
         Driver seniorGuido = new Driver("Senior Guido", "77777");
@@ -44,45 +45,44 @@ public class Main {
         hornetDrivers.add(drHornet);
         hornetDrivers.add(mrFillmore);
 
-        Car fabulousHudsonHornet = new Car("HudsonHornet", hudsonMotor, hornetDrivers);
-        carService.create(fabulousHudsonHornet);
-
         List<Driver> volkswagenBusDrivers = new ArrayList<>();
         volkswagenBusDrivers.add(mrFillmore);
-
-        Car volkswagenBus = new Car("Volkswagen Bus", volkswagen, volkswagenBusDrivers);
-        carService.create(volkswagenBus);
 
         List<Driver> fiatAndBmwDrivers = new ArrayList<>();
         fiatAndBmwDrivers.add(seniorGuido);
         fiatAndBmwDrivers.add(seniorLuigi);
 
-        Car fiat500 = new Car("Fiat 500", fiat, fiatAndBmwDrivers);
-        carService.create(fiat500);
+        Car fabulousHudsonHornet = new Car("Hudson", hudsonMotor);
+        fabulousHudsonHornet.setDrivers(hornetDrivers);
+        Car volkswagenBus = new Car("Volkswagen Bus", volkswagen);
+        volkswagenBus.setDrivers(volkswagenBusDrivers);
+        Car fiat500 = new Car("Fiat 500", fiat);
+        fiat500.setDrivers(fiatAndBmwDrivers);
+        Car isettaMesser = new Car("Isetta Messer", bmw);
+        isettaMesser.setDrivers(fiatAndBmwDrivers);
 
-        Car isettaMesser = new Car("Isetta Messer", bmw, fiatAndBmwDrivers);
+        carService.create(fabulousHudsonHornet);
+        carService.create(volkswagenBus);
+        carService.create(fiat500);
         carService.create(isettaMesser);
 
         carService.getAll().forEach(System.out::println);
         System.out.println("...Original list of cars...");
 
-        carService.delete(isettaMesser.getId());
-        System.out.println();
-
-        carService.getAll().forEach(System.out::println);
-        System.out.println("...Secondary list of cars...");
+        System.out.println(carService.delete(isettaMesser.getId()));
+        System.out.println("...Isetta Messer is deleted...");
 
         carService.addDriverToCar(mrFillmore, fiat500);
         carService.removeDriverFromCar(mrFillmore, fabulousHudsonHornet);
+        System.out.println(carService.getAllByDriver(mrFillmore.getId()));
         System.out.println("...Car owners has changed...");
 
-        hudsonMotor.setCountry("USA");
-        fabulousHudsonHornet.setManufacturer(hudsonMotor);
+        fabulousHudsonHornet.setModel("Hudson Hornet");
         carService.update(fabulousHudsonHornet);
-        carService.get(fabulousHudsonHornet.getId());
-        System.out.println("...Fabulous Hadson Hornet manufacturer's country has changed...");
+        System.out.println(carService.get(fabulousHudsonHornet.getId()));
+        System.out.println("...Fabulous Hadson Hornet's model has changed...");
 
-        carService.getAllByDriver(mrFillmore.getId());
+        System.out.println(carService.getAllByDriver(mrFillmore.getId()));
         System.out.println("...Mr Fillmore's cars list...");
     }
 }
