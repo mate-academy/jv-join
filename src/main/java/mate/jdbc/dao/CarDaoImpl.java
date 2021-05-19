@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get car from DB with id " + id, e);
         }
         if (car != null) {
-            car.setDriverList(getDriverFromCar(car.getId()));
+            car.setDriverList(getDriverByCarId(car.getId()));
         }
         return Optional.ofNullable(car);
     }
@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
         for (Car car : cars) {
-            car.setDriverList(getDriverFromCar(car.getId()));
+            car.setDriverList(getDriverByCarId(car.getId()));
         }
         return cars;
     }
@@ -132,7 +132,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get driver with id " + driverId, e);
         }
         for (Car car : cars) {
-            car.setDriverList(getDriverFromCar(car.getId()));
+            car.setDriverList(getDriverByCarId(car.getId()));
         }
         return cars;
     }
@@ -171,7 +171,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriverFromCar(Long carId) {
+    private List<Driver> getDriverByCarId(Long carId) {
         String query = "SELECT d.id, d.name, d.license_number "
                 + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN drivers d ON cd.driver_id = d.id "
@@ -183,12 +183,7 @@ public class CarDaoImpl implements CarDao {
             getDriversByCarStatement.setLong(1, carId);
             ResultSet resultSet = getDriversByCarStatement.executeQuery();
             while (resultSet.next()) {
-                Long id = resultSet.getObject("id", Long.class);
-                String name = resultSet.getString("name");
-                String licenseNumber = resultSet.getString("license_number");
-                Driver driver = new Driver(name, licenseNumber);
-                driver.setId(id);
-                drivers.add(driver);
+                drivers.add(getDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException throwable) {
