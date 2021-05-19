@@ -57,7 +57,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get book by id " + id, throwable);
         }
-        car.setDrivers(getDriversList(car.getId()));
+        if (car.getId() != null) {
+            car.setDrivers(getDriversList(car.getId()));
+        }
         return Optional.of(car);
     }
 
