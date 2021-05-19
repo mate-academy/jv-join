@@ -77,7 +77,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars", e);
         }
-        cars.stream().forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
@@ -99,7 +99,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id: " + driverId, e);
         }
-        cars.stream().forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
@@ -119,7 +119,7 @@ public class CarDaoImpl implements CarDao {
         List<Driver> drivers = car.getDrivers();
         if (drivers != null) {
             for (Driver driver : drivers) {
-                createNewRelations(car, driver);
+                createNewRelations(car);
             }
         }
         return car;
@@ -194,13 +194,15 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void createNewRelations(Car car, Driver driver) {
+    private void createNewRelations(Car car) {
         String request = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createRelationsStatement = connection.prepareStatement(request)) {
             createRelationsStatement.setLong(1, car.getId());
-            createRelationsStatement.setLong(2, driver.getId());
-            createRelationsStatement.executeUpdate();
+            for (Driver driver : car.getDrivers()) {
+                createRelationsStatement.setLong(2, driver.getId());
+                createRelationsStatement.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create relations between "
                     + "driver and car: " + car, e);
