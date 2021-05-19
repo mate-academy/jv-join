@@ -118,21 +118,46 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT id AS cars_id, model AS cars_model, manufacturer_id FROM cars c"
-                + " JOIN cars_drivers cd ON c.id = cd.cars_id"
+        String query = "SELECT c.id AS car_id, model AS cars_model, "
+                + "manufacturer_id, name AS manufacturer_name, "
+                + "country AS manufacturer_country "
+                + "FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + " JOIN cars_drivers cd ON c.id = cd.cars_id "
                 + " WHERE cd.drivers_id = ? AND c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            List<Car> cars = new ArrayList<>();
             preparedStatement.setLong(1, driverId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(get(resultSet.getObject("cars_id", Long.class)).get());
+                cars.add(getCar(resultSet));
             }
-            return cars;
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't get cars by drivers id " + driverId,
                     throwables);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversFromCurrentCar(car.getId()));
+        }
+        return cars;
+    }
+
+    private Car getCar(ResultSet resultSet) {
+        try {
+            Long carsId = resultSet.getObject("car_id", Long.class);
+            String model = resultSet.getString("cars_model");
+            Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+            String manufacturerCountry
+                    = resultSet.getString("manufacturer_country");
+            String manufacturerName = resultSet.getString("manufacturer_name");
+            Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
+            manufacturer.setId(manufacturerId);
+            Car car = new Car(manufacturer, model);
+            car.setId(carsId);
+            return car;
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Can't get car by input data", throwables);
         }
     }
 

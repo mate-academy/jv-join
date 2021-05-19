@@ -63,5 +63,7 @@ public class Main {
         System.out.println(carService.getAllByDriver(10L));
         System.out.println(carService.getAll());
         System.out.println(carService.getAll());
+        System.out.println("______________");
+        System.out.println(carService.getAllByDriver(10L));
     }
 }
