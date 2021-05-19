@@ -95,10 +95,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't update car from DB", throwables);
         }
-        if (executeUpdate > 0) {
-            removeDriversRelations(car);
-            insertDrivers(car);
-        }
+        removeDriversRelations(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -118,10 +116,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT c.id as car_id, model, m.id as manufacturer_id, "
-                + "name, country FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "JOIN cars_drivers cd ON c.id = cd.car_id "
-                + "WHERE cd.driver_id = ? AND c.deleted = FALSE;";
+        String getAllByDriverRequest = "SELECT car_id, driver_id, model, manufacturers.name, "
+                + "country, manufacturer_id "
+                + "FROM cars_drivers "
+                + "JOIN cars ON cars_drivers.car_id = cars.id "
+                + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
+                + "JOIN drivers ON drivers.id = cars_drivers.driver_id "
+                + "WHERE cars_drivers.driver_id = ? AND cars.deleted = FALSE "
+                + "AND drivers.deleted = FALSE;";
         List<Car> carList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement =
@@ -140,10 +142,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void addDriversForCar(List<Car> carList) {
-        if (carList != null && carList.size() > 0) {
-            for (Car car : carList) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+        for (Car car : carList) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
     }
 
