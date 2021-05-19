@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't create car. " + car.getModel()
+            throw new DataProcessingException("Can't create car. " + car
                     + " ", e);
         }
         addDriverRelationForCar(car);
@@ -103,7 +103,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
-                    + car.getModel() + " in cars DB. ", e);
+                    + car + " in cars DB. ", e);
         }
         removeDriversRelations(car);
         List<Driver> drivers = car.getDrivers();
@@ -132,7 +132,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverQuery = "SELECT c.model as car_model, c.id as car_id, "
                 + "m.name as manufacturer_name, m.country as manufacturer_country, "
-                + "m.id as manufacturer_id  from cars_drivers cd "
+                + "m.id as manufacturer_id  FROM cars_drivers cd "
                 + "LEFT JOIN cars c ON cd.car_id = c.id "
                 + "LEFT JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
