@@ -87,14 +87,13 @@ public class CarDaoImpl implements CarDao {
             updateStatement.setString(1, car.getModel());
             updateStatement.setObject(2, car.getManufacturer().getId());
             updateStatement.setObject(3, car.getId());
-            if (updateStatement.executeUpdate() > 0) {
-                deleteDrivers(car);
-                insertDrivers(car);
-            }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't update car " + car
                 + "in the cars table.", throwable);
         }
+
+        deleteDrivers(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -131,9 +130,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars by driver with id "
             + driverId + ".",throwable);
         }
-        if (!cars.isEmpty()) {
-            cars.forEach(car -> car.setDrivers(getDriversListForCar(car.getId())));
-        }
+
+        cars.forEach(car -> car.setDrivers(getDriversListForCar(car.getId())));
         return cars;
     }
 
