@@ -49,12 +49,14 @@ public class Main {
         carService.create(boomer);
 
         List<Driver> secondDriversTeam = new ArrayList<>();
-        firstDriversTeam.add(driverService.get(fedor.getId()));
-        firstDriversTeam.add(driverService.get(babak.getId()));
-        firstDriversTeam.add(driverService.get(bond.getId()));
+        secondDriversTeam.add(driverService.get(fedor.getId()));
+        secondDriversTeam.add(driverService.get(babak.getId()));
+        secondDriversTeam.add(driverService.get(bond.getId()));
         Car american = new Car("Ford focus",ford, secondDriversTeam);
-        carService.create(boomer);
+        carService.create(american);
 
+        carService.addDriverToCar(bond, boomer);
+        carService.removeDriverFromCar(vinDiesel, boomer);
         System.out.println(carService.get(boomer.getId()));
     }
 }
