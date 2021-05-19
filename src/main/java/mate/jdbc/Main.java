@@ -35,7 +35,6 @@ public class Main {
         Manufacturer manufacturerMercedes = new Manufacturer("Mercedes","Germany");
         manufacturerService.create(manufacturerAudi);
         manufacturerService.create(manufacturerMercedes);
-        manufacturerService.delete(4L);
 
         List<Driver> mercedesDrivers = new ArrayList<>();
         mercedesDrivers.add(driverJohn);
