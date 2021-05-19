@@ -13,8 +13,6 @@ import mate.jdbc.service.ManufacturerService;
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
-    private static final List<Driver> DRIVER_LIST = new ArrayList<>();
-
     public static void main(String[] args) {
         Driver driverOleg = new Driver("Oleg Pavlytskiy", "283475");
         Driver driverTaras = new Driver("Taras Duda", "752403");

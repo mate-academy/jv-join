@@ -40,12 +40,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long carId) {
-        Car car = null;
         String selectCarQuery = "SELECT c.id, c.model, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = "
                 + "FALSE";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement = connection.prepareStatement(selectCarQuery)) {
             getCarStatement.setLong(1, carId);
@@ -53,7 +53,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get car by id " + carId, throwable);
         }
@@ -61,7 +60,6 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getDriverList(car.getId()));
         }
         return Optional.ofNullable(car);
-
     }
 
     @Override
