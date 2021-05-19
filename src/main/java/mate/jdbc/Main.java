@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -52,47 +51,42 @@ public class Main {
         Car gmcCanyon = new Car("Canyon", "123-4567", gmc);
         Car audiA8 = new Car("A8", "978-645", audi);
         Car hondaAccord = new Car("Accord", "456-789", honda);
-
-        List<Driver> gmcCanyonDrivers = new ArrayList<>(List.of(alice));
-        List<Driver> audiA8Drivers = new ArrayList<>(List.of(bob));
-        List<Driver> hondaAccordDrivers = new ArrayList<Driver>(List.of(alice, bob));
+        List<Driver> gmcCanyonDrivers = List.of(alice);
+        List<Driver> audiA8Drivers = List.of(bob);
+        List<Driver> hondaAccordDrivers = List.of(alice, bob);
         gmcCanyon.setDrivers(gmcCanyonDrivers);
         audiA8.setDrivers(audiA8Drivers);
         hondaAccord.setDrivers(hondaAccordDrivers);
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
-        Car storedGmcCanyon = carService.create(gmcCanyon);
-        Car storedAudiA8 = carService.create(audiA8);
-        Car storedHondaAccord = carService.create(hondaAccord);
         System.out.println("===All records after Car`s create-block===");
-        System.out.println(storedGmcCanyon);
-        System.out.println(storedAudiA8);
-        System.out.println(storedHondaAccord);
+        final Car storedAudiA8 = carService.create(audiA8);
+        final Car storedHondaAccord = carService.create(hondaAccord);
+        final Car storedGmcCanyon = carService.create(gmcCanyon);
+        carService.getAll().forEach(System.out::println);
 
-        System.out.println("-- Before modified --");
+        System.out.println("-- Before car modified --");
         System.out.println(storedGmcCanyon);
         storedGmcCanyon.setRegistrationNumber("0000-0000");
-        System.out.println("-- After modified");
+        System.out.println("-- After car modified");
         System.out.println(carService.update(storedGmcCanyon));
 
-        System.out.println("-- Before delete --");
-        //System.out.println(carService.getAll());
-        System.out.println("-- Before delete --");
-        carService.delete(storedGmcCanyon.getId());
-        //System.out.println(carService.getAll());
+        System.out.println("-- Before car delete --");
+        System.out.println(carService.getAll());
+        System.out.println("-- After car delete --");
+        carService.delete(storedAudiA8.getId());
+        System.out.println(carService.getAll());
 
-        System.out.println("-- Add driver to Car --");
+        System.out.println("-- Add Driver to Car --");
         Driver ivan = new Driver("Ivan", "7777-7777");
         Driver storedIvan = driverService.create(ivan);
         carService.addDriverToCar(storedIvan, storedHondaAccord);
         System.out.println(storedHondaAccord);
-
-        System.out.println("-- Remove driver From Car --");
+        System.out.println("-- Remove Driver from Car --");
         carService.removeDriverFromCar(storedIvan, storedHondaAccord);
         System.out.println(storedHondaAccord);
 
         System.out.println("-- Get All Cars by Driver --");
         carService.getAllByDriver(alice.getId()).forEach(System.out::println);
-
     }
 }
