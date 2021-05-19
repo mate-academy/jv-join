@@ -84,8 +84,4 @@ public class Car {
                 + ", drivers=" + drivers
                 + '}';
     }
-
-    public Car get() {
-        return this;
-    }
 }
