@@ -79,10 +79,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of car from cars DB.",
                     throwable);
         }
-        if (!cars.isEmpty()) {
-            for (Car car: cars) {
-                car.setDrivers(getDriversList(car.getId()));
-            }
+
+        for (Car car : cars) {
+            car.setDrivers(getDriversList(car.getId()));
         }
         return cars;
     }
@@ -143,10 +142,8 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
 
-        if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversList(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversList(car.getId()));
         }
         return cars;
     }
