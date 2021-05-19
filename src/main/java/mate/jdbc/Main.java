@@ -27,11 +27,11 @@ public class Main {
         Driver driverOleg = new Driver("Oleg", "12345678");
         driverService.create(driverOleg);
 
-        final CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carMazda = new Car();
         carMazda.setModel("RX 6");
         carMazda.setManufacturer(manufacturerMazdaCorp);
         carMazda.setDrivers(new ArrayList<>(Arrays.asList(driverLisa, driverOleg)));
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(carMazda);
         Car carBmv = new Car();
         carBmv.setModel("Feraro");
