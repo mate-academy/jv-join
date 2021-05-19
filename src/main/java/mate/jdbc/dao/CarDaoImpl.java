@@ -13,6 +13,7 @@ import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.util.ConnectionUtil;
 
@@ -45,8 +46,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getRequest =
-                "SELECT * FROM cars WHERE id = ? and is_deleted = false;";
+        String getRequest = "SELECT * FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? and c.is_deleted = false;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement =
@@ -68,7 +70,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllRequest = "SELECT * FROM cars WHERE is_deleted = false";
+        String getAllRequest = "SELECT * FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id WHERE c.is_deleted = false;";
         List<Car> allCars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 Statement getAllStatement = connection.createStatement()) {
@@ -100,12 +103,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t update car by id: "
                     + car.getId() + " from DB", e);
         }
-        if (updateCount > 0) {
-            deleteDrivers(car);
-            insertDrivers(car);
-            return car;
-        }
-        throw new DataProcessingException("Car with id:" + car.getId() + "wasn`t found in DB");
+        deleteDrivers(car);
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -123,20 +123,26 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Car car =
-                new Car(resultSet.getString("model"),
-                        manufacturerService.get(resultSet
-                                .getObject("manufacturer_id", Long.class)));
-        car.setId(resultSet.getObject("id", Long.class));
+        Long carId = resultSet.getObject("id", Long.class);
+        String carModel = resultSet.getString("model");
+        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+        String manufacturerName = resultSet.getString("name");
+        String manufacturerCountry = resultSet.getString("country");
+        Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
+        manufacturer.setId(manufacturerId);
+        Car car = new Car(carModel, manufacturer);
+        car.setId(carId);
         return car;
     }
 
     public List<Car> getCarsByDriverId(Long driverId) {
         String getCarsRequest =
-                "SELECT c.id AS id, c.model AS model, m.id AS manufacturer_id FROM cars c "
+                "SELECT c.id AS id, c.model AS model, m.id AS manufacturer_id, "
+                + "m.name AS name, m.country AS country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
-                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
+                + "JOIN drivers d ON cd.driver_id = d.id "
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ? AND d.is_deleted = FALSE;";
         List<Car> allCarsByDriver = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarsStatement =
@@ -162,8 +168,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getDriversStatement =
                         connection.prepareStatement(getDriversRequest)) {
             getDriversStatement.setLong(1, carId);
-            ResultSet resultSet =
-                    getDriversStatement.executeQuery();
+            ResultSet resultSet = getDriversStatement.executeQuery();
             while (resultSet.next()) {
                 driverList.add(parseDriver(resultSet));
             }
