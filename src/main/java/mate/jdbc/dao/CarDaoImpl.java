@@ -63,21 +63,25 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String query = "SELECT * FROM cars WHERE is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
+
             while (resultSet.next()) {
                 Long carsId = resultSet.getObject("id", Long.class);
                 Car car = parseCar(resultSet);
                 car.setId(carsId);
-                car.setDrivers(getDriversFromCurrentCar(carsId));
                 cars.add(car);
             }
-            return cars;
+
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't get all cars", throwables);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversFromCurrentCar(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -94,9 +98,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't update current car - " + car,
                     throwables);
         }
-        if (car != null) {
-            deleteDriversRelationsWithCar(car);
-        }
+        deleteDriversRelationsWithCar(car);
         insertDrivers(car);
         return car;
     }
@@ -125,10 +127,7 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, driverId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(get(resultSet.getObject("cars_id", Long.class))
-                             .orElseThrow(() ->
-                         new DataProcessingException("Can't get car from dataBase by driver's id - "
-                             + driverId)));
+                cars.add(get(resultSet.getObject("cars_id", Long.class)).get());
             }
             return cars;
         } catch (SQLException throwables) {

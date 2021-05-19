@@ -42,8 +42,7 @@ public class Main {
 
         List<Driver> audiDrivers = new ArrayList<>();
         audiDrivers.add(driverJohn);
-        driverService.create(driverAlex);
-        driverService.create(driverTom);
+        audiDrivers.add(driverAlex);
 
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverHarry);
@@ -51,20 +50,18 @@ public class Main {
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carAudi = new Car(manufacturerAudi, "A4");
-        carService.create(carAudi);
         carAudi.setDrivers(audiDrivers);
-        System.out.println(carAudi);
+        carService.create(carAudi);
 
         Car mercedes = new Car(manufacturerMercedes, "E-CLASS");
         mercedes.setDrivers(mercedesDrivers);
         System.out.println(carService.create(mercedes));
         carService.addDriverToCar(driverHarry, mercedes);
-        System.out.println(mercedes);
 
         System.out.println(carService.get(1L));
         carService.update(mercedes);
         System.out.println(carService.getAllByDriver(10L));
         System.out.println(carService.getAll());
-        System.out.println(carService.delete(4L));
+        System.out.println(carService.getAll());
     }
 }
