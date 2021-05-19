@@ -48,7 +48,7 @@ public class Main {
         carService.getAll().forEach(System.out::println);
 
         System.out.println("test method getAllCarByDriver()");
-        List<Car> allCarByDriver = carService.getAllCarByDriver(driverBob.getId());
+        List<Car> allCarByDriver = carService.getAllCarByDriver(driverMax.getId());
         allCarByDriver.forEach(System.out::println);
 
         System.out.println("test method delete()");
