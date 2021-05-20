@@ -1,0 +1,36 @@
+CREATE DATABASE `manufactures` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+
+CREATE TABLE `cars` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `model` varchar(255) DEFAULT NULL,
+  `manufacturer_id` bigint DEFAULT NULL,
+  `is_deleted` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_cars_manufacturers_idx` (`manufacturer_id`),
+  CONSTRAINT `fk_cars_manufacturers` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `cars_drivers` (
+  `cars_id` bigint NOT NULL,
+  `drivers_id` bigint NOT NULL,
+  KEY `cars_drivers_cars_fk` (`cars_id`),
+  KEY `cars_drivers_drivers_fk` (`drivers_id`),
+  CONSTRAINT `cars_cars_drivers_fk` FOREIGN KEY (`cars_id`) REFERENCES `cars` (`id`),
+  CONSTRAINT `drivers_cars_drivers_fk` FOREIGN KEY (`drivers_id`) REFERENCES `drivers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `drivers` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) DEFAULT NULL,
+  `license_number` varchar(45) DEFAULT NULL,
+  `is_deleted` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `manufacturers` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `is_deleted` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3;
