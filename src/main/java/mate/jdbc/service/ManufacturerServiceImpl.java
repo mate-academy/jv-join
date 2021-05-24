@@ -21,7 +21,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     public Manufacturer get(Long id) {
         return manufacturerDao.get(id)
                 .orElseThrow(() -> new DataProcessingException("Could not get manufacturer "
-                        + "from DAO."));
+                        + "from DAO by id = " + id));
     }
 
     @Override
