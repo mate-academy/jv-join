@@ -57,6 +57,7 @@ public class Main {
         factory.create(racingCar);
         System.out.println("List of all cars: ");
         factory.getAll().forEach(System.out::println);
+
         System.out.println(SEPARATOR + "Find car by id " + factory.get(racingCar.getId()));
 
         ford.setId(7L);
