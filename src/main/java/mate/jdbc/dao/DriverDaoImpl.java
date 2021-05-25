@@ -15,99 +15,99 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class DriverDaoImpl implements DriverDao {
+
     @Override
     public Driver create(Driver driver) {
-        String query = "INSERT INTO drivers (name, number) VALUES (?, ?)";
+        String insertDriverQuery = "INSERT INTO drivers (name, licenseNumber) "
+                + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement saveDriverStatement = connection.prepareStatement(query,
+                PreparedStatement createStatement
+                        = connection.prepareStatement(insertDriverQuery,
                         Statement.RETURN_GENERATED_KEYS)) {
-            saveDriverStatement.setString(1, driver.getName());
-            saveDriverStatement.setString(2, driver.getLicenseNumber());
-            saveDriverStatement.executeUpdate();
-            ResultSet resultSet = saveDriverStatement.getGeneratedKeys();
+            createStatement.setString(1, driver.getName());
+            createStatement.setString(2, driver.getLicenseNumber());
+            createStatement.executeUpdate();
+            ResultSet resultSet = createStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 driver.setId(resultSet.getObject(1, Long.class));
             }
             return driver;
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't create "
-                    + driver + ". ", throwable);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't create driver. " + driver + " ", e);
         }
     }
 
     @Override
     public Optional<Driver> get(Long id) {
-        String query = "SELECT id, name, license_number "
-                + "FROM drivers "
-                + "WHERE id = ? AND deleted = FALSE";
+        String getDriverQuery = "SELECT * FROM drivers"
+                + " WHERE id = (?) AND deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getDriverStatement = connection.prepareStatement(query)) {
-            getDriverStatement.setLong(1, id);
-            ResultSet resultSet = getDriverStatement.executeQuery();
+                PreparedStatement getStatement = connection.prepareStatement(getDriverQuery)) {
+            getStatement.setLong(1, id);
+            ResultSet resultSet = getStatement.executeQuery();
             Driver driver = null;
             if (resultSet.next()) {
                 driver = getDriver(resultSet);
             }
             return Optional.ofNullable(driver);
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get driver by id " + id, throwable);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get driver by id " + id + " ", e);
         }
     }
 
     @Override
     public List<Driver> getAll() {
-        String query = "SELECT * FROM drivers WHERE deleted = FALSE";
-        List<Driver> drivers = new ArrayList<>();
+        String getAllDriversQuery = "SELECT * FROM drivers WHERE deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getAllDriversStatement = connection.prepareStatement(query)) {
-            ResultSet resultSet = getAllDriversStatement.executeQuery();
+                PreparedStatement getAllStatement =
+                        connection.prepareStatement(getAllDriversQuery)) {
+            List<Driver> drivers = new ArrayList<>();
+            ResultSet resultSet = getAllStatement.executeQuery();
             while (resultSet.next()) {
                 drivers.add(getDriver(resultSet));
             }
             return drivers;
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
-                    throwable);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of drivers.", e);
         }
     }
 
     @Override
     public Driver update(Driver driver) {
-        String query = "UPDATE drivers "
-                + "SET name = ?, license_number = ? "
-                + "WHERE id = ? AND deleted = FALSE";
+        String updateDriverQuery = "UPDATE drivers SET name = ?, licenseNumber = ?"
+                + " WHERE id = ? AND deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement updateDriverStatement
-                        = connection.prepareStatement(query)) {
-            updateDriverStatement.setString(1, driver.getName());
-            updateDriverStatement.setString(2, driver.getLicenseNumber());
-            updateDriverStatement.setLong(3, driver.getId());
-            updateDriverStatement.executeUpdate();
-            return driver;
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't update "
-                    + driver + " in driversDB.", throwable);
+                PreparedStatement updateStatement =
+                        connection.prepareStatement(updateDriverQuery)) {
+            updateStatement.setString(1, driver.getName());
+            updateStatement.setString(2, driver.getLicenseNumber());
+            updateStatement.setLong(3, driver.getId());
+            updateStatement.executeUpdate();
+            if (updateStatement.executeUpdate() > 0) {
+                return driver;
+            }
+            throw new RuntimeException("Can't update. Driver does not exist.");
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update a driver " + driver + " ", e);
         }
     }
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE drivers SET deleted = TRUE WHERE id = ?";
+        String deleteQuery = "UPDATE drivers SET deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteDriverStatement = connection.prepareStatement(query)) {
-            deleteDriverStatement.setLong(1, id);
-            return deleteDriverStatement.executeUpdate() > 0;
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't delete driver with id " + id, throwable);
+                PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
+            deleteStatement.setLong(1, id);
+            return deleteStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete a driver by id " + id + " ", e);
         }
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long newId = resultSet.getObject("driver_id", Long.class);
-        String name = resultSet.getString("driver_name");
-        String licenseNumber = resultSet.getString("driver_license_number");
-        Driver driver = new Driver(name, licenseNumber);
-        driver.setId(newId);
+        Driver driver = new Driver(resultSet.getString("name"),
+                resultSet.getString("licenseNumber"));
+        driver.setId(resultSet.getObject("id", Long.class));
         return driver;
     }
 }
