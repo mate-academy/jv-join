@@ -26,9 +26,12 @@ CREATE TABLE `cars` (
                                 `color` VARCHAR(255)  NOT NULL,
                                 `price` DECIMAL NOT NULL,
                                 `is_deleted` TINYINT NOT NULL DEFAULT 0,
-                                `driver_id` BIGINT NULL,
                                 PRIMARY KEY (`id`),
-                                CONSTRAINT `cars_driver_id_fk` FOREIGN KEY (`driver_id`)
-                                    REFERENCES `library_db`.`drivers` (`id`)
-                                    ON DELETE NO ACTION
-                                    ON UPDATE NO ACTION);
+                                ;
+CREATE TABLE `cars_drivers`(
+                                `car_id` BIGINT NOT NULL,
+                                `driver_id` BIGINT NOT NULL,
+                                constraint `cars_drivers_cars_fk` foreign key(`car_id`)
+                                references `cars`(`id`),
+                                constraint `cars_drivers_drivers_fk` foreign key(`driver_id`)
+                                references `drivers`(`id`));

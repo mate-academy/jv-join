@@ -1,6 +1,7 @@
 package mate.jdbc.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
@@ -8,7 +9,7 @@ public class Car {
     private String model;
     private String color;
     private BigDecimal price;
-    private Driver driver;
+    private List<Driver> drivers;
 
     public Car(String model, String color) {
         this.model = model;
@@ -47,26 +48,30 @@ public class Car {
         this.color = color;
     }
 
-    public Driver getDriver() {
-        return driver;
+    public List<Driver> getDrivers() {
+        return drivers;
     }
 
-    public void setDriver(Driver driver) {
-        this.driver = driver;
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {return true;}
-        if (o == null || getClass() != o.getClass()) {return false;}
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Car car = (Car) o;
         return id == car.id && Objects.equals(model, car.model)
-                && Objects.equals(color, car.color) && Objects.equals(driver, car.driver);
+                && Objects.equals(color, car.color) && Objects.equals(drivers, car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, color, driver);
+        return Objects.hash(id, model, color, drivers);
     }
 
     @Override
@@ -75,7 +80,7 @@ public class Car {
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", color='" + color + '\''
-                + ", driver=" + driver
+                + ", driver=" + drivers
                 + '}';
     }
 }
