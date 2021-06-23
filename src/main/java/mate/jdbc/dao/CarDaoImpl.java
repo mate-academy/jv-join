@@ -41,11 +41,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT \n"
-                + "    id as car_id, model, color, price\n"
-                + "FROM\n"
-                + "    cars \n"
-                + "WHERE\n"
+        String query = "SELECT "
+                + "    id as car_id, model, color, price "
+                + "FROM "
+                + "    cars "
+                + "WHERE "
                 + "    id = ? and is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -66,11 +66,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT \n"
-                + "    id as car_id, model, color, price\n"
-                + "FROM\n"
-                + "    cars \n"
-                + "WHERE\n"
+        String query = "SELECT "
+                + "    id as car_id, model, color, price "
+                + "FROM "
+                + "    cars "
+                + "WHERE "
                 + "    is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -83,21 +83,21 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.",
                     throwable);
         }
-        for (Car car : cars) { // цей фрагмент повторюється
-            car.setDrivers(getDriversByCar(car)); //але сумніваюсь. чи
-        } //виносити його  в окремий метод
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCar(car));
+        }
         return cars;
     }
 
     @Override
     public List<Car> getAllByDriverId(Long driverId) {
-        String query = "SELECT \n"
-                + "    id as car_id, model, color, price\n"
-                + "FROM\n"
-                + "    cars c\n"
-                + "        JOIN\n"
-                + "    cars_drivers cd ON c.id = cd.car_id\n"
-                + "WHERE\n"
+        String query = "SELECT "
+                + "    id as car_id, model, color, price "
+                + "FROM "
+                + "    cars c "
+                + "        JOIN "
+                + "    cars_drivers cd ON c.id = cd.car_id "
+                + "WHERE "
                 + "    driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -136,7 +136,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", throwable);
         }
-        updateDriversCarsRelationsTable(car);
+        updatedCarDrivers(car);
         return car;
     }
 
@@ -166,13 +166,13 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversByCar(Car car) {
-        String query = "SELECT \n"
-                + "    id, name, license_number\n"
-                + "FROM\n"
-                + "    drivers d\n"
-                + "        JOIN\n"
-                + "    cars_drivers cd ON d.id = cd.driver_id\n"
-                + "WHERE\n"
+        String query = "SELECT "
+                + "    id, name, license_number "
+                + "FROM "
+                + "    drivers d "
+                + "        JOIN "
+                + "    cars_drivers cd ON d.id = cd.driver_id "
+                + "WHERE "
                 + "    car_id = ? AND d.is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -200,10 +200,10 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void updateDriversCarsRelationsTable(Car car) {
+    private void updatedCarDrivers(Car car) {
         Long carId = car.getId();
         List<Driver> drivers = car.getDrivers();
-        deleteAllDriversByCarId(carId);
+        deleteCarDrivers(carId);
         if (drivers.size() > 0) {
             String sourceOfQuery = "insert into cars_drivers(car_id,driver_id) values(";
             try (Connection connection = ConnectionUtil.getConnection();
@@ -224,7 +224,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteAllDriversByCarId(Long carId) {
+    private void deleteCarDrivers(Long carId) {
         String query =
                 "DELETE FROM cars_drivers "
                         + "WHERE"
