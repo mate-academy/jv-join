@@ -1,11 +1,13 @@
 package mate.jdbc.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
     private Long id;
-    private Long manufacturerId;
     private String model;
+    private Manufacturer manufacturer;
+    private List<Driver> allDriverForCar;
 
     public Long getId() {
         return id;
@@ -15,20 +17,28 @@ public class Car {
         this.id = id;
     }
 
-    public Long getManufacturerId() {
-        return manufacturerId;
-    }
-
-    public void setManufacturerId(Long manufacturerId) {
-        this.manufacturerId = manufacturerId;
-    }
-
     public String getModel() {
         return model;
     }
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public List<Driver> getAllDriverForCar() {
+        return allDriverForCar;
+    }
+
+    public void setAllDriverForCar(List<Driver> allDriverForCar) {
+        this.allDriverForCar = allDriverForCar;
     }
 
     @Override
@@ -41,21 +51,23 @@ public class Car {
         }
         Car car = (Car) o;
         return Objects.equals(id, car.id)
-                && Objects.equals(manufacturerId, car.manufacturerId)
-                && Objects.equals(model, car.model);
+                && Objects.equals(model, car.model)
+                && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(allDriverForCar, car.allDriverForCar);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, manufacturerId, model);
+        return Objects.hash(id, model, manufacturer, allDriverForCar);
     }
 
     @Override
     public String toString() {
         return "Car{"
                 + "id=" + id
-                + ", manufacturerId=" + manufacturerId
                 + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", allDriverForCar=" + allDriverForCar
                 + '}';
     }
 }
