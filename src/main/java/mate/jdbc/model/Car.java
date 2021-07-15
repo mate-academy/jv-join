@@ -12,9 +12,9 @@ public class Car {
     public Car() {
     }
 
-    public Car(Manufacturer manufacturer, String model) {
-        this.manufacturer = manufacturer;
+    public Car(String model, Manufacturer manufacturer) {
         this.model = model;
+        this.manufacturer = manufacturer;
     }
 
     public Long getId() {
