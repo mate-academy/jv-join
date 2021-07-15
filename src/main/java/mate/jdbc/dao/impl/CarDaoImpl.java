@@ -187,9 +187,9 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertStatement = connection.prepareStatement(query)) {
+            insertStatement.setLong(2, car.getId());
             for (Driver driver : car.getDrivers()) {
                 insertStatement.setLong(1, driver.getId());
-                insertStatement.setLong(2, car.getId());
                 insertStatement.executeUpdate();
             }
         } catch (SQLException e) {
