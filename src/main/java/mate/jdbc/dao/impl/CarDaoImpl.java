@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.lib.exception.DataProcessingException;
@@ -35,12 +36,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create car " + car, throwable);
         }
         updateCarsDrivers(car);
-        car.setDrivers(getDriversForCar(car.getId()));
         return car;
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT c.model, m.id, m.name, m.country, c.id AS car_id "
                 + "FROM cars AS c JOIN manufacturers AS m ON c.manufacture_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE AND m.is_deleted = FALSE;";
@@ -57,10 +57,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get car by id " + id, throwable);
         }
-        if (car != null) {
-            car.setDrivers(getDriversForCar(id));
-        }
-        return car;
+        car.setDrivers(getDriversForCar(id));
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -72,7 +70,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                cars.add(get(resultSet.getObject("id", Long.class)));
+                cars.add(get(resultSet.getObject("id", Long.class)).get());
             }
             return cars;
         } catch (SQLException throwable) {
@@ -135,7 +133,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                cars.add(get(resultSet.getObject("id", Long.class)));
+                cars.add(get(resultSet.getObject("id", Long.class)).get());
             }
             return cars;
         } catch (SQLException throwable) {
@@ -173,23 +171,21 @@ public class CarDaoImpl implements CarDao {
 
     private Car updateCarsDrivers(Car car) {
         List<Driver> drivers = car.getDrivers();
-        if (drivers != null) {
-            String queryUpdateCarsDriver =
-                    "INSERT INTO `taxi`.`cars_drivers` (`driver_id`, `car_id`) VALUES (?, ?);";
-            try (Connection connection = ConnectionUtil.getConnection();
-                     PreparedStatement updateCarsDriversStatement =
-                             connection.prepareStatement(queryUpdateCarsDriver)) {
-                if (drivers.size() > 0) {
-                    updateCarsDriversStatement.setLong(2, car.getId());
-                    for (Driver driver : drivers) {
-                        updateCarsDriversStatement.setLong(1, driver.getId());
-                        updateCarsDriversStatement.executeUpdate();
-                    }
+        String queryUpdateCarsDriver =
+                "INSERT INTO `taxi`.`cars_drivers` (`driver_id`, `car_id`) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement updateCarsDriversStatement =
+                         connection.prepareStatement(queryUpdateCarsDriver)) {
+            if (drivers.size() > 0) {
+                updateCarsDriversStatement.setLong(2, car.getId());
+                for (Driver driver : drivers) {
+                    updateCarsDriversStatement.setLong(1, driver.getId());
+                    updateCarsDriversStatement.executeUpdate();
                 }
-            } catch (SQLException throwable) {
-                throw new DataProcessingException("Couldn't update a car from cars_drivers "
-                        + car, throwable);
             }
+        } catch (SQLException throwable) {
+            throw new DataProcessingException("Couldn't update a car from cars_drivers "
+                    + car, throwable);
         }
         return car;
     }
