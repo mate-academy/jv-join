@@ -10,20 +10,12 @@ import mate.jdbc.model.Driver;
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-   private ManufacturerService manufacturerService;
-    @Inject
-   private DriverService driverService;
-    @Inject
     private CarDao carDao;
 
     @Override
     public Car create(Car car) {
-        manufacturerService.create(car.getManufacturer());
-        for (Driver driver : car.getDrivers()) {
-            driverService.create(driver);
-        }
-        carDao.create(car);
-        return car;
+        return carDao.create(car);
+
     }
 
     @Override
@@ -48,8 +40,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        Driver newDriver = driverService.create(driver);
-        car.getDrivers().add(newDriver);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
