@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -18,8 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private DriverDao driverDao;
 
     @Override
     public Car create(Car car) {
@@ -34,11 +31,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDriversToCar(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't creat car to database: " + car, e);
         }
+        insertDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -46,19 +43,22 @@ public class CarDaoImpl implements CarDao {
         String getCarById = "SELECT c.id as car_id, model, name, m.id as manufacturer_id, country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getCarById)) {
             statement.setLong(1, id);
             statement.executeQuery();
             ResultSet resultSet = statement.getResultSet();
-            Car car = null;
             if (resultSet.next()) {
-                car = getCar(resultSet);
+                car = getCarWithManufacturer(resultSet);
             }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car from database by id: " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -66,17 +66,18 @@ public class CarDaoImpl implements CarDao {
         String getAllCar = "SELECT c.id as car_id, model, name, m.id as manufacturer_id, country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE;";
-        List<Car> carList = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllCar)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carList.add(getCar(resultSet));
+                cars.add(getCarWithManufacturer(resultSet));
             }
-            return carList;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from database.", e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        return cars;
     }
 
     @Override
@@ -90,12 +91,12 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            deleteDriversFromCar(car);
-            insertDriversToCar(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car in database: " + car, e);
         }
+        deleteDriversFromCar(car);
+        insertDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -106,7 +107,6 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(deleteCar)) {
             statement.setLong(1, id);
-            deleteDriversFromCar(get(id).orElseThrow());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car in database by id: " + id, e);
@@ -121,20 +121,21 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars c ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
-        List<Car> carList = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getByDriver)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carList.add(getCar(resultSet));
+                cars.add(getCarWithManufacturer(resultSet));
             }
-            return carList;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from database.", e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        return cars;
     }
 
-    private Car getCar(ResultSet resultSet) throws SQLException {
+    private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("name");
         String manufacturerCountry = resultSet.getString("country");
@@ -142,21 +143,30 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setId(manufacturerId);
         Long carId = resultSet.getObject("car_id", Long.class);
         String carModel = resultSet.getString("model");
-        return new Car(carId, carModel, manufacturer, getDriversForCar(carId));
+        return new Car(carId, carModel, manufacturer);
+    }
+
+    private Driver getDriverFromDatabase(ResultSet resultSet) throws SQLException {
+        Long driverId = resultSet.getObject("id", Long.class);
+        String driverName = resultSet.getString("name");
+        String driverLicense = resultSet.getString("license_number");
+        Driver driver = new Driver(driverName, driverLicense);
+        driver.setId(driverId);
+        return driver;
     }
 
     private List<Driver> getDriversForCar(Long carId) {
         List<Driver> drivers = new ArrayList<>();
-        String getDriverByCarId = "SELECT driver_id "
+        String getDriverByCarId = "SELECT id, name, license_number "
                 + "FROM cars_drivers cd "
-                + "WHERE car_id = ?;";
+                + "JOIN drivers d ON cd.driver_id = d.id "
+                + "WHERE car_id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getDriverByCarId)) {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Long driverId = resultSet.getObject(1, Long.class);
-                drivers.add(driverDao.get(driverId).orElseThrow());
+                drivers.add(getDriverFromDatabase(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -164,13 +174,12 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Car deleteDriversFromCar(Car car) {
+    private boolean deleteDriversFromCar(Car car) {
         String deleteDriver = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(deleteDriver)) {
             statement.setLong(1, car.getId());
-            statement.executeUpdate();
-            return get(car.getId()).orElseThrow();
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't write relation car-driver to database,"
                     + " with car: " + car, e);

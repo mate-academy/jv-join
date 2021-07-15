@@ -27,10 +27,12 @@ public class Main {
         Manufacturer pejo = manufacturerService.create(new Manufacturer("PEUGEOT", "France"));
         Manufacturer geely = manufacturerService.create(new Manufacturer("GEELY", "China"));
 
-        final Car carGeely = carService.create(new Car("Emgrand 7", geely,
-                Arrays.asList(taras, mao, sara)));
-        final Car carPejo = carService.create(new Car("3008", pejo,
-                Arrays.asList(spiderMan, mao, sara)));
+        Car carGeely = new Car("Emgrand 7", geely);
+        carGeely.setDrivers(Arrays.asList(taras, mao, sara));
+        carGeely = carService.create(carGeely);
+        Car carPejo = new Car("3008", pejo);
+        carPejo.setDrivers(Arrays.asList(spiderMan, mao, sara));
+        carPejo = carService.create(carPejo);
 
         System.out.println("________________");
         carService.getAll().forEach(System.out::println);
