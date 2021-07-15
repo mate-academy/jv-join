@@ -98,8 +98,8 @@ public class CarDaoImpl implements CarDao {
     private Car deleteFromCar(Car car) {
         String queryDeleteCarsDriver = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement deleteCarsDriversStatement =
-                     connection.prepareStatement(queryDeleteCarsDriver)) {
+                 PreparedStatement deleteCarsDriversStatement =
+                        connection.prepareStatement(queryDeleteCarsDriver)) {
             deleteCarsDriversStatement.setLong(1, car.getId());
             deleteCarsDriversStatement.executeUpdate();
         } catch (SQLException throwable) {
@@ -163,7 +163,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                Driver driver = parseDriversFromResultSet(resultSet);
                 drivers.add(parseDriversFromResultSet(resultSet));
             }
             return drivers;
