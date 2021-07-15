@@ -14,6 +14,11 @@ public class CarServiceImpl implements CarService {
     private CarDao carDao;
 
     @Override
+    public Car getCarById(Long id) {
+        return carDao.get(id);
+    }
+
+    @Override
     public void addDriverToCar(Driver driver, Car car) {
         List<Driver> drivers = car.getDrivers();
         drivers.add(driver);
@@ -28,5 +33,20 @@ public class CarServiceImpl implements CarService {
             car.setDrivers(drivers);
             carDao.update(car);
         }
+    }
+
+    @Override
+    public List<Car> getAllCars() {
+        return carDao.getAll();
+    }
+
+    @Override
+    public Car createCar(Car car) {
+        return carDao.create(car);
+    }
+
+    @Override
+    public Car updateCar(Car car) {
+        return carDao.update(car);
     }
 }
