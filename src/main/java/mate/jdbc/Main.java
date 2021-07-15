@@ -32,9 +32,11 @@ public class Main {
         Driver driver6 = new Driver("driver6", "license6");
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+        Driver driver = driverService.get(17L);
 
         driverService.create(driver1);
         driverService.create(driver2);
+
         driverService.create(driver3);
         driverService.create(driver4);
         driverService.create(driver5);
@@ -50,6 +52,9 @@ public class Main {
         car3.setDrivers(List.of(driverService.get(17L), driverService.get(18L)));
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
+
+        Car car = carService.get(3L);
+
         carService.create(car1);
         carService.create(car2);
         carService.create(car3);
