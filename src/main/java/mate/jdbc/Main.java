@@ -10,10 +10,11 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
-    private static CarService carService = (CarService) injector.getInstance(CarService.class);
-    private static DriverService driverService = (DriverService) injector
+    private static final CarService carService = (CarService) injector
+            .getInstance(CarService.class);
+    private static final DriverService driverService = (DriverService) injector
             .getInstance(DriverService.class);
-    private static ManufacturerService manufacturerService = (ManufacturerService) injector
+    private static final ManufacturerService manufacturerService = (ManufacturerService) injector
             .getInstance(
                     ManufacturerService.class);
 
@@ -37,5 +38,7 @@ public class Main {
         carService.createCar(car2);
         car2.setModel("modelTest");
         carService.updateCar(car2);
+        System.out.println("-".repeat(50));
+        carService.getAllCars().forEach(System.out::println);
     }
 }
