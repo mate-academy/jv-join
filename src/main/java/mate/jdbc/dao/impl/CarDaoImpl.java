@@ -55,7 +55,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get car by id " + id + " from DB", e);
         }
         if (car != null) {
-            car.setManufacturer(getManufacturerForCar(id));
             car.setDrivers(getDriversForCar(id));
         }
         return Optional.ofNullable(car);
@@ -77,7 +76,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
         for (Car car : cars) {
-            car.setManufacturer(getManufacturerForCar(car.getId()));
             car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
@@ -87,18 +85,21 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ?"
                 + " WHERE id = ? AND is_deleted = FALSE;";
+        boolean changedCar;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement = connection.prepareStatement(query)) {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
-            updateCarStatement.executeUpdate();
+            changedCar = updateCarStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car " + car
                     + " by id " + car.getId(), e);
         }
-        deleteAllCarsDriversRelations(car);
-        insertAllCarsDriversRelations(car);
+        if (changedCar) {
+            deleteAllCarsDriversRelations(car);
+            insertAllCarsDriversRelations(car);
+        }
         return car;
     }
 
@@ -131,7 +132,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars by driver id " + driverId, e);
         }
         for (Car car : cars) {
-            car.setManufacturer(getManufacturerForCar(car.getId()));
             car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
@@ -139,8 +139,7 @@ public class CarDaoImpl implements CarDao {
 
     private Car parseCar(ResultSet resultSet) throws SQLException {
         String model = resultSet.getString("model");
-        Manufacturer manufacturer = getManufacturerForCar(
-                resultSet.getObject("manufacturer_id", Long.class));
+        Manufacturer manufacturer = parseManufacturer(resultSet);
         Car car = new Car(model, manufacturer);
         car.setId(resultSet.getObject("cars.id", Long.class));
         return car;
@@ -164,26 +163,8 @@ public class CarDaoImpl implements CarDao {
         return drivers;
     }
 
-    private Manufacturer getManufacturerForCar(Long id) {
-        String query = "SELECT manufacturers.id, name, country FROM cars "
-                + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.id = ?;";
-        Manufacturer manufacturer = null;
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getManufacturerStatement = connection.prepareStatement(query)) {
-            getManufacturerStatement.setLong(1, id);
-            ResultSet resultSet = getManufacturerStatement.executeQuery();
-            if (resultSet.next()) {
-                manufacturer = parseManufacturer(resultSet);
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't get manufacturer by id " + id + "From DB", e);
-        }
-        return manufacturer;
-    }
-
     private Manufacturer parseManufacturer(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("manufacturers.id", Long.class);
+        Long id = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(name, country);
@@ -198,7 +179,7 @@ public class CarDaoImpl implements CarDao {
             deleteStatement.setLong(1, car.getId());
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete relation from DB", e);
+            throw new DataProcessingException("Can't delete relation from DB by car " + car, e);
         }
     }
 
