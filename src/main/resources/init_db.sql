@@ -18,3 +18,5 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+
+
