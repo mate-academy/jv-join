@@ -30,7 +30,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return driver;
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't create " + driver, throwable);
+            throw new DataProcessingException("Can't create " + driver, throwable);
         }
     }
 
@@ -49,7 +49,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return Optional.ofNullable(driver);
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get driver by id " + id, throwable);
+            throw new DataProcessingException("Can't get driver by id " + id, throwable);
         }
     }
 
@@ -65,7 +65,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return drivers;
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.",
+            throw new DataProcessingException("Can't get a list of drivers from drivers DB.",
                     throwable);
         }
     }

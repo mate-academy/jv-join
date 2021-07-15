@@ -120,7 +120,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't update car: " + car + " in DB.", throwable);
         }
         return deleteDriversFromCar(car) ? insertDrivers(car) : new Car();
-
     }
 
     @Override
@@ -192,8 +191,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement removeDriverFromCarStatement =
                          connection.prepareStatement(query)) {
             removeDriverFromCarStatement.setLong(1, car.getId());
-            removeDriverFromCarStatement.executeUpdate();
-            return true;
+            return removeDriverFromCarStatement.executeUpdate() > 0;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't delete drivers from car: " + car,
                     throwable);
