@@ -11,7 +11,7 @@ public interface CarDao {
 
     List<Car> getAll();
 
-    Car update(Car manufacturer);
+    Car update(Car car);
 
     boolean delete(Long id);
 }

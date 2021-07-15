@@ -9,4 +9,8 @@ public interface CarService {
     Car get(Long id);
 
     List<Car> getAll();
+
+    Car update(Car car);
+
+    boolean delete(Long id);
 }

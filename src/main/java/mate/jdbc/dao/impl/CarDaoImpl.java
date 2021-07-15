@@ -31,11 +31,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        insertDrivers(car);
+        addDriversForCar(car);
         return car;
     }
 
-    private void insertDrivers (Car car) {
+    private void addDriversForCar(Car car) {
         String query = "INSERT INTO cars_driver (driver_id, car_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement addDriverForCarStatement = connection.prepareStatement(query)) {
@@ -146,6 +146,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String deleteRequest =
+                "UPDATE cars SET is_deleted = true WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement deleteCarsStatement =
+                     connection.prepareStatement(deleteRequest)) {
+            deleteCarsStatement.setLong(1, id);
+            return deleteCarsStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete car by id " + id, e);
+        }
     }
 }
