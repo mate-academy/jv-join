@@ -123,12 +123,11 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String selectRequest = "SELECT c.id AS car_id, c.model AS model,"
-                + " m.id AS manufacturer_id, m.name AS name,"
-                + " m.country AS country  FROM taxi.cars c "
-                + "JOIN taxi.cars_drivers cd ON c.id = cd.car_id "
-                + "JOIN taxi.manufacturers m ON c.manufacturer_id = m.id"
-                + "WHERE cd.driver_id = ?;";
+        String selectRequest = "SELECT c.id AS car_id, c.model AS model, "
+                + "m.id AS manufacturer_id, m.name AS name, m.country AS country "
+                + "FROM taxi.cars c JOIN taxi.cars_drivers cd ON c.id = cd.car_id "
+                + "JOIN taxi.manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                   PreparedStatement getAllDriversByDriverStatement = connection
                          .prepareStatement(selectRequest)) {
@@ -163,7 +162,7 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDriversForCar(Long carId) {
         String selectRequest = "SELECT id, name, license_number "
                 + "FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ?;";
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                   PreparedStatement getAllDriversStatement = connection
                           .prepareStatement(selectRequest)) {
