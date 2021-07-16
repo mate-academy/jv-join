@@ -1,7 +1,6 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -43,12 +42,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        for (Driver driverForCar : car.getDrivers()) {
-            if (Objects.equals(driver, driverForCar)) {
-                throw new DataProcessingException("Can't add new " + driver + " to " + car + "! "
-                        + "Driver is already driving this car!");
-            }
-        }
         List<Driver> drivers = car.getDrivers();
         drivers.add(driver);
         carDao.update(car);
@@ -56,7 +49,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        car.getDrivers().removeIf(driverForCar -> Objects.equals(driver, driverForCar));
+        List<Driver> drivers = car.getDrivers();
+        drivers.remove(driver);
         carDao.update(car);
     }
 
