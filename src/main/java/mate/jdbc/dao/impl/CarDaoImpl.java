@@ -33,12 +33,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            deleteFromCarsDrivers(car);
-            insertToCarsDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car " + car, e);
         }
+        insertToCarsDrivers(car);
+        return car;
     }
 
     @Override
