@@ -19,33 +19,6 @@ public class Car {
         this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Car)) {
-            return false;
-        }
-        Car car = (Car) o;
-        return id.equals(car.id) && model.equals(car.model)
-                && manufacturer.equals(car.manufacturer)
-                && drivers.equals(car.drivers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model, manufacturer, drivers);
-    }
-
-    @Override
-    public String toString() {
-        return "Car{" + "id=" + id
-                + ", model='" + model + '\''
-                + ", manufacturer=" + manufacturer
-                + ", drivers=" + drivers + '}';
-    }
-
     public Long getId() {
         return id;
     }
@@ -76,5 +49,32 @@ public class Car {
 
     public void setDrivers(List<Driver> drivers) {
         this.drivers = drivers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Car)) {
+            return false;
+        }
+        Car car = (Car) o;
+        return id.equals(car.id) && model.equals(car.model)
+                && manufacturer.equals(car.manufacturer)
+                && drivers.equals(car.drivers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, model, manufacturer, drivers);
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" + "id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers + '}';
     }
 }
