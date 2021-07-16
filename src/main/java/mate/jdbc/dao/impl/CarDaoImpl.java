@@ -59,9 +59,8 @@ public class CarDaoImpl implements CarDao {
         }
         if (car != null) {
             car.setDrivers(getAllDriversByCar(car));
-            return Optional.of(car);
         }
-        return Optional.empty();
+        return Optional.ofNullable(car);
     }
 
     @Override
