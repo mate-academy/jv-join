@@ -111,7 +111,7 @@ public class CarDaoImpl implements CarDao {
                         connection.prepareStatement(deleteByIdRequest)) {
             deleteByIdStatement.setLong(1, id);
             int updatedRows = deleteByIdStatement.executeUpdate();
-            return updatedRows >= 0;
+            return updatedRows > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Cant delete data with id " + id, e);
         }
@@ -166,16 +166,12 @@ public class CarDaoImpl implements CarDao {
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
-        Manufacturer manufacturer = new Manufacturer();
+        Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
         manufacturer.setId(manufacturerId);
-        manufacturer.setName(manufacturerName);
-        manufacturer.setCountry(manufacturerCountry);
         Long carId = resultSet.getObject("car_id", Long.class);
         String carName = resultSet.getString("car_name");
-        Car car = new Car();
+        Car car = new Car(carName, manufacturer);
         car.setId(carId);
-        car.setName(carName);
-        car.setManufacturer(manufacturer);
         return car;
     }
 
