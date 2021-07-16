@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't create car " + car, throwable);
         }
-        updateCarsDrivers(car);
+        insertCarsDrivers(car);
         return car;
     }
 
@@ -101,7 +101,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update a car " + car, throwable);
         }
-        return updateCarsDrivers(car);
+        return insertCarsDrivers(car);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Car updateCarsDrivers(Car car) {
+    private Car insertCarsDrivers(Car car) {
         List<Driver> drivers = car.getDrivers();
         String query = "INSERT INTO cars_drivers (`driver_id`, `car_id`) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
