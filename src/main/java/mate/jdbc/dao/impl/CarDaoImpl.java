@@ -100,7 +100,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update a car " + car, throwable);
         }
-        return deleteFromCar(car);
+        deleteFromCar(car);
+        return insertCarsDrivers(car);
     }
 
     @Override
@@ -216,6 +217,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't delete a car from cars_drivers "
                     + car, throwable);
         }
-        return insertCarsDrivers(car);
+        return car;
     }
 }
