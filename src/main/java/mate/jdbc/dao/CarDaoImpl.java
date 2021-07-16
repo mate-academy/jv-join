@@ -43,9 +43,9 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         Car car = null;
         String getCarRequest =
-                "SELECT id, model, manufacturer_id, drivers.country, drivers.name "
+                "SELECT id, model, manufacturer_id, manufacturers.country,  manufacturer.name "
                 + "FROM cars "
-                + "JOIN manufacturers ON cars.manufacturer_id = manufacturer_id "
+                + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement = connection
