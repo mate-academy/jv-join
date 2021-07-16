@@ -40,26 +40,31 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.model, m.id, m.name, m.country, c.id AS car_id "
-                + "FROM cars AS c JOIN manufacturers AS m ON c.manufacture_id = m.id "
-                + "WHERE c.id = ? AND c.is_deleted = FALSE AND m.is_deleted = FALSE;";
-        Car car = null;
+        String query = "SELECT c.id AS car_id, model, d.id AS driver_id, m.id, "
+                + " d.name AS driver_name, m.name, m.country, d.license_number "
+                + "FROM cars AS c JOIN cars_drivers AS cd ON cd.car_id = c.id "
+                + "JOIN drivers AS d ON cd.driver_id = d.id "
+                + "JOIN manufacturers AS m ON c.manufacture_id = m.id "
+                + "WHERE c.id = ? AND  c.is_deleted = FALSE AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getCarStatement =
-                        connection.prepareStatement(query)) {
+                 PreparedStatement getCarStatement =
+                         connection.prepareStatement(query)) {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
+            Car car = null;
+            List<Driver> drivers = new ArrayList<>();
             if (resultSet.next()) {
-                car = parseCarFromResultSet(resultSet);
-                car.setManufacturer(parseManufactureFromResultSet(resultSet));
+                car = parseManufactureWithCarFromResultSet(resultSet);
+                drivers.add(parseDriversFromResultSet(resultSet));
+                while (resultSet.next()) {
+                    drivers.add(parseDriversFromResultSet(resultSet));
+                }
+                car.setDrivers(drivers);
             }
+            return Optional.ofNullable(car);
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get car by id " + id, throwable);
         }
-        if (car != null) {
-            car.setDrivers(getDriversForCar(id));
-        }
-        return Optional.ofNullable(car);
     }
 
     @Override
@@ -139,7 +144,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long id) {
-        String query = "SELECT d.id, d.name, d.license_number "
+        String query = "SELECT d.id AS driver_id, d.name AS driver_name, d.license_number "
                 + "FROM cars AS c "
                 + "JOIN cars_drivers AS cd "
                 + "ON cd.car_id = c.id "
@@ -184,21 +189,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
-        car.setId(resultSet.getObject("car_id", Long.class));
-        car.setModel(resultSet.getString("model"));
-        return car;
-    }
-
-    private Manufacturer parseManufactureFromResultSet(ResultSet resultSet) throws SQLException {
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
-        return manufacturer;
-    }
-
     private Car parseManufactureWithCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
@@ -213,8 +203,8 @@ public class CarDaoImpl implements CarDao {
 
     private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
-        driver.setId(resultSet.getObject("id", Long.class));
-        driver.setName(resultSet.getString("name"));
+        driver.setId(resultSet.getObject("driver_id", Long.class));
+        driver.setName(resultSet.getString("driver_name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
