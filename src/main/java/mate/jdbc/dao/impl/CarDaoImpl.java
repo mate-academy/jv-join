@@ -55,10 +55,9 @@ public class CarDaoImpl implements CarDao {
             List<Driver> drivers = new ArrayList<>();
             if (resultSet.next()) {
                 car = parseManufactureWithCarFromResultSet(resultSet);
-                drivers.add(parseDriversFromResultSet(resultSet));
-                while (resultSet.next()) {
+                do {
                     drivers.add(parseDriversFromResultSet(resultSet));
-                }
+                } while (resultSet.next());
                 car.setDrivers(drivers);
             }
             return Optional.ofNullable(car);
