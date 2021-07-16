@@ -30,12 +30,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't create "
                     + car, throwable);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -44,21 +44,21 @@ public class CarDaoImpl implements CarDao {
                 + " m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.id = ? AND c.is_deleted = FALSE;";
+        Car car = new Car();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarsStatement = connection.prepareStatement(query)) {
             getCarsStatement.setLong(1, id);
             ResultSet resultSet = getCarsStatement.executeQuery();
-            Car car = new Car();
             if (resultSet.next()) {
                 car = getCarWithManufacturer(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getDriversForCar(id));
-            }
-            return Optional.ofNullable(car);
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get car by id " + id, throwable);
         }
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
