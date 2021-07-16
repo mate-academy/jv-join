@@ -21,13 +21,13 @@ public class Main {
         final CarService carService =
                 (CarService) injector.getInstance(CarService.class);
 
-        Driver dan = new Driver("Dan", "112233123456789");
+        Driver dan = new Driver("Dan", "1122331234567890");
         dan = driverService.create(dan);
-        Driver ben = new Driver("Ben", "223344123456789");
+        Driver ben = new Driver("Ben", "2233441234567890");
         ben = driverService.create(ben);
-        Driver sean = new Driver("Sean", "334455123456789");
+        Driver sean = new Driver("Sean", "3344551234567890");
         sean = driverService.create(sean);
-        Driver ron = new Driver("Ron", "445566123456789");
+        Driver ron = new Driver("Ron", "4455661234567890");
         ron = driverService.create(ron);
 
         Manufacturer vw = new Manufacturer("VW", "Germany");
