@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import mate.jdbc.lib.Dao;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
@@ -37,7 +39,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT cars.id, cars.model, man.name, man.country, manufacturer_id, man.id "
                 + "FROM cars JOIN manufacturers man ON cars.manufacturer_id = man.id "
                 + "WHERE cars.id = ? AND cars.is_deleted = false;";
@@ -55,7 +57,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getInfoAboutDrivers(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -181,17 +183,21 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                Driver driver = new Driver();
-                driver.setId(resultSet.getObject("id", Long.class));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
-                drivers.add(driver);
+                drivers.add(parseDriver(resultSet));
             }
             return drivers;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get info about drivers in car with id "
                     + id + ". ", throwable);
         }
+    }
+
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
+        return driver;
     }
 
     private void deleteDrivers(Long id) {
