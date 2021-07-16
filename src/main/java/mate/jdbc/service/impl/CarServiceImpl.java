@@ -46,16 +46,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        List<Driver> addDriver;
-        if (car.getDrivers() == null) {
-            addDriver = new ArrayList<>();
-        } else {
-            addDriver = new ArrayList<>(car.getDrivers());
-        }
+        List<Driver> addDriver = car.getDrivers();
         if (!addDriver.contains(driver)) {
             addDriver.add(driver);
             car.setDrivers(addDriver);
-            update(car);
+            carDao.update(car);
         }
     }
 
@@ -65,7 +60,7 @@ public class CarServiceImpl implements CarService {
         if (removeDriver.contains(driver)) {
             removeDriver.remove(driver);
             car.setDrivers(removeDriver);
-            update(car);
+            carDao.update(car);
         }
     }
 }
