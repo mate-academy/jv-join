@@ -98,12 +98,12 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            deleteDriversByCar(car);
-            addDriversToCar(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car by id - " + car.getId(), e);
         }
+        deleteDriversByCar(car);
+        addDriversToCar(car);
+        return car;
     }
 
     @Override
