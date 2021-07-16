@@ -1,6 +1,28 @@
 CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8;
 USE `taxi`;
 
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `name` varchar(255) DEFAULT NULL,
+                        `manufacturer_id` bigint DEFAULT NULL,
+                        `is_deleted` tinyint NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `cars_manufacturer_id_fk` (`manufacturer_id`),
+                        CONSTRAINT `cars_manufacturer_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `name` varchar(255) DEFAULT NULL,
+                        `manufacturer_id` bigint DEFAULT NULL,
+                        `is_deleted` tinyint NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `cars_manufacturer_id_fk` (`manufacturer_id`),
+                        CONSTRAINT `cars_manufacturer_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
                                         `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
