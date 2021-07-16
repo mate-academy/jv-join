@@ -119,7 +119,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT cars.id, model, manufacturer_id, name, country FROM cars"
                 + " JOIN manufacturers ON cars.manufacturer_id = manufacturers.id"
                 + " JOIN cars_drivers ON cars.id = cars_drivers.car_id"
-                + " WHERE cars_drivers.driver_id = ?;";
+                + " WHERE cars_drivers.driver_id = ? AND is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement = connection.prepareStatement(query)) {
