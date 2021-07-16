@@ -11,7 +11,7 @@ import mate.jdbc.model.Driver;
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-    private static CarDao carDao;
+    private CarDao carDao;
 
     @Override
     public Car create(Car car) {
