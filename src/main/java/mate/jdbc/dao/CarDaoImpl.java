@@ -116,8 +116,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection
                         .prepareStatement(deleteQuery)) {
             statement.setLong(1, id);
-            int numberOfDeletedRows = statement.executeUpdate();
-            return numberOfDeletedRows > 0;
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car by id = " + id, e);
         }
