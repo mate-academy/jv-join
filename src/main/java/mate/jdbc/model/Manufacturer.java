@@ -10,6 +10,11 @@ public class Manufacturer {
     public Manufacturer() {
     }
 
+    public Manufacturer(Long id, String name, String country) {
+        this(name, country);
+        this.id = id;
+    }
+
     public Manufacturer(String name, String country) {
         this.name = name;
         this.country = country;
