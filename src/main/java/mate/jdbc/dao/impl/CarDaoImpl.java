@@ -32,7 +32,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
+            throw new DataProcessingException("Can't create "
                     + car + ". ", e);
         }
         addDriversForCar(car);
@@ -156,7 +156,7 @@ public class CarDaoImpl implements CarDao {
                 addDriverForCarStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert driver for car " + car, e);
+            throw new DataProcessingException("Can't add driver for car " + car, e);
         }
     }
 
