@@ -57,10 +57,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long id) {
-        Driver driver = driverDao.get(id).get();
-        return carDao.getAll()
-                .stream()
-                .filter(car -> car.getDrivers().contains(driver))
-                .collect(Collectors.toList());
+        return carDao.getAllCarsByDriver(id);
     }
 }

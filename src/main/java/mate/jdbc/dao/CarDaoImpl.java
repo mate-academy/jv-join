@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import mate.jdbc.lib.Dao;
 import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Car;
@@ -91,22 +93,19 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        int numberOfChanges = 0;
         try (Connection connection = ConnectionUtil.getConnection();
                         PreparedStatement statement =
                         connection.prepareStatement(updateCarQuery)) {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
-            numberOfChanges = statement.executeUpdate();
+            statement.executeUpdate();
+            deleteDriversByCar(car);
+            addDriversToCar(car);
+            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car by id - " + car.getId(), e);
         }
-        if (numberOfChanges != 0) {
-            deleteDriversByCar(car);
-            addDriversToCar(car);
-        }
-        return car;
     }
 
     @Override
@@ -152,7 +151,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private List<Car> getCarsByDriver(Long id) {
+    public List<Car> getAllCarsByDriver(Long id) {
         List<Car> cars = new ArrayList<>();
         String getAllCarsByDriverQuery =
                 "SELECT joined_table.car_id, joined_table.model, manufacturer_id, "
