@@ -19,8 +19,8 @@ public class DriverDaoImpl implements DriverDao {
     public Driver create(Driver driver) {
         String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement saveDriverStatement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement saveDriverStatement =
+                        connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             saveDriverStatement.setString(1, driver.getName());
             saveDriverStatement.setString(2, driver.getLicenseNumber());
             saveDriverStatement.executeUpdate();
