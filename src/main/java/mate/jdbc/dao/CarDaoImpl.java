@@ -66,7 +66,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllCarsQuery = "SELECT cars.id AS car_id, model, name, manufacturers.id "
+        String getAllCarsQuery = "SELECT cars.id AS id, model, name, manufacturers.id "
                 + "AS manufacturer_id, country "
                 + "FROM cars JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
@@ -124,8 +124,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverQuery =
-                "SELECT cars.id, model, manufacturer_id, manufacturer.name, country "
-                + "FROM cars_drivers JOIN cars ON cars.id = cars_drivers.car_id "
+                "SELECT cars.id AS id, model, manufacturer_id, manufacturer.name, country "
+                + "FROM cars_drivers JOIN cars ON id = cars_drivers.car_id "
                 + "JOIN manufacturers ON cars.manufacturer_id "
                 + "WHERE cars.is_deleted = FALSE AND cars_drivers.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
@@ -167,7 +167,7 @@ public class CarDaoImpl implements CarDao {
         String manufacturerCountry = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
         manufacturer.setId(manufacturerId);
-        Long carId = resultSet.getObject("car_id", Long.class);
+        Long carId = resultSet.getObject("id", Long.class);
         String carModel = resultSet.getString("model");
         Car car = new Car(carModel, manufacturer);
         car.setId(carId);
