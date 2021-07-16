@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
         for (Car car : cars) {
-                car.setDrivers(getInfoAboutDrivers(car.getId()));
+            car.setDrivers(getInfoAboutDrivers(car.getId()));
         }
         return cars;
     }
