@@ -36,4 +36,9 @@ public class CarServiceImpl implements CarService {
     public boolean delete(Long id) {
         return carDao.delete(id);
     }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        return carDao.getAllByDriver(driverId);
+    }
 }
