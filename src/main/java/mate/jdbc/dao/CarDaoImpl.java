@@ -39,9 +39,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectQuery = "SELECT c.id AS car_id, model, m.id AS manufacturer_id,"
-                + " m.name, m.country FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id WHERE c.id =? AND c.is_deleted = FALSE;";
+        String selectQuery = "SELECT * FROM cars c JOIN manufacturers m"
+                + " ON c.manufacturer_id = m.id WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarPreparedStatement = connection
@@ -63,9 +62,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         List<Car> cars = new ArrayList<>();
-        String getAllQuery = "SELECT c.id AS car_id, model, name, m.id AS manufacturer_id,"
-                + " m.name, m.country FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE;";
+        String getAllQuery = "SELECT * FROM cars c JOIN manufacturers m"
+                + " ON c.manufacturer_id = m.id WHERE c.is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsPreparedStatement = connection
                          .prepareStatement(getAllQuery)) {
@@ -115,10 +113,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long id) {
         List<Car> cars = new ArrayList<>();
-        String byDriverQuery = "SELECT c.id AS car_id, c.model AS model, "
-                + "m.id AS manufacturer_id, m.name AS name, m.country AS country "
-                + "FROM cars c JOIN taxi.cars_drivers cd ON c.id = cd.car_id "
-                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+        String byDriverQuery = "SELECT * FROM cars c JOIN taxi.cars_drivers cd"
+                + " ON c.id = cd.car_idJOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement byDriverQueryPreparedStatement = connection
