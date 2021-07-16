@@ -49,7 +49,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getCarsStatement.executeQuery();
             Car car = new Car();
             if (resultSet.next()) {
-                car = getCar(resultSet);
+                car = getCarWithManufacturer(resultSet);
             }
             return Optional.ofNullable(car);
         } catch (SQLException throwable) {
@@ -69,7 +69,7 @@ public class CarDaoImpl implements CarDao {
                          .prepareStatement(selectAllRequest)) {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
+                Car car = getCarWithManufacturer(resultSet);
                 cars.add(car);
             }
         } catch (SQLException e) {
@@ -119,7 +119,7 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         String selectRequest = "SELECT c.id AS car_id, c.model AS model, "
                 + "m.id AS manufacturer_id, m.name AS name, m.country AS country "
-                + "FROM cars c JOIN taxi.cars_drivers cd ON c.id = cd.car_id "
+                + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -128,7 +128,7 @@ public class CarDaoImpl implements CarDao {
             getAllDriversByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllDriversByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
+                Car car = getCarWithManufacturer(resultSet);
                 cars.add(car);
             }
         } catch (SQLException e) {
@@ -141,7 +141,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car getCar(ResultSet resultSet) throws SQLException {
+    private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
