@@ -26,6 +26,16 @@ public class Main {
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(car);
         System.out.println(carService.get(car.getId()));
+        Car car2 = new Car();
+        car2.setModel("Polo");
+        car2.setId(1L);
+        car2.setManufacturer(manufacturerService.get(2L));
+        List<Driver> drivers2 = new ArrayList<>();
+        drivers2.add(driverService.get(3L));
+        drivers2.add(driverService.get(4L));
+        car2.setDrivers(drivers2);
+        carService.update(car2);
+        System.out.println(carService.get(car.getId()));
         carService.getAllByDriver(1L).forEach(System.out::println);
         carService.addDriverToCar(driverService.get(1L), car);
         carService.removeDriverFromCar(driverService.get(1L), car);
