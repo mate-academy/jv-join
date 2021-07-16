@@ -20,6 +20,7 @@ public class Main {
         car.setDrivers(List.of(driverService.get(1L),driverService.get(2L)));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(car);
+        System.out.println(carService.get(car.getId()));
         carService.getAllByDriver(1L).forEach(System.out::println);
         carService.addDriverToCar(driverService.get(1L), car);
         carService.removeDriverFromCar(driverService.get(1L), car);
