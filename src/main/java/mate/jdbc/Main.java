@@ -77,5 +77,18 @@ public class Main {
         System.out.println("Volvo drivers: ");
         carVolvo.getDrivers().forEach(System.out::println);
         System.out.println();
+
+        System.out.println("Get all cars: ");
+        carService.getAll().forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("Get by id: ");
+        carService.get(tesla.getId());
+        System.out.println();
+
+        System.out.println("Added driver Bob to Audi: ");
+        carService.addDriverToCar(bob, carAudi);
+        carService.update(carAudi);
+        System.out.println(carService.get(carAudi.getId()));
     }
 }
