@@ -175,10 +175,10 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement updateCarsDriversStatement =
                         connection.prepareStatement(query)) {
             updateCarsDriversStatement.setLong(2, car.getId());
-                for (Driver driver : drivers) {
-                    updateCarsDriversStatement.setLong(1, driver.getId());
-                    updateCarsDriversStatement.executeUpdate();
-                }
+            for (Driver driver : drivers) {
+                updateCarsDriversStatement.setLong(1, driver.getId());
+                updateCarsDriversStatement.executeUpdate();
+            }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update a car from cars_drivers "
                     + car, throwable);
