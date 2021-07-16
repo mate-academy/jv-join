@@ -166,11 +166,10 @@ public class CarDaoImpl implements CarDao {
 
     private Car updateCarsDrivers(Car car) {
         List<Driver> drivers = car.getDrivers();
-        String queryUpdateCarsDriver =
-                "INSERT INTO cars_drivers (`driver_id`, `car_id`) VALUES (?, ?);";
+        String query = "INSERT INTO cars_drivers (`driver_id`, `car_id`) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateCarsDriversStatement =
-                        connection.prepareStatement(queryUpdateCarsDriver)) {
+                        connection.prepareStatement(query)) {
             if (drivers.size() > 0) {
                 updateCarsDriversStatement.setLong(2, car.getId());
                 for (Driver driver : drivers) {
