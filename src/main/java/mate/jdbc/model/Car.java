@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Car {
-    private long id;
+    private Long id;
     private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
@@ -14,11 +14,11 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -55,7 +55,7 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return id == car.id && Objects.equals(model, car.model)
+        return id.equals(car.id) && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
                 && Objects.equals(drivers, car.drivers);
     }

@@ -32,7 +32,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Can't create a driver "
+            throw new DataProcessingException("Can't create a car "
                     + car, throwable);
         }
         addDriverToCar(car);
@@ -41,7 +41,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getCarByIdQuery = "SELECT car_id, model, name, manufacturer_id, country "
+        String getCarByIdQuery = "SELECT id, model, name, manufacturer_id, country "
                 + "FROM cars "
                 + "JOIN manufacturers ON cars.manufacturer_id = manufacturer_id "
                 + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
@@ -114,8 +114,8 @@ public class CarDaoImpl implements CarDao {
                    PreparedStatement deleteCarByIdStatement =
                            connection.prepareStatement(deleteCarByIdQuery)) {
             deleteCarByIdStatement.setLong(1, id);
-            deleteCarByIdStatement.executeUpdate();
-            return deleteCarByIdStatement.executeUpdate() > 0;
+            int updatedRows = deleteCarByIdStatement.executeUpdate();
+            return updatedRows > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete a car from DB by id: " + id, e);
         }
@@ -124,7 +124,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverQuery =
-                "SELECT cars.id, model, manufacturer.id, manufacturer.name, country "
+                "SELECT cars.id, model, manufacturer_id, manufacturer.name, country "
                 + "FROM cars_drivers JOIN cars ON cars.id = cars_drivers.car_id "
                 + "JOIN manufacturers ON cars.manufacturer_id "
                 + "WHERE cars.is_deleted = FALSE AND cars_drivers.driver_id = ?;";
@@ -190,7 +190,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get drivers by id: " + carId, e);
+            throw new DataProcessingException("Can't get drivers by car id: " + carId, e);
         }
     }
 
