@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public class Manufacturer {
     private Long id;
-    private String name;
+    private String title;
     private String country;
 
     public Manufacturer() {
     }
 
-    public Manufacturer(String name, String country) {
-        this.name = name;
+    public Manufacturer(String title, String country) {
+        this.title = title;
         this.country = country;
     }
 
@@ -23,12 +23,12 @@ public class Manufacturer {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getCountry() {
@@ -49,20 +49,20 @@ public class Manufacturer {
         }
         Manufacturer that = (Manufacturer) o;
         return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
+                && Objects.equals(title, that.title)
                 && Objects.equals(country, that.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, country);
+        return Objects.hash(id, title, country);
     }
 
     @Override
     public String toString() {
         return "Manufacturer{"
                 + "id=" + id
-                + ", name='" + name + '\''
+                + ", name='" + title + '\''
                 + ", country='" + country + '\''
                 + '}';
     }
