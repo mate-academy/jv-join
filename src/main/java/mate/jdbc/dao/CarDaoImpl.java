@@ -48,7 +48,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getDriverStatement.executeQuery();
             Car car = null;
             if (resultSet.next()) {
-                car.setDrivers(getDriversById(id));
+                car.setDrivers(getDriversById(id, connection));
                 car.setId(id);
                 car.setManufacturer(getManufacturerBySet(resultSet));
                 car.setTitle(resultSet.getString(2));
@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
             Car car = null;
             while (resultSet.next()) {
                 Long id = resultSet.getObject(1, Long.class);
-                car.setDrivers(getDriversById(id));
+                car.setDrivers(getDriversById(id, connection));
                 car.setId(id);
                 car.setManufacturer(getManufacturerBySet(resultSet));
                 car.setTitle(resultSet.getString(2));
@@ -162,7 +162,7 @@ public class CarDaoImpl implements CarDao {
             Car car = new Car();
             while (resultSet.next()) {
                 Long id = resultSet.getObject("id", Long.class);
-                car.setDrivers(getDriversById(id));
+                car.setDrivers(getDriversById(id, connection));
                 car.setId(id);
                 car.setManufacturer(getManufacturerBySet(resultSet));
                 car.setTitle(resultSet.getString(2));
@@ -175,41 +175,31 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Manufacturer getManufacturerBySet(ResultSet resultSet) {
-        Manufacturer manufacturer = null;
-        try {
-            manufacturer = new Manufacturer(
-                    resultSet.getString(6),
-                    resultSet.getString(7)
+    private Manufacturer getManufacturerBySet(ResultSet resultSet) throws SQLException {
+        Manufacturer manufacturer = new Manufacturer(
+                    resultSet.getString("name"),
+                    resultSet.getString("country")
             );
-            manufacturer.setId(resultSet.getObject(5, Long.class));
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Couldn't get driver by set.", throwables);
-        }
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         return manufacturer;
     }
 
-    private List<Driver> getDriversById(Long id) {
+    private List<Driver> getDriversById(Long id, Connection connection) throws SQLException {
         String selectDrivers = "SELECT d.name, d.license_number"
                 + " FROM drivers d JOIN cars_drivers c ON "
                 + "c.driver_id = d.id"
                 + " WHERE cars_id = ? AND is_deleted = false";
         List<Driver> drivers = new ArrayList<>();
-        try (Connection connection = ConnectionUtil.getConnection();
-                    PreparedStatement selectStatement
-                            = connection.prepareStatement(selectDrivers)) {
-            selectStatement.setLong(1, id);
-            ResultSet resultSet = selectStatement.executeQuery();
-            Driver driver;
-            while (resultSet.next()) {
-                driver = new Driver(
-                        resultSet.getString(2),
-                        resultSet.getString(3)
-                );
-                driver.setId(resultSet.getObject(1, Long.class));
-            }
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Couldn't get driver by set.", throwables);
+        PreparedStatement selectStatement = connection.prepareStatement(selectDrivers);
+        selectStatement.setLong(1, id);
+        ResultSet resultSet = selectStatement.executeQuery();
+        Driver driver;
+        while (resultSet.next()) {
+            driver = new Driver(
+                    resultSet.getString(2),
+                    resultSet.getString(3)
+            );
+            driver.setId(resultSet.getObject(1, Long.class));
         }
         return drivers;
     }
