@@ -2,9 +2,9 @@ package mate.jdbc.service;
 
 import java.util.List;
 import mate.jdbc.dao.ManufacturerDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
-import mate.jdbc.lib.exception.DataProcessingException;
 import mate.jdbc.model.Manufacturer;
 
 @Service
