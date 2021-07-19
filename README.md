@@ -22,3 +22,7 @@
 
 __Before submitting solution make sure you checked it first with__ [checklist](https://mate-academy.github.io/jv-program-common-mistakes/java-JDBC/join/Joins_checklist.html)
 
+![diagram](taxi_models_diagram.jpeg)
+
+![diagram](join-db-diagram.png)
+
