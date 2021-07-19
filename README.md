@@ -19,3 +19,5 @@ __Before submitting solution make sure you checked it first with__ [checklist](h
 
 ![diagram](taxi_models_diagram.jpeg)
 
+![diagram](join-db-diagram.png)
+
