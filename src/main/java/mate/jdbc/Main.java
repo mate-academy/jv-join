@@ -13,11 +13,15 @@ public class Main {
             = (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
-        carService.create(new Car(0L,"Sony", new Manufacturer()));
-        Car car = carService.get(0L);
+        carService.create(new Car("Sony", new Manufacturer()));
+        Car car = carService.get(1L);
         System.out.println(car.toString());
+        Manufacturer manufacturer = new Manufacturer("Sony", "Japan");
+        manufacturer.setId(1L);
         car.setManufacturer(new Manufacturer("Sony", "Japan"));
         carService.update(car);
+        Driver driver = new Driver("Unnamed", "243");
+        driver.setId(1L);
         carService.addDriverToCar(new Driver(), car);
         System.out.println(car.toString());
         carService.delete(car.getId());
