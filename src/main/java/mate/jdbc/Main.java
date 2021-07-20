@@ -8,7 +8,6 @@ import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
-//Test of new functionality (CarService, CarDao, Car)
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
     private static final CarService carService
@@ -16,15 +15,15 @@ public class Main {
     private static final ManufacturerService manufService
             = (ManufacturerService) injector.getInstance(ManufacturerService.class);
     private static final DriverService driverService
-            = (DriverService) injector.getInstance(DriverService.class);
+             = (DriverService) injector.getInstance(DriverService.class);
 
     public static void main(String[] args) {
-        carService.create(new Car("Sony", new Manufacturer()));
-        Car car = carService.get(1L);
-        System.out.println(car.toString());
         Manufacturer manufacturer = new Manufacturer("Sony", "Japan");
         manufService.create(manufacturer);
+        carService.create(new Car("Sony", manufacturer));
+        Car car = carService.get(1L);
         car.setManufacturer(manufacturer);
+        System.out.println(car.toString());
         carService.update(car);
         Driver driver = new Driver("Unnamed", "243");
         driverService.create(driver);
