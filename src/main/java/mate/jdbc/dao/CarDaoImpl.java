@@ -39,7 +39,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id, c.title, c.manufacturer_id "
+        String query = "SELECT c.id, c.title, c.manufacturer_id, m.title, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
                 + " WHERE c.id = ? AND c.is_deleted = false";
         Car car = null;
@@ -62,7 +62,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id, c.title, c.manufacturer_id "
+        String query = "SELECT c.id, c.title, c.manufacturer_id, m.title, m.country "
                 + "FROM cars c JOIN manufacturer m ON c.manufacturer_id = m.id"
                 + " WHERE c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
@@ -72,6 +72,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getDriverStatement.executeQuery();
             Car car = null;
             getDriverStatement.close();
+            connection.close();
             while (resultSet.next()) {
                 Long id = resultSet.getObject(1, Long.class);
                 car.setDrivers(getDriversById(id));
