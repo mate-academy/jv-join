@@ -68,25 +68,28 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c JOIN manufacturer m ON c.manufacturer_id = m.id"
                 + " WHERE c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
+        Car car = null;
+        Long id = null;
         try (Connection connection = ConnectionUtil.getConnection()) {
             PreparedStatement getDriverStatement
                     = connection.prepareStatement(query);
             ResultSet resultSet = getDriverStatement.executeQuery();
-            Car car = null;
             getDriverStatement.close();
             resultSet.first();
             while (resultSet.next()) {
-                Long id = resultSet.getObject(1, Long.class);
-                car.setDrivers(getDriversById(id, connection));
+                id = resultSet.getObject(1, Long.class);
                 car.setId(id);
                 car.setManufacturer(getManufacturerFromResultSet(resultSet));
                 car.setTitle(resultSet.getString(2));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get cars.", throwable);
         }
+        if (id != null) {
+            car.setDrivers(getDriversById(id));
+        }
+        return cars;
     }
 
     @Override
@@ -195,6 +198,17 @@ public class CarDaoImpl implements CarDao {
             );
         manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         return manufacturer;
+    }
+
+    private List<Driver> getDriversById(Long id) {
+        List<Driver> drivers = new ArrayList<>();
+        try (Connection connection
+                = ConnectionUtil.getConnection()) {
+            drivers = getDriversById(id, connection);
+        } catch (SQLException throwable) {
+            throw new RuntimeException("Can't get drivers for id: " + id);
+        }
+        return drivers;
     }
 
     private List<Driver> getDriversById(Long id, Connection connection) {

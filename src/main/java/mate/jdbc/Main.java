@@ -20,16 +20,17 @@ public class Main {
     public static void main(String[] args) {
         Manufacturer manufacturer = new Manufacturer("Sony", "Japan");
         manufService.create(manufacturer);
-        carService.create(new Car("Sony", manufacturer));
-        Car car = carService.get(1L);
-        car.setManufacturer(manufacturer);
-        System.out.println(car.toString());
-        carService.update(car);
+        Car car2 = new Car("Sony", manufacturer);
+        carService.create(car2);
+        car2.setManufacturer(manufacturer);
+        System.out.println(car2.toString());
+        carService.update(car2);
         Driver driver = new Driver("Unnamed", "243");
         driverService.create(driver);
-        carService.addDriverToCar(driver, car);
-        System.out.println(car.toString());
-        carService.delete(car.getId());
-        System.out.println(carService.get(car.getId()));
+        carService.addDriverToCar(driver, car2);
+        System.out.println(car2.toString());
+        //carService.delete(car2.getId());
+        System.out.println(carService.get(car2.getId()));
+        Car car = carService.get(2L);
     }
 }
