@@ -74,8 +74,6 @@ public class CarDaoImpl implements CarDao {
             PreparedStatement getDriverStatement
                     = connection.prepareStatement(query);
             ResultSet resultSet = getDriverStatement.executeQuery();
-            getDriverStatement.close();
-            resultSet.first();
             while (resultSet.next()) {
                 id = resultSet.getObject(1, Long.class);
                 car.setId(id);
