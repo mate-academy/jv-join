@@ -29,7 +29,7 @@ public class Main {
         driverService.create(driver);
         carService.addDriverToCar(driver, car2);
         System.out.println(car2.toString());
-        //carService.delete(car2.getId());
+        carService.delete(car2.getId());
         System.out.println(carService.get(car2.getId()));
         Car car = carService.get(2L);
     }
