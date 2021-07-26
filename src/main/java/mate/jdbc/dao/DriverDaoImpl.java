@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
-import mate.jdbc.exception.UniqueRecordWasDeletedException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Driver;
 import mate.jdbc.util.ConnectionUtil;
@@ -18,19 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver create(Driver driver) {
-        try {
-            Optional<Driver> checkedDriver = checkByLicense(driver);
-            if (checkedDriver.isPresent()) {
-                return checkedDriver.get();
-            }
-        } catch (UniqueRecordWasDeletedException e) {
-            restoreDriver(driver);
-            Driver restoredDriver = checkByLicense(driver)
-                    .orElseThrow(() -> new DataProcessingException("Cannot get driver "
-                    + driver + " with ID after restoring"));
-            deletePreviousAssignments(restoredDriver);
-            return restoredDriver;
-        }
         String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement saveDriverStatement = connection.prepareStatement(query,
@@ -123,61 +109,5 @@ public class DriverDaoImpl implements DriverDao {
         Driver driver = new Driver(name, licenseNumber);
         driver.setId(id);
         return driver;
-    }
-
-    private Optional<Driver> checkByLicense(Driver driver) {
-        String query = "SELECT id, name, license_number, is_deleted "
-                + "FROM drivers "
-                + "WHERE license_number = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getDriverStatement = connection.prepareStatement(query)) {
-            getDriverStatement.setString(1, driver.getLicenseNumber());
-            ResultSet resultSet = getDriverStatement.executeQuery();
-            Driver checkedDriver = null;
-            if (resultSet.next()) {
-                checkedDriver = getDriver(resultSet);
-                if (resultSet.getBoolean("is_deleted")
-                        && resultSet.getObject("name").equals(driver.getName())) {
-                    throw new UniqueRecordWasDeletedException("driver with license "
-                            + driver.getLicenseNumber() + " was previously deleted");
-                }
-                if (!resultSet.getObject("name").equals(driver.getName())) {
-                    throw new DataProcessingException("License number " + driver.getLicenseNumber()
-                            + " was previously assigned to other person");
-                }
-            }
-            return Optional.ofNullable(checkedDriver);
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get driver by licence number "
-                    + driver.getLicenseNumber(), throwable);
-        }
-    }
-
-    private void restoreDriver(Driver driver) {
-        String query = "UPDATE drivers "
-                + "SET is_deleted = FALSE "
-                + "WHERE name = ? AND license_number = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement restoreDriverStatement
-                        = connection.prepareStatement(query)) {
-            restoreDriverStatement.setString(1, driver.getName());
-            restoreDriverStatement.setString(2, driver.getLicenseNumber());
-            restoreDriverStatement.executeUpdate();
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't restore "
-                    + driver + " in driversDB.", throwable);
-        }
-    }
-
-    private void deletePreviousAssignments(Driver driver) {
-        String query = "UPDATE cars_drivers SET is_deleted = TRUE WHERE driver_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteConnectionStatement = connection.prepareStatement(query)) {
-            deleteConnectionStatement.setLong(1, driver.getId());
-            deleteConnectionStatement.executeUpdate();
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't delete old connections for driver with id "
-                    + driver.getId(), throwable);
-        }
     }
 }

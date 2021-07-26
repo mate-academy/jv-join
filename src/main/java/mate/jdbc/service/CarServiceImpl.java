@@ -1,8 +1,7 @@
 package mate.jdbc.service;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Inject;
@@ -25,7 +24,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id).orElseThrow(
-                () -> new IllegalArgumentException("Car with id " + id + " not found"));
+                () -> new NoSuchElementException("Car with id " + id + " not found"));
     }
 
     @Override
@@ -57,13 +56,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> fullList = carDao.getAll();
-        Optional<Driver> driver = driverDao.get(driverId);
-        if (driver.isPresent()) {
-            fullList = fullList.stream()
-                    .filter((i) -> i.getDrivers().contains(driver.get()))
-                    .collect(Collectors.toList());
-        }
-        return fullList;
+        return carDao.getAllByDriver(driverId);
     }
 }

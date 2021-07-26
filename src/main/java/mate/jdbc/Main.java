@@ -2,7 +2,7 @@ package mate.jdbc;
 
 import java.util.ArrayList;
 import java.util.List;
-import mate.jdbc.exception.DataProcessingException;
+import java.util.NoSuchElementException;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -53,7 +53,7 @@ public class Main {
         try {
             Car car = carService.get(2L);
             System.out.println(car);
-        } catch (IllegalArgumentException e) {
+        } catch (NoSuchElementException e) {
             System.out.println(e.getMessage() + System.lineSeparator());
         }
         System.out.println(System.lineSeparator());
@@ -76,6 +76,7 @@ public class Main {
 
         System.out.println("Adding driver to car id 1");
         Driver driver4 = new Driver("Lucia", "PP555555");
+        driver4 = driverService.create(driver4);
         carService.addDriverToCar(driver4, car1);
         carService.getAll().forEach(System.out::println);
         System.out.println(System.lineSeparator());
@@ -84,30 +85,5 @@ public class Main {
         carService.removeDriverFromCar(driver2, car1);
         carService.getAll().forEach(System.out::println);
         System.out.println(System.lineSeparator());
-
-        System.out.println("Removing driver with id 1");
-        driverService.delete(1L);
-        carService.getAll().forEach(System.out::println);
-        System.out.println(System.lineSeparator());
-
-        System.out.println("Assuming he is hired again for car id 3");
-        Driver driver5 = new Driver("Peter", "XX777777");
-        carService.addDriverToCar(driver5, car3);
-        carService.getAll().forEach(System.out::println);
-        System.out.println("No error due to same license number, no invalid assignments :)");
-        System.out.println(System.lineSeparator());
-
-        System.out.println("Firing him again");
-        driverService.delete(1L);
-        carService.getAll().forEach(System.out::println);
-        System.out.println(System.lineSeparator());
-
-        System.out.println("Assuming smart Fox comes with his license");
-        Driver driver6 = new Driver("Fox", "XX777777");
-        try {
-            carService.addDriverToCar(driver6, car3);
-        } catch (DataProcessingException e) {
-            System.out.println("Fox wasn't accepted, reason: " + e.getMessage());
-        }
     }
 }

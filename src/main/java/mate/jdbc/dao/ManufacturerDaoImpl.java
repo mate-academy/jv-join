@@ -17,10 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 public class ManufacturerDaoImpl implements ManufacturerDao {
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
-        Optional<Manufacturer> checkedManufacturer = checkExisted(manufacturer);
-        if (checkedManufacturer.isPresent()) {
-            return checkedManufacturer.get();
-        }
         String query = "INSERT INTO manufacturers (name, country) "
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -113,28 +109,5 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
         Manufacturer manufacturer = new Manufacturer(name, country);
         manufacturer.setId(id);
         return manufacturer;
-    }
-
-    private Optional<Manufacturer> checkExisted(Manufacturer manufacturer) {
-        String query = "SELECT *"
-                + "FROM manufacturers "
-                + "WHERE name = ? AND country = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getManufacturerStatement = connection.prepareStatement(query)) {
-            getManufacturerStatement.setString(1, manufacturer.getName());
-            getManufacturerStatement.setString(2, manufacturer.getCountry());
-            ResultSet resultSet = getManufacturerStatement.executeQuery();
-            Manufacturer checkedManufacturer = null;
-            while (resultSet.next()) {
-                if (!resultSet.getBoolean("is_deleted")) {
-                    checkedManufacturer = getManufacturer(resultSet);
-                    return Optional.of(checkedManufacturer);
-                }
-            }
-            return Optional.ofNullable(checkedManufacturer);
-        } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't check if manufacturer "
-                    + manufacturer + "exists", throwable);
-        }
     }
 }

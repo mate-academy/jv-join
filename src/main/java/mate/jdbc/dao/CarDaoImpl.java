@@ -101,10 +101,6 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        if (car.getManufacturer().getId() == null
-                || manufacturerDao.get(car.getManufacturer().getId()).isEmpty()) {
-            car.setManufacturer(manufacturerDao.create(car.getManufacturer()));
-        }
         String query = "UPDATE cars "
                 + "SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
@@ -120,9 +116,6 @@ public class CarDaoImpl implements CarDao {
         }
         deleteOldDriversConnections(car);
         for (Driver driver : car.getDrivers()) {
-            if (driver.getId() == null || driverDao.get(driver.getId()).isEmpty()) {
-                driver.setId(driverDao.create(driver).getId());
-            }
             assignDriver(car, driver);
         }
         return car;
@@ -138,6 +131,33 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't delete car with id " + id, throwable);
         }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> carsList = new ArrayList<>();
+        String query = "SELECT c.id AS id, model, m.id AS man_id, name, country, m.is_deleted "
+                + "FROM cars c "
+                + "INNER JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "RIGHT JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "WHERE c.is_deleted = FALSE and cd.driver_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getCarsStatement = connection.prepareStatement(query)) {
+            getCarsStatement.setLong(1, driverId);
+            ResultSet resultSet = getCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                carsList.add(getCar(resultSet));
+            }
+        } catch (SQLException throwable) {
+            throw new DataProcessingException("Couldn't get cars from DB by driver id "
+                    + driverId, throwable);
+        }
+        for (Car car : carsList) {
+            car.setDrivers(getDriversList(car));
+        }
+        return carsList;
     }
 
     private void deleteOldDriversConnections(Car car) {
