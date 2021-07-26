@@ -142,7 +142,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id "
                 + "RIGHT JOIN cars_drivers cd "
                 + "ON c.id = cd.car_id "
-                + "WHERE c.is_deleted = FALSE and cd.driver_id = ?";
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ? AND cd.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarsStatement = connection.prepareStatement(query)) {
             getCarsStatement.setLong(1, driverId);

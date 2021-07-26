@@ -56,6 +56,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getAllByDriver(driverId);
+        if (driverDao.get(driverId).isPresent()) {
+            return carDao.getAllByDriver(driverId);
+        }
+        throw new NoSuchElementException("Driver with id " + driverId + " doesn't exist");
     }
 }
