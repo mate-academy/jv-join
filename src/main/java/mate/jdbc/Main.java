@@ -26,20 +26,20 @@ public class Main {
 
         DriverDao driverDao = new DriverDaoImpl();
 
-        Driver Anton = new Driver();
-        Anton.setName("Anton");
-        Anton.setLicenseNumber("1919");
-        driverDao.create(Anton);
+        Driver anton = new Driver();
+        anton.setName("anton");
+        anton.setLicenseNumber("1919");
+        driverDao.create(anton);
 
-        Driver Misha = new Driver();
-        Misha.setName("Misha");
-        Misha.setLicenseNumber("2929");
-        driverDao.create(Misha);
+        Driver misha = new Driver();
+        misha.setName("misha");
+        misha.setLicenseNumber("2929");
+        driverDao.create(misha);
 
-        Driver Max = new Driver();
-        Max.setName("Max");
-        Max.setLicenseNumber("3939");
-        driverDao.create(Max);
+        Driver max = new Driver();
+        max.setName("max");
+        max.setLicenseNumber("3939");
+        driverDao.create(max);
 
         List<Driver> bmvDrivers = new ArrayList<>();
         bmvDrivers.add(driverDao.get(1L).get());
