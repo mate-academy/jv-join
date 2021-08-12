@@ -180,7 +180,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't remove driver from car" + car, e);
         }
-
     }
 
     public List<Car> getAllByDriver(Long driverId) {

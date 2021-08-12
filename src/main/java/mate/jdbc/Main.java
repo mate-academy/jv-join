@@ -15,16 +15,31 @@ import mate.jdbc.model.Manufacturer;
 public class Main {
     public static void main(String[] args) {
         ManufacturerDao manufacturerDao = new ManufacturerDaoImpl();
-        Manufacturer bmwManufactured = new Manufacturer();
-        bmwManufactured.setCountry("Germany");
-        bmwManufactured.setName("BMWManufactured");
-        manufacturerDao.create(bmwManufactured);
+        Manufacturer bmwManufacturer = new Manufacturer();
+        bmwManufacturer.setCountry("Germany");
+        bmwManufacturer.setName("BMWManufacturer");
+        manufacturerDao.create(bmwManufacturer);
 
         Car bmw = new Car();
         bmw.setModel("bmw");
-        bmw.setManufacturer(bmwManufactured);
+        bmw.setManufacturer(bmwManufacturer);
 
         DriverDao driverDao = new DriverDaoImpl();
+
+        Driver Anton = new Driver();
+        Anton.setName("Anton");
+        Anton.setLicenseNumber("1919");
+        driverDao.create(Anton);
+
+        Driver Misha = new Driver();
+        Misha.setName("Misha");
+        Misha.setLicenseNumber("2929");
+        driverDao.create(Misha);
+
+        Driver Max = new Driver();
+        Max.setName("Max");
+        Max.setLicenseNumber("3939");
+        driverDao.create(Max);
 
         List<Driver> bmvDrivers = new ArrayList<>();
         bmvDrivers.add(driverDao.get(1L).get());
@@ -32,11 +47,11 @@ public class Main {
         bmvDrivers.add(driverDao.get(3L).get());
         bmw.setDrivers(bmvDrivers);
 
-        CarDao newCar = new CarDaoImpl();
-        newCar.create(bmw);
-        System.out.println("bmw from DB before update:" + newCar.get(bmw.getId()));
+        CarDao carDao = new CarDaoImpl();
+        carDao.create(bmw);
+        System.out.println("bmw from DB before update:" + carDao.get(bmw.getId()));
         bmw.getDrivers().remove(1);
-        newCar.update(bmw);
-        System.out.println("bmw from DB after update:" + newCar.get(bmw.getId()));
+        carDao.update(bmw);
+        System.out.println("bmw from DB after update:" + carDao.get(bmw.getId()));
     }
 }
