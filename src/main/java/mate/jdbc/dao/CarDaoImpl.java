@@ -82,9 +82,7 @@ public class CarDaoImpl implements CarDao {
                     throwable);
         }
 
-        Consumer<Car> getDriversForCarConsumer =
-                car -> car.setDrivers(getDriversForCar(car.getId()));
-        cars.forEach(getDriversForCarConsumer);
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
 
         return cars;
     }
@@ -126,28 +124,28 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT cd.driver_id, cd.car_id "
+        String query = "SELECT cd.driver_id, cd.car_id, c.id, c.model, m.name AS manufacturer, "
+                + "m.id AS manufacturer_id, m.country "
                 + "FROM taxi.cars_drivers cd "
                 + "JOIN taxi.drivers d ON cd.driver_id = d.id "
-                + "WHERE cd.driver_id = ? AND d.is_deleted = FALSE";
+                + "JOIN taxi.cars c ON cd.car_id = c.id "
+                + "JOIN taxi.manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND d.is_deleted = FALSE;";
 
-        List<Long> carsId = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarsIdByDriverStatement = connection.prepareStatement(query)) {
             getCarsIdByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsIdByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                carsId.add(resultSet.getObject("car_id", Long.class));
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get a list of cars id from cars_driverDB"
                     + " by driver id: " + driverId, throwable);
         }
 
-        List<Car> cars = carsId.stream()
-                .map(this::get)
-                .filter(Optional::isPresent)
-                .map(Optional::get).collect(Collectors.toList());
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
 
         return cars;
     }
