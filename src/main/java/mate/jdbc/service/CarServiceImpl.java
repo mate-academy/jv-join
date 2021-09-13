@@ -1,15 +1,12 @@
 package mate.jdbc.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.util.ConnectionUtil;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -23,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id);
+        return carDao.get(id).get();
     }
 
     @Override
@@ -43,33 +40,20 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        String insertDriverRequest = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement insertDriverStatement =
-                        connection.prepareStatement(insertDriverRequest)) {
-            insertDriverStatement.setLong(1, car.getId());
-            insertDriverStatement.setLong(2, driver.getId());
-            insertDriverStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't insert driver to car " + car, e);
+        if (car.getDrivers() != null) {
+            car.getDrivers().add(driver);
+        } else {
+            List<Driver> drivers = new ArrayList<>();
+            drivers.add(driver);
+            car.setDrivers(drivers);
         }
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        String removeDriverFromCarRequest =
-                "DELETE FROM cars_drivers WHERE car_id = ? AND driver_id = ?;";
-
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement removeDriverFromCarStatement =
-                        connection.prepareStatement(removeDriverFromCarRequest)) {
-            removeDriverFromCarStatement.setLong(1, car.getId());
-            removeDriverFromCarStatement.setLong(2, driver.getId());
-            removeDriverFromCarStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't remove driver " + driver + " from car " + car, e);
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
