@@ -4,14 +4,14 @@ import java.util.Objects;
 
 public class Driver {
     private Long id;
-    private String name;
+    private String driverName;
     private String licenseNumber;
 
     public Driver() {
     }
 
-    public Driver(String name, String licenseNumber) {
-        this.name = name;
+    public Driver(String driverName, String licenseNumber) {
+        this.driverName = driverName;
         this.licenseNumber = licenseNumber;
     }
 
@@ -24,11 +24,11 @@ public class Driver {
     }
 
     public String getName() {
-        return name;
+        return driverName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.driverName = name;
     }
 
     public String getLicenseNumber() {
@@ -49,20 +49,20 @@ public class Driver {
         }
         Driver driver = (Driver) o;
         return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
+                && Objects.equals(driverName, driver.driverName)
                 && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, licenseNumber);
+        return Objects.hash(id, driverName, licenseNumber);
     }
 
     @Override
     public String toString() {
         return "Driver{"
                 + "id=" + id
-                + ", name='" + name + '\''
+                + ", name='" + driverName + '\''
                 + ", licenseNumber='" + licenseNumber + '\''
                 + '}';
     }
