@@ -15,7 +15,7 @@ public class ConnectionUtil {
     private static final String USER_VALUE = "root";
     private static final String PASSWORD_VALUE = "1234567890";
     private static final String URL
-            = "jdbc:mysql://localhost:3306/manufacturer_db";
+            = "jdbc:mysql://localhost:3306/taxi";
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     static {
@@ -24,7 +24,6 @@ public class ConnectionUtil {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(CANT_LOAD_JDBC_DRIVER_MESSAGE, e);
         }
-
     }
 
     public static Connection getConnection() {

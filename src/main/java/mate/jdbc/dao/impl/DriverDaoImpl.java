@@ -1,14 +1,17 @@
 package mate.jdbc.dao.impl;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Driver;
 import mate.jdbc.util.ConnectionUtil;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Dao
 public class DriverDaoImpl implements DriverDao {
@@ -18,7 +21,7 @@ public class DriverDaoImpl implements DriverDao {
     private static final String CANT_DELETE_MESSAGE = "Can't delete driver with id = %s from DB.";
     private static final String CANT_GET_MESSAGE = "Can't get driver with id = %s from DB.";
     private static final String NAME = "name";
-    private static final String LICENCE_NUMBER = "licence_number";
+    private static final String LICENSE_NUMBER = "license_number";
     private static final String ID = "id";
 
     @Override
@@ -43,7 +46,7 @@ public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver create(Driver driver) {
         String insertDriverRequest
-                = "INSERT INTO drivers(name, licence_number) values(?,?);";
+                = "INSERT INTO drivers(name, license_number) values(?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement createDriverStatement =
                         connection.prepareStatement(insertDriverRequest,
@@ -115,7 +118,7 @@ public class DriverDaoImpl implements DriverDao {
     private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject(ID, Long.class);
         String name = resultSet.getString(NAME);
-        String licenseNumber = resultSet.getString(LICENCE_NUMBER);
+        String licenseNumber = resultSet.getString(LICENSE_NUMBER);
         return new Driver(id, name, licenseNumber);
     }
 }

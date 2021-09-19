@@ -1,89 +1,103 @@
 package mate.jdbc;
 
+import java.util.List;
 import mate.jdbc.lib.Injector;
+import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final String PACKAGE_NAME = "mate.jdbc";
     private static final Injector injector = Injector.getInstance(PACKAGE_NAME);
+    private static final CarService carService;
+    private static final DriverService driverService;
+    private static final ManufacturerService manufacturerService;
+
+    static {
+        carService = (CarService) injector.getInstance(CarService.class);
+        driverService = (DriverService) injector.getInstance(DriverService.class);
+        manufacturerService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        fillManufacturersTableWithData();
+        fillDriversTableWithData();
+        fillCarsTableWithData();
+    }
 
     public static void main(String[] args) {
-        driverTest();
-        manufacturerTest();
+        outputCarList(carService.getAll());
+
+        Car hyundaiAccent = carService.get(4L);
+        hyundaiAccent.setName("Hyundai Accent Ultra");
+        carService.update(hyundaiAccent);
+        outputCarList(carService.getAll());
+
+        Car bentleyContinental = carService.get(1L);
+        carService.delete(bentleyContinental.getId());
+        outputCarList(carService.getAll());
+
+        Car ferrariCalifornia = carService.get(2L);
+        Driver anton = driverService.get(1L);
+        carService.addDriverToCar(anton, ferrariCalifornia);
+        outputCarList(carService.getAll());
+
+        hyundaiAccent = carService.get(4L);
+        Driver anna = driverService.get(3L);
+        carService.removeDriverFromCar(anna, hyundaiAccent);
+        outputCarList(carService.getAll());
+
+        Driver kiril = driverService.get(4L);
+        List<Car> allKirilCars = carService.getAllByDriver(kiril.getId());
+        outputCarList(allKirilCars);
     }
 
-    private static void driverTest() {
-        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        System.out.println("\t\tTESTS FOR DRIVERS");
-
-        System.out.println("\nTest for create");
-        Driver andrey = driverService.create(new Driver("Andrey", "1234567"));
-        Driver anna = driverService.create(new Driver("Anna", "6666666"));
-        Driver lena = driverService.create(new Driver("Lena", "121212121"));
-        Driver anton = driverService.create(new Driver("Anton", "111"));
-        System.out.println(andrey);
-        System.out.println(anna);
-        System.out.println(lena);
-        System.out.println(anton);
-
-        System.out.println("\nTest for getAll()");
-        System.out.println("DriverList: " + driverService.getAll());
-
-        System.out.println("\nTest for update");
-        System.out.println("Before update: " + anna);
-        anna.setLicenseNumber("666");
-        System.out.println(driverService.update(anna));
-        System.out.println("After update: " + anna);
-
-        System.out.println("\nTest for get");
-        System.out.println(driverService.get(andrey.getId()));
-        System.out.println(driverService.get(lena.getId()));
-
-        System.out.println("\nTest for delete");
-        System.out.println("deleting " + anton);
-        driverService.delete(anton.getId());
-        System.out.println("DriverList: " + driverService.getAll());
+    public static void fillManufacturersTableWithData() {
+        manufacturerService.create(new Manufacturer("Bentley", "England"));
+        manufacturerService.create(new Manufacturer("Hyundai", "South Korea"));
+        manufacturerService.create(new Manufacturer("Mercedes", "Germany"));
+        manufacturerService.create(new Manufacturer("Ferrari", "Italy"));
     }
 
-    private static void manufacturerTest() {
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        System.out.println("\t\tTESTS FOR MANUFACTURERS");
+    private static void fillDriversTableWithData() {
+        driverService.create(new Driver("Anton", "12456789"));
+        driverService.create(new Driver("Lena", "34343432"));
+        driverService.create(new Driver("Anna", "9999999"));
+        driverService.create(new Driver("Kiril", "6666666"));
+        driverService.create(new Driver("Petro", "556565656"));
+        driverService.create(new Driver("Maxim", "2222222222"));
+        driverService.create(new Driver("Katia", "998888888"));
+    }
 
-        System.out.println("\nTest for create");
-        Manufacturer bentley
-                = manufacturerService.create(new Manufacturer("Bentley", "Great Britain"));
-        Manufacturer ferrari
-                = manufacturerService.create(new Manufacturer("Ferrari", "Italy"));
-        Manufacturer mercedes
-                = manufacturerService.create(new Manufacturer("Mercedes", "Germany"));
-        Manufacturer hyundai
-                = manufacturerService.create(new Manufacturer("Hyundai", "South Korea"));
-        System.out.println(bentley);
-        System.out.println(ferrari);
-        System.out.println(mercedes);
-        System.out.println(hyundai);
+    private static void fillCarsTableWithData() {
+        Manufacturer bentley = manufacturerService.get(1L);
+        Manufacturer hyundai = manufacturerService.get(2L);
+        Manufacturer mercedes = manufacturerService.get(3L);
+        Manufacturer ferrari = manufacturerService.get(4L);
+        Driver anton = driverService.get(1L);
+        Driver lena = driverService.get(2L);
+        Driver anna = driverService.get(3L);
+        Driver kiril = driverService.get(4L);
+        Driver petro = driverService.get(5L);
+        Driver maxim = driverService.get(6L);
+        Driver katia = driverService.get(7L);
 
-        System.out.println("\nTest for getAll()");
-        System.out.println("Manufacturer List: " + manufacturerService.getAll());
+        Car bentleyContinental = new Car("BentleyContinental", bentley, List.of(anton, kiril));
+        carService.create(bentleyContinental);
 
-        System.out.println("\nTest for update");
-        System.out.println("Before update: " + hyundai);
-        hyundai.setName("Hyundai Motor Company");
-        System.out.println(manufacturerService.update(hyundai));
-        System.out.println("After update: " + hyundai);
+        Car ferrariCalifornia = new Car("Ferrari California", ferrari, List.of(maxim));
+        carService.create(ferrariCalifornia);
 
-        System.out.println("\nTest for get");
-        System.out.println(manufacturerService.get(ferrari.getId()));
-        System.out.println(manufacturerService.get(bentley.getId()));
+        Car mercedesBenz = new Car("Mercedes-Benz", mercedes, List.of(lena, anna, kiril));
+        carService.create(mercedesBenz);
 
-        System.out.println("\nTest for delete");
-        System.out.println("deleting " + ferrari);
-        manufacturerService.delete(ferrari.getId());
-        System.out.println("Manufacturer List: " + manufacturerService.getAll());
+        Car hyundaiAccent = new Car("Hyundai Accent", hyundai, List.of(petro, katia, anna, kiril));
+        carService.create(hyundaiAccent);
+    }
+
+    private static void outputCarList(List<Car> cars) {
+        cars.forEach(System.out::println);
+        System.out.println("\n\n");
     }
 }
 
