@@ -160,7 +160,7 @@ public class CarDaoImpl implements CarDao {
                 drivers.add(getDriverFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get all cars from database", throwable);
+            throw new DataProcessingException("Can't get drivers for car with id " + id, throwable);
         }
         return drivers;
     }
@@ -184,7 +184,7 @@ public class CarDaoImpl implements CarDao {
                 insertRelationsStatement.executeUpdate();
             }
         } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't insert drivers to car: " + car, throwables);
+            throw new DataProcessingException("Can't insert relations for car: " + car, throwables);
         }
     }
 
