@@ -69,12 +69,13 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getCarStatement = connection.prepareStatement(getAllCarsQuery)) {
             ResultSet resultSet = getCarStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCarFromResultSet(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
-                cars.add(car);
+                cars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get all cars from database", throwable);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -122,12 +123,14 @@ public class CarDaoImpl implements CarDao {
             getCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCarFromResultSet(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
+                cars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get cars by driver id: "
                     + driverId, throwable);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
