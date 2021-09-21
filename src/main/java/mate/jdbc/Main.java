@@ -39,5 +39,7 @@ public class Main {
         carService.delete(car.getId());
         cars = carService.getAll();
         cars.forEach(System.out::println);
+        List<Car> allByDriver = carService.getAllByDriver(alice.getId());
+        System.out.println(allByDriver);
     }
 }
