@@ -115,7 +115,9 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String getCarsByDriverQuery = "SELECT id as car_id, model, manufacturer_id FROM cars c"
+        String getCarsByDriverQuery = "SELECT id as car_id, model, manufacturer_id, "
+                + "m.name, m.country FROM cars c" +
+                " JOIN manufacturers m ON c.manufacturer_id = m.id"
                 + " JOIN cars_drivers cd ON c.id = cd.car_id WHERE cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarsStatement = connection
