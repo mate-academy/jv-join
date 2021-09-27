@@ -26,7 +26,7 @@ public class Main {
         drivers.add(driverService.get(21L));
         drivers.add(driverService.get(23L));
         crossCountry.setDrivers(drivers);
-        carService.create(crossCountry);
+        crossCountry = carService.create(crossCountry);
         System.out.println(carService.getAll());
         Car giulia = carService.get(23L);
         giulia.setModel("Giulia");

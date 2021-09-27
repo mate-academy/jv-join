@@ -84,9 +84,6 @@ public class CarDaoImp implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.",
                     throwable);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversForCar(car.getId()));
-        }
         return cars.stream()
                 .peek(car -> car.setDrivers(getDriversForCar(car.getId())))
                 .collect(Collectors.toList());
