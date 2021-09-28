@@ -6,6 +6,7 @@ public class Driver {
     private Long id;
     private String name;
     private String licenseNumber;
+    private Car cars;
 
     public Driver() {
     }
@@ -13,6 +14,14 @@ public class Driver {
     public Driver(String name, String licenseNumber) {
         this.name = name;
         this.licenseNumber = licenseNumber;
+    }
+
+    public Car getCars() {
+        return cars;
+    }
+
+    public void setCars(Car cars) {
+        this.cars = cars;
     }
 
     public Long getId() {
