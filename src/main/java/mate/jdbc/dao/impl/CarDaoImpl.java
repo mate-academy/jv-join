@@ -80,7 +80,7 @@ public class CarDaoImpl implements CarDao {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
+                car = parseCarFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException(String.format(CANT_GET_CAR_MESSAGE, id), e);
@@ -106,7 +106,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement getAllCarsStatement = connection.prepareStatement(getAllCars)) {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException(CANT_GET_ALL_CARS_MESSAGE, e);
@@ -156,27 +156,30 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllCarsByDriverRequest
-                = "SELECT car_id "
-                + " FROM cars_drivers "
-                + " JOIN drivers ON cars_drivers.driver_id = drivers.id "
-                + " WHERE drivers.id = ? AND drivers.is_deleted = false;";
-        List<Long> ids = new ArrayList<>();
+                = "SELECT"
+                + " cars.id AS 'car_id',"
+                + " cars.name AS 'car_name',"
+                + " manufacturers.id AS 'manufacturer_id',"
+                + " manufacturers.name AS 'manufacturer_name',"
+                + " manufacturers.country AS 'manufacturer_country'"
+                + " FROM cars"
+                + " JOIN manufacturers ON cars.manufacturer_id = manufacturers.id"
+                + " JOIN cars_drivers ON cars.id = cars_drivers.car_id "
+                + " WHERE cars_drivers.driver_id = ? AND cars.is_deleted = false;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsByDriverStatement
                         = connection.prepareStatement(getAllCarsByDriverRequest)) {
             getAllCarsByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllCarsByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                ids.add(resultSet.getObject(CAR_ID, Long.class));
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException(CANT_GET_ALL_CARS_OF_DRIVER_MESSAGE + driverId, e);
         }
-        List<Car> cars = new ArrayList<>();
-        for (Long id : ids) {
-            if (get(id).isPresent()) {
-                cars.add(get(id).get());
-            }
+        for (Car car : cars) {
+            car.setDriverList(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -232,15 +235,11 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject(MANUFACTURER_ID, Long.class));
-        manufacturer.setName(resultSet.getString(MANUFACTURER_NAME));
-        manufacturer.setCountry(resultSet.getString(MANUFACTURER_COUNTRY));
+    private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject(CAR_ID,Long.class));
         car.setName(resultSet.getString(CAR_NAME));
-        car.setManufacturer(manufacturer);
+        car.setManufacturer(parseManufacturerFromResultSet(resultSet));
         return car;
     }
 
@@ -250,5 +249,13 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString(NAME));
         driver.setLicenseNumber(resultSet.getString(LICENSE_NUMBER));
         return driver;
+    }
+
+    private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(resultSet.getObject(MANUFACTURER_ID, Long.class));
+        manufacturer.setName(resultSet.getString(MANUFACTURER_NAME));
+        manufacturer.setCountry(resultSet.getString(MANUFACTURER_COUNTRY));
+        return manufacturer;
     }
 }
