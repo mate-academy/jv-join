@@ -18,27 +18,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static final String CANT_GET_ALL_CARS_MESSAGE = "Can't get all cars from DB.";
-    private static final String CANT_CREATE_CAR_MESSAGE = "Can't insert car %s to DB.";
-    private static final String CANT_UPDATE_CAR_MESSAGE = "Can't update car %s in DB.";
-    private static final String CANT_DELETE_CAR_MESSAGE = "Can't delete car with id = %s from DB.";
-    private static final String CANT_GET_CAR_MESSAGE = "Can't get car with id = %s from DB.";
-    private static final String CANT_INSERT_DRIVERS_TO_CAR_MESSAGE = "Can't insert drivers to car ";
-    private static final String CANT_GET_DRIVERS_TO_CAR_MESSAGE
-            = "Can't get driver for car by car id = ";
-    private static final String CANT_DELETE_DRIVERS_FROM_CAR_MESSAGE
-            = "Can't delete drivers from car ";
-    private static final String CANT_GET_ALL_CARS_OF_DRIVER_MESSAGE
-            = "Can't get all cars with driverId = ";
-    private static final String NAME = "name";
-    private static final String LICENSE_NUMBER = "license_number";
-    private static final String ID = "id";
-    private static final String CAR_ID = "car_id";
-    private static final String CAR_NAME = "car_name";
-    private static final String MANUFACTURER_ID = "manufacturer_id";
-    private static final String MANUFACTURER_NAME = "manufacturer_name";
-    private static final String MANUFACTURER_COUNTRY = "manufacturer_country";
-
     @Override
     public Car create(Car car) {
         String createCarRequest
@@ -56,7 +35,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_CREATE_CAR_MESSAGE, car), e);
+            throw new DataProcessingException("Can't insert car " + car + " to DB.", e);
         }
         insertDriversToCar(car);
         return car;
@@ -83,7 +62,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_GET_CAR_MESSAGE, id), e);
+            throw new DataProcessingException("Can't get car with id = " + id + " from DB.", e);
         }
         if (car != null) {
             car.setDriverList(getDriversForCar(car.getId()));
@@ -109,7 +88,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(CANT_GET_ALL_CARS_MESSAGE, e);
+            throw new DataProcessingException("Can't get all cars from DB.", e);
         }
         for (Car car : cars) {
             car.setDriverList(getDriversForCar(car.getId()));
@@ -132,7 +111,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setObject(3, car.getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_UPDATE_CAR_MESSAGE, car), e);
+            throw new DataProcessingException("Can't update car " + car + " in DB.", e);
         }
         deleteDriversFromCar(car);
         insertDriversToCar(car);
@@ -149,7 +128,7 @@ public class CarDaoImpl implements CarDao {
             deleteCarStatement.setLong(1, id);
             return deleteCarStatement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_DELETE_CAR_MESSAGE, id), e);
+            throw new DataProcessingException("Can't delete car with id = " + id + " from DB.", e);
         }
     }
 
@@ -176,7 +155,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException(CANT_GET_ALL_CARS_OF_DRIVER_MESSAGE + driverId, e);
+            throw new DataProcessingException("Can't get all cars with driverId = " + driverId, e);
         }
         for (Car car : cars) {
             car.setDriverList(getDriversForCar(car.getId()));
@@ -196,7 +175,7 @@ public class CarDaoImpl implements CarDao {
                 addDriversToCarStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(CANT_INSERT_DRIVERS_TO_CAR_MESSAGE + car, e);
+            throw new DataProcessingException("Can't insert drivers to car " + car, e);
         }
     }
 
@@ -208,7 +187,7 @@ public class CarDaoImpl implements CarDao {
             deleteDriversFromCarStatement.setLong(1, car.getId());
             deleteDriversFromCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(CANT_DELETE_DRIVERS_FROM_CAR_MESSAGE + car, e);
+            throw new DataProcessingException("Can't delete drivers from car " + car, e);
         }
     }
 
@@ -231,31 +210,31 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException(CANT_GET_DRIVERS_TO_CAR_MESSAGE + carId, e);
+            throw new DataProcessingException("Can't get driver for car by car id = " + carId, e);
         }
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setId(resultSet.getObject(CAR_ID,Long.class));
-        car.setName(resultSet.getString(CAR_NAME));
+        car.setId(resultSet.getObject("car_id",Long.class));
+        car.setName(resultSet.getString("car_name"));
         car.setManufacturer(parseManufacturerFromResultSet(resultSet));
         return car;
     }
 
     private Driver parseDriverForCarFromResultSet(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
-        driver.setId(resultSet.getObject(ID, Long.class));
-        driver.setName(resultSet.getString(NAME));
-        driver.setLicenseNumber(resultSet.getString(LICENSE_NUMBER));
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
 
     private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject(MANUFACTURER_ID, Long.class));
-        manufacturer.setName(resultSet.getString(MANUFACTURER_NAME));
-        manufacturer.setCountry(resultSet.getString(MANUFACTURER_COUNTRY));
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setName(resultSet.getString("manufacturer_name"));
+        manufacturer.setCountry(resultSet.getString("manufacturer_country"));
         return manufacturer;
     }
 }

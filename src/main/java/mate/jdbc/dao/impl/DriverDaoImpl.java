@@ -9,21 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.dao.DriverDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Driver;
 import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class DriverDaoImpl implements DriverDao {
-    private static final String CANT_GET_ALL_MESSAGE = "Can't get all drivers from DB.";
-    private static final String CANT_CREATE_MESSAGE = "Can't insert driver %s to DB.";
-    private static final String CANT_UPDATE_MESSAGE = "Can't update driver %s in DB.";
-    private static final String CANT_DELETE_MESSAGE = "Can't delete driver with id = %s from DB.";
-    private static final String CANT_GET_MESSAGE = "Can't get driver with id = %s from DB.";
-    private static final String NAME = "name";
-    private static final String LICENSE_NUMBER = "license_number";
-    private static final String ID = "id";
-
     @Override
     public List<Driver> getAll() {
         List<Driver> driverList = new ArrayList<>();
@@ -38,7 +30,7 @@ public class DriverDaoImpl implements DriverDao {
                 driverList.add(getDriver(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(CANT_GET_ALL_MESSAGE, e);
+            throw new DataProcessingException("Can't get all drivers from DB.", e);
         }
         return driverList;
     }
@@ -60,7 +52,7 @@ public class DriverDaoImpl implements DriverDao {
                 driver.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_CREATE_MESSAGE, driver), e);
+            throw new DataProcessingException("Can't insert driver " + driver + " to DB.", e);
         }
         return driver;
     }
@@ -77,7 +69,7 @@ public class DriverDaoImpl implements DriverDao {
             updateDriverStatement.setObject(3, driver.getId());
             updateDriverStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_UPDATE_MESSAGE, driver), e);
+            throw new DataProcessingException("Can't update driver " + driver + " in DB.", e);
         }
         return driver;
     }
@@ -92,7 +84,8 @@ public class DriverDaoImpl implements DriverDao {
             deleteDriverStatement.setLong(1, id);
             return deleteDriverStatement.executeUpdate() >= 1;
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_DELETE_MESSAGE, id), e);
+            throw new DataProcessingException("Can't delete driver with id = "
+                    + id + " from DB.", e);
         }
     }
 
@@ -111,14 +104,14 @@ public class DriverDaoImpl implements DriverDao {
             }
             return Optional.ofNullable(driver);
         } catch (SQLException e) {
-            throw new RuntimeException(String.format(CANT_GET_MESSAGE, id), e);
+            throw new DataProcessingException("Can't get driver with id = " + id + " from DB.", e);
         }
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject(ID, Long.class);
-        String name = resultSet.getString(NAME);
-        String licenseNumber = resultSet.getString(LICENSE_NUMBER);
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("license_number");
         return new Driver(id, name, licenseNumber);
     }
 }
