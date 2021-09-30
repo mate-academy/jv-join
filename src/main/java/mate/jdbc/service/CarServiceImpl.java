@@ -1,7 +1,8 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
@@ -28,7 +29,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAll() {
-        return carDao.getAll();
+        return carDao.getAllByDriver();
     }
 
     @Override
@@ -45,17 +46,20 @@ public class CarServiceImpl implements CarService {
     public void addDriverToCar(Driver driver, Car car) {
         if (car.getDrivers() != null) {
             car.getDrivers().add(driver);
+            update(car);
             return;
         }
-        List<Driver> drivers = new ArrayList<>();
+        Set<Driver> drivers = new HashSet<>();
         drivers.add(driver);
         car.setDrivers(drivers);
+        update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers() != null) {
+        if (car.getDrivers() != null && !car.getDrivers().isEmpty()) {
             car.getDrivers().remove(driver);
+            update(car);
             return;
         }
         throw new RuntimeException("Can't remove driver from '"
@@ -67,17 +71,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = getAll();
-        List<Car> carsByDriver = new ArrayList<>();
-        for (Car car : cars) {
-            long count = car.getDrivers().stream()
-                    .map(Driver::getId)
-                    .filter(id -> id.equals(driverId))
-                    .count();
-            if (count > 0) {
-                carsByDriver.add(car);
-            }
-        }
-        return carsByDriver;
+        return carDao.getAllByDriver(driverId);
     }
 }
