@@ -65,10 +65,11 @@ public class Main {
         carService.getAll().forEach(System.out::println);
         System.out.println("--------------Test add new driver to car----------------");
         carService.getAll().forEach(System.out::println);
-        car.getDrivers().add(driverService.get(7L));
+        carService.addDriverToCar(driverService.get(7L), car);
         carService.getAll().forEach(System.out::println);
         System.out.println("--------------Test remove driver to car----------------");
-        System.out.println(car.getDrivers().remove(driverService.get(7L)));
+        carService.getAll().forEach(System.out::println);
+        carService.removeDriverFromCar(driverService.get(7L), car);
         carService.getAll().forEach(System.out::println);
     }
 }
