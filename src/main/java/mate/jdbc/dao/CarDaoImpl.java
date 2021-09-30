@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -17,14 +16,9 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private DriverDao driverDao;
-    @Inject
-    private ManufacturerDao manufacturerDao;
 
     @Override
     public Car create(Car car) {
-        isAllDataOk(car);
         String createRequest = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement
@@ -59,7 +53,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getStatement.executeQuery();
             if (resultSet.next()) {
                 car = parseCarWithoutDrivers(resultSet);
-
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id: "
@@ -75,13 +68,17 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("model"));
+        car.setManufacturer(parseManufacturer(resultSet));
+        return car;
+    }
+
+    private Manufacturer parseManufacturer(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet
                 .getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
-        car.setManufacturer(manufacturer);
-        return car;
+        return manufacturer;
     }
 
     private List<Driver> getAllDriversByCarId(Long carId) {
@@ -116,7 +113,6 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        List<Driver> drivers = driverDao.getAll();
         List<Car> cars = new ArrayList<>();
         String getAllRequest = "SELECT c.*, m.name, m.country FROM cars c\n"
                 + "JOIN manufacturers m\n"
@@ -141,7 +137,6 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        manufacturerDao.update(car.getManufacturer());
         String updateRequest = "UPDATE cars \n"
                 + "SET manufacturer_id = ?, model = ?\n"
                 + "WHERE id = ? AND is_deleted = FALSE;";
@@ -224,17 +219,6 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getAllDriversByCarId(car.getId()));
         }
         return cars;
-    }
-
-    private void isAllDataOk(Car car) {
-        if (car.getManufacturer() != null && car.getManufacturer().getId() == null) {
-            car.getManufacturer().setId(manufacturerDao.create(car.getManufacturer()).getId());
-        }
-        for (Driver driver : car.getDrivers()) {
-            if (driver != null && driver.getId() == null) {
-                driver.setId(driverDao.create(driver).getId());
-            }
-        }
     }
 
     private void createCarsDriversRecords(Car car) {
