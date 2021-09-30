@@ -9,7 +9,7 @@ public interface CarDao {
 
     Optional<Car> get(Long id);
 
-    List<Car> getAllByDriver();
+    List<Car> getAll();
 
     List<Car> getAllByDriver(Long id);
 

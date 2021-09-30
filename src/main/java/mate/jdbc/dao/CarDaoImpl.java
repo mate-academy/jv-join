@@ -66,7 +66,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllByDriver() {
+    public List<Car> getAll() {
         String query = "SELECT cars.id AS id, "
                 + "manufacturers.`name` AS manufacturer_name, "
                 + "cars.model AS model, "
@@ -92,7 +92,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = getAllByDriver();
+        List<Car> cars = getAll();
         List<Car> carsByDriver = new ArrayList<>();
         for (Car car : cars) {
             long count = car.getDrivers().stream()
@@ -208,12 +208,17 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
+    private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         String manufacturerName = resultSet.getString("manufacturer_name");
         Long manufacturerId = resultSet.getObject("manufacturers_id", Long.class);
         String manufacturerCountry = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
         manufacturer.setId(manufacturerId);
+        return manufacturer;
+    }
+
+    private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
+        Manufacturer manufacturer = parseManufacturerFromResultSet(resultSet);
         Long carId = resultSet.getObject("id", Long.class);
         String carModel = resultSet.getString("model");
         Set<Driver> carDrivers = getAllDriversByCarId(carId);
