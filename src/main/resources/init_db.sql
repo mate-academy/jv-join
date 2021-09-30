@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `jv_jdbc_hw02` DEFAULT CHARACTER SET utf8;
-USE `jv_jdbc_hw02`;
+CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8;
+USE `taxi`;
 
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (

@@ -57,16 +57,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers() != null && !car.getDrivers().isEmpty()) {
-            car.getDrivers().remove(driver);
-            update(car);
-            return;
-        }
-        throw new RuntimeException("Can't remove driver from '"
-                + car.getManufacturer().getName() + " " + car.getModel() + "'!"
-                + System.lineSeparator()
-                + " You have not yet added any drivers to '"
-                + car.getManufacturer().getName() + " " + car.getModel() + "'!");
+        car.getDrivers().remove(driver);
+        update(car);
     }
 
     @Override
