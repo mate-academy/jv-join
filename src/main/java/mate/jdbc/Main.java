@@ -15,19 +15,31 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
+        System.out.println("--------------Test create car----------------");
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName("Lada");
+        manufacturer.setCountry("Ukraine");
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        manufacturerService.create(manufacturer);
+        Driver driverFirst = new Driver();
+        driverFirst.setName("Andriy");
+        driverFirst.setLicenseNumber("OK-6574");
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
-        System.out.println("--------------Test create car----------------");
-        Manufacturer manufacturer = manufacturerService.get(9L);
-        Driver driverFirst = driverService.get(17L);
-        Driver driverSecond = driverService.get(18L);
-        Driver driverThird = driverService.get(15L);
+        driverService.create(driverFirst);
+        Driver driverSecond = new Driver();
+        driverSecond.setName("Bohdan");
+        driverSecond.setLicenseNumber("CK-8134");
+        driverService.create(driverSecond);
+        Driver driverThird = new Driver();
+        driverThird.setName("Lisa");
+        driverThird.setLicenseNumber("BM-1634");
+        driverService.create(driverThird);
         Car car = new Car();
         car.setManufacturer(manufacturer);
-        car.setDrivers(new ArrayList<>(Arrays.asList(driverFirst, driverSecond, driverThird)));
         car.setModel("Nubira");
+        car.setDrivers(new ArrayList<>(Arrays.asList(driverFirst, driverSecond, driverThird)));
         System.out.println(car);
         CarService carService
                 = (CarService) injector.getInstance(CarService.class);
@@ -44,32 +56,42 @@ public class Main {
         carFirst.setManufacturer(
                 manufacturerService.get(
                         manufacturerService.create(manufacturerFirst).getId()));
-        carFirst.setDrivers(new ArrayList<>(Arrays.asList(driverService.get(17L),
-                driverService.get(18L),
-                driverService.get(15L),
-                driverService.get(4L))));
+        Driver driverFourth = new Driver();
+        driverFourth.setName("Petro");
+        driverFourth.setLicenseNumber("VN-7491");
+        driverService.create(driverFourth);
+        carFirst.setDrivers(new ArrayList<>(Arrays.asList(driverFirst, driverSecond,
+                driverThird, driverFourth)));
         System.out.println(carFirst);
         carService.create(carFirst);
         carService.get(carFirst.getId());
         carFirst.setModel("Brinson");
+        Driver driverFifth = new Driver();
+        driverFifth.setName("Mark");
+        driverFifth.setLicenseNumber("MB-8246");
+        driverService.create(driverFifth);
         List<Driver> drivers = carFirst.getDrivers();
-        drivers.add(driverService.get(5L));
+        drivers.add(driverFifth);
         carFirst.setDrivers(drivers);
         carService.update(car);
         System.out.println("--------------Test get all cars----------------");
         carService.getAll().forEach(System.out::println);
         System.out.println("--------------Test get all cars by driver----------------");
-        System.out.println(carService.getAllByDriver(4L));
+        System.out.println(carService.getAllByDriver(driverThird.getId()));
         System.out.println("--------------Test delete car----------------");
         carService.delete(carFirst.getId());
         carService.getAll().forEach(System.out::println);
         System.out.println("--------------Test add new driver to car----------------");
         carService.getAll().forEach(System.out::println);
-        carService.addDriverToCar(driverService.get(7L), car);
+        Driver driverSixth = new Driver();
+        driverSixth.setName("Natalia");
+        driverSixth.setLicenseNumber("YU-8453");
+        driverService.create(driverSixth);
+        carService.addDriverToCar(driverSixth, car);
         carService.getAll().forEach(System.out::println);
         System.out.println("--------------Test remove driver to car----------------");
         carService.getAll().forEach(System.out::println);
-        carService.removeDriverFromCar(driverService.get(7L), car);
+        carService.removeDriverFromCar(driverFourth, car);
         carService.getAll().forEach(System.out::println);
     }
 }
