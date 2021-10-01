@@ -18,3 +18,11 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+
+CREATE TABLE `cars` (
+                                `id` bigint auto_increment primary key,
+                                `model`         varchar(255)         null,
+                                `manufacture_id` bigint               not null,
+                                `is_deleted`     tinyint(1) default 0 not null,
+                                constraint cars_ibfk_1 foreign key (manufacture_id) references manufacturers (id)
+);
