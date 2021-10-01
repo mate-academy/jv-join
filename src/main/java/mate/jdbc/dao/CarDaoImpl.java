@@ -185,9 +185,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Set<Driver> getAllDriversByCarId(Long carId) {
-        String query = "SELECT cars.id AS car_id, "
-                + "drivers.id AS driver_id,  "
-                + "drivers.name AS driver_name,  "
+        String query = "SELECT drivers.id AS driver_id, "
+                + "drivers.name AS driver_name, "
                 + "drivers.license_number AS driver_license "
                 + "FROM cars "
                 + "JOIN cars_drivers "
@@ -201,11 +200,8 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getDriversStatement.executeQuery();
             Set<Driver> drivers = new HashSet<>();
             while (resultSet.next()) {
-                Long driverCarId = resultSet.getObject("car_id", Long.class);
                 Driver driver = parseDriverFromResultSet(resultSet);
-                if (carId.equals(driverCarId)) {
-                    drivers.add(driver);
-                }
+                drivers.add(driver);
             }
             return drivers;
         } catch (SQLException throwable) {
