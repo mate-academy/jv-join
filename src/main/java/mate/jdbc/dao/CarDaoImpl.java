@@ -38,9 +38,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car get(Long id) {
-        String query = "SELECT "
-                + "cars.id, "
-                + "cars.model, "
+        String query = "SELECT cars.id, cars.model, "
                 + "cars.manufacturer_id, "
                 + "manufacturers.name, "
                 + "manufacturers.country "
