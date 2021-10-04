@@ -17,7 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String insertRequest = "INSERT INTO taxi_service_db.cars "
@@ -150,7 +149,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
         }
         for (Car car : cars) {
-            getDriversForCar(car.getId());
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -196,13 +195,17 @@ public class CarDaoImpl implements CarDao {
     private Car parseCarsFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
+        car.setManufacturer(parseManufacturerFromResultSet(resultSet));
+        car.setId(resultSet.getObject("id",Long.class));
+        return car;
+    }
+
+    private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufactures_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
-        car.setManufacturer(manufacturer);
-        car.setId(resultSet.getObject("id",Long.class));
-        return car;
+        return manufacturer;
     }
 
     private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {

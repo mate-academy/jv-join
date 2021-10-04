@@ -25,12 +25,12 @@ public class Main {
                 + receivedCar);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver driver = new Driver();
-        driver.setName("Anduin");
-        driver.setLicenseNumber("12346895");
-        driverService.create(driver);
+        Driver anduin = new Driver();
+        anduin.setName("Anduin");
+        anduin.setLicenseNumber("12346895");
+        driverService.create(anduin);
         List<Driver> drivers = new ArrayList<>();
-        drivers.add(driver);
+        drivers.add(anduin);
 
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setCountry("Germany");
@@ -44,6 +44,20 @@ public class Main {
         Car golf = carService.create(car);
         System.out.println("The result of the method create() from CarServiceImpl Class: "
                 + golf);
+
+        Driver sylvanas = new Driver();
+        sylvanas.setName("Sylvanas");
+        sylvanas.setLicenseNumber("12342295");
+        driverService.create(sylvanas);
+        carService.addDriverToCar(sylvanas, golf);
+        System.out.println("The method addDriverToCar() from CarServiceImpl class was called. "
+                + "The result of the method: ");
+        carService.getAll().stream().forEach(System.out::println);
+
+        carService.removeDriverFromCar(sylvanas, golf);
+        System.out.println("The method removeDriverFromCar from CarServiceImpl class was called. "
+                + "The result of the method: ");
+        carService.getAll().stream().forEach(System.out::println);
 
         golf.setModel("Golf-531");
         Car updatedGolf = carService.update(car);
