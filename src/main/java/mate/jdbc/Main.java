@@ -8,8 +8,8 @@ public class Main {
 
     public static void main(String[] args) {
         CarService carService = (CarService) injector.getInstance(CarService.class);
-       // System.out.println(carService.get(2L));
-       // carService.getAll().forEach(System.out::println);
+        System.out.println(carService.get(2L));
+        carService.getAll().forEach(System.out::println);
         System.out.println();
         carService.getAllByDriver(1L).forEach(System.out::println);
     }
