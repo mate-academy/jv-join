@@ -17,7 +17,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver create(Driver driver) {
-        String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
+        String query = "INSERT INTO taxi_service_db.drivers (name, licenseNumber) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement saveDriverStatement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
