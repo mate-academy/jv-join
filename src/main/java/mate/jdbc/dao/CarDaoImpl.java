@@ -32,8 +32,9 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Cant add car to database " + car, e);
+            throw new DataProcessingException("Can't add car to database " + car, e);
         }
+        insertNewRelations(car);
         return car;
     }
 
