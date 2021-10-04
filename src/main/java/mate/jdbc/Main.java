@@ -27,7 +27,7 @@ public class Main {
         Manufacturer manufacturer = new Manufacturer("Tesla", "USA");
         manufacturer.setId(11L);
         Car car = new Car("Model X", manufacturer);
-        //carService.create(car);
+        carService.create(car);
         car = new Car(2L, "Vectra", manufacturerService.get(11L));
         Driver driver1 = driverSevice.get(1L);
         Driver driver2 = driverSevice.get(2L);
@@ -35,12 +35,13 @@ public class Main {
         drivers.add(driver1);
         drivers.add(driver2);
         car.setDrivers(drivers);
-        //carService.create(car);
-        //carService.update(car);
-        //carService.delete(3L);
+        carService.create(car);
+        carService.update(car);
+        carService.delete(3L);
         carService.getAllByDriver(2L).forEach(System.out::println);
-        //carService.addDriverToCar(new Driver(3L,"Sem", "333"), car);
-        //carService.removeDriverFromCar(new Driver(3L,"Sem", "333"), car);
-        //carService.getAll().forEach(System.out::println);
+        carService.addDriverToCar(new Driver(3L,"Sem", "333"), car);
+        carService.removeDriverFromCar(new Driver(3L,"Sem", "333"), car);
+        carService.getAll().forEach(System.out::println);
+        System.out.println(carService.get(1L));
     }
 }
