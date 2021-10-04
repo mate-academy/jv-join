@@ -20,7 +20,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO `library_db`.`cars` (model, manufacturer_id) VALUES (?, ?);";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
 
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createCarStatement
