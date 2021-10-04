@@ -1,26 +1,25 @@
 CREATE SCHEMA IF NOT EXISTS `taxi_db` DEFAULT CHARACTER SET utf8;
 USE `taxi_db`;
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
-                        `id` bigint NOT NULL AUTO_INCREMENT,
-                        `name` varchar(255) DEFAULT NULL,
-                        `manufacturer_id` bigint DEFAULT NULL,
-                        `is_deleted` tinyint NOT NULL DEFAULT '0',
+                        `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+                        `manufacturer_id` BIGINT(11) NULL,
+                        `model` VARCHAR(255) NULL,
+                        `is_deleted` TINYINT NOT NULL DEFAULT 0,
                         PRIMARY KEY (`id`),
-                        KEY `cars_manufacturer_id_fk` (`manufacturer_id`),
-                        CONSTRAINT `cars_manufacturer_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+                        CONSTRAINT `manufacturers_fk`
+                            FOREIGN KEY (`manufacturer_id`)
+                                REFERENCES `taxi_db`.`manufacturers` (`id`)
+                                ON DELETE NO ACTION
+                                ON UPDATE NO ACTION);
 
-
-CREATE TABLE `cars` (
-                        `id` bigint NOT NULL AUTO_INCREMENT,
-                        `name` varchar(255) DEFAULT NULL,
-                        `manufacturer_id` bigint DEFAULT NULL,
-                        `is_deleted` tinyint NOT NULL DEFAULT '0',
-                        PRIMARY KEY (`id`),
-                        KEY `cars_manufacturer_id_fk` (`manufacturer_id`),
-                        CONSTRAINT `cars_manufacturer_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE `cars_drivers` (
+                                `car_id` BIGINT(11) NOT NULL,
+                                `driver_id` BIGINT(11) NOT NULL,
+                                CONSTRAINT `cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+                                CONSTRAINT `drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`));
 
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
