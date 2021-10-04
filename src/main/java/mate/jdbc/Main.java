@@ -14,7 +14,6 @@ public class Main {
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        carService.removeDriverFromCar(driverService.get(1L), carService.get(6L));
-        System.out.println(carService.get(6L));
+        carService.getAllByDriver(7L).forEach(System.out::println);
     }
 }

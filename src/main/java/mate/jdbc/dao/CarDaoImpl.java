@@ -102,23 +102,16 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllQuery = "SELECT c.id AS car_id,"
-                + " c.model AS car_model, c.manufacturers_id AS manufacturer_id,"
-                + " m.country AS manufacturer_country, m.name As manufacturer_name"
-                + " FROM cars c JOIN manufacturers m ON c.manufacturers_id = m.id "
-                + " WHERE c.is_deleted = false AND m.is_deleted = false";
+        String getAllQuery = "SELECT id FROM cars WHERE is_deleted = false;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllQuery)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(genCarFromResultSet(resultSet));
+                cars.add(get(resultSet.getObject(1, Long.class)).get());
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from db", e);
-        }
-        for (Car car : cars) {
-            car.setDrivers(getDriversListFromResultSet(car.getId()));
         }
         return cars;
     }
@@ -183,25 +176,19 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverQuery = "SELECT c.id AS car_id,"
-                + " c.model AS car_model, c.manufacturers_id AS manufacturer_id,"
-                + " m.country AS manufacturer_country, m.name As manufacturer_name"
-                + " FROM cars c JOIN manufacturers m ON c.manufacturers_id = m.id"
-                + " JOIN cars_drivers cd on c.id = cd.car_id"
-                + " WHERE driver_id = ? AND c.is_deleted = false AND m.is_deleted = false";
+        String getAllByDriverQuery = "SELECT id FROM cars c "
+                + "JOIN cars_drivers cd on c.id = cd.car_id"
+                + " WHERE driver_id = ? AND c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllByDriverQuery)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(genCarFromResultSet(resultSet));
+                cars.add(get(resultSet.getObject(1, Long.class)).get());
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars by driver id " + driverId, e);
-        }
-        for (Car car : cars) {
-            car.setDrivers(getDriversListFromResultSet(car.getId()));
         }
         return cars;
     }
