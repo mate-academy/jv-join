@@ -55,7 +55,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        car.setDrivers(getAllDriverByCar(car.getId()));
+        if (car != null) {
+            car.setDrivers(getAllDriverByCar(car.getId()));
+        }
         return Optional.ofNullable(car);
     }
 
@@ -78,7 +80,6 @@ public class CarDaoImpl implements CarDao {
                     + "from cars table. ", e);
         }
         for (Car car : cars) {
-            List<Driver> allDriverByCar = getAllDriverByCar(car.getId());
             car.setDrivers(getAllDriverByCar(car.getId()));
         }
         return cars;
