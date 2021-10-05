@@ -71,14 +71,14 @@ public class Main {
         cars.add(new Car("Charger", manufacturers.get(1)));
         cars.add(new Car("Challenger", manufacturers.get(1)));
         cars.add(new Car("c3", manufacturers.get(2)));
-        cars.add(new Car("c3", manufacturers.get(2)));
+        cars.add(new Car("c5", manufacturers.get(2)));
     }
 
     private static void createDrivers() {
         drivers = new ArrayList<>();
         drivers.add(new Driver("Joe", "123"));
         drivers.add(new Driver("Misha", "456"));
-        drivers.add(new Driver("Hanz", "789"));
+        drivers.add(new Driver("Hans", "789"));
         drivers.add(new Driver("Gerard", "101"));
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);

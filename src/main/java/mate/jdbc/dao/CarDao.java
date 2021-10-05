@@ -13,7 +13,7 @@ public interface CarDao {
 
     public Car update(Car car);
 
-    public void deleteRelationsForCar(Long carId);
+    public void deleteRelationsForCar(Car car);
 
     public void insertDrivers(Car car);
 
