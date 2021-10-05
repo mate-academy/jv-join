@@ -15,14 +15,21 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturerBMW = new Manufacturer("BMW", "Germany");
         Manufacturer manufacturerFord = new Manufacturer("Ford", "USA");
+        Manufacturer manufacturerPorsche = new Manufacturer("Porsche", "Germany");
         manufacturerService.create(manufacturerFord);
         manufacturerService.create(manufacturerBMW);
-        //System.out.println(manufacturerService.get(manufacturerBMW.getId()));
-        Car carX5 = new Car(manufacturerService.get(manufacturerBMW.getId()), "X5");
-        Car carMustang = new Car(manufacturerService.get(manufacturerFord.getId()), "Mustang");
+        manufacturerService.create(manufacturerPorsche);
+        Car carX5 = new Car(manufacturerBMW, "X5");
+        Car carMustang = new Car(manufacturerFord, "Mustang");
+        Car carCayenne = new Car(manufacturerPorsche, "Cayenne");
         carService.create(carX5);
         carService.create(carMustang);
-        System.out.println(carService.get(carX5.getId()));
+        carService.getAll().forEach(System.out::println);
+        carCayenne.setId(carX5.getId());
+        carService.update(carCayenne);
+        carService.getAll().forEach(System.out::println);
+        System.out.println(carService.get(carCayenne.getId()));
+        carService.delete(carMustang.getId());
         carService.getAll().forEach(System.out::println);
     }
 }

@@ -1,9 +1,12 @@
 package mate.jdbc.model;
 
+import java.util.List;
+
 public class Car {
     Long id;
     Manufacturer manufacturer;
     String model;
+    List<Driver> drivers;
 
     public Car() {}
 
@@ -34,6 +37,14 @@ public class Car {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
