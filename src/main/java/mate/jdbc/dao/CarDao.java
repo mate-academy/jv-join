@@ -11,11 +11,13 @@ public interface CarDao {
 
     List<Car> getAll();
 
-    Car update(Car car);
+    public Car update(Car car);
+
+    public void deleteRelationsForCar(Long carId);
+
+    public void insertDrivers(Car car);
 
     boolean delete(Long id);
 
     List<Car> getAllByDriver(Long driverId);
-
-    void updateCarDrivers(Car car);
 }
