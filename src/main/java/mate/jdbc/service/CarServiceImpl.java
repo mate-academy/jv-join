@@ -50,6 +50,7 @@ public class CarServiceImpl implements CarService {
         } else {
             car.getDrivers().add(driver);
         }
+        carDao.update(car);
     }
 
     @Override

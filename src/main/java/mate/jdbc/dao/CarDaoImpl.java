@@ -111,14 +111,14 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
-            deleteDriversFromCar(car.getId());
-            insertDrivers(car);
             updateCarStatement.executeUpdate();
-            return car;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in CarDB.", throwable);
         }
+        deleteDriversFromCar(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -147,9 +147,7 @@ public class CarDaoImpl implements CarDao {
             List<Car> carList = new ArrayList<>();
             while (resultSet.next()) {
                 Long id = resultSet.getObject("id", Long.class);
-                Car car = get(id).orElseThrow(() ->
-                        new DataProcessingException("Can't get a car: " + id
-                        + " for a driver: " + driverId));
+                Car car = get(id).get();
                 carList.add(car);
             }
             return carList;
@@ -202,10 +200,14 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void deleteDriversFromCar(Long carId) throws SQLException {
+    private void deleteDriversFromCar(Long carId) {
         String deleteQuery = "delete from cars_drivers where car_id = ?";
-        Connection connection = ConnectionUtil.getConnection();
-        PreparedStatement deleteStatment = connection.prepareStatement(deleteQuery);
-        deleteStatment.setLong(1, carId);
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement deleteStatment = connection.prepareStatement(deleteQuery)) {
+            deleteStatment.setLong(1, carId);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete "
+                    + "drivers from a car with id: " + carId, e);
+        }
     }
 }
