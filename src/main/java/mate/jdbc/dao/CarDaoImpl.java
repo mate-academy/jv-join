@@ -108,7 +108,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.executeUpdate();
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update a car "
-                    + car + " ", throwable);
+                    + car + ". ", throwable);
         }
         deleteCarById(car.getId());
         insertDrivers(car);
@@ -165,7 +165,7 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't insert drivers to car "
-                    + car + " ", throwable);
+                    + car + ". ", throwable);
         }
     }
 

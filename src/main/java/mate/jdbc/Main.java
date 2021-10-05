@@ -8,6 +8,7 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
+import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -21,8 +22,10 @@ public class Main {
         Car car = carService.get(2L);
         System.out.println(car);
         System.out.println(System.lineSeparator() + "Add new car:");
-        Manufacturer manufacturer = new Manufacturer("Peugeot", "France");
-        manufacturer.setId(25L);
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Manufacturer manufacturer = manufacturerService
+                .create(new Manufacturer("Peugeot", "France"));
         car = new Car("208", manufacturer);
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
@@ -36,24 +39,21 @@ public class Main {
         System.out.println(System.lineSeparator() + "Delete car with id 4:");
         System.out.println(carService.delete(4L));
         System.out.println(System.lineSeparator() + "Update car with id 3:");
-        manufacturer = new Manufacturer("Lexus", "Japan");
-        manufacturer.setId(5L);
-        Car car2 = new Car("NX", manufacturer);
-        car2.setId(3L);
+        Car car2 = carService.get(3L);
         car2.setDrivers(drivers);
         System.out.println(carService.update(car2));
         System.out.println(System.lineSeparator() + "All cars:");
         cars = carService.getAll();
         cars.forEach(System.out::println);
         Driver driver3 = driverService.create(new Driver("Alisa", "9743"));
-        System.out.println(System.lineSeparator() + "Get all cars by car with id "
-                + driver.getId() + ":");
+        System.out.println(System.lineSeparator() + "Get all cars by driver with id "
+                + driver3.getId() + ":");
         carService.addDriverToCar(driver3, car);
-        carService.addDriverToCar(driver3, car2);
         System.out.println(carService.getAllByDriver(driver3.getId()));
-        System.out.println(System.lineSeparator() + "Get current all cars by car with id "
-                + driver.getId() + ":");
+        System.out.println(System.lineSeparator() + "Get current all cars by driver with id "
+                + driver3.getId() + ":");
         carService.removeDriverFromCar(driver3, car);
+        carService.addDriverToCar(driver3, car2);
         System.out.println(carService.getAllByDriver(driver3.getId()));
     }
 }
