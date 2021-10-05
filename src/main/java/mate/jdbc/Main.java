@@ -33,13 +33,14 @@ public class Main {
         car.setDrivers(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car createdCar = carService.create(car);
-        carService.get(createdCar.getId());
-        carService.getAll();
+        System.out.println(carService.get(createdCar.getId()));
+        System.out.println(carService.getAll());
         driver = new Driver();
         driver.setLicenseNumber("123");
         driver.setName("Bob");
         createdDriver = driverService.create(driver);
         carService.addDriverToCar(createdDriver, createdCar);
+        System.out.println(carService.getAllByDriver(createdDriver.getId()));
         carService.removeDriverFromCar(createdDriver, createdCar);
         car.getDrivers().add(createdDriver);
         carService.update(createdCar);
