@@ -6,27 +6,29 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionUtil {
-    private static final String URL = "YOUR DATABASE URL";
-    private static final String USERNAME = "YOUR USERNAME";
-    private static final String PASSWORD = "YOUR PASSWORD";
-    private static final String JDBC_DRIVER = "YOUR DRIVER";
+    public static final String DRIVER_NAME = "org.mariadb.jdbc.Driver";
+    public static final String URL = "jdbc:mariadb://192.168.1.40:3306/taxi_service_db";
+    public static final String USER = "user";
+    public static final String USER_NAME = "root";
+    public static final String PASSWORD = "password";
+    public static final String PASSWORD_NAME = "MariaDB#10";
 
     static {
         try {
-            Class.forName(JDBC_DRIVER);
+            Class.forName(DRIVER_NAME);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Can't find SQL Driver", e);
+            throw new RuntimeException("Can't load JDBC driver for MariaDB", e);
         }
     }
 
-    public static Connection getConnection() {
-        Properties dbProperties = new Properties();
-        dbProperties.setProperty("user", USERNAME);
-        dbProperties.setProperty("password", PASSWORD);
+    public static Connection getConnect() {
         try {
+            Properties dbProperties = new Properties();
+            dbProperties.put(USER, USER_NAME);
+            dbProperties.put(PASSWORD, PASSWORD_NAME);
             return DriverManager.getConnection(URL, dbProperties);
         } catch (SQLException e) {
-            throw new RuntimeException("Can't create connection to DB ", e);
+            throw new RuntimeException("Can't create connection to DB", e);
         }
     }
 }
