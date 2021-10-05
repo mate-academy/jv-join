@@ -12,76 +12,44 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
+    private static CarService carService = (CarService) injector.getInstance(CarService.class);
+    private static DriverService driverService = (DriverService) injector
+            .getInstance(DriverService.class);
+    private static ManufacturerService manufacturerService =
+            (ManufacturerService) injector.getInstance(ManufacturerService.class);
     private static List<Manufacturer> manufacturers;
     private static List<Car> cars;
     private static List<Driver> drivers;
 
     public static void main(String[] args) {
-        createManufacturers();
-        createCars();
-        createDrivers();
+        Manufacturer audi = new Manufacturer("Audi", "Germany");
+        audi = manufacturerService.create(audi);
+        System.out.println("Manufacturer audi: " + audi);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-
-        cars.forEach(carService::create);
-        System.out.println("List of cars before all operations: ");
-        carService.getAll().forEach(System.out::println);
-
-        carService.delete(3L);
-        System.out.println("\nList of cars after Dodge Charger deleted");
-        carService.getAll().forEach(System.out::println);
-
-        carService.addDriverToCar(drivers.get(0), cars.get(0));
-        carService.addDriverToCar(drivers.get(1), cars.get(1));
-        carService.addDriverToCar(drivers.get(1), cars.get(3));
-        carService.addDriverToCar(drivers.get(2), cars.get(3));
-        carService.addDriverToCar(drivers.get(2), cars.get(4));
-        carService.addDriverToCar(drivers.get(3), cars.get(4));
-        carService.addDriverToCar(drivers.get(3), cars.get(5));
-        System.out.println("\nList of cars after drivers added:");
-        carService.getAll().forEach(System.out::println);
-
-        carService.removeDriverFromCar(drivers.get(0), cars.get(0));
-        carService.removeDriverFromCar(drivers.get(1), cars.get(1));
-        carService.removeDriverFromCar(drivers.get(2), cars.get(3));
-        System.out.println("\nList of cars after drivers removed:");
-        carService.getAll().forEach(System.out::println);
-
-        System.out.println("\nList of cars with driver which id = 4:");
-        carService.getAllByDriver(4L).forEach(System.out::println);
-
-        System.out.println("\nThe car with id = 5 is " + carService.get(5L));
-    }
-
-    private static void createManufacturers() {
-        manufacturers = new ArrayList<>();
-        manufacturers.add(new Manufacturer("BMW", "Germany"));
-        manufacturers.add(new Manufacturer("Dodge", "USA"));
-        manufacturers.add(new Manufacturer("Citroen", "France"));
-
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        manufacturers.forEach(manufacturerService::create);
-    }
-
-    private static void createCars() {
-        cars = new ArrayList<>();
-        cars.add(new Car("X5", manufacturers.get(0)));
-        cars.add(new Car("X6", manufacturers.get(0)));
-        cars.add(new Car("Charger", manufacturers.get(1)));
-        cars.add(new Car("Challenger", manufacturers.get(1)));
-        cars.add(new Car("c3", manufacturers.get(2)));
-        cars.add(new Car("c5", manufacturers.get(2)));
-    }
-
-    private static void createDrivers() {
         drivers = new ArrayList<>();
-        drivers.add(new Driver("Joe", "123"));
-        drivers.add(new Driver("Misha", "456"));
-        drivers.add(new Driver("Hans", "789"));
-        drivers.add(new Driver("Gerard", "101"));
+        Driver misha = driverService.create(new Driver("Zubenko Michail Petrovych", "01234"));
+        drivers.add(misha);
+        Driver joe = driverService.create(new Driver("Joe", "56789"));
+        drivers.add(joe);
+        Driver bob = driverService.create(new Driver("Bob", "10111"));
+        drivers.add(bob);
+        System.out.println("List of drivers: ");
+        drivers.forEach(System.out::println);
 
-        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        drivers.forEach(driverService::create);
+        Car q7 = carService.create(new Car("q7", audi, drivers));
+        System.out.println(carService.get(q7.getId()));
+        System.out.println("Car audi q7: " + q7);
+
+        carService.removeDriverFromCar(misha, q7);
+        carService.removeDriverFromCar(joe, q7);
+        carService.addDriverToCar(bob, q7);
+        System.out.println("Car audi q7 after changing driver: " + q7);
+
+        List<Car> cars = carService.getAll();
+        System.out.println("List of all cars ");
+        cars.forEach(System.out::println);
+        System.lineSeparator();
+        System.out.println("All cars with driver Bob: ");
+        System.out.println(carService.getAllByDriver(bob.getId()));
     }
 }
