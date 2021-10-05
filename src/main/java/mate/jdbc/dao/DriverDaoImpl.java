@@ -37,9 +37,9 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Optional<Driver> get(Long id) {
-        String query = "SELECT id, name, license_number "
+        String query = "SELECT driver_id, name, license_number "
                 + "FROM drivers "
-                + "WHERE id = ? AND is_deleted = FALSE";
+                + "WHERE driver_id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriverStatement = connection.prepareStatement(query)) {
             getDriverStatement.setLong(1, id);
@@ -75,7 +75,7 @@ public class DriverDaoImpl implements DriverDao {
     public Driver update(Driver driver) {
         String query = "UPDATE drivers "
                 + "SET name = ?, license_number = ? "
-                + "WHERE id = ? AND is_deleted = FALSE";
+                + "WHERE driver_id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateDriverStatement
                         = connection.prepareStatement(query)) {
@@ -92,7 +92,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE drivers SET is_deleted = TRUE WHERE id = ?";
+        String query = "UPDATE drivers SET is_deleted = TRUE WHERE driver_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteDriverStatement = connection.prepareStatement(query)) {
             deleteDriverStatement.setLong(1, id);
@@ -103,7 +103,7 @@ public class DriverDaoImpl implements DriverDao {
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
+        Long id = resultSet.getObject("driver_id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
         Driver driver = new Driver(name, licenseNumber);
