@@ -9,6 +9,9 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
+    public Car() {
+    }
+
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
@@ -49,8 +52,12 @@ public class Car {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Car car = (Car) o;
         return Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
