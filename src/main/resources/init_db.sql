@@ -26,7 +26,7 @@ CREATE TABLE `cars` (
                         PRIMARY KEY (`id`),
                         KEY `manufacturer_id_idx` (`manufacturer_id`),
                         CONSTRAINT `cars_manufacturer_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 CREATE TABLE `cars_drivers` (
                                 `car_id` bigint DEFAULT NULL,
                                 `driver_id` bigint DEFAULT NULL,
