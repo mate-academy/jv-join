@@ -15,7 +15,6 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-
         Car car = new Car();
         car.setModel("Panamera");
         car.setManufacturer(manufacturerService.get(2L));
@@ -26,7 +25,6 @@ public class Main {
         drivers.add(driverAlice);
         drivers.add(driverJohn);
         car.setDrivers(drivers);
-
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.getAll().forEach(System.out::println);
         System.out.println("create car: ");

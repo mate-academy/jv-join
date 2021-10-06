@@ -162,7 +162,7 @@ public class CarDaoImpl implements CarDao {
                 insertDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert list drivers to db in this car:"
+            throw new DataProcessingException("Couldn't insert drivers for this car into DB:"
                     + car, e);
         }
     }
