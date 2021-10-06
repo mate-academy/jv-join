@@ -26,11 +26,11 @@ public class Application {
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car car = new Car("Q8", manufacturer, drivers);
         car = carService.create(car);
-        List<Car> cars = carService.getAll();
         Driver white = new Driver("White", "45658525");
         white = driverService.create(white);
         carService.addDriverToCar(white, car);
         carService.removeDriverFromCar(black, car);
+        List<Car> cars = carService.getAll();
         cars = carService.getAll();
         carService.delete(car.getId());
         cars = carService.getAll();
