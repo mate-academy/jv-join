@@ -32,7 +32,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't create car " + car, e);
         }
-        insertDrivers(car);
+        insertRelationsForCar(car);
         return car;
     }
 
@@ -98,7 +98,7 @@ public class CarDaoImpl implements CarDao {
             throw new RuntimeException("Can't update car " + car, e);
         }
         deleteAllRelationsForCar(car);
-        insertRelationsForCarAndDriver(car);
+        insertRelationsForCar(car);
         return car;
     }
 
@@ -138,21 +138,6 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getDriverForCar(car.getId()));
         }
         return cars;
-    }
-
-    private void insertDrivers(Car car) {
-        String insertDriversRequest = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement addDriverToCarStatement = connection
-                         .prepareStatement(insertDriversRequest)) {
-            addDriverToCarStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                addDriverToCarStatement.setLong(2, driver.getId());
-                addDriverToCarStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't insert driver to car " + car, e);
-        }
     }
 
     private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
@@ -206,7 +191,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertRelationsForCarAndDriver(Car car) {
+    private void insertRelationsForCar(Car car) {
         String insertRelationsForCarRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
