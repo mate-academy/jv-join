@@ -201,7 +201,7 @@ public class CarDaoImpl implements CarDao {
             deleteStatement.setLong(1, id);
             deleteStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new DataProcessingException("Can't delete car id: " + id);
         }
     }
 }
