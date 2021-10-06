@@ -125,8 +125,7 @@ public class CarDaoImpl implements CarDao {
         String getAllByDriverRequest = "SELECT c.id AS car_id, c.model, c.manufacturers_id,"
                 + " m.name, m.country"
                 + " FROM cars c"
-                + " JOIN manufacturers m"
-                + " ON c.manufacturers_id = m.id"
+                + " JOIN manufacturers m ON c.manufacturers_id = m.id"
                 + " JOIN cars_drivers cd ON c.id = cd.car_id"
                 + " WHERE cd.driver_id = ?";
         List<Car> carList = new ArrayList<>();
@@ -162,10 +161,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void deleteRelationsForCar(Car car) {
-        String softDeleteDriversRequest = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        String deleteRelationsForCarRequest = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                         PreparedStatement deleteStatement =
-                                connection.prepareStatement(softDeleteDriversRequest)) {
+                                connection.prepareStatement(deleteRelationsForCarRequest)) {
             deleteStatement.setLong(1, car.getId());
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
@@ -196,14 +195,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("car_id", Long.class);
-        String name = resultSet.getString("model");
         Manufacturer manufacturer = new Manufacturer();
-        Car car = new Car(name, manufacturer);
-        car.setId(id);
         manufacturer.setId(resultSet.getObject("manufacturers_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
+        Long carId = resultSet.getObject("car_id", Long.class);
+        String name = resultSet.getString("model");
+        Car car = new Car(name, manufacturer);
+        car.setId(carId);
         return car;
     }
 
