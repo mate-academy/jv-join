@@ -40,11 +40,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT car_id, model, manufacturer_id, m.name, m.country "
+        String query = "SELECT c.id, model, manufacturer_id, m.name, m.country "
                 + "FROM cars c  "
                 + "JOIN manufacturers m "
                 + "ON manufacturer_id = m.id "
-                + "WHERE car_id = ? AND c.is_deleted = FALSE;";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarByIdStatement = connection.prepareStatement(query)) {
@@ -64,7 +64,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT car_id, model, manufacturer_id, m.name, m.country "
+        String query = "SELECT c.id, model, manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON manufacturer_id = m.id "
@@ -90,7 +90,7 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars "
                 + "SET manufacturer_id = ?, model = ?"
-                + "WHERE car_id = ? AND is_deleted = FALSE";
+                + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement = connection.prepareStatement(query)) {
             updateCarStatement.setObject(1, car.getManufacturer().getId());
@@ -108,7 +108,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE car_id = ?";
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement softDeleteCarStatement = connection.prepareStatement(query)) {
             softDeleteCarStatement.setLong(1, id);
@@ -120,10 +120,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.car_id, model, manufacturer_id, m.name, m.country "
+        String query = "SELECT c.id, model, manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m ON manufacturer_id = m.id "
-                + "JOIN cars_drivers cd  ON c.car_id = cd.car_id "
+                + "JOIN cars_drivers cd  ON c.id = cd.car_id "
                 + " WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -165,7 +165,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         car.setManufacturer(manufacturer);
-        car.setId(resultSet.getObject("car_id", Long.class));
+        car.setId(resultSet.getObject("c.id", Long.class));
         return car;
     }
 
