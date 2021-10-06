@@ -51,7 +51,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = parseCarWithManufacturerFromResultSet(resultSet);
             }
-
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't get car with id = " + id, throwables);
         }
