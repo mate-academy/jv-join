@@ -33,13 +33,14 @@ public class Main {
         Driver pavel = new Driver("Pavel", "pv1234");
         System.out.println(driverService.create(pavel));
         System.out.println(carService.get(1L));
-        System.out.println(carService.getAll());
         List<Driver> drivers = new ArrayList<>();
         drivers.add(ivan);
         drivers.add(pavel);
         m5.setDriverList(drivers);
         System.out.println(carService.update(m5));
         carService.addDriverToCar(pavel, m5);
+        System.out.println(System.lineSeparator());
+        carService.getAll().forEach(System.out::println);
         carService.getAllByDriver(1L);
         carService.removeDriverFromCar(pavel, m5);
     }

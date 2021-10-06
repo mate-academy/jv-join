@@ -31,10 +31,10 @@ public class CarDaoImpl implements CarDao {
             if (resultSetUpdate.next()) {
                 car.setId(resultSetUpdate.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car with param: " + car + ". ", e);
         }
+        return car;
     }
 
     @Override
@@ -78,10 +78,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSetGetAllCars.next()) {
                 carList.add(getCar(resultSetGetAllCars));
             }
-            return carList;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars. ", e);
         }
+        for (Car temp : carList) {
+            temp.setDriverList(getListDrivers(temp.getId()));
+        }
+        return carList;
     }
 
     @Override
