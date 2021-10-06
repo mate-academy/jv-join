@@ -11,7 +11,6 @@ CREATE TABLE `manufacturers` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
-
 DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
   `id` bigint NOT NULL AUTO_INCREMENT,
