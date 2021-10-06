@@ -125,19 +125,22 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m ON manufacturer_id = m.id "
                 + "JOIN cars_drivers cd  ON c.car_id = cd.car_id "
                 + " WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarsByDriversStatement = connection.prepareStatement(query)) {
             getCarsByDriversStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsByDriversStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
-            return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get cars by drivers id "
                     + driverId, throwable);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     private void insertDrivers(Car car) {
