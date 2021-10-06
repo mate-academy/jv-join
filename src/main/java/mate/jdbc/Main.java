@@ -28,6 +28,8 @@ public class Main {
         driverService.create(bart);
         Driver lisa = new Driver("Lisa Simpson", "mcqpm1m");
         driverService.create(lisa);
+        Driver homer = new Driver("Homer Simpson", "mcian3");
+        driverService.create(homer);
         List<Driver> driverList = driverService.getAll();
         driverList.forEach(System.out::println);
 
@@ -36,6 +38,8 @@ public class Main {
         teslaByZaz.setDriverList(driverList);
         teslaByZaz = carService.create(teslaByZaz);
         carService.getAll().forEach(System.out::println);
+
+        teslaByZaz.getDriverList().add(homer);
 
         carService.addDriverToCar(bart, teslaByZaz);
         carService.addDriverToCar(lisa, teslaByZaz);
