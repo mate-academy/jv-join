@@ -170,10 +170,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carsId) {
-        String query = "SELECT d.driver_id, name, license_number"
+        String query = "SELECT d.id, name, license_number"
                 + " FROM drivers d "
                 + "JOIN cars_drivers cd "
-                + "ON d.driver_id = cd.driver_id "
+                + "ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ?; ";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriversStatement = connection.prepareStatement(query)) {
@@ -194,7 +194,7 @@ public class CarDaoImpl implements CarDao {
         String licenseNumber = resultSet.getString("license_number");
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(licenseNumber);
-        driver.setId(resultSet.getObject("driver_id", Long.class));
+        driver.setId(resultSet.getObject("id", Long.class));
         return driver;
     }
 
