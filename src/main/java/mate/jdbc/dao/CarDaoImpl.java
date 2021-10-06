@@ -98,7 +98,7 @@ public class CarDaoImpl implements CarDao {
             throw new RuntimeException("Can't update car " + car, e);
         }
         deleteAllRelationsForCar(car);
-        insertDriversToCar(car);
+        insertRelationsForCarAndDriver(car);
         return car;
     }
 
@@ -206,19 +206,19 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertDriversToCar(Car car) {
-        String insertDriversToCarRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
+    private void insertRelationsForCarAndDriver(Car car) {
+        String insertRelationsForCarRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement insertRelationsStatement = connection
-                         .prepareStatement(insertDriversToCarRequest)) {
+                         .prepareStatement(insertRelationsForCarRequest)) {
             insertRelationsStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 insertRelationsStatement.setLong(2, driver.getId());
                 insertRelationsStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't update connection ", e);
+            throw new RuntimeException("Can't insert new relations for car " + car, e);
         }
     }
 }
