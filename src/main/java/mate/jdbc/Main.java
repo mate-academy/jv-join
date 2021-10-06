@@ -31,21 +31,22 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         car.setManufacturer(manufacturerService.get(33L));
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        System.out.println(carService.create(car));
-        System.out.println(carService.get(33L));
-        driver.setName("Bob");
-        driver.setLicenseNumber("Bob20");
-        driverService.create(driver);
-        Driver secondDriver = new Driver();
+        System.out.println("createMethod:" + carService.create(car));
+        System.out.println("gerMethod: " + carService.get(33L));
         Car newCar = carService.create(car);
-        carService.addDriverToCar(secondDriver, newCar);
-        System.out.println(carService.getAll());
-        carService.removeDriverFromCar(driver, newCar);
-        System.out.println(carService.getAll());
         newCar.setModel("AMG_GT_63");
-        System.out.println(carService.update(car));
-        System.out.println(carService.delete(car.getId()));
-        System.out.println(carService.getAllByDriver(30L));
-
+        System.out.println("update: " + carService.update(newCar));
+        Driver secondDriver = new Driver();
+        secondDriver.setName("Bob");
+        secondDriver.setLicenseNumber("Bob20");
+        driverService.create(secondDriver);
+        carService.addDriverToCar(secondDriver, newCar);
+        System.out.println("addDriverToCar/getAllByDriverMethod: "
+                + carService.getAllByDriver(secondDriver.getId()));
+        carService.removeDriverFromCar(secondDriver, newCar);
+        carService.addDriverToCar(secondDriver, car);
+        System.out.println("remoteDriverToCar/getAllMethod: "
+                + carService.getAllByDriver(secondDriver.getId()));
+        System.out.println("deleteMethod: " + carService.delete(car.getId()));
     }
 }
