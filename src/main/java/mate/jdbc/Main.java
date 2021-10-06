@@ -21,6 +21,8 @@ public class Main {
         System.out.println(manufacturerService.getAll());
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver specialDriver = new Driver("Jack", "AC889885t");
+        Driver usualDriver = new Driver("Maks", "BC889885U");
+        driverService.create(usualDriver);
         driverService.create(specialDriver);
         System.out.println(driverService.getAll());
         CarService carService = (CarService) injector.getInstance(CarService.class);
@@ -28,7 +30,8 @@ public class Main {
         civic.setModel("Honda Civic");
         civic.setManufacturer(bmw);
         carService.create(civic);
-        carService.addDriverToCar(specialDriver, civic);
+        carService.addDriverToCar(usualDriver, civic);
+        carService.removeDriverFromCar(specialDriver, civic);
         System.out.println(carService.getAllByDriver(1L));
     }
 }
