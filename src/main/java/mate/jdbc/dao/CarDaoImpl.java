@@ -53,11 +53,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = parseAllInfoFromResultSet(resultSet);
             }
+            return Optional.ofNullable(car);
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't find car "
                     + id + " in DB: ", throwable);
         }
-        return Optional.ofNullable(car);
     }
 
     @Override
