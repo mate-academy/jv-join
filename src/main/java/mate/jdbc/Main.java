@@ -45,7 +45,7 @@ public class Main {
         System.out.println(System.lineSeparator() + "All cars:");
         cars = carService.getAll();
         cars.forEach(System.out::println);
-        Driver driver3 = driverService.create(new Driver("Alisa", "8888"));
+        Driver driver3 = driverService.create(new Driver("Alisa", "9999"));
         System.out.println(System.lineSeparator() + "Get all cars by driver with id "
                 + driver3.getId() + ":");
         carService.addDriverToCar(driver3, car);
