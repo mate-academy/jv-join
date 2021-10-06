@@ -29,7 +29,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
@@ -49,6 +49,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }
