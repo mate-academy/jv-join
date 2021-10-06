@@ -140,7 +140,9 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
                 carsByDriver.add(car);
             }
-
+            for (Car drivers : carsByDriver) {
+                drivers.setDriverList(getDriversForCar(drivers.getId()));
+            }
             return carsByDriver;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id: "
@@ -156,8 +158,6 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setId(resultSet.getObject("manufacturers_id", Long.class));
         manufacturer.setName(resultSet.getString("manufacturers_name"));
         manufacturer.setCountry(resultSet.getString("manufacturers_country"));
-        List<Driver> drivers = getDriversForCar(resultSet.getObject("car_id", Long.class));
-        car.setDriverList(drivers);
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -207,8 +207,8 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertRelationStatement = connection.prepareStatement(sqlQuery)) {
             insertRelationStatement.setObject(1, car.getId());
-            for (Driver temp : car.getDriverList()) {
-                insertRelationStatement.setObject(2, temp.getId());
+            for (Driver driver : car.getDriverList()) {
+                insertRelationStatement.setObject(2, driver.getId());
                 insertRelationStatement.execute();
             }
         } catch (SQLException e) {
