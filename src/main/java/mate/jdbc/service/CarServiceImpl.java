@@ -1,7 +1,10 @@
 package mate.jdbc.service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -19,36 +22,47 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return null;
+        return carDao.get(id)
+                .orElseThrow(()-> new DataProcessingException("Could not get car "
+                        + "from DAO by id = " + id));
     }
 
     @Override
     public List<Car> getAll() {
-        return null;
+        return carDao.getAll();
     }
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return carDao.delete(id);
     }
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        List<Driver> drivers = car.getDrivers();
+        drivers.add(driver);
+        car.setDrivers(drivers);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-
+        List<Driver> drivers = new ArrayList<>();
+        drivers = car.getDrivers();
+        List<Driver> filtredDrivers = car.getDrivers().stream()
+                .filter(d -> !d.equals(driver))
+                .collect(Collectors.toList());
+        car.setDrivers(filtredDrivers);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }
