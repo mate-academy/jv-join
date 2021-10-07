@@ -2,8 +2,6 @@ package mate.jdbc.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.DataFormatException;
-
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
