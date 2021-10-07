@@ -65,6 +65,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
+        List<Car> cars = new ArrayList<>();
         ResultSet resultSet;
         String selectQuery = "select manufacturers.country as country, cars.id "
                 + "as car_id, cars.model as car_model, manufacturers.name "
@@ -81,10 +82,10 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can`t get cars list ", throwable);
         }
-        for (Car car : carList) {
+        for (Car car : cars) {
             car.setDrivers(getDriversForCar(car.getId()));
         }
-        return carList;
+        return cars;
     }
 
     @Override
@@ -136,7 +137,6 @@ public class CarDaoImpl implements CarDao {
                 Car car = get(id).get();
                 carList.add(car);
             }
-            return carList;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can't get a car by a driver id: "
                     + carList, throwable);
