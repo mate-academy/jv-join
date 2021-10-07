@@ -42,10 +42,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectRequest = "SELECT cars.id as car_id, model, "
+        String selectRequest = "SELECT cars.id AS car_id, model, "
                 + "m.id as manufacturers_id, m.name, m.country "
                 + "FROM cars " + "JOIN manufacturers m " + "ON cars.manufacturers_id = m.id "
-                + "where cars.id = ? and cars.is_deleted = false;";
+                + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarStatement =
@@ -68,25 +68,26 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllRequest = "SELECT cars.id as car_id, model, "
+        String getAllRequest = "SELECT cars.id AS car_id, model, "
                 + "m.id as manufacturers_id, m.name, m.country "
                 + "FROM cars " + "JOIN manufacturers m "
                 + "ON cars.manufacturers_id = m.id "
-                + "where cars.is_deleted = false;";
+                + "where cars.is_deleted = FALSE ;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsStatement =
                          connection.prepareStatement(getAllRequest)) {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCarFromResultSet(resultSet);
-                car.setDrivers(getDriverForCar(car.getId()));
-                cars.add(car);
+                cars.add(parseCarFromResultSet(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get Cars from DB");
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriverForCar(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -124,7 +125,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllCarsByDriverRequest = "SELECT c.id as car_id, model, manufacturers_id, "
+        String getAllCarsByDriverRequest = "SELECT c.id AS car_id, model, manufacturers_id, "
                 + "m.name, m.country FROM cars c"
                 + " JOIN manufacturers m ON c.manufacturers_id = m.id"
                 + " JOIN cars_drivers cd ON c.id = cd.car_id WHERE cd.driver_id = ?;";
