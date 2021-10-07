@@ -17,7 +17,6 @@ public class Main {
     private static List<Driver> drivers;
 
     public static void main(String[] args) {
-
         createManufacturers();
         createCars();
         createDrivers();
@@ -71,7 +70,7 @@ public class Main {
 
     private static void createCars() {
         cars = new ArrayList<>();
-        cars.add(new Car("SF 90", manufacturers.get(0)));
+        cars.add(new Car("Roma1", manufacturers.get(0)));
         cars.add(new Car("Roma", manufacturers.get(0)));
         cars.add(new Car("Urus", manufacturers.get(1)));
         cars.add(new Car("Huracan", manufacturers.get(1)));
