@@ -2,7 +2,10 @@ package mate.jdbc.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.DataFormatException;
+
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -20,7 +23,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow();
+        if (carDao.get(id).isPresent()) {
+            return carDao.get(id).get();
+        }
+        throw new DataProcessingException("Car by id: " + id + " don't exist");
     }
 
     @Override
