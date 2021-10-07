@@ -134,7 +134,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't find drivers in DB by driver id " + driverId, e);
+            throw new DataProcessingException("Can't find drivers in DB by driver id "
+                    + driverId, e);
         }
         for (Car car : cars) {
             car.setDrivers(getDriverForCar(car.getId()));
