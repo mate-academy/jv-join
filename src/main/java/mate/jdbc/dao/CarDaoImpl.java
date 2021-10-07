@@ -77,7 +77,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot update car: " + car, e);
         }
-        deleteCarIdFromCarsDrivers(car);
+        removeDriversFromCar(car);
         insertDrivers(car);
         return car;
     }
@@ -154,11 +154,11 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setName(resultSet.getString("m.name"));
         manufacturer.setCountry(resultSet.getString("m.country"));
         car.setManufacturer(manufacturer);
-        car.setDrivers(getDriversForCar(car.getId()));
+        car.setDrivers(getDrivers(car.getId()));
         return car;
     }
 
-    private List<Driver> getDriversForCar(Long carId) {
+    private List<Driver> getDrivers(Long carId) {
         String getDriversRequest = "SELECT id, name, license_number  "
                 + "FROM drivers "
                 + "JOIN cars_drivers cd "
@@ -203,7 +203,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteCarIdFromCarsDrivers(Car car) {
+    private void removeDriversFromCar(Car car) {
         String deleteRequest = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarIdStatement = connection
