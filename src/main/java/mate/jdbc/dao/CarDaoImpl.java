@@ -75,6 +75,9 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement = connection.prepareStatement(selectQuery)) {
             resultSet = getCarStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCarWithManufacturer(resultSet));
+            }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Can`t get cars list ", throwable);
         }
