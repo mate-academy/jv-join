@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8;
-USE `taxi`;
+CREATE SCHEMA IF NOT EXISTS `taxi_service_db` DEFAULT CHARACTER SET utf8;
+USE `taxi_service_db`;
 
 DROP TABLE IF EXISTS `cars_drivers`;
 DROP TABLE IF EXISTS `cars`;

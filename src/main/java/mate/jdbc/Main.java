@@ -1,7 +1,6 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDaoImpl;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -9,10 +8,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -53,8 +48,10 @@ public class Main {
         System.out.println("Car2 after tmpDriver was added: " + carService.get(car2.getId()));
         carService.removeDriverFromCar(tmpDriver, car1);
         System.out.println("Car2 after tmpDriver was removed: " + carService.get(car2.getId()));
-        System.out.println("Get all cars who use driver2: " + carService.getAllByDriver(driver1.getId()));
-        System.out.println("Get all cars who use driver3: " + carService.getAllByDriver(driver3.getId()));
+        System.out.println("Get all cars who use driver2: "
+                + carService.getAllByDriver(driver1.getId()));
+        System.out.println("Get all cars who use driver3: "
+                + carService.getAllByDriver(driver3.getId()));
 
     }
 }
