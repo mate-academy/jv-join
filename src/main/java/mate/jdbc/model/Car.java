@@ -7,9 +7,10 @@ public class Car {
     private Long id;
     private String model;
     private Manufacturer manufacturer;
-    private List<Driver> drivers = new ArrayList<>();
+    private List<Driver> drivers;
 
     public Car() {
+        drivers = new ArrayList<>();
     }
 
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
