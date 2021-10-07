@@ -70,20 +70,22 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarStatement
                         = connection.prepareStatement(getAllCarQuery)) {
             ResultSet resultSet = getAllCarStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 Car car = parseCarWithManufacturer(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars ", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -98,12 +100,12 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
             updateCarStatement.executeUpdate();
-            deleteDriversOfCar(car.getId());
-            insertDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car: " + car, e);
         }
+        deleteDriversOfCar(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -123,33 +125,30 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Long> carsIds = getCarIdsWithDriverId(driverId);
+        String getAllCarByDriverQuery = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
-        for (Long id : carsIds) {
-            if (get(id).isPresent()) {
-                cars.add(get(id).get());
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement addDriversToCarStatement = connection
+                     .prepareStatement(getAllCarByDriverQuery)) {
+            addDriversToCarStatement.setLong(1, driverId);
+            ResultSet resultSet = addDriversToCarStatement.executeQuery();
+            while (resultSet.next()) {
+                Car car = parseCarWithManufacturer(resultSet);
+                cars.add(car);
             }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get all cars by driver id: " + driverId, e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
-    }
-
-    private List<Long> getCarIdsWithDriverId(Long id) {
-        String getCarIdsQuery = "SELECT car_id "
-                + "FROM cars_drivers "
-                + "WHERE driver_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getCarsIdsStatement = connection
-                        .prepareStatement(getCarIdsQuery)) {
-            getCarsIdsStatement.setLong(1, id);
-            ResultSet resultSet = getCarsIdsStatement.executeQuery();
-            List<Long> ids = new ArrayList<>();
-            while (resultSet.next()) {
-                ids.add(resultSet.getObject("car_id", Long.class));
-            }
-            return ids;
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get cars ids with driver id: " + id, e);
-        }
     }
 
     private void insertDrivers(Car car) {
