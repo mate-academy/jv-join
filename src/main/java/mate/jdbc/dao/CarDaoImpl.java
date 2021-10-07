@@ -66,7 +66,8 @@ public class CarDaoImpl implements CarDao {
         String getAllCarQuery = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id";
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement getAllCarStatement = connection.prepareStatement(getAllCarQuery)) {
             ResultSet resultSet = getAllCarStatement.executeQuery();
@@ -113,6 +114,37 @@ public class CarDaoImpl implements CarDao {
             return softDeleteCarStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car, car_id: " + id, e);
+        }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Long> carsIds = getCarIdsWithDriverId(driverId);
+        List<Car> cars = new ArrayList<>();
+        for(Long id : carsIds) {
+            if (get(id).isPresent()) {
+                cars.add(get(id).get());
+            }
+        }
+        return cars;
+    }
+
+    private List<Long> getCarIdsWithDriverId(Long id) {
+        String getCarIdsQuery = "SELECT car_id "
+                + "FROM cars_drivers "
+                + "WHERE driver_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement getCarsIdsStatement = connection
+                     .prepareStatement(getCarIdsQuery)) {
+            getCarsIdsStatement.setLong(1, id);
+            ResultSet resultSet = getCarsIdsStatement.executeQuery();
+            List<Long> ids = new ArrayList<>();
+            while (resultSet.next()) {
+                ids.add(resultSet.getObject("car_id", Long.class));
+            }
+            return ids;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get cars ids with driver id: " + id, e);
         }
     }
 
