@@ -1,7 +1,6 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
-import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
@@ -11,9 +10,6 @@ import mate.jdbc.service.ManufacturerService;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
-    @Inject
-    private CarDao carDao;
-
     @Inject
     private ManufacturerDao manufacturerDao;
 
