@@ -19,7 +19,6 @@ public class DriverDaoImpl implements DriverDao {
     private static final String NAME_COLUMN = "name";
     private static final String LICENSE_COLUMN = "license_number";
 
-
     @Override
     public Driver create(Driver driver) {
         String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
