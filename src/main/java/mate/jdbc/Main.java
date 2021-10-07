@@ -34,6 +34,9 @@ public class Main {
         System.out.println(carService.get(x3.getId()));
         Driver bob = new Driver("Bob", "34567");
         bob = driverService.create(bob);
+        System.out.println();
+        carService.update(x3);
+        System.out.println();
         carService.removeDriverFromCar(carl, x3);
         carService.removeDriverFromCar(jonny, x3);
         carService.addDriverToCar(bob, x3);
