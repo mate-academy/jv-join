@@ -25,8 +25,8 @@ CREATE TABLE `cars` (
                         `is_deleted` tinyint NOT NULL DEFAULT '0',
                         PRIMARY KEY (`id`),
                         KEY `cars_manufacturers_id` (`manufacturer_id`),
-                        CONSTRAINT `cars_manufacturers_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+                        CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 CREATE TABLE `cars_drivers` (
                                 `driver_id` bigint NOT NULL,
                                 `car_id` bigint NOT NULL,
