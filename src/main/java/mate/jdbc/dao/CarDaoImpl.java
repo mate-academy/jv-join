@@ -141,6 +141,10 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get a car by a driver id: "
                     + carList, throwable);
         }
+        for (Car car : carList) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return carList;
     }
 
     private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {
