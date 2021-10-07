@@ -196,7 +196,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM drivers d "
                 + "INNER JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ?";
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriversStatement
                         = connection.prepareStatement(getDriversForCarQuery)) {
