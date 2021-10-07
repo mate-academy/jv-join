@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
                 + "m.id as manufacturers_id, m.name, m.country "
                 + "FROM cars " + "JOIN manufacturers m "
                 + "ON cars.manufacturers_id = m.id "
-                + "where cars.is_deleted = FALSE ;";
+                + "WHERE cars.is_deleted = FALSE ;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllCarsStatement =
