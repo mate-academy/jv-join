@@ -102,12 +102,13 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
             updateCarStatement.executeUpdate();
-            insertDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update "
                     + car + " in cars DB.", e);
         }
+        deleteCarFromCarsDriversTable(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -191,6 +192,17 @@ public class CarDaoImpl implements CarDao {
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get driver from DB by id " + id, e);
+        }
+    }
+
+    private void deleteCarFromCarsDriversTable(Long id) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement deleteStatement = connection.prepareStatement(query)) {
+            deleteStatement.setLong(1, id);
+            deleteStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Can't delete car id: " + id);
         }
     }
 
