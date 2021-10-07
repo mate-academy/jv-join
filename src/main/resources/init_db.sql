@@ -19,7 +19,7 @@ CREATE TABLE `drivers` (
                            `manufacturer_id` bigint NOT NULL,
                            PRIMARY KEY (`id`),
                            KEY `manufacurer_id_idx` (`manufacturer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 
 CREATE TABLE `cars` (
@@ -29,7 +29,7 @@ CREATE TABLE `cars` (
                         `manufacturer_id` bigint NOT NULL,
                         PRIMARY KEY (`id`),
                         KEY `manufacturer_id_idx` (`manufacturer_id`),
-                        CONSTRAINT `manufacturer_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+                        CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8_hungarian_ci;
 
 CREATE TABLE `cars_drivers` (
@@ -37,6 +37,6 @@ CREATE TABLE `cars_drivers` (
                                 `drivers_id` bigint NOT NULL,
                                 KEY `cars_id_idx` (`cars_id`),
                                 KEY `drivers_id_idx` (`drivers_id`),
-                                CONSTRAINT `cars_id` FOREIGN KEY (`cars_id`) REFERENCES `cars` (`id`),
-                                CONSTRAINT `drivers_id` FOREIGN KEY (`drivers_id`) REFERENCES `drivers` (`id`)
+                                CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`cars_id`) REFERENCES `cars` (`id`),
+                                CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`drivers_id`) REFERENCES `drivers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
