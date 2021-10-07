@@ -14,4 +14,6 @@ public interface CarDao {
     Car update(Car car);
 
     boolean delete(Long carId);
+
+    List<Car> getAllByDriver(Long driverId);
 }
