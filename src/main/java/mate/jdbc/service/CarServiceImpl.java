@@ -21,10 +21,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        if (carDao.get(id).isPresent()) {
-            return carDao.get(id).get();
-        }
-        throw new DataProcessingException("Car by id: " + id + " don't exist");
+        return carDao.get(id)
+                .orElseThrow(() ->
+                        new DataProcessingException("Car by id: " + id + " don't exist in BD")
+                );
     }
 
     @Override
