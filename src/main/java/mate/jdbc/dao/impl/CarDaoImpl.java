@@ -18,6 +18,14 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
+    private static final String ID_COLUMN = "id";
+    private static final String NAME_COLUMN = "name";
+    private static final String LICENSE_NUMBER_COLUMN = "license_number";
+    private static final String MODEL_COLUMN = "model";
+    private static final String MANUFACTURERS_ID = "manufacturers_id";
+    private static final String COUNTRY_COLUMN = "country";
+    private static final String CAR_ID_COLUMN = "car_id";
+
     @Override
     public Car create(Car car) {
         String insertRequest = "INSERT INTO cars (model, manufacturers_id) VALUE (?, ?);";
@@ -34,7 +42,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't create Car", e);
+            throw new DataProcessingException("Can't create Car: " + car, e);
         }
         insertDrivers(car);
         return car;
@@ -177,15 +185,15 @@ public class CarDaoImpl implements CarDao {
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setModel(resultSet.getString("model"));
+        car.setModel(resultSet.getString(MODEL_COLUMN));
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject(
-                "manufacturers_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
+                MANUFACTURERS_ID, Long.class));
+        manufacturer.setName(resultSet.getString(NAME_COLUMN));
+        manufacturer.setCountry(resultSet.getString(COUNTRY_COLUMN));
         car.setManufacturer(manufacturer);
         car.setId(resultSet.getObject(
-                "car_id", Long.class));
+                CAR_ID_COLUMN, Long.class));
         return car;
     }
 
@@ -211,9 +219,9 @@ public class CarDaoImpl implements CarDao {
 
     private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
-        driver.setId(resultSet.getObject("id", Long.class));
-        driver.setName(resultSet.getString("name"));
-        driver.setLicenseNumber(resultSet.getString("license_number"));
+        driver.setId(resultSet.getObject(ID_COLUMN, Long.class));
+        driver.setName(resultSet.getString(NAME_COLUMN));
+        driver.setLicenseNumber(resultSet.getString(LICENSE_NUMBER_COLUMN));
         return driver;
     }
 }
