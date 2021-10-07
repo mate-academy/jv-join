@@ -38,10 +38,11 @@ public class CarDaoImpl implements CarDao {
             if (generatedKeys.next()) {
                 car.setId(generatedKeys.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + " ", e);
         }
+        addDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -101,9 +102,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
-            if (updateCarStatement.executeUpdate() == 0) {
-                return car;
-            }
+            updateCarStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car " + car + " ", e);
         }
@@ -194,7 +193,6 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement addCarsDriversRelationStatement
                         = connection.prepareStatement(addCarsDriversRelationQuery)) {
             addCarsDriversRelationStatement.setLong(1, car.getId());
-
             for (Driver driver: car.getDrivers()) {
                 addCarsDriversRelationStatement.setLong(2, driver.getId());
                 addCarsDriversRelationStatement.executeUpdate();
