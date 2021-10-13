@@ -9,7 +9,8 @@ import mate.jdbc.model.Car;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        return null;
+        String insertRequest = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
+        return car;
     }
 
     @Override
