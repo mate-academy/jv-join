@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
-        Manufacturer teslaManufacturer =  manufacturerService.get(1L);
+        Manufacturer teslaManufacturer = manufacturerService.get(1L);
         //manufacturerService.create(teslaManufacturer);
         System.out.println(manufacturerService.getAll());
 

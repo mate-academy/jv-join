@@ -40,14 +40,16 @@ public class CarDaoImpl implements CarDao {
     void insertDriversForCar(Car car) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement insertDriversStatement = connection.prepareStatement(insertDriversQuery)) {
+             PreparedStatement insertDriversStatement =
+                     connection.prepareStatement(insertDriversQuery)) {
             insertDriversStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 insertDriversStatement.setLong(2, driver.getId());
                 insertDriversStatement.executeUpdate();
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Can't insert driver for car: " + car + " to DB", throwable);
+            throw new DataProcessingException("Can't insert driver for car: "
+                    + car + " to DB", throwable);
         }
     }
 
