@@ -137,7 +137,36 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        return null;
+        String updateQuery = "UPDATE cars SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement updateCarStatement
+                     = connection.prepareStatement(updateQuery)) {
+            updateCarStatement.setString(1, car.getModel());
+            updateCarStatement.setLong(2, car.getManufacturer().getId());
+            updateCarStatement.setLong(3, car.getId());
+            updateCarStatement.executeUpdate();
+        } catch (SQLException throwable) {
+            throw new DataProcessingException("Couldn't update car: " + car, throwable);
+        }
+        // 1. update cars fields +
+        deleteDriversFromCar(car);
+        // 2. delete all relations in cars_drivers table where carId = car.getId()
+        insertDriversForCar(car);
+        // 3. add new relations to the cars_drivers table
+        return car;
+    }
+
+    private void deleteDriversFromCar(Car car) {
+        String deleteDriversQuery = "DELETE FROM cars_drivers WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement deleteDriversStatement = connection
+                     .prepareStatement(deleteDriversQuery)) {
+            deleteDriversStatement.setLong(1, car.getId());
+            deleteDriversStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete driver from car: " + car, e);
+        }
     }
 
     @Override
