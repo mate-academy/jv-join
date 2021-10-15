@@ -149,11 +149,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update car: " + car, throwable);
         }
-        // 1. update cars fields +
         deleteDriversFromCar(car);
-        // 2. delete all relations in cars_drivers table where carId = car.getId()
         insertDriversForCar(car);
-        // 3. add new relations to the cars_drivers table
         return car;
     }
 
