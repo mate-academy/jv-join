@@ -189,7 +189,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarsStatement = connection
                          .prepareStatement(getAllByDriverQuery)) {
-
+            getCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsStatement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCarFromResultSet(resultSet));
