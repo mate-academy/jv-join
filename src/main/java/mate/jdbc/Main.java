@@ -27,12 +27,12 @@ public class Main {
         System.out.println(driverService.getAll());
 
         List<Driver> drivers = new ArrayList<>();
-        drivers.add(driverService.get(1l));
+        //drivers.add(driverService.get(1l));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car firstCar = new Car("Model X", teslaManufacturer, drivers);
         //carService.create(firstCar);
 
-        System.out.println(carService.get(1L));
+        System.out.println(carService.getAll());
 
     }
 }
