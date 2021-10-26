@@ -1,7 +1,5 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;

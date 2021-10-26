@@ -126,7 +126,7 @@ public class CarDaoImpl implements CarDao {
                 carsId.add(resultSet.getObject("car_id", Long.class));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get car_id for driver id  " + driverId,
+            throw new DataProcessingException("Couldn't get car id for driver id  " + driverId,
                     throwable);
         }
         List<Car> cars = new ArrayList<>();
