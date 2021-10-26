@@ -30,10 +30,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
+        if (car.getDrivers() != null) {
+            createDriversForCar(car);
+        }
+        return car;
     }
 
     @Override
@@ -94,7 +97,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't update " + car + " in cars DB.", throwable);
         }
-        removeDriverForCar(car);
+        removeDriverForCar(car.getId());
         createDriversForCar(car);
         return car;
     }
@@ -120,14 +123,14 @@ public class CarDaoImpl implements CarDao {
             getCarStatement.setLong(1, driverId);
             ResultSet resultSet = getCarStatement.executeQuery();
             while (resultSet.next()) {
-                carsId.add(resultSet.getObject("car_id",Long.class));
+                carsId.add(resultSet.getObject("car_id", Long.class));
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't get car_id for driver id  " + driverId,
                     throwable);
         }
         List<Car> cars = new ArrayList<>();
-        for (Long carId: carsId) {
+        for (Long carId : carsId) {
             cars.add(get(carId).get());
         }
         return cars;
@@ -160,7 +163,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get driver by id " + id, throwable);
+            throw new DataProcessingException("Couldn't get drivers by car id " + id, throwable);
         }
     }
 
@@ -172,14 +175,14 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void removeDriverForCar(Car car) {
+    private void removeDriverForCar(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarDriversStatement = connection.prepareStatement(query)) {
-            deleteCarDriversStatement.setLong(1, car.getId());
+            deleteCarDriversStatement.setLong(1, carId);
             deleteCarDriversStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't update driver by car id " + car.getId(),
+            throw new DataProcessingException("Couldn't update driver by car id " + carId,
                     throwable);
         }
     }
