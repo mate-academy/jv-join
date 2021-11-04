@@ -7,12 +7,22 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
+    private boolean isDeleted;
+
     public Driver() {
     }
 
     public Driver(String name, String licenseNumber) {
         this.name = name;
         this.licenseNumber = licenseNumber;
+    }
+
+    public boolean isIs_deleted() {
+        return isDeleted;
+    }
+
+    public void setIs_deleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {

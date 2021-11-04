@@ -6,6 +6,7 @@ public class Manufacturer {
     private Long id;
     private String name;
     private String country;
+    private boolean isDeleted;
 
     public Manufacturer() {
     }
@@ -13,6 +14,14 @@ public class Manufacturer {
     public Manufacturer(String name, String country) {
         this.name = name;
         this.country = country;
+    }
+
+    public boolean isIs_deleted() {
+        return isDeleted;
+    }
+
+    public void setIs_deleted(boolean isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public Long getId() {
