@@ -1,10 +1,9 @@
 package mate.jdbc.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.DriverDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -25,7 +24,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                .orElseThrow(() -> new DataProcessingException("Could not get car from DAO "
+                .orElseThrow(() -> new NoSuchElementException("Could not find car "
                         + "by id = " + id));
     }
 
@@ -46,10 +45,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (!isPresentCarDriver(car,driver)) {
-            throw new DataProcessingException("Can't add driver " + driver
-            + " to car " + car);
-        }
         if (!car.getDrivers().contains(driver)) {
             car.getDrivers().add(driver);
         }
@@ -58,14 +53,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (!isPresentCarDriver(car,driver)) {
-            throw new DataProcessingException("Can't add driver " + driver
-                    + " to car " + car);
-        }
-        List<Driver> drivers = car.getDrivers().stream()
-                .filter(d -> !d.equals(driver))
-                .collect(Collectors.toList());
-        car.setDrivers(drivers);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
@@ -74,8 +62,4 @@ public class CarServiceImpl implements CarService {
         return carDao.getAllByDriver(driverId);
     }
 
-    private boolean isPresentCarDriver(Car car, Driver driver) {
-        return driverDao.get(driver.getId()).isPresent()
-                && carDao.get(car.getId()).isPresent();
-    }
 }
