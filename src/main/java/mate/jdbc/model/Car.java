@@ -12,11 +12,15 @@ public class Car {
     public Car() {
     }
 
-    public Car(Long id, String model, List<Driver> drivers, Manufacturer manufacturer) {
-        this.id = id;
+    public Car(String model, List<Driver> drivers, Manufacturer manufacturer) {
         this.model = model;
         this.drivers = drivers;
         this.manufacturer = manufacturer;
+    }
+
+    public Car(Long id, String model, List<Driver> drivers, Manufacturer manufacturer) {
+        this(model, drivers, manufacturer);
+        this.id = id;
     }
 
     public void setId(Long id) {
