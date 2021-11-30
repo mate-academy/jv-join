@@ -27,10 +27,19 @@ CREATE TABLE `cars` (
                            `manufacturer_id` BIGINT(11) NULL,
                            PRIMARY KEY (`id`),
                            CONSTRAINT `taxi_manufacturer_fk`
-                                                                FOREIGN KEY (`manufacturer_id`)
-                                                                    REFERENCES `taxi`.`manufacturers` (`id`)
-                                                                    ON DELETE NO ACTION
-                                                                    ON UPDATE NO ACTION
+                                FOREIGN KEY (`manufacturer_id`)
+                                    REFERENCES `taxi`.`manufacturers` (`id`)
                        );
 
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE `cars_drivers` (
+                        `car_id` BIGINT(11) NOT NULL,
+                        `driver_id` BIGINT(11) NOT NULL,
+                        CONSTRAINT `taxi_driver_fk`
+                            FOREIGN KEY (`driver_id`)
+                                REFERENCES `taxi`.`drivers` (`id`),
+                        CONSTRAINT `taxi_cars_fk`
+                            FOREIGN KEY (`car_id`)
+                                REFERENCES `taxi`.`cars` (`id`)
+);
 
