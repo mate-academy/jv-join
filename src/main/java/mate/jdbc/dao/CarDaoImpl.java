@@ -152,7 +152,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 drivers.add(getDriver(resultSet));
             }
             return drivers;
