@@ -21,8 +21,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                .orElseThrow(() -> new DataProcessingException("Could not get car from DAO "
-                        + "by id = " + id));
+                .orElseThrow();
     }
 
     @Override
@@ -56,7 +55,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getAllByDriver(driverId);
+    public List<Car> getCarsByDriverId(Long driverId) {
+        return carDao.getCarsByDriverId(driverId);
     }
 }

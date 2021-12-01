@@ -46,9 +46,9 @@ public class Main {
         carService.addDriverToCar(antonio, maseratiGhibli);
         carService.addDriverToCar(antonio, maseratiLevante);
 
-        carService.getAllByDriver(antonio.getId()).forEach(System.out::println);
-        carService.getAllByDriver(maria.getId()).forEach(System.out::println);
+        carService.getCarsByDriverId(antonio.getId()).forEach(System.out::println);
+        carService.getCarsByDriverId(maria.getId()).forEach(System.out::println);
         carService.removeDriverFromCar(antonio, maseratiLevante);
-        carService.getAllByDriver(antonio.getId()).forEach(System.out::println);
+        carService.getCarsByDriverId(antonio.getId()).forEach(System.out::println);
     }
 }

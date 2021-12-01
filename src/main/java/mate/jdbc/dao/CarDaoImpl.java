@@ -119,7 +119,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllByDriver(Long driverId) {
+    public List<Car> getCarsByDriverId(Long driverId) {
         String query = "SELECT c.id AS car_id, model, manufacturer_id, name, country "
                 + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
