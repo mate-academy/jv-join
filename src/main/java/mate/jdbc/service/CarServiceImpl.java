@@ -1,9 +1,7 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -55,15 +53,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = new ArrayList<>();
-        for (Car car : carDao.getAll()) {
-            for (Driver driver : car.getDrivers()) {
-                if (driver.getId() == driverId) {
-                    cars.add(car);
-                    break;
-                }
-            }
-        }
-        return cars;
+        return carDao.getCarByDriverId(driverId);
     }
 }

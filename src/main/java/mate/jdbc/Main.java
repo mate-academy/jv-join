@@ -26,9 +26,9 @@ public class Main {
         System.out.println(carService.getAll());
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
-        Driver kostya = new Driver("Kostya", "111");
-        Driver anya = new Driver("Anya", "222");
-        Driver kolya = new Driver("Kolya", "333");
+        Driver kostya = new Driver("Kostya", "444");
+        Driver anya = new Driver("Anya", "555");
+        Driver kolya = new Driver("Kolya", "666");
         driverService.create(kostya);
         driverService.create(anya);
         driverService.create(kolya);

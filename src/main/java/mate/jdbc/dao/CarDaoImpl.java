@@ -118,6 +118,28 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    public List<Car> getCarByDriverId(Long driverId) {
+        String query = "SELECT c.id AS id, model, manufacturer_id, name, country "
+                + "FROM `cars` AS c "
+                + "JOIN `cars_drivers` AS cd "
+                + "ON c.id = cd.car_id "
+                + "JOIN `manufacturers` AS m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted IS FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            List<Car> cars = new ArrayList<>();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get car by id " + driverId, e);
+        }
+    }
+
     private void deleteDrivers(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
