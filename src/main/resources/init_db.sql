@@ -42,4 +42,3 @@ CREATE TABLE `cars_drivers` (
                             FOREIGN KEY (`car_id`)
                                 REFERENCES `taxi`.`cars` (`id`)
 );
-
