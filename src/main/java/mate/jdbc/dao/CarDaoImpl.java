@@ -30,7 +30,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
@@ -75,7 +74,6 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
         }
@@ -157,7 +155,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get driver by car id " + carId, e);
+            throw new DataProcessingException("Couldn't get all drivers by car id " + carId, e);
         }
     }
 
@@ -172,7 +170,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't save driver to car "
+            throw new DataProcessingException("Couldn't save drivers to car "
                     + car + ". ", e);
         }
     }
@@ -184,7 +182,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete driver from car "
+            throw new DataProcessingException("Couldn't delete drivers from car "
                     + car + ". ", e);
         }
     }
