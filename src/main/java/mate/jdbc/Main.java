@@ -25,7 +25,7 @@ public class Main {
 
         System.out.println(driverService.get(driverThird.getId()));
 
-        System.out.println(driverService.getAll());
+        driverService.getAll().forEach(System.out::println);
 
         driverFirst.setLicenseNumber("54321");
         System.out.println(driverService.update(driverFirst));
@@ -53,7 +53,7 @@ public class Main {
 
         System.out.println(manufacturerService.get(manufacturerFirst.getId()));
 
-        System.out.println(manufacturerService.getAll());
+        manufacturerService.getAll().forEach(System.out::println);
 
         manufacturerSecond.setName("newSecond");
         manufacturerSecond.setCountry("newSecond");
@@ -93,7 +93,7 @@ public class Main {
 
         System.out.println(carService.get(carFirst.getId()));
 
-        System.out.println(carService.getAll());
+        carService.getAll().forEach(System.out::println);
 
         carSecond.setModel("Volvo1");
         System.out.println(carService.update(carSecond));
