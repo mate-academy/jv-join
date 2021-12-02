@@ -30,6 +30,6 @@ public class Main {
         carService.addDriverToCar(igorPetrovych, oldCar);
         Car secondCar = carService.get(3L);
         carService.addDriverToCar(igorPetrovych, secondCar);
-        carService.getAllByDriver(igorPetrovych.getId()).forEach(System.out::println);
+        carService.delete(secondCar.getId());
     }
 }
