@@ -51,12 +51,12 @@ public class Main {
 
         carService.get(car.getId());
 
-        carService.getAll();
+        carService.getAll().forEach(System.out::println);
 
         car.setModel("A4");
         carService.update(car);
 
-        carService.addDriverToCar(thirdDriver, car);
+        carService.addDriverToCar(firstDriver, car);
 
         carService.removeDriverFromCar(secondDriver, car);
 
