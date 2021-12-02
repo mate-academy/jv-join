@@ -1,13 +1,25 @@
 package mate.jdbc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Car {
     private Long id;
-    private String name;
+    private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
+
+    public Car(String model, Manufacturer manufacturer) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        drivers = new ArrayList<>();
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this(model, manufacturer);
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -17,12 +29,12 @@ public class Car {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getModel() {
+        return model;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.model = name;
     }
 
     public Manufacturer getManufacturer() {
@@ -43,25 +55,29 @@ public class Car {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Car car = (Car) o;
         return Objects.equals(id, car.id)
-                && Objects.equals(name, car.name)
+                && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
                 && Objects.equals(drivers, car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, manufacturer, drivers);
+        return Objects.hash(id, model, manufacturer, drivers);
     }
 
     @Override
     public String toString() {
         return "Car{"
                 + "id=" + id
-                + ", name='" + name + '\''
+                + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer
                 + ", drivers=" + drivers
                 + '}';
