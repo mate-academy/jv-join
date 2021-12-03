@@ -2,7 +2,6 @@ package mate.jdbc.service;
 
 import java.util.List;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -20,7 +19,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new DataProcessingException(
+        return carDao.get(id).orElseThrow(() -> new RuntimeException(
                 "Could not get car from DAO by id = " + id));
     }
 
@@ -41,7 +40,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getAllCarsByDriver(driverId);
+        return carDao.getAllByDriver(driverId);
     }
 
     @Override

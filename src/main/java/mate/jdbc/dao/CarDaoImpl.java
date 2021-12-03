@@ -121,7 +121,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllCarsByDriver(Long driverId) {
+    public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT c.id AS car_id, model, manufacturer_id, name, country FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
@@ -156,7 +156,7 @@ public class CarDaoImpl implements CarDao {
                 saveDriverToCarStatement.executeUpdate();
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Can't insert drivers to car: ", throwable);
+            throw new DataProcessingException("Can't insert drivers to car: " + car, throwable);
         }
     }
 
@@ -187,7 +187,8 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long carId) {
         String query = "SELECT id,name,license_number FROM drivers d "
-                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?;";
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id "
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriverStatement = connection.prepareStatement(query)) {
