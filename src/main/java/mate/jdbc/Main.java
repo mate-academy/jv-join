@@ -1,6 +1,7 @@
 package mate.jdbc;
 
 import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -15,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
-        ArrayList<Driver> driverList = new ArrayList<>();
+        List<Driver> driverList = new ArrayList<>();
         driverList.add(new Driver("Aleksandr Moskovchuk", "BAH000-111"));
         driverList.add(new Driver("Anatolii Huryk", "BAH000-222"));
         driverList.add(new Driver("Andrew Dzundza", "BAH000-333"));
