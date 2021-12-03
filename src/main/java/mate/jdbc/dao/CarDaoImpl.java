@@ -42,7 +42,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id, c.model, m.id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE c.id = ? AND c.is_deleted = FALSE ;";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
@@ -183,7 +183,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM drivers d "
                 + "INNER JOIN cars_drivers cd "
                 + "ON cd.driver_id = d.id "
-                + "WHERE car_id = ?;";
+                + "WHERE car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
