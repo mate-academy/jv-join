@@ -41,13 +41,9 @@ public class Main {
         carService.addDriverToCar(driverKarl, carFordFigo);
         carService.addDriverToCar(driverKarl, carFordAspire);
         carService.addDriverToCar(driverMark, carFordSport);
-        carService.update(carFordAspire);
-        carService.update(carFordFigo);
-        carService.update(carFordSport);
         System.out.println(carService.getAll());
         System.out.println(carService.getAllByDriver(driverJohn.getId()));
         carService.removeDriverFromCar(driverJohn, carFordAspire);
-        carService.update(carFordAspire);
         System.out.println(carService.get(carFordAspire.getId()));
         System.out.println(carService.delete(carFordFigo.getId()));
     }
