@@ -36,4 +36,3 @@ CREATE TABLE `cars_drivers` (
  KEY `driver_fk_idx` (`driver_id`),
  CONSTRAINT `car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
  CONSTRAINT `driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`));
-
