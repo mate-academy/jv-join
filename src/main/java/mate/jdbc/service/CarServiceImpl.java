@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new DataProcessingException(""));
+        return carDao.get(id).orElseThrow();
     }
 
     @Override
@@ -52,6 +52,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getCarsByDriverId(driverId);
+        return carDao.getByDriverId(driverId);
     }
 }

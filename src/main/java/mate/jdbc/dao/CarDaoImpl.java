@@ -116,33 +116,34 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getCarsByDriverId(Long id) {
+    public List<Car> getByDriverId(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String query = "SELECT c.id, c.model, m.id, m.name, m.country FROM cars c "
+        String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.country"
+                + " FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get cars by driver id " + id, e);
+            throw new DataProcessingException("Couldn't get cars by driver id " + driverId, e);
         }
         cars.forEach(car -> car.setDrivers(getCarDrivers(car.getId())));
         return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Long carId = resultSet.getObject(1, Long.class);
-        String carModel = resultSet.getString(2);
-        Long manufacturerId = resultSet.getObject(3, Long.class);
-        String manufacturerName = resultSet.getString(4);
-        String manufacturerCountry = resultSet.getString(5);
+        Long carId = resultSet.getObject("car_id", Long.class);
+        String carModel = resultSet.getString("model");
+        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+        String manufacturerName = resultSet.getString("name");
+        String manufacturerCountry = resultSet.getString("country");
         Manufacturer manufacturer
                 = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
         return new Car(carId, carModel, manufacturer);
@@ -200,9 +201,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject(1, Long.class);
-        String name = resultSet.getString(2);
-        String country = resultSet.getString(3);
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String country = resultSet.getString("license_number");
         return new Driver(id, name, country);
     }
 }
