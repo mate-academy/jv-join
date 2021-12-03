@@ -32,8 +32,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't create car. " + car + " ",
-                    e);
+            throw new DataProcessingException("Can't create car. " + car + " ", e);
         }
         insertDriver(car);
         return car;
@@ -53,8 +52,7 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get car by id " + id + " ",
-                    e);
+            throw new DataProcessingException("Can't get car by id " + id + " ", e);
         }
         if (car != null) {
             car.setDrivers(getAllDriversByCar(car.getId()));
@@ -185,7 +183,7 @@ public class CarDaoImpl implements CarDao {
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                        = connection.prepareStatement(query)) {
             preparedStatement.setLong(2, car.getId());
             for (Driver driver : car.getDrivers()) {
                 preparedStatement.setLong(1, driver.getId());
@@ -200,7 +198,7 @@ public class CarDaoImpl implements CarDao {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                        = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
