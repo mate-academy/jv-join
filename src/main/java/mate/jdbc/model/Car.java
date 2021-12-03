@@ -7,7 +7,7 @@ public class Car {
     private Long id;
     private String model;
     private Manufacturer manufacturer;
-    private List<Driver> driverList;
+    private List<Driver> driver;
 
     public Long getId() {
         return id;
@@ -33,12 +33,12 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    public List<Driver> getDriverList() {
-        return driverList;
+    public List<Driver> getDriver() {
+        return driver;
     }
 
-    public void setDriverList(List<Driver> driverList) {
-        this.driverList = driverList;
+    public void setDriver(List<Driver> driver) {
+        this.driver = driver;
     }
 
     @Override
@@ -52,12 +52,12 @@ public class Car {
         Car car = (Car) o;
         return Objects.equals(id, car.id) && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
-                && Objects.equals(driverList, car.driverList);
+                && Objects.equals(driver, car.driver);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, manufacturer, driverList);
+        return Objects.hash(id, model, manufacturer, driver);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class Car {
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer
-                + ", driverList=" + driverList
+                + ", driverList=" + driver
                 + '}';
     }
 }

@@ -1,5 +1,5 @@
 CREATE SCHEMA IF NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
-USE `taxi`;
+USE `taxi_service`;
 
 CREATE TABLE `manufacturers` (
                                  `id` bigint NOT NULL AUTO_INCREMENT,
@@ -7,16 +7,16 @@ CREATE TABLE `manufacturers` (
                                  `country` varchar(255) NOT NULL,
                                  `is_deleted` tinyint NOT NULL DEFAULT '0',
                                  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 
 CREATE TABLE `drivers` (
                           `id` bigint NOT NULL AUTO_INCREMENT,
                           `name` varchar(255) NOT NULL,
-                          `licenseNumber` varchar(255) NOT NULL,
+                          `license_number` varchar(255) NOT NULL,
                           `is_deleted` tinyint NOT NULL DEFAULT '0',
                           PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `cars` (
     `id`               BIGINT       NOT NULL AUTO_INCREMENT,

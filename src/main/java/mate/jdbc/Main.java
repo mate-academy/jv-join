@@ -68,7 +68,7 @@ public class Main {
         List<Driver> driverListForFirstCar = new ArrayList<>();
         driverListForFirstCar.add(driverFirst);
         driverListForFirstCar.add(driverSecond);
-        carFirst.setDriverList(driverListForFirstCar);
+        carFirst.setDriver(driverListForFirstCar);
 
         Car carSecond = new Car();
         carSecond.setModel("Volvo");
@@ -76,7 +76,7 @@ public class Main {
         List<Driver> driverListForSecondCar = new ArrayList<>();
         driverListForSecondCar.add(driverFirst);
         driverListForSecondCar.add(driverSecond);
-        carSecond.setDriverList(driverListForSecondCar);
+        carSecond.setDriver(driverListForSecondCar);
 
         Car carThird = new Car();
         carThird.setModel("Audi");
@@ -84,7 +84,7 @@ public class Main {
         List<Driver> driverListForThirdCar = new ArrayList<>();
         driverListForThirdCar.add(driverFirst);
         driverListForThirdCar.add(driverSecond);
-        carThird.setDriverList(driverListForThirdCar);
+        carThird.setDriver(driverListForThirdCar);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carFirst = carService.create(carFirst);
