@@ -14,7 +14,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        return carDao.create(car).get();
+        return carDao.create(car);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        car.getDriver().add(driver);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        car.getDriver().remove(driver);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 

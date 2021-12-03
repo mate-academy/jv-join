@@ -18,7 +18,7 @@ import mate.jdbc.util.ConnectionUtil;
 @Dao
 public class CarDaoImpl implements CarDao {
     @Override
-    public Optional<Car> create(Car car) {
+    public Car create(Car car) {
         String query = "INSERT INTO `cars` (model, manufacturers_id) VALUE (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(query,
@@ -34,14 +34,14 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t insert car " + car + " to DB", e);
         }
         insertDrivers(car);
-        return Optional.ofNullable(car);
+        return car;
     }
 
     @Override
     public Optional<Car> get(Long id) {
         Car car = null;
-        String query = "SELECT c.id car_id, c.model model, m.id model_id, "
-                + "m.country country, m.name name FROM cars c LEFT JOIN "
+        String query = "SELECT c.id car_id, c.model, m.id model_id, "
+                + "m.country, m.name FROM cars c LEFT JOIN "
                 + "manufacturers m ON m.id = c.manufacturers_id WHERE c.id = ? "
                 + "AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -56,7 +56,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t get car from DB by car id " + id, e);
         }
         if (car != null) {
-            car.setDriver(getDriverForCar(id));
+            car.setDrivers(getDriverForCar(id));
         }
         return Optional.ofNullable(car);
     }
@@ -64,8 +64,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         List<Car> carList = new ArrayList<>();
-        String query = "SELECT c.id car_id, c.model model, m.id model_id,"
-                + "m.country country, m.name name FROM cars c LEFT JOIN "
+        String query = "SELECT c.id car_id, c.model, m.id model_id,"
+                + "m.country, m.name FROM cars c LEFT JOIN "
                 + "manufacturers m ON m.id = c.manufacturers_id WHERE c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement preparedStatement =
@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t get all cars from DB", e);
         }
         for (Car car : carList) {
-            car.setDriver(getDriverForCar(car.getId()));
+            car.setDrivers(getDriverForCar(car.getId()));
         }
         return carList;
     }
@@ -118,8 +118,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllCarsByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String query = "SELECT c.id car_id, c.model model, m.id model_id,"
-                + " m.country country, m.name name"
+        String query = "SELECT c.id car_id, c.model, m.id model_id,"
+                + " m.country , m.name"
                 + " FROM cars_drivers LEFT JOIN cars c ON c.id = cars_drivers.cars_id"
                 + " LEFT JOIN manufacturers m on c.manufacturers_id = m.id"
                 + " WHERE drivers_id = ?;";
@@ -144,7 +144,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement preparedStatement =
                          connection.prepareStatement(query)) {
             preparedStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDriver()) {
+            for (Driver driver : car.getDrivers()) {
                 preparedStatement.setLong(2, driver.getId());
                 preparedStatement.executeUpdate();
             }
@@ -155,7 +155,7 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriverForCar(Long id) {
         List<Driver> driverList = new ArrayList<>();
-        String query = "SELECT d.id id, d.model model, d.license_number license "
+        String query = "SELECT d.id id, d.model, d.license_number license "
                     + "FROM cars_drivers cd LEFT JOIN drivers d on d.id = cd.drivers_id"
                     + " WHERE cd.cars_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
