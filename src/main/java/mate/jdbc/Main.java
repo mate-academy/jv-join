@@ -29,7 +29,7 @@ public class Main {
         thirdDriver.setId(17L);
 
         DriverService driverService =
-                (DriverService) injector.getInstance(DriverService.class);
+                 (DriverService) injector.getInstance(DriverService.class);
 
         driverService.create(firstDriver);
         driverService.create(secondDriver);
@@ -97,7 +97,7 @@ public class Main {
         car4.setId(3L);
 
         System.out.println(carService.get(3L));
-        carService.removeDriverFromCar(firstDriver, carService.get(3L));
+        carService.removeDriverFromCar(secondDriver, carService.get(3L));
         System.out.println(carService.get(3L));
     }
 }
