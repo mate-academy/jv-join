@@ -25,12 +25,16 @@ CREATE TABLE `cars` (
                         `model` varchar(225) NOT NULL,
                         `is_deleted` tinyint NOT NULL DEFAULT '0',
                         PRIMARY KEY (`id`),
-                        CONSTRAINT `manufacturer_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`));
+                        CONSTRAINT `manufacturer_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+                        ON UPDATE NO ACTION
+                        ON DELETE NO ACTION);
 
 CREATE TABLE `cars_drivers` (
-                                `car_id` bigint NOT NULL,
-                                `driver_id` bigint NOT NULL,
-                                KEY `car_fk_idx` (`car_id`),
-                                KEY `driver_fk_idx` (`driver_id`),
-                                CONSTRAINT `car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
-                                CONSTRAINT `driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`));
+    `car_id`    bigint NOT NULL,
+    `driver_id` bigint NOT NULL,
+    CONSTRAINT `car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`)
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT `driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION);

@@ -127,6 +127,5 @@ public class Main {
         carService.getAllByDriver(paul.getId());
 
         carService.getAll().forEach(System.out::println);
-
     }
 }
