@@ -31,7 +31,7 @@ public class Main {
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         carService.create(car);
-        System.out.println(carService.get(2L));
+        carService.get(2L);
         carService.delete(1L);
         car.setModel("VAZ-2108");
         carService.update(car);
