@@ -30,9 +30,9 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-        } catch (SQLException throwable) {
+        } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
-                    + car + ". ", throwable);
+                    + car + ". ", e);
         }
         insertDrivers(car);
         return car;
@@ -52,9 +52,9 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
             }
             return Optional.ofNullable(car);
-        } catch (SQLException throwable) {
+        } catch (SQLException e) {
             throw new DataProcessingException("Couldn't car in DB by id"
-                    + id + ". ", throwable);
+                    + id + ". ", e);
         }
     }
 
@@ -72,9 +72,9 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-        } catch (SQLException throwable) {
+        } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.",
-                    throwable);
+                    e);
         }
         for (Car car : cars) {
             car.setDrivers(getAllDriversByCarId(car.getId()));
@@ -123,11 +123,11 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN `manufacturers` AS m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted IS FALSE";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
