@@ -43,9 +43,11 @@ public class Main {
 
         Car carFirstFromDB = carService.get(carFirst.getId());
         List<Car> allCarsFromDB = carService.getAll();
+        System.out.println("All cars from DB");
         allCarsFromDB.stream()
                 .forEach(System.out::println);
 
+        System.out.println("All cars by driver " + driverFirst + "\n");
         carService.getAllByDriver(driverFirst.getId())
                         .stream()
                                 .forEach(System.out::println);
