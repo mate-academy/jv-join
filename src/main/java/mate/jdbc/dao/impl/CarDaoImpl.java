@@ -43,7 +43,7 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String query = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
-                + "JOIN manufacturers m "
+                + "INNER JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
@@ -68,7 +68,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
-                + "JOIN manufacturers m "
+                + "INNER JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
@@ -80,7 +80,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.",
+            throw new DataProcessingException("Couldn't get a list of cars from DB.",
                     e);
         }
         for (Car car : cars) {
@@ -202,7 +202,7 @@ public class CarDaoImpl implements CarDao {
         car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("id", Long.class));
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
