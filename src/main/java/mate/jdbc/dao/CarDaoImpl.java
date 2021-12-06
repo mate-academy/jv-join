@@ -40,7 +40,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT cars.id, cars.model, manufacturer_id, manufacturers.name, manufacturers.country"
+        String query = "SELECT cars.id, cars.model, manufacturer_id, "
+                + "manufacturers.name, manufacturers.country"
                 + "FROM cars"
                 + "JOIN manufacturers"
                 + "ON cars.manufacturer_id = manufacturers.id"
@@ -71,8 +72,8 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE ;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement
-                     = connection.prepareStatement(query)) {
+                PreparedStatement statement
+                        = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
@@ -125,8 +126,8 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement
-                     = connection.prepareStatement(query)) {
+                PreparedStatement statement
+                        = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -181,8 +182,8 @@ public class CarDaoImpl implements CarDao {
                 + "ON cd.driver_id = d.id "
                 + "WHERE car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement
-                     = connection.prepareStatement(query)) {
+                PreparedStatement statement
+                        = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
