@@ -19,6 +19,7 @@ CREATE TABLE `drivers` (
                            UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                            UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
                         `id` bigint NOT NULL AUTO_INCREMENT,
                         `model` varchar(255) DEFAULT NULL,
