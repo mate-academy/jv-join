@@ -54,7 +54,7 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get driver by id=" + id, e);
+            throw new DataProcessingException("Couldn't get car by id=" + id, e);
         }
         if (car != null) {
             car.setDrivers(getAllDriversForCar(id));
