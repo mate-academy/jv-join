@@ -133,23 +133,23 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDrivers(Long carId) {
-        List<Driver> result = new ArrayList<>();
+        List<Driver> drivers = new ArrayList<>();
         String query = "SELECT id, name, license_number FROM drivers d "
                 + "JOIN cars_drivers cd ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ? AND c.id_deleted = FALSE"
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE "
                 + "GROUP BY name;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                result.add(convertToDriver(resultSet));
+                drivers.add(convertToDriver(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t read drivers for car from DB with ID: "
                     + carId, e);
         }
-        return result;
+        return drivers;
     }
 
     private Driver convertToDriver(ResultSet resultSet) throws SQLException {
