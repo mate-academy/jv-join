@@ -29,6 +29,7 @@ public class Main {
         car.setManufacturer(manufacturer);
         car.setDrivers(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
+        carService.create(car);
         System.out.println(carService.getAll());
 
         carService.delete(car.getId());
