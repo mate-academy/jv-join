@@ -9,23 +9,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
+@Dao
 public class CarDaoImpl implements CarDao {
 
     @Override
     public Car create(Car car) {
-        String query = "insert into cars(manufacturers_id, model) values (?, ?)";
+        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement saveCarStatement = connection.prepareStatement(query,
+                PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
-            saveCarStatement.setLong(1, car.getManufacturer().getId());
-            saveCarStatement.setString(2, car.getModel());
-            saveCarStatement.executeUpdate();
-            ResultSet resultSet = saveCarStatement.getResultSet();
+            statement.setLong(1, car.getManufacturer().getId());
+            statement.setString(2, car.getModel());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
