@@ -100,7 +100,7 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(3, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Can't update car" + car, sqlException);
+            throw new RuntimeException("Can't update car " + car, sqlException);
         }
         deleteDrivers(car);
         insertDrivers(car);
@@ -116,7 +116,7 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, carId);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Can't delete car by id" + carId, sqlException);
+            throw new RuntimeException("Can't delete car by id " + carId, sqlException);
         }
     }
 
