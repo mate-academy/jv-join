@@ -6,8 +6,8 @@ import java.util.Objects;
 public class Car {
     private Long id;
     private String model;
-    Manufacturer manufacturer;
-    List<Driver> drivers;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -52,8 +52,12 @@ public class Car {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Car car = (Car) o;
         return Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
