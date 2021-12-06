@@ -16,12 +16,12 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer mtz = manufacturerService.get(20L);
+        Manufacturer mtz = manufacturerService.create(new Manufacturer("MTZ", "Belarus"));
 
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
-        Driver firsDriver = driverService.get(20L);
-        Driver secondDriver = driverService.get(21L);
+        Driver firsDriver = driverService.create(new Driver("Petya", "LYC3"));
+        Driver secondDriver = driverService.create(new Driver("Vasya", "LYC4"));
 
         CarService carService
                 = (CarService) injector.getInstance(CarService.class);
@@ -34,7 +34,7 @@ public class Main {
         System.out.println("Got car = " + carService.get(createdCar.getId()));
         createdCar.setModel("Tractor2");
         System.out.println("Updated car = " + carService.update(createdCar));
-        Driver thirdDriver = driverService.get(19L);
+        Driver thirdDriver = driverService.create(new Driver("Mikola", "NOANYLIC1"));
         carService.addDriverToCar(thirdDriver, createdCar);
         System.out.println("UpdatedWithoutDriver = " + carService.get(createdCar.getId()));
         carService.removeDriverFromCar(firsDriver, createdCar);
@@ -43,6 +43,6 @@ public class Main {
         System.out.println("All cars:");
         carService.getAll().forEach(System.out::println);
         System.out.println("All cars by driver:");
-        carService.getAllByDriver(18L).forEach(System.out::println);
+        carService.getAllByDriver(secondDriver.getId()).forEach(System.out::println);
     }
 }
