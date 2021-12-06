@@ -14,29 +14,25 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer = manufacturerService.get(18L);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-
-
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverService.get(1L));
         drivers.add(driverService.get(2L));
-
-//        Car car = new Car();
-//        car.setModel("testModel");
-//        car.setManufacturer(manufacturer);
-//        car.setDrivers(drivers);
-//        Car car1 = carService.create(car);
-        Car car = carService.get(1L);
+        Car car = new Car();
+        car.setModel("testModel");
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Manufacturer manufacturer = manufacturerService.get(18L);
+        car.setManufacturer(manufacturer);
+        car.setDrivers(drivers);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
+        Car car1 = carService.create(car);
         System.out.println(carService.getAll());
 
         drivers.remove(1);
         drivers.add(driverService.get(1L));
+        car = carService.get(1L);
         car.setDrivers(drivers);
         car.setModel("new X1");
         car = carService.update(car);
