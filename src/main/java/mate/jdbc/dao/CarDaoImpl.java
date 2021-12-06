@@ -30,19 +30,19 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id AS id, model, manufacturer_id, name, country "
-                + "FROM `cars` AS c "
-                + "JOIN `manufacturers` AS m "
+        String query = "SELECT c.id, model, manufacturer_id, name, country "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars from DB.", e);
         }
         cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
@@ -94,7 +94,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update " + car
-                    + " in car DB.", e);
+                    + " in DB.", e);
         }
         deleteAllDriversOfCar(car);
         insertDrivers(car);
