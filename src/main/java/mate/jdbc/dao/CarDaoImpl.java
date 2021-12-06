@@ -39,7 +39,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
+        String query = "SELECT c.model, c.id AS car_id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -64,11 +64,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
+        String query = "SELECT c.model, c.id AS car_id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE c.is_deleted = false;";
+                + "WHERE c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
@@ -120,7 +120,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.model, c.id, m.id AS manufacturer_id, m.name, m.country "
+        String query = "SELECT c.model, c.id AS car_id, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
