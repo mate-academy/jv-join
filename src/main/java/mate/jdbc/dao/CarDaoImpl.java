@@ -49,7 +49,7 @@ public class CarDaoImpl implements CarDao {
                         PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 car = parseCar(resultSet);
             }
         } catch (SQLException e) {
