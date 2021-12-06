@@ -41,8 +41,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         Car car = null;
-        String query = "SELECT c.id AS car_id, c.model AS model, "
-                + "m.id AS manufacturer_id, m.name AS name,  m.country AS country "
+        String query = "SELECT c.id AS car_id, c.model, "
+                + "m.id AS manufacturer_id, m.name,  m.country "
                 + "FROM cars AS c JOIN manufacturers AS m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = false;";
@@ -67,8 +67,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         List<Car> cars = new ArrayList<>();
-        String query = "SELECT c.id AS car_id, c.model AS model, "
-                + "m.id AS manufacturer_id, m.name AS name,  m.country AS country "
+        String query = "SELECT c.id AS car_id, c.model, "
+                + "m.id AS manufacturer_id, m.name,  m.country "
                 + "FROM cars AS c JOIN manufacturers AS m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = false;";
@@ -82,7 +82,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(car);
             }
         } catch (SQLException sqlException) {
-            throw new RuntimeException("Can't get all books from DB", sqlException);
+            throw new RuntimeException("Can't get all cars from DB", sqlException);
         }
         cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
@@ -123,9 +123,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String query = "SELECT c.id AS car_id, c.model AS model, "
-                + "c.manufacturer_id AS manufacturer_id, "
-                + "m.name AS name, m.country AS country "
+        String query = "SELECT c.id AS car_id, c.model, c.manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
