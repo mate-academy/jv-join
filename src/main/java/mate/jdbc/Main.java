@@ -19,7 +19,7 @@ public class Main {
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
         Manufacturer teslaManufacturer = new Manufacturer("Tesla", "USA");
-        teslaManufacturer = manufacturerService.create(teslaManufacturer);
+        manufacturerService.create(teslaManufacturer);
         List<Driver> drivers = new ArrayList<>();
         Driver driverJohn = new Driver("John", "12131415");
         Driver driverMatthew = new Driver("Matthew", "16171819");
@@ -31,11 +31,12 @@ public class Main {
         CarService carService = (CarService) injector
                 .getInstance(CarService.class);
         Car anotherCar = new Car("Model X", teslaManufacturer, drivers);
-        anotherCar = carService.create(anotherCar);
+        carService.create(anotherCar);
         System.out.println(carService.get(anotherCar.getId()));
         Driver driverBob = new Driver("Bob", "19181716");
-        driverBob = driverService.create(driverBob);
+        driverService.create(driverBob);
         System.out.println();
+        anotherCar.setModel("Model Z");
         carService.update(anotherCar);
         System.out.println();
         carService.removeDriverFromCar(driverMatthew, anotherCar);
