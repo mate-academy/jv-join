@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -29,16 +30,16 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Couldn't insert car: "
                     + car + " to DB.", throwable);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         Car car = null;
         String query = "SELECT c.id, c.model, m.id manufacturer_id, "
                 + "m.name manufacturer_name, m.country "
@@ -58,7 +59,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriversForCar(car.getId()));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -95,7 +96,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car: "
-                    + car + " from DB.", e);
+                    + car + " in DB.", e);
         }
         removeDrivers(car);
         insertDrivers(car);
@@ -130,16 +131,21 @@ public class CarDaoImpl implements CarDao {
                 cars.get(cars.size() - 1)
                         .setDrivers(getDriversForCar(resultSet.getObject("id", Long.class)));
             }
-            return cars;
+
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get list of Cars for driver with id: "
                     + driverId, e);
         }
+        for (Car car: cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     private List<Driver> getDriversForCar(Long carId) {
         String query = "SELECT name, license_number, id FROM drivers d "
-                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?;";
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id "
+                + "WHERE cd.car_id = ? AND d.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversStatement =
                         connection.prepareStatement(query)) {
@@ -160,8 +166,8 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO `cars_drivers` (car_id, driver_id) VALUE (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertCarsDriversStatement = connection.prepareStatement(query)) {
+            insertCarsDriversStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
-                insertCarsDriversStatement.setLong(1, car.getId());
                 insertCarsDriversStatement.setLong(2, driver.getId());
                 insertCarsDriversStatement.executeUpdate();
             }
@@ -174,10 +180,8 @@ public class CarDaoImpl implements CarDao {
         String query = "DELETE FROM `cars_drivers` WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertCarsDriversStatement = connection.prepareStatement(query)) {
-            for (Driver driver : car.getDrivers()) {
-                insertCarsDriversStatement.setLong(1, car.getId());
-                insertCarsDriversStatement.executeUpdate();
-            }
+            insertCarsDriversStatement.setLong(1, car.getId());
+            insertCarsDriversStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't remove drivers with car: " + car, e);
         }
