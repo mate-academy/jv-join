@@ -69,8 +69,8 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getCarStatement = connection.prepareStatement(query)) {
-            ResultSet resultSet = getCarStatement.executeQuery();
+                PreparedStatement getAllCarsStatement = connection.prepareStatement(query)) {
+            ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));
             }
