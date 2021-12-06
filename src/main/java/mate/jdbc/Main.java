@@ -52,6 +52,7 @@ public class Main {
         carService.addDriverToCar(toretto, saab900);
         carService.getAllByDriver(morales.getId()).forEach(System.out::println);
         carService.removeDriverFromCar(morales, renaultLogan);
+        carService.delete(saab900.getId());
         carService.getAllByDriver(morales.getId()).forEach(System.out::println);
     }
 }
