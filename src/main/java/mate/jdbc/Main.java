@@ -47,9 +47,9 @@ public class Main {
         carService.getAllByDriver(driverNumberOne.getId()).forEach(System.out::println);
         carService.getAllByDriver(driverNumberThree.getId()).forEach(System.out::println);
         System.out.println();
-        System.out.println(carService.get(7L));
+        System.out.println(carService.get(carNumberOne.getId()));
         System.out.println();
-        carService.delete(1L);
+        carService.delete(carNumberTwo.getId());
         System.out.println(carService.update(carNumberThreeModel));
         System.out.println();
         carService.getAll().forEach(System.out::println);
