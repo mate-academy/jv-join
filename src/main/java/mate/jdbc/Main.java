@@ -31,16 +31,17 @@ public class Main {
         driversTest.add(driverTest);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carTest = new Car("Lanos", manufacturerTest, driversTest);
-        carService.create(carTest);
-        System.out.println(carService.get(1L));
-        System.out.println(carService.getAll());
+        System.out.println(carService.create(carTest) + " created");
+        System.out.println("Get " + carService.get(16L));
+        System.out.println("Get all " + carService.getAll());
 
         carService.addDriverToCar(driverService.get(1L), carTest);
         System.out.println(carService.getAll());
 
-        System.out.println(carService.getAllByDriver(3L));
+        System.out.println("GetAllByDriver " + carService.getAllByDriver(3L));
 
-        carService.delete(1L);
+        System.out.println(carService.delete(16L) + " deleted");
         System.out.println(carService.getAll());
+        System.out.println("GetAllByDriver " + carService.getAllByDriver(3L));
     }
 }
