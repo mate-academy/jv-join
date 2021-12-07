@@ -22,7 +22,7 @@ CREATE TABLE `cars` (
                         CONSTRAINT cars_manufacturer_id_fk FOREIGN KEY (manufacturer_id)
                             REFERENCES manufacturers(id)
                             ON DELETE NO ACTION
-                            ON UPDATE CASCADE );
+                            ON UPDATE NO ACTION );
 
 CREATE TABLE `drivers` (
                            `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
@@ -43,5 +43,5 @@ CREATE TABLE `cars_drivers` (
                                 CONSTRAINT cars_drivers_cars_fk
                                     FOREIGN KEY (car_id) REFERENCES cars(id)
                                         ON DELETE NO ACTION
-                                        ON UPDATE CASCADE
+                                        ON UPDATE NO ACTION
 )

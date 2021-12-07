@@ -46,12 +46,12 @@ public class Main {
         daewooAveoCar.setDrivers(driversDaewoo);
         carService.create(daewooAveoCar);
 
-        driversDaewoo.add(driver1);
         Manufacturer cherry = manufacturerService.create(new Manufacturer("Cherry", "China"));
         Car cherryQqCar = new Car();
         cherryQqCar.setModel("QQ");
         cherryQqCar.setManufacturer(cherry);
         List<Driver> driversCherry = new ArrayList<>();
+        driversCherry.add(driver1);
         cherryQqCar.setDrivers(driversCherry);
         carService.create(cherryQqCar);
 
@@ -60,9 +60,9 @@ public class Main {
         System.out.println("BMW X5 list of drivers after removing driver from car" + driver1
                 + "\n" + carService.get(bmwX5Car.getId()).getDrivers());
 
-        System.out.println("BMW X5 list of drivers after adding driver to car" + driver1);
+        System.out.println("BMW X5 list of drivers after adding driver " + driver1);
         carService.addDriverToCar(driver1, bmwX5Car);
-        System.out.println("BMW X5 list of drivers"
+        System.out.println("BMW X5 list of drivers \n"
                 + carService.get(bmwX5Car.getId()).getDrivers());
 
         System.out.println("Cars in DB:");
