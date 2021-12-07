@@ -33,7 +33,7 @@ public class Main {
         bmwX5Car.setDrivers(driversBmw);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        bmwX5Car = carService.create(bmwX5Car);
+        carService.create(bmwX5Car);
 
         List<Driver> driversDaewoo = new ArrayList<>();
         driversDaewoo.add(driver1);
@@ -44,7 +44,7 @@ public class Main {
         daewooAveoCar.setModel("Aveo");
         daewooAveoCar.setManufacturer(daewoo);
         daewooAveoCar.setDrivers(driversDaewoo);
-        daewooAveoCar = carService.create(daewooAveoCar);
+        carService.create(daewooAveoCar);
 
         driversDaewoo.add(driver1);
         Manufacturer cherry = manufacturerService.create(new Manufacturer("Cherry", "China"));
@@ -53,7 +53,7 @@ public class Main {
         cherryQqCar.setManufacturer(cherry);
         List<Driver> driversCherry = new ArrayList<>();
         cherryQqCar.setDrivers(driversCherry);
-        cherryQqCar = carService.create(cherryQqCar);
+        carService.create(cherryQqCar);
 
         System.out.println("BMW X5 car" + carService.get(bmwX5Car.getId()));
         carService.removeDriverFromCar(driver1, bmwX5Car);
@@ -75,6 +75,6 @@ public class Main {
         System.out.println("Add driver" + driver3 + "to" + cherryQqCar);
         cherryQqCar.getDrivers().add(driver3);
         carService.update(cherryQqCar);
-        System.out.println("Drivers in car: " + cherryQqCar);
+        System.out.println("Drivers in car: " + carService.get(cherryQqCar.getId()));
     }
 }
