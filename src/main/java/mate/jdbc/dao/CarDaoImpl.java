@@ -153,7 +153,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = getManufacturer(resultSet);
+        Manufacturer manufacturer = parseManufacturer(resultSet);
         car.setManufacturer(manufacturer);
         return car;
     }
