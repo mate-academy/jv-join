@@ -81,9 +81,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.",
                     e);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversForCar(car.getId()));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -108,9 +106,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all сars by driver id " + driverId, e);
         }
-        for (Car car : cars) {
-            car.setDrivers(getDriversForCar(car.getId()));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -158,7 +154,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
+        Long id = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(name, country);
@@ -191,8 +187,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String getDriversRequest = "SELECT d.id AS id, name, license_number FROM `drivers` AS d "
-                + "JOIN `cars_drivers` AS cd "
+        String getDriversRequest = "SELECT d.id AS id, name, license_number FROM drivers AS d "
+                + "JOIN cars_drivers AS cd "
                 + "ON d.id = cd.driver_id "
                 + "WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
