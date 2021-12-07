@@ -35,13 +35,15 @@ public class Main {
 
         carService.delete(car.getId());
         drivers.remove(1);
+        Driver driverThree = driverService.create(new Driver("Alice","4567"));
+        drivers.add(driverThree);
         car.setDrivers(drivers);
         car.setModel("new X1");
         car = carService.update(car);
         System.out.println(car);
 
         System.out.println("Cars by driver: ");
-        List<Car> allByDriver = carService.getAllByDriver(2L);
+        List<Car> allByDriver = carService.getAllByDriver(driverTwo.getId());
         allByDriver.stream().forEach(System.out::println);
     }
 }
