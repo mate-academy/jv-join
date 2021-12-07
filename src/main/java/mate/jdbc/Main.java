@@ -32,7 +32,6 @@ public class Main {
         koenigsegg.setName("Koenigsegg");
         manufacturerDao.create(koenigsegg);
 
-        System.out.println(manufacturerDao.get(3L));
         manufacturerDao.getAll().forEach(System.out::println);
 
         porsche.setCountry("Ukraine");
