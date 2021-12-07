@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS `taxi_service_db`  DEFAULT CHARACTER SET utf8   DEFAULT ENCRYPTION='N';
 USE `taxi_service_db`;
 
-DROP TABLE IF EXISTS `manufacturers`;
+DROP TABLE IF EXISTS `cars_drivers`, `cars`, `drivers`, `manufacturers`;
 CREATE TABLE `manufacturers` (
                                  `id` bigint NOT NULL AUTO_INCREMENT,
                                  `name` varchar(255) DEFAULT NULL,
@@ -10,7 +10,6 @@ CREATE TABLE `manufacturers` (
                                  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
                            `id` bigint NOT NULL AUTO_INCREMENT,
                            `name` varchar(255) DEFAULT NULL,
