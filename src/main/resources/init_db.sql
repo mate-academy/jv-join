@@ -26,7 +26,9 @@ CREATE TABLE `cars` (
                         `manufacturer_id` bigint DEFAULT NULL,
                         PRIMARY KEY (`id`),
                         KEY `cars_manufacturers_fk` (`manufacturer_id`),
-                        CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`));
+                        CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+                            ON DELETE NO ACTION
+                            ON UPDATE NO ACTION);
 
 
 CREATE TABLE `cars_drivers` (
@@ -34,6 +36,10 @@ CREATE TABLE `cars_drivers` (
                                 `driver_id` bigint NOT NULL,
                                 KEY `cars_drivers_cars_fk` (`car_id`),
                                 KEY `cars_drivers_drivers_fk` (`driver_id`),
-                                CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
-                                CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`));
+                                CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`)
+                                    ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION,
+                                CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+                                    ON DELETE NO ACTION
+                                    ON UPDATE NO ACTION);
 
