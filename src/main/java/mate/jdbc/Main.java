@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.sql.SQLOutput;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -53,10 +52,5 @@ public class Main {
         System.out.println("Remove some drivers");
         carService.removeDriverFromCar(vasil, sens);
         carService.getAllByDriver(vasil.getId()).forEach(System.out::println);
-
-
-
-
-
     }
 }
