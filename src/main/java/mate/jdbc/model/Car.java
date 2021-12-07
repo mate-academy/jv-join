@@ -13,10 +13,14 @@ public class Car {
         this.model = model;
     }
 
-    public Car(Long id, String model, Manufacturer manufacturer) {
+    public Car(String model, Manufacturer manufacturer) {
         this(model);
-        this.id = id;
         this.manufacturer = manufacturer;
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this(model, manufacturer);
+        this.id = id;
     }
 
     public Long getId() {
