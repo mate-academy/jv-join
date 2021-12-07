@@ -17,7 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String insertQuery = "INSERT INTO cars(model, manufacturer_id) VALUES (?, ?)";
@@ -41,8 +40,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query =
-                                "SELECT c.id id, c.model model, m.id manufacturer_id, "
+        String query = "SELECT c.id, model, m.id manufacturer_id, "
                                 + "m.name manufacturer, m.country country "
                                 + "FROM cars c "
                                 + "INNER JOIN manufacturers m "
@@ -69,8 +67,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String query =
-                                "SELECT c.id id, c.model model, m.id manufacturer_id, "
-                                + "m.name manufacturer, m.country country "
+                                "SELECT c.id, model, m.id manufacturer_id, "
+                                + "name manufacturer, country "
                                 + "FROM cars c "
                                 + "INNER JOIN manufacturers m "
                                 + "ON c.manufacturer_id = m.id "
@@ -86,6 +84,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException exc) {
             throw new DataProcessingException(
                     "Can't get all entries from table Cars", exc);
+        }
+        for (Car car : listOfCars) {
+            insertDrivers(car);
         }
         return listOfCars;
     }
@@ -115,26 +116,25 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
-            preparedStatement.execute();
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException exc) {
             throw new DataProcessingException("Couldn't delete car by id = " + id, exc);
         }
-        return true;
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query =
-                "SELECT c.id id, c.model model, "
-                        + "m.id manufacturer_id, m.name manufacturer, "
-                        + "m.country country "
+                "SELECT c.id, c.model, "
+                        + "m.id manufacturer_id, name manufacturer, "
+                        + "country "
                         + "FROM cars c"
                         + "INNER JOIN cars_drivers c_d "
-                        + "ON cars.id = cars_drivers.car_id "
+                        + "ON c.id = c_d.car_id "
                         + "INNER JOIN manufacturers m "
-                        + "ON manufacturers.id = cars.manufacturer_id "
-                        + "WHERE driver_id = ? AND cars.is_deleted = FALSE "
-                        + "AND drivers.is_deleted = FALSE";
+                        + "ON m.id = c.manufacturer_id "
+                        + "WHERE driver_id = ? AND c.is_deleted = FALSE "
+                        + "AND d.is_deleted = FALSE";
         List<Car> listOfCars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -145,6 +145,9 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException exc) {
             throw new DataProcessingException("Couldn't get all cars by driver id" + driverId, exc);
+        }
+        for (Car car : listOfCars) {
+            insertDrivers(car);
         }
         return listOfCars;
     }
@@ -183,10 +186,10 @@ public class CarDaoImpl implements CarDao {
 
     private void setCarDrivers(Car car) {
         String query = "SELECT id, name, license_number "
-                + "FROM cars_drivers "
-                + "INNER JOIN drivers "
-                + "ON cars_drivers.driver_id = drivers.id "
-                + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = FALSE";
+                + "FROM cars_drivers c_d "
+                + "INNER JOIN drivers d "
+                + "ON c_d.driver_id = d.id "
+                + "WHERE c_d.car_id = ? AND d.is_deleted = FALSE";
         List<Driver> driversList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
