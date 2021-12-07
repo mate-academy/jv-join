@@ -14,7 +14,6 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         List<Driver> drivers = new ArrayList<>();
         Driver driverOne = driverService.create(new Driver("Bob","1234"));
@@ -33,14 +32,14 @@ public class Main {
         carService.create(car);
         System.out.println(carService.getAll());
 
-        carService.delete(car.getId());
         drivers.remove(1);
         Driver driverThree = driverService.create(new Driver("Alice","4567"));
         drivers.add(driverThree);
         car.setDrivers(drivers);
         car.setModel("new X1");
         car = carService.update(car);
-        System.out.println(car);
+        System.out.println(carService.get(car.getId()));
+        carService.delete(car.getId());
 
         System.out.println("Cars by driver: ");
         List<Car> allByDriver = carService.getAllByDriver(driverTwo.getId());
