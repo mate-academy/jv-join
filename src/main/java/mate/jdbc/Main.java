@@ -26,6 +26,8 @@ public class Main {
         Driver bobbyFischer = new Driver("Bobby Fischer", "5678");
         driverService.create(garryKasparov);
         driverService.create(bobbyFischer);
+        drivers.add(garryKasparov);
+        drivers.add(bobbyFischer);
 
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
@@ -38,8 +40,7 @@ public class Main {
         carService.addDriverToCar(garryKasparov, averageTeslaCar);
         carService.addDriverToCar(bobbyFischer, averageTeslaCar);
         carService.addDriverToCar(bobbyFischer, topTeslaCar);
-        drivers.add(garryKasparov);
-        drivers.add(bobbyFischer);
+
         System.out.println("Get all before operations: "
                 + carService.getAll());
 
