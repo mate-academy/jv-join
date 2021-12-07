@@ -19,7 +19,6 @@ CREATE TABLE `drivers` (
                            PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
                         `id` bigint NOT NULL AUTO_INCREMENT,
                         `model` varchar(255) DEFAULT 'null',
@@ -30,7 +29,6 @@ CREATE TABLE `cars` (
                         CONSTRAINT `cars_manufacturer_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
                                 `car_id` bigint NOT NULL,
                                 `driver_id` bigint NOT NULL,
