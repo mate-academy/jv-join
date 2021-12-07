@@ -40,9 +40,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectRequest = "SELECT * FROM cars JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
+        String selectRequest = "SELECT c.id AS id, model, manufacturer_id, name, country "
+                + "FROM cars AS c "
+                + "JOIN manufacturers AS m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement = connection.prepareStatement(selectRequest)) {
@@ -62,10 +64,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String selectRequest = "SELECT * FROM cars JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE "
-                + "AND manufacturers.is_deleted = FALSE;";
+        String selectRequest = "SELECT c.id AS id, model, manufacturer_id, name, country "
+                + "FROM cars AS c "
+                + "JOIN manufacturers AS m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement =
@@ -86,10 +89,13 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String selectRequest = "SELECT * "
-                + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
-                + "JOIN manufacturers m ON m.id = c.manufacturer_id "
-                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
+        String selectRequest = "SELECT c.id AS id, model, manufacturer_id, name, country "
+                + "FROM cars AS c "
+                + "JOIN cars_drivers AS cd "
+                + "ON c.id = cd.car_id "
+                + "JOIN manufacturers AS m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted IS FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement =
@@ -185,10 +191,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String getDriversRequest = "SELECT * "
-                + "FROM drivers d JOIN cars_drivers cd "
+        String getDriversRequest = "SELECT d.id AS id, name, license_number FROM `drivers` AS d "
+                + "JOIN `cars_drivers` AS cd "
                 + "ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ?;";
+                + "WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversStatement =
                         connection.prepareStatement(getDriversRequest)) {
