@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get a list of cars "
-                    + "from cars table. ", e);
+                    + "from cars table.", e);
         }
         for (Car car : cars) {
             car.setDrivers(getAllDriversFromCar(car.getId()));
@@ -115,14 +115,15 @@ public class CarDaoImpl implements CarDao {
             deleteStatement.setLong(1, id);
             return deleteStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete a car by id " + id + " ", e);
+            throw new DataProcessingException("Can't delete a car by id " + id, e);
         }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverRequest = "SELECT c.id as car_id, manufacturer_id, model, "
-                + "name , country FROM cars c "
+                + "name , country "
+                + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
@@ -174,7 +175,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversFromCar(Long carId) {
-        String getAllDriversFromCar = "SELECT d.id, name, licenseNumber "
+        String getAllDriversFromCar = "SELECT d.id, name, license_number "
                 + "FROM drivers d "
                 + "JOIN cars_drivers cd ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ? "
@@ -186,7 +187,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = driversFromCarStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(getDriver(resultSet));
+                drivers.add(parseDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -195,10 +196,10 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver getDriver(ResultSet resultSet) throws SQLException {
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("licenseNumber");
+        String licenseNumber = resultSet.getString("license_number");
         Driver driver = new Driver(name, licenseNumber);
         driver.setId(id);
         return driver;
