@@ -42,9 +42,8 @@ public class Main {
         carService.create(carSecond);
 
         Car carFirstFromDB = carService.get(carFirst.getId());
-        List<Car> allCarsFromDB = carService.getAll();
         System.out.println("All cars from DB");
-        allCarsFromDB.stream()
+        carService.getAll().stream()
                 .forEach(System.out::println);
 
         System.out.println("\nAll cars by driver " + driverFirst);
