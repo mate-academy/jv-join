@@ -122,7 +122,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllCarsByDriver(Long driverId) {
-        String query = "SELECT c.id AS car_id, c.model, c.manufacturer_id as manufacturer_id, "
+        String query = "SELECT c.id AS car_id, c.model, c.manufacturer_id, "
                 + "m.name, m.country "
                 + "FROM cars c "
                 + "LEFT JOIN manufacturers m ON manufacturer_id = m.id "
@@ -194,7 +194,7 @@ public class CarDaoImpl implements CarDao {
             }
             return listDrivers;
         } catch (SQLException ex) {
-            throw new DataProcessingException("Couldn't add all drivers from car: " + car, ex);
+            throw new DataProcessingException("Couldn't get all car drivers: " + car, ex);
         }
     }
 
