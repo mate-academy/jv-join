@@ -21,12 +21,12 @@ public class CarDaoImpl implements CarDao {
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement saveCarStatement = connection.prepareStatement(query,
+                PreparedStatement createCarStatement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
-            saveCarStatement.setString(1, car.getModel());
-            saveCarStatement.setLong(2, car.getManufacturer().getId());
-            saveCarStatement.executeUpdate();
-            ResultSet resultSet = saveCarStatement.getGeneratedKeys();
+            createCarStatement.setString(1, car.getModel());
+            createCarStatement.setLong(2, car.getManufacturer().getId());
+            createCarStatement.executeUpdate();
+            ResultSet resultSet = createCarStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
@@ -131,7 +131,6 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getAllByDriverStatement = connection.prepareStatement(query)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
-            Car car = null;
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
