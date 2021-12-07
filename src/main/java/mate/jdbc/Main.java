@@ -19,7 +19,6 @@ public class Main {
         Manufacturer mtz = manufacturerService.create(new Manufacturer("BelAZ", "Belarus"));
         Manufacturer audi = manufacturerService.create(new Manufacturer("Audi", "Italy"));
         Manufacturer generalMotors = manufacturerService.create(new Manufacturer("GMT", "USA"));
-        Manufacturer dodgeMotors = manufacturerService.create(new Manufacturer("Dodge", "USA"));
 
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
@@ -41,6 +40,7 @@ public class Main {
         System.out.println("Got americanCar = " + carService.get(americanCar.getId()));
         belarusianCar.setModel("Tractor");
         italianCar.setModel("A7");
+        Manufacturer dodgeMotors = manufacturerService.create(new Manufacturer("Dodge", "USA"));
         americanCar.setManufacturer(dodgeMotors);
         System.out.println("Updated belarusianCar = " + carService.update(belarusianCar));
         System.out.println("Updated italianCar = " + carService.update(italianCar));
