@@ -92,21 +92,17 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
+        deleteDependencyBetweenCarAndDriver(car.getId());
         String carQuery = "UPDATE cars "
                 + "SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE;";
-        String deleteQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement carUpdateStatement
-                         = connection.prepareStatement(carQuery);
-                 PreparedStatement driverUpdateStatement
-                         = connection.prepareStatement(deleteQuery)) {
+                         = connection.prepareStatement(carQuery)) {
             carUpdateStatement.setString(1, car.getModel());
             carUpdateStatement.setLong(2, car.getManufacturer().getId());
             carUpdateStatement.setLong(3, car.getId());
             carUpdateStatement.executeUpdate();
-            driverUpdateStatement.setLong(1, car.getId());
-            driverUpdateStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
@@ -130,24 +126,27 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT cd.car_id FROM cars_drivers AS cd JOIN cars "
-                + "ON cars.id = cd.car_id WHERE cd.driver_id = ? AND cars.is_deleted = false;";
-        List<Long> carsId = new ArrayList<>();
+        String query = "SELECT c.id as car_id, model, manufacturer_id, name, country "
+                + "FROM cars AS c JOIN manufacturers AS m ON m.id = c.manufacturer_id "
+                + "JOIN cars_drivers AS cd ON c.id = cd.car_id "
+                + "WHERE c.is_deleted = FALSE AND driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement =
-                         connection.prepareStatement(query)) {
-            statement.setLong(1, driverId);
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1,driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Long carId = resultSet.getObject(1, Long.class);
-                carsId.add(carId);
+                Car car = parseCarWithManufacturerFromResultSet(resultSet);
+                cars.add(car);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get all cars by driver id: " + driverId, e);
+            throw new DataProcessingException("Couldn't get a list of cars from DB.",
+                    e);
         }
-        List<Car> cars = new ArrayList<>();
-        for (Long carId: carsId) {
-            cars.add(get(carId).get());
+        for (Car car: cars) {
+            Long carId = car.getId();
+            List<Driver> drivers = getDriversForCar(carId);
+            car.setDrivers(drivers);
         }
         return cars;
     }
@@ -203,5 +202,18 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
+    }
+
+    public void deleteDependencyBetweenCarAndDriver(Long carId) {
+        String deleteQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement driverUpdateStatement
+                         = connection.prepareStatement(deleteQuery)) {
+            driverUpdateStatement.setLong(1, carId);
+            driverUpdateStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete data "
+                    + "in cars_driversDB for car ID" + carId, e);
+        }
     }
 }
