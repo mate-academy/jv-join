@@ -41,7 +41,7 @@ public class Main {
                 = (CarService) injector.getInstance(CarService.class);
         carService.create(x5);
         carService.create(q7);
-        System.out.println(carService.get(1L));
+        System.out.println(carService.get(x5.getId()));
         carService.getAll().forEach(System.out::println);
         carService.addDriverToCar(ann, x5);
         carService.addDriverToCar(bob, q7);
