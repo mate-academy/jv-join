@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
             getStatement.setLong(1, id);
             ResultSet resultSet = getStatement.executeQuery();
             if (resultSet.next()) {
-                car = getCarById(resultSet);
+                car = getCar(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a car with id " + id, e);
@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                         connection.prepareStatement(selectRequest)) {
             ResultSet resultSet = getStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCarById(resultSet);
+                Car car = getCar(resultSet);
                 cars.add(car);
             }
         } catch (SQLException e) {
@@ -136,7 +136,7 @@ public class CarDaoImpl implements CarDao {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCarByDriver(resultSet));
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get a list of cars by driver with id "
@@ -191,7 +191,7 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private Car getCarById(ResultSet resultSet) throws SQLException {
+    private Car getCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
@@ -199,24 +199,7 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
-        car.setId(resultSet.getObject("id", Long.class));
-        return car;
-    }
-
-    private Car getCarByDriver(ResultSet resultSet) throws SQLException {
-        final Long id = resultSet.getObject("car_id", Long.class);
-        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
-        final String model = resultSet.getString("model");
-        String manufacturerName = resultSet.getString("name");
-        String manufacturerCountry = resultSet.getString("country");
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(manufacturerId);
-        manufacturer.setName(manufacturerName);
-        manufacturer.setCountry(manufacturerCountry);
-        Car car = new Car();
-        car.setId(id);
-        car.setManufacturer(manufacturer);
-        car.setModel(model);
+        car.setId(resultSet.getObject("manufacturer_id", Long.class));
         return car;
     }
 
