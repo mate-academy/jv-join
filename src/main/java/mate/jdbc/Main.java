@@ -18,26 +18,30 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer lada = new Manufacturer("Lada", "Ukraine");
         Manufacturer deo = new Manufacturer("Deo", "Ukraine");
-        lada = manufacturerService.create(lada);
-        deo = manufacturerService.create(deo);
-        Car car = new Car("VAZ-2107", lada);
+        manufacturerService.create(lada);
+        manufacturerService.create(deo);
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
+        Driver driver = new Driver("John","239056");
+        driverService.create(driver);
         List<Driver> driverList = new ArrayList<>();
-        System.out.println(driverService.get(2L));
-        driverList.add(driverService.get(2L));
-        car.setDrivers(driverList);
+        driverList.add(driver);
+        Car car1 = new Car("VAZ-2107", lada);
+        Car car2 = new Car("DEO-Nexia", deo);
+        car1.setDrivers(driverList);
+        car2.setDrivers(driverList);
 
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
-        car = carService.create(car);
-        carService.get(car.getId());
-        carService.delete(1L);
-        car.setModel("VAZ-2108");
-        carService.update(car);
-        carService.addDriverToCar(driverService.get(2L), car);
-        carService.removeDriverFromCar(driverService.get(2L), car);
+        carService.create(car1);
+        carService.create(car2);
+        carService.get(car1.getId());
+        carService.delete(car2.getId());
+        car1.setModel("VAZ-2108");
+        carService.update(car1);
+        carService.addDriverToCar(driverService.get(driver.getId()), car1);
+        carService.removeDriverFromCar(driverService.get(driver.getId()), car2);
         carService.getAll().forEach(System.out::println);
-        carService.getAllByDriver(1L).forEach(System.out::println);
+        carService.getAllByDriver(driver.getId()).forEach(System.out::println);
     }
 }

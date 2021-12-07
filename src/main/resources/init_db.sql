@@ -1,4 +1,11 @@
 CREATE DATABASE `taxi_service` !40100 DEFAULT CHARACTER SET utf8  !80016 DEFAULT ENCRYPTION='N';
+CREATE TABLE `manufacturers` (
+                                 `id` bigint NOT NULL AUTO_INCREMENT,
+                                 `name` varchar(255) DEFAULT NULL,
+                                 `country` varchar(255) DEFAULT NULL,
+                                 `is_deleted` tinyint NOT NULL DEFAULT '0',
+                                 PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 CREATE TABLE `cars` (
                         `id` bigint NOT NULL AUTO_INCREMENT,
                         `model` varchar(255) DEFAULT NULL,
@@ -7,7 +14,14 @@ CREATE TABLE `cars` (
                         PRIMARY KEY (`id`),
                         KEY `cars_manufacturers_fk` (`manufacturer_id`),
                         CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
+CREATE TABLE `drivers` (
+                           `id` bigint NOT NULL AUTO_INCREMENT,
+                           `name` varchar(255) DEFAULT NULL,
+                           `license_number` varchar(255) DEFAULT NULL,
+                           `is_deleted` tinyint NOT NULL DEFAULT '0',
+                           PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 CREATE TABLE `cars_drivers` (
                                 `driver_id` bigint NOT NULL,
                                 `car_id` bigint NOT NULL,
@@ -16,19 +30,3 @@ CREATE TABLE `cars_drivers` (
                                 CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
                                 CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-CREATE TABLE `drivers` (
-                           `id` bigint NOT NULL AUTO_INCREMENT,
-                           `name` varchar(255) DEFAULT NULL,
-                           `license_number` varchar(255) DEFAULT NULL,
-                           `is_deleted` tinyint NOT NULL DEFAULT '0',
-                           PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb3;
-CREATE TABLE `manufacturers` (
-                                 `id` bigint NOT NULL AUTO_INCREMENT,
-                                 `name` varchar(255) DEFAULT NULL,
-                                 `country` varchar(255) DEFAULT NULL,
-                                 `is_deleted` tinyint NOT NULL DEFAULT '0',
-                                 PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb3;
-
-
