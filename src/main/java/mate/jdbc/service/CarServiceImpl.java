@@ -19,10 +19,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        if (carDao.get(id).isEmpty()) {
-            throw new RuntimeException("No such car with id: " + id);
-        }
-        return carDao.get(id).get();
+        return carDao.get(id).orElseThrow();
     }
 
     @Override

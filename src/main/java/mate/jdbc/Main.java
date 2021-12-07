@@ -17,15 +17,16 @@ public class Main {
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         List<Driver> drivers = new ArrayList<>();
-        Driver driverOne = driverService.get(1L);
+        Driver driverOne = driverService.create(new Driver("Bob","1234"));
         drivers.add(driverOne);
-        Driver driverTwo = driverService.get(2L);
+        Driver driverTwo = driverService.create(new Driver("Jack","09876"));
         drivers.add(driverTwo);
         Car car = new Car();
         car.setModel("testModel");
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer = manufacturerService.get(18L);
+        Manufacturer manufacturer = manufacturerService
+                .create(new Manufacturer("Peugeot", "France"));
         car.setManufacturer(manufacturer);
         car.setDrivers(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
@@ -33,15 +34,13 @@ public class Main {
         System.out.println(carService.getAll());
 
         carService.delete(car.getId());
-        car = carService.get(1L);
         drivers.remove(1);
-        drivers.add(driverService.get(1L));
         car.setDrivers(drivers);
         car.setModel("new X1");
         car = carService.update(car);
         System.out.println(car);
 
-        System.out.println("Cars by driver:");
+        System.out.println("Cars by driver: ");
         List<Car> allByDriver = carService.getAllByDriver(2L);
         allByDriver.stream().forEach(System.out::println);
     }
