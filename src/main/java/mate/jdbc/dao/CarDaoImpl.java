@@ -168,7 +168,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String query = "SELECT id, d.name, licenseNumber FROM drivers AS d "
+        String query = "SELECT id, d.name, d.license_number FROM drivers AS d "
                 + "JOIN cars_drivers AS cd ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -200,7 +200,7 @@ public class CarDaoImpl implements CarDao {
     private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("licenseNumber");
+        String licenseNumber = resultSet.getString("license_number");
         Driver driver = new Driver(name, licenseNumber);
         driver.setId(id);
         return driver;
