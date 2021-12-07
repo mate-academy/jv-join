@@ -52,14 +52,11 @@ public class Main {
         carService.addDriverToCar(garryKasparov, topTeslaCar);
         System.out.println("Get cars via driver`s id: "
                 + carService.getAllByDriver(garryKasparov.getId()));
-
         topTeslaCar.setModel("Most expensive Tesla");
         carService.update(topTeslaCar);
         System.out.println("Get car after update: "
                 + carService.get(topTeslaCar.getId()));
-
         System.out.println("Get all by drivers id: "
                 + carService.getAllByDriver(bobbyFischer.getId()));
-
     }
 }
