@@ -41,7 +41,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id AS id, model, manufacturer_id, name, country "
+        String query = "SELECT c.id, model, manufacturer_id, name, country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -65,7 +65,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id AS id, model, manufacturer_id, name, country "
+        String query = "SELECT c.id, model, manufacturer_id, name, country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -118,24 +118,26 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT car_id FROM cars_drivers WHERE driver_id = ?";
-        List<Long> carIds = new ArrayList<>();
+        String query = "SELECT c.id, model, manufacturer_id, name, country "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carIds.add(resultSet.getLong("car_id"));
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Couldn't get car IDs for driver ID "
-                    + driverId, throwable);
+            throw new DataProcessingException("Couldn't get cars from DB.", throwable);
         }
-        Optional<Car> carOptional;
-        List<Car> cars = new ArrayList<>();
-        for (Long id : carIds) {
-            carOptional = get(id);
-            carOptional.ifPresent(cars::add);
+        for (Car car : cars) {
+            car.setDrivers(getDriversFromDb(car));
         }
         return cars;
     }
