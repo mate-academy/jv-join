@@ -56,7 +56,6 @@ public class Main {
         daniel.setLicenseNumber("666");
         driverService.create(daniel);
 
-        System.out.println(driverService.get(2L));
         driverService.getAll().forEach(System.out::println);
 
         daniel.setLicenseNumber("88");
