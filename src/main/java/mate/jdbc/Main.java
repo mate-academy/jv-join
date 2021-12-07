@@ -16,33 +16,45 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer mtz = manufacturerService.create(new Manufacturer("MTZ", "Belarus"));
+        Manufacturer mtz = manufacturerService.create(new Manufacturer("BelAZ", "Belarus"));
+        Manufacturer audi = manufacturerService.create(new Manufacturer("Audi", "Italy"));
+        Manufacturer generalMotors = manufacturerService.create(new Manufacturer("GMT", "USA"));
+        Manufacturer dodgeMotors = manufacturerService.create(new Manufacturer("Dodge", "USA"));
 
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
-        Driver firsDriver = driverService.create(new Driver("Petya", "LYC3"));
-        Driver secondDriver = driverService.create(new Driver("Vasya", "LYC4"));
+        Driver firsDriver = driverService.create(new Driver("Petya", "LYC1"));
+        Driver secondDriver = driverService.create(new Driver("Vasya", "LYC2"));
+        Driver thirdDriver = driverService.create(new Driver("Misha", "LYC3"));
+        Driver fourthDriver = driverService.create(new Driver("Masha", "LYC4"));
 
         CarService carService
                 = (CarService) injector.getInstance(CarService.class);
-
-        List<Driver> drivers = new ArrayList<>(List.of(firsDriver, secondDriver));
-        Car tractor = new Car("Tractor1", mtz, drivers);
-
-        Car createdCar = carService.create(tractor);
-        System.out.println("Created car = " + createdCar);
-        System.out.println("Got car = " + carService.get(createdCar.getId()));
-        createdCar.setModel("Tractor2");
-        System.out.println("Updated car = " + carService.update(createdCar));
-        Driver thirdDriver = driverService.create(new Driver("Mikola", "NOANYLIC1"));
-        carService.addDriverToCar(thirdDriver, createdCar);
-        System.out.println("UpdatedWithoutDriver = " + carService.get(createdCar.getId()));
-        carService.removeDriverFromCar(firsDriver, createdCar);
-        System.out.println("UpdatedWithNewDriver = " + carService.get(createdCar.getId()));
-        System.out.println("Deleted = " + carService.delete(createdCar.getId()));
-        System.out.println("All cars:");
+        Car belarusianCar = carService.create(new Car("Belaz", mtz,
+                new ArrayList<>(List.of(firsDriver, secondDriver))));
+        Car italianCar = carService.create(new Car("A8", audi,
+                new ArrayList<>(List.of(secondDriver, thirdDriver))));
+        Car americanCar = carService.create(new Car("Cadillac", generalMotors,
+                new ArrayList<>(List.of(thirdDriver, fourthDriver))));
+        System.out.println("Got belarusianCar = " + carService.get(belarusianCar.getId()));
+        System.out.println("Got italianCar = " + carService.get(italianCar.getId()));
+        System.out.println("Got americanCar = " + carService.get(americanCar.getId()));
+        belarusianCar.setModel("Tractor");
+        italianCar.setModel("A7");
+        americanCar.setManufacturer(dodgeMotors);
+        System.out.println("Updated belarusianCar = " + carService.update(belarusianCar));
+        System.out.println("Updated italianCar = " + carService.update(italianCar));
+        System.out.println("Updated americanCar = " + carService.update(americanCar));
+        carService.addDriverToCar(thirdDriver, belarusianCar);
+        System.out.println("BelarusianCarWithNewDriver = " + carService.get(belarusianCar.getId()));
+        carService.removeDriverFromCar(firsDriver, belarusianCar);
+        System.out.println("BelarusianCarWithoutDriver = " + carService.get(belarusianCar.getId()));
+        System.out.println("All cars before deletion:");
+        carService.getAll().forEach(System.out::println);
+        System.out.println("Deleted = " + carService.delete(belarusianCar.getId()));
+        System.out.println("All cars after deletion:");
         carService.getAll().forEach(System.out::println);
         System.out.println("All cars by driver:");
-        carService.getAllByDriver(secondDriver.getId()).forEach(System.out::println);
+        carService.getAllByDriver(fourthDriver.getId()).forEach(System.out::println);
     }
 }
