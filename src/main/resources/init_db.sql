@@ -1,6 +1,10 @@
-DROP SCHEMA IF EXISTS `taxi`;
-CREATE SCHEMA `taxi` DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8;
 USE `taxi`;
+
+DROP table IF EXISTS  `cars_drivers`;
+DROP table IF EXISTS `cars`;
+DROP table IF EXISTS  `manufacturers`;
+DROP table IF EXISTS  `drivers`;
 
 CREATE TABLE `manufacturers` (
                                  `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
@@ -34,10 +38,10 @@ CREATE TABLE `cars_drivers` (
                                 car_id BIGINT,
                                 CONSTRAINT cars_drivers_drivers_fk
                                     FOREIGN KEY (driver_id) REFERENCES drivers(id)
-                                    ON DELETE NO ACTION
-                                    ON UPDATE CASCADE ,
+                                        ON DELETE NO ACTION
+                                        ON UPDATE CASCADE ,
                                 CONSTRAINT cars_drivers_cars_fk
                                     FOREIGN KEY (car_id) REFERENCES cars(id)
-                                    ON DELETE NO ACTION
-                                    ON UPDATE CASCADE
+                                        ON DELETE NO ACTION
+                                        ON UPDATE CASCADE
 )

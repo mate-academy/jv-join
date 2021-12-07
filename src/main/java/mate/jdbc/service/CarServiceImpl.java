@@ -3,12 +3,14 @@ package mate.jdbc.service;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
+import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
+@Service
 public class CarServiceImpl implements CarService {
     @Inject
-    CarDao carDao;
+    private CarDao carDao;
 
     @Override
     public Car create(Car car) {
@@ -19,7 +21,7 @@ public class CarServiceImpl implements CarService {
     public Car get(Long id) {
         return carDao.get(id).orElseThrow(
                 () -> new RuntimeException(
-                        "Car with id = " + id +" not found!"));
+                        "Car with id = " + id + " not found!"));
     }
 
     @Override
@@ -45,10 +47,12 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 }
