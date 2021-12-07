@@ -99,6 +99,7 @@ public class CarDaoImpl implements CarDao {
                     + car + " in carsDB.", ex);
         }
         if (car.getDrivers() != null) {
+            hardDeleteAllDriversByCar(car.getId());
             addAllDriversByCar(car);
         }
         return car;
@@ -123,10 +124,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllCarsByDriver(Long driverId) {
         String query = "SELECT c.id AS car_id, c.model, c.manufacturer_id as manufacturer_id, "
-                + "m.name, m.country, cd.driver_id AS driver_id \n"
-                + "FROM cars c \n"
-                + "LEFT JOIN manufacturers m ON manufacturer_id = m.id\n"
-                + "LEFT JOIN cars_drivers cd ON c.id = cd.car_id\n"
+                + "m.name, m.country, cd.driver_id AS driver_id "
+                + "FROM cars c "
+                + "LEFT JOIN manufacturers m ON manufacturer_id = m.id "
+                + "LEFT JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE driver_id = '2' AND c.is_deleted = FALSE;";
         List<Car> listCars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -158,7 +159,6 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void addAllDriversByCar(Car car) {
-        hardDeleteAllDriversByCar(car.getId());
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement addAllDriversByCarStatement
@@ -175,9 +175,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversByCar(Car car) {
-        String query = "SELECT d.*\n"
-                + "FROM cars_drivers cd\n"
-                + "LEFT JOIN drivers d ON cd.driver_id = d.id\n"
+        String query = "SELECT d.* "
+                + "FROM cars_drivers cd "
+                + "LEFT JOIN drivers d ON cd.driver_id = d.id "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversByCarStatement
