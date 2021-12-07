@@ -18,8 +18,8 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer lada = new Manufacturer("Lada", "Ukraine");
         Manufacturer deo = new Manufacturer("Deo", "Ukraine");
-        manufacturerService.create(lada);
-        manufacturerService.create(deo);
+        lada = manufacturerService.create(lada);
+        deo = manufacturerService.create(deo);
         Car car = new Car("VAZ-2107", lada);
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
@@ -30,8 +30,8 @@ public class Main {
 
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
-        carService.create(car);
-        carService.get(2L);
+        car = carService.create(car);
+        carService.get(car.getId());
         carService.delete(1L);
         car.setModel("VAZ-2108");
         carService.update(car);
