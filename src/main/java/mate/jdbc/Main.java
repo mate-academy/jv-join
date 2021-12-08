@@ -76,5 +76,8 @@ public class Main {
         cherryQqCar.getDrivers().add(driver3);
         carService.update(cherryQqCar);
         System.out.println("Drivers in car: " + carService.get(cherryQqCar.getId()));
+
+        System.out.println("All cars by driver" + driver1);
+        System.out.println("is: " + carService.getAllByDriver(driver1.getId()));
     }
 }
