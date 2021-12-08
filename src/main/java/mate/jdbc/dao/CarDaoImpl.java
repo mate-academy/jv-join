@@ -144,7 +144,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get all cars by driver id" + driverId, exc);
         }
         for (Car car : listOfCars) {
-           setCarDrivers(car);
+            setCarDrivers(car);
         }
         return listOfCars;
     }
