@@ -1,6 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `taxi` DEFAULT CHARACTER SET utf8;
-USE `taxi`;
-
+CREATE SCHEMA IF NOT EXISTS `taxi_service_db` DEFAULT CHARACTER SET utf8;
+USE `taxi_service_db`;
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
                                         `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
@@ -18,3 +17,21 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+DROP TABLE IF EXISTS `cars`;
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `manufacturer_id` bigint NOT NULL,
+                        `model` varchar(255) DEFAULT NULL,
+                        `is_deleted` tinyint DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        CONSTRAINT `manufacturer_id` FOREIGN KEY (`id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE `cars_drivers` (
+                                `driver_id` bigint NOT NULL,
+                                `car_id` bigint NOT NULL,
+                                KEY `driver_id_idx` (`driver_id`),
+                                KEY `car_id_idx` (`car_id`),
+                                CONSTRAINT `car_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+                                CONSTRAINT `driver_id` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
