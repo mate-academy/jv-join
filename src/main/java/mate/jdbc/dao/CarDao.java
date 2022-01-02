@@ -15,8 +15,4 @@ public interface CarDao {
     boolean delete(Long id);
 
     List<Car> getAllByDriver(Long driverId);
-
-    boolean removeDriverFromCar(Long carId, Long driverId);
-
-    boolean addDriverToCar(Long carId, Long driverId);
 }
