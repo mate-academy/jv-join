@@ -106,7 +106,6 @@ public class DriverDaoImpl implements DriverDao {
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
         Driver driver = new Driver(id, name, licenseNumber);
-        driver.setId(id);
         return driver;
     }
 }

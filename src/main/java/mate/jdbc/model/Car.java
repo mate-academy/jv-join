@@ -12,13 +12,10 @@ public class Car {
 
     }
 
-    public Car(String model) {
+    public Car(String model, Long manufacturerId, List<Driver> drivers) {
         this.model = model;
-    }
-
-    public Car(Long id, String model) {
-        this.id = id;
-        this.model = model;
+        this.manufacturerId = manufacturerId;
+        this.drivers = drivers;
     }
 
     public Car(Long id, String model, Long manufacturerId) {
