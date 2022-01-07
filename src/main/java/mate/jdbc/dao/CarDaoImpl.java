@@ -49,13 +49,13 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                car = getCar(resultSet);
+                car = parseCarsFromResultSet(resultSet);
             }
+            car.setDrivers(getDriversForCar(id));
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        car.setDrivers(getDriversForCar(id));
-        return Optional.of(car);
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCar(resultSet));
+                cars.add(parseCarsFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
@@ -132,7 +132,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllCarsForDriverRequest = "SELECT id, model "
+        String getAllCarsForDriverRequest = "SELECT id, model, manufacturer_id "
                 + "FROM cars "
                 + "JOIN cars_drivers "
                 + "ON cars.id = cars_drivers.car_id "
@@ -222,15 +222,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("cars.id", Long.class));
         car.setModel(resultSet.getString("cars.model"));
-        return car;
-    }
-
-    private Car getCar(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String model = resultSet.getString("model");
-        Long manufacturerId = resultSet.getObject("manufacturer_Id", Long.class);
-        Car car = new Car(id, model, manufacturerId);
-        car.setId(id);
+        car.setManufacturer_id(resultSet.getObject("cars.manufacturer_id", Long.class));
         return car;
     }
 }

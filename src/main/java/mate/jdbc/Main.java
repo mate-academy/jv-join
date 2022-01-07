@@ -46,14 +46,14 @@ public class Main {
         volkswagenTiguan.setDrivers(driversVolkswagen);
         carService.update(volkswagenTiguan);
 
-        //carService.delete(7L);
+        carService.delete(7L);
         carService.addDriverToCar(driverService.get(3L),
                 carService.get(5L));
-        carService.removeDriverFromCar(driverService.get(3L),
-                carService.get(5L));
+        carService.removeDriverFromCar(driverService.get(2L),
+                carService.get(6L));
 
         carService.getAll().forEach(System.out::println);
         driverService.getAll().forEach(System.out::println);
-        carService.getAllByDriver(1L).forEach(System.out::println);
+        carService.getAllByDriver(2L).forEach(System.out::println);
     }
 }

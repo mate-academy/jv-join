@@ -8,20 +8,23 @@ public class Car {
     private Long manufacturerId;
     private List<Driver> drivers;
 
-    public Car() {
-
-    }
-
-    public Car(String model, Long manufacturerId, List<Driver> drivers) {
+    public Car(String model, long manufacturerId) {
         this.model = model;
         this.manufacturerId = manufacturerId;
+    }
+
+    public Car(String model, long manufacturerId, List<Driver> drivers) {
+        this(model, manufacturerId);
         this.drivers = drivers;
     }
 
-    public Car(Long id, String model, Long manufacturerId) {
+    public Car(long id, String model, long manufacturerId) {
+        this(model, manufacturerId);
         this.id = id;
-        this.model = model;
-        this.manufacturerId = manufacturerId;
+    }
+
+    public Car() {
+
     }
 
     public Long getId() {
