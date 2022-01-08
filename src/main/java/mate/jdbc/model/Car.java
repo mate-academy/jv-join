@@ -56,9 +56,9 @@ public class Car {
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
         return Objects.equals(id, car.id) &&
-                model.equals(car.model) &&
-                manufacturer.equals(car.manufacturer) &&
-                drivers.equals(car.drivers);
+                Objects.equals(model, car.model) &&
+                Objects.equals(manufacturer, car.manufacturer) &&
+                Objects.equals(drivers, car.drivers);
     }
 
     @Override
@@ -67,8 +67,7 @@ public class Car {
     }
 
     @Override
-    public String
-    toString() {
+    public String toString() {
         return "Car{" +
                 "id=" + id +
                 ", model='" + model + '\'' +
