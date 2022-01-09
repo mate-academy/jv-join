@@ -1,6 +1,7 @@
 package mate.jdbc.dao;
 
 import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Dao
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
@@ -200,11 +202,12 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setName(resultSet.getObject("name", String.class));
         manufacturer.setCountry(resultSet.getObject("country", String.class));
         car.setManufacturer(manufacturer);
+        car.setModel(resultSet.getObject("model", String.class));
         return car;
     }
 
     private void updateCar(Car car) {
-        String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ?"
+        String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement updateCarStatement = connection
@@ -212,6 +215,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
+            updateCarStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't update car: " + car, throwables);
         }
@@ -223,6 +227,7 @@ public class CarDaoImpl implements CarDao {
              PreparedStatement removeDriversFromCarStatement = connection
                      .prepareStatement(deleteAllRelationsByCar)) {
             removeDriversFromCarStatement.setLong(1, car.getId());
+            removeDriversFromCarStatement.executeUpdate();
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't remove drivers from car: "
                     + car, throwables);
