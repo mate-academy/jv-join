@@ -107,41 +107,6 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void addDriverToCar(Driver driver, Car car) {
-        String addDriverQuery = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement addDriverStatement = connection
-                        .prepareStatement(addDriverQuery)) {
-            addDriverStatement.setLong(1, driver.getId());
-            addDriverStatement.setLong(2, car.getId());
-            addDriverStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't add driver: "
-                    + driver + " to car: "
-                    + car, throwables);
-        }
-
-    }
-
-    @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-        String removeDriverFromCarQuery = "DELETE FROM cars_drivers "
-                + "WHERE driver_id = ? AND car_id = ?;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteDriverFromCarStatement = connection
-                        .prepareStatement(removeDriverFromCarQuery)) {
-            deleteDriverFromCarStatement.setLong(1, driver.getId());
-            deleteDriverFromCarStatement.setLong(2, car.getId());
-            deleteDriverFromCarStatement.executeUpdate();
-
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't remove driver: "
-                    + driver + " from car: " + car, throwables);
-        }
-
-    }
-
-    @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllCarsByDriverIdQuery = "SELECT c.id , c.model, c.manufacturer_id,"
                 + " m.name, m.country "
@@ -170,6 +135,21 @@ public class CarDaoImpl implements CarDao {
         cars.forEach(car -> car.setDrivers(getDriversByCar(car)));
         return cars;
 
+    }
+
+    private boolean addDriverToCar(Driver driver, Car car) {
+        String addDriverQuery = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement addDriverStatement = connection
+                        .prepareStatement(addDriverQuery)) {
+            addDriverStatement.setLong(1, driver.getId());
+            addDriverStatement.setLong(2, car.getId());
+            return addDriverStatement.executeUpdate() > 0;
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Can't add driver: "
+                    + driver + " to car: "
+                    + car, throwables);
+        }
     }
 
     private List<Driver> getDriversByCar(Car car) {
