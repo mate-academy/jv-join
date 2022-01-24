@@ -23,10 +23,9 @@ DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
                                    `id` bigint NOT NULL AUTO_INCREMENT,
                                    `model` varchar(255) DEFAULT NULL,
-                                   `is_deleted` tinyint NOT NULL DEFAULT '0',
                                    `manufacturers_id` bigint DEFAULT NULL,
+                                   `is_deleted` tinyint NOT NULL DEFAULT '0',
                                    PRIMARY KEY (`id`),
-                                   KEY `cars_manufacturers_id_fk` (`manufacturers_id`),
                                    CONSTRAINT `cars_manufacturers_id_fk` FOREIGN KEY (`manufacturers_id`) REFERENCES `manufacturers` (`id`));
 
 DROP TABLE IF EXISTS `cars_drivers`;
