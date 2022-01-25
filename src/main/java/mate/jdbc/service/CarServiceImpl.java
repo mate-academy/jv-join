@@ -2,11 +2,13 @@ package mate.jdbc.service;
 
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
+import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
 import java.util.List;
 
+@Service
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
@@ -19,7 +21,6 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id);
-                // .orElseThrow(() -> new DataProcessingException("Could not get car from DAO by id = " + id));
     }
 
     @Override
