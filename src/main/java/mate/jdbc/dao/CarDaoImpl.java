@@ -80,7 +80,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String updateCarQuery = "UPDATE cars SET model = ?, manufacturers_id = ? WHERE id = ?;";
+        String updateCarQuery = "UPDATE cars SET model = ?, manufacturers_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement
                          = connection.prepareStatement(updateCarQuery)) {
