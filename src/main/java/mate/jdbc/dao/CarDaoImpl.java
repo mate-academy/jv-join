@@ -47,7 +47,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id car_id, c.model car_model, " +
-                "m.id man_id, m.country man_country, m.name man_name," +
+                "m.id man_id, m.country man_country, m.name man_name " +
                 "FROM cars c JOIN manufacturers m ON m.id = c.manufacturer_id " +
                 "WHERE c.id = ? AND c.is_deleted = 0";
         Car car;
@@ -68,7 +68,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String query = "SELECT c.id car_id, c.model car_model, " +
-                "m.id man_id, m.country man_country, m.name man_name," +
+                "m.id man_id, m.country man_country, m.name man_name " +
                 "FROM cars c JOIN manufacturers m ON m.id = c.manufacturer_id " +
                 "WHERE c.is_deleted = 0";
         List<Car> cars = new ArrayList<>();
@@ -146,7 +146,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT c.id car_id, c.model car_model, " +
-                "m.id man_id, m.country man_country, m.name man_name," +
+                "m.id man_id, m.country man_country, m.name man_name " +
                 "FROM cars_drivers cd JOIN cars c ON c.id = cd.car_id " +
                 "JOIN manufacturers m ON m.id = c.manufacturer_id " +
                 "WHERE cd.driver_id = ? AND c.is_deleted = 0";
@@ -178,6 +178,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void createCarsDriversByCar(Car car) {
+        if (car.getDrivers() == null)
+            return;
         car.getDrivers().stream()
                 .forEach(driver -> createCarDriverRecord(car, driver));
     }
