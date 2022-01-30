@@ -1,5 +1,7 @@
 package mate.jdbc;
 
+import java.util.List;
+import java.util.stream.IntStream;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -7,10 +9,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -32,15 +30,15 @@ public class Main {
                 .forEach(service::update);
         System.out.println("***********UPDATE BLOCK RESULTS***********");
         service.getAll().forEach(System.out::println);
-        for(Car car : service.getAll()) {
-            for(int i = 0; i < car.getId(); i++) {
+        for (Car car : service.getAll()) {
+            for (int i = 0; i < car.getId(); i++) {
                 service.addDriverToCar(drivers.get(i), car);
             }
         }
         System.out.println("***********ADD DRIVER BLOCK RESULTS***********");
         service.getAll().forEach(System.out::println);
-        for(Car car : service.getAll()) {
-            for(Driver driver : car.getDrivers()) {
+        for (Car car : service.getAll()) {
+            for (Driver driver : car.getDrivers()) {
                 if (driver.getId() % 2 != car.getId() % 2) {
                     service.removeDriverFromCar(driver, car);
                 }
@@ -54,10 +52,6 @@ public class Main {
             service.getAllByDriver(driver.getId()).forEach(car ->
                     System.out.println("\t" + car.getModel()));
         });
-    }
-
-    private static void printCarWithDrivers (Car car) {
-        System.out.println(car);
     }
 
     private static List<Driver> createDrivers() {
