@@ -52,6 +52,17 @@ public class Main {
             service.getAllByDriver(driver.getId()).forEach(car ->
                     System.out.println("\t" + car.getModel()));
         });
+        service.getAll().stream()
+                .filter(car -> car.getId() % 3 == 0)
+                .forEach(car -> service.delete(car.getId()));
+        System.out.println("***********DELETE CAR BLOCK RESULTS***********");
+        service.getAll().forEach(System.out::println);
+        System.out.println("******************DRIVERS BY CAR*****************");
+        drivers.forEach(driver -> {
+            System.out.println(driver);
+            service.getAllByDriver(driver.getId()).forEach(car ->
+                    System.out.println("\t" + car.getModel()));
+        });
     }
 
     private static List<Driver> createDrivers() {
