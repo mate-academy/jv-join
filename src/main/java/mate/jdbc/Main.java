@@ -38,10 +38,8 @@ public class Main {
         System.out.println("***********ADD DRIVER BLOCK RESULTS***********");
         service.getAll().forEach(System.out::println);
         for (Car car : service.getAll()) {
-            for (Driver driver : car.getDrivers()) {
-                if (driver.getId() % 2 != car.getId() % 2) {
-                    service.removeDriverFromCar(driver, car);
-                }
+            if (car.getDrivers().size() > 0) {
+                service.removeDriverFromCar(car.getDrivers().get(0), car);
             }
         }
         System.out.println("***********REMOVE DRIVER BLOCK RESULTS***********");
