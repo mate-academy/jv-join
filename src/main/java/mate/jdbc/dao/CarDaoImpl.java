@@ -8,10 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -19,8 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private DriverDao driverDao;
 
     @Override
     public Car create(Car car) {
@@ -219,22 +215,26 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCarWithDrivers(Car car) {
-        String query = "SELECT driver_id FROM cars_drivers WHERE car_id = ?";
-        List<Long> driverIdList = new ArrayList<>();
+        String query = "SELECT d.id d_id, d.name d_name, d.license_number d_license "
+                + "FROM cars_drivers cd "
+                + "JOIN drivers d ON d.id = cd.driver_id "
+                + "WHERE cd.car_id = ? AND d.is_deleted = 0 "
+                + "ORDER BY d_id";
+        List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, car.getId());
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                driverIdList.add(resultSet.getLong("driver_id"));
+                Driver driver = new Driver();
+                driver.setId(resultSet.getLong("d_id"));
+                driver.setName(resultSet.getString("d_name"));
+                driver.setLicenseNumber(resultSet.getString("d_license"));
+                drivers.add(driver);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Error getting drivers data for car. ", e);
         }
-        List<Driver> drivers = driverIdList.stream()
-                .map(driverDao::get)
-                .map(Optional::get)
-                .collect(Collectors.toList());
         car.setDrivers(drivers);
         return car;
     }
