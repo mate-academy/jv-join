@@ -190,7 +190,7 @@ public class CarDaoImpl implements CarDao {
     private boolean isExistsCarDriverRecord(Driver driver, Car car) {
         String query = "SELECT COUNT(*) FROM cars_drivers WHERE driver_id = ? AND car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, driver.getId());
             statement.setObject(2, car.getId());
             ResultSet resultSet = statement.executeQuery();
