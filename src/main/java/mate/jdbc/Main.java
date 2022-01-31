@@ -1,55 +1,101 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.CarDao;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import mate.jdbc.lib.Injector;
+import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
+import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
+    private static final CarService carService =
+            (CarService) injector.getInstance(CarService.class);
+    private static final DriverService driverService =
+            (DriverService) injector.getInstance(DriverService.class);
+    private static final ManufacturerService manufacturerService =
+            (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
     public static void main(String[] args) {
-        // test your code here
-        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        CarDao carDao = (CarDao) injector.getInstance(CarDao.class);
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        /*Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName("Honda");
-        manufacturer.setCountry("Japan");
-        manufacturer.setId(1L);
-        Car car = new Car();
-        car.setModel("Odyssey");
-        car.setId(5L);
-        car.setManufacturer(manufacturer);
-        List<Driver> drivers = new ArrayList<>();
-        Driver driver = new Driver();
-        driver.setName("Rocket Jet");
-        driver.setLicenseNumber("00000005");
-        driver.setId(5L);
-        drivers.add(driver);
-        car.setDrivers(drivers);
-        carDao.update(car);
-        driverService.create(driver);
-        carDao.create(car);
-        carDao.delete(5L);
-        System.out.println(carDao.get(4L).getDrivers());
-        System.out.println(carDao.get(2L).getModel());
-        System.out.println(carDao.get(2L)
-                .getDrivers().stream()
-                .map(Driver::getName)
-                .collect(Collectors.toList()));
-        System.out.println(carDao.getAll()
+        Manufacturer honda = new Manufacturer();
+        honda.setCountry("Japan");
+        honda.setName("Honda");
+        manufacturerService.create(honda);
+
+        Manufacturer audi = new Manufacturer();
+        audi.setName("Audi");
+        audi.setCountry("Germany");
+        manufacturerService.create(audi);
+
+        Manufacturer lamborghini = new Manufacturer();
+        lamborghini.setCountry("Italy");
+        lamborghini.setName("Lamborghini");
+        manufacturerService.create(lamborghini);
+
+        Driver vinDiesel = new Driver();
+        vinDiesel.setName("Vin Diesel");
+        vinDiesel.setLicenseNumber("89AD");
+        driverService.create(vinDiesel);
+
+        Driver bob = new Driver();
+        bob.setName("Bob");
+        bob.setLicenseNumber("00001234");
+        driverService.create(bob);
+
+        Driver jhon = new Driver();
+        jhon.setName("Jhon");
+        jhon.setLicenseNumber("00005679");
+        driverService.create(jhon);
+
+        Car carAudi = new Car();
+        carAudi.setManufacturer(audi);
+        carAudi.setModel("AudiQ7");
+        carAudi.setDrivers(List.of(jhon, vinDiesel));
+        carService.create(carAudi);
+
+        Car carHonda = new Car();
+        carHonda.setManufacturer(honda);
+        carHonda.setModel("HondaCRV");
+        carHonda.setDrivers(List.of(jhon));
+        carService.create(carHonda);
+
+        Car carLamborghini = new Car();
+        carLamborghini.setManufacturer(lamborghini);
+        carLamborghini.setModel("Lamborghini");
+        carLamborghini.setDrivers(List.of(bob, vinDiesel));
+        carService.create(carLamborghini);
+
+        System.out.println("HondaCRV drivers: ");
+        carHonda.getDrivers().forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("Audi drivers: ");
+        carAudi.getDrivers().forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("Lamborghini drivers: ");
+        carLamborghini.getDrivers().forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("Get all cars: ");
+        carService.getAll().stream().map(Car::getModel).forEach(System.out::println);
+        System.out.println();
+
+        System.out.println("Get by id: ");
+        System.out.println(carService.get(carAudi.getId()).getModel());
+        System.out.println();
+
+        System.out.println(carService.getAllByDriver(vinDiesel.getId())
                 .stream()
-                .map(Car::getManufacturer)
-                .map(Manufacturer::getName)
+                .map(Car::getModel)
                 .collect(Collectors.toList()));
-        System.out.println(carDao.get(5L).getDrivers());
-        System.out.println(carDao.getAllByDriver(1L)
-                .stream()
-                .map(Car::getManufacturer)
-                .map(Manufacturer::getName)
-                .collect(Collectors.toList()));
-        carService.addDriverToCar(driver,car);
-        carService.removeDriverFromCar(driver,car);*/
+
+        //The method addDriverToCar catches an exception...
+        // I can't to add any driver to List<Driver> drivers...
+        carService.addDriverToCar(jhon,carHonda);
     }
 }
