@@ -181,10 +181,10 @@ public class CarDaoImpl implements CarDao {
             return;
         }
         car.getDrivers().stream()
-                .forEach(driver -> createCarDriverRecord(car, driver));
+                .forEach(driver -> createCarDriverRecord(driver, car));
     }
 
-    private void createCarDriverRecord(Car car, Driver driver) {
+    private void createCarDriverRecord(Driver driver, Car car) {
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
