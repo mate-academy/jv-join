@@ -97,7 +97,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update a car " + car, e);
         }
         clearDriversFromCar(car.getId());
-        car.getDrivers().forEach(driver -> addDriverToCar(driver, car));
+        createCarsDriversByCar(car);
         return car;
     }
 
@@ -116,16 +116,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        String query = "INSERT INTO cars_drivers(driver_id, car_id) VALUES(?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, driver.getId());
-            statement.setLong(2, car.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't add driver " + driver + " to car "
-                    + car, e);
+        if (isExistsCarDriverRecord(driver, car)) {
+            return;
         }
+        createCarDriverRecord(driver, car);
     }
 
     @Override
@@ -193,6 +187,21 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create reference driver->car for"
+                    + driver + " AND " + car + ". ", e);
+        }
+    }
+
+    private boolean isExistsCarDriverRecord(Driver driver, Car car) {
+        String query = "SELECT COUNT(*) FROM cars_drivers WHERE driver_id = ? AND car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setObject(1, driver.getId());
+            statement.setObject(2, car.getId());
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            return resultSet.getLong(1) > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get records count from cars_drivers for"
                     + driver + " AND " + car + ". ", e);
         }
     }
