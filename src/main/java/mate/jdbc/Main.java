@@ -31,7 +31,7 @@ public class Main {
         System.out.println("***********UPDATE BLOCK RESULTS***********");
         service.getAll().forEach(System.out::println);
         for (Car car : service.getAll()) {
-            for (int i = 0; i < car.getId(); i++) {
+            for (int i = 0; i < car.getId() && i < drivers.size(); i++) {
                 service.addDriverToCar(drivers.get(i), car);
             }
         }
@@ -58,7 +58,7 @@ public class Main {
         DriverService service = (DriverService) injector.getInstance(DriverService.class);
         if (service.getAll().size() == 0) {
             IntStream.range(0, 10)
-                    .mapToObj(i -> getNewDriver("name", "license"))
+                    .mapToObj(i -> getNewDriver("name" + i, "license" + i))
                     .forEach(service::create);
             service.getAll().stream()
                     .map(Main::updateDriver)
