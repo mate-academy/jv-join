@@ -32,7 +32,9 @@ public class Main {
         service.getAll().forEach(System.out::println);
         for (Car car : service.getAll()) {
             for (int i = 0; i < car.getId() && i < drivers.size(); i++) {
-                service.addDriverToCar(drivers.get(i), car);
+                if (! car.getDrivers().contains(drivers.get(i))) {
+                    service.addDriverToCar(drivers.get(i), car);
+                }
             }
         }
         System.out.println("***********ADD DRIVER BLOCK RESULTS***********");
