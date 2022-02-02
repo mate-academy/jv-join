@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import mate.jdbc.lib.Injector;
@@ -20,81 +21,44 @@ public class Main {
             (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
     public static void main(String[] args) {
-        Manufacturer honda = new Manufacturer();
-        honda.setCountry("Japan");
-        honda.setName("Honda");
-        manufacturerService.create(honda);
+        Driver diesel = new Driver();
+        diesel.setName("Diesel");
+        diesel.setLicenseNumber("TL000357UA");
+        driverService.create(diesel);
 
-        Manufacturer audi = new Manufacturer();
-        audi.setName("Audi");
-        audi.setCountry("Germany");
-        manufacturerService.create(audi);
+        Driver senna = new Driver();
+        senna.setName("Ayrton_Senna");
+        senna.setLicenseNumber("TL000589UA");
+        driverService.create(senna);
 
-        Manufacturer lamborghini = new Manufacturer();
-        lamborghini.setCountry("Italy");
-        lamborghini.setName("Lamborghini");
-        manufacturerService.create(lamborghini);
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(diesel);
 
-        Driver vinDiesel = new Driver();
-        vinDiesel.setName("Vin Diesel");
-        vinDiesel.setLicenseNumber("89AD");
-        driverService.create(vinDiesel);
+        Manufacturer ferrari = new Manufacturer();
+        ferrari.setCountry("Italy");
+        ferrari.setName("FerrariLTD");
+        manufacturerService.create(ferrari);
 
-        Driver bob = new Driver();
-        bob.setName("Bob");
-        bob.setLicenseNumber("00001234");
-        driverService.create(bob);
+        Car ferrariLaFerrari = new Car();
+        ferrariLaFerrari.setModel("LaFerrari");
+        ferrariLaFerrari.setManufacturer(ferrari);
+        ferrariLaFerrari.setDrivers(drivers);
+        carService.create(ferrariLaFerrari);
 
-        Driver jhon = new Driver();
-        jhon.setName("Jhon");
-        jhon.setLicenseNumber("00005679");
-        driverService.create(jhon);
+        System.out.println(carService.get(ferrariLaFerrari.getId()).getModel());
 
-        Car carAudi = new Car();
-        carAudi.setManufacturer(audi);
-        carAudi.setModel("AudiQ7");
-        carAudi.setDrivers(List.of(jhon, vinDiesel));
-        carService.create(carAudi);
-
-        Car carHonda = new Car();
-        carHonda.setManufacturer(honda);
-        carHonda.setModel("HondaCRV");
-        carHonda.setDrivers(List.of(jhon));
-        carService.create(carHonda);
-
-        Car carLamborghini = new Car();
-        carLamborghini.setManufacturer(lamborghini);
-        carLamborghini.setModel("Lamborghini");
-        carLamborghini.setDrivers(List.of(bob, vinDiesel));
-        carService.create(carLamborghini);
-
-        System.out.println("HondaCRV drivers: ");
-        carHonda.getDrivers().forEach(System.out::println);
-        System.out.println();
-
-        System.out.println("Audi drivers: ");
-        carAudi.getDrivers().forEach(System.out::println);
-        System.out.println();
-
-        System.out.println("Lamborghini drivers: ");
-        carLamborghini.getDrivers().forEach(System.out::println);
-        System.out.println();
-
-        System.out.println("Get all cars: ");
-        carService.getAll().stream().map(Car::getModel).forEach(System.out::println);
-        System.out.println();
-
-        System.out.println("Get by id: ");
-        System.out.println(carService.get(carAudi.getId()).getModel());
-        System.out.println();
-
-        System.out.println(carService.getAllByDriver(vinDiesel.getId())
+        System.out.println(carService.getAllByDriver(diesel.getId())
                 .stream()
                 .map(Car::getModel)
                 .collect(Collectors.toList()));
 
-        //The method addDriverToCar catches an exception...
-        // I can't to add any driver to List<Driver> drivers...
-        carService.addDriverToCar(jhon,carHonda);
+        System.out.println(carService.getAll()
+                .stream()
+                .map(Car::getManufacturer)
+                .map(Manufacturer::getName)
+                .collect(Collectors.toList()));
+
+        carService.addDriverToCar(senna,ferrariLaFerrari);
+        carService.update(ferrariLaFerrari);
     }
 }
