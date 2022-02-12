@@ -1,28 +1,32 @@
 package mate.jdbc.dao;
 
-import mate.jdbc.exception.DataProcessingException;
-import mate.jdbc.lib.Dao;
-import mate.jdbc.model.Driver;
-import mate.jdbc.util.ConnectionUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
+import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
 
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO car (model, manufacturers_id) VALUES (?, ?)";
+        String createCarQuery = "INSERT INTO cars (model, manufacturers_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query,
+             PreparedStatement createCarStatement = connection.prepareStatement(createCarQuery,
                      Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, car.getName());
-            statement.setString(2, car.getLicenseNumber());
-            statement.executeUpdate();
-            ResultSet resultSet = statement.getGeneratedKeys();
+            createCarStatement.setString(1, car.getModel());
+            createCarStatement.setLong(2, car.getManufacturer().getId());
+            createCarStatement.executeUpdate();
+            ResultSet resultSet = createCarStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }

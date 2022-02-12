@@ -6,11 +6,9 @@ import mate.jdbc.model.Car;
 public interface CarDao {
     Car create(Car car);
 
-    Optional<Car> get(Long id);
+    Car get(Long id);
 
     List<Car> getAll();
-
-    Driver update(Car car);
 
     Car update(Car car);
 
