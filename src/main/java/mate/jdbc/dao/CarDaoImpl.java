@@ -60,8 +60,8 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String getQuery = "SELECT c.id AS car_id, model, m.id "
                 + "AS manufacturer_id, m.name, m.country"
-                + " FROM taxi.cars c JOIN taxi.manufacturers m ON c.manufacturer_id = m.id"
-                + " WHERE c.id = ?;";
+                + " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
+                + " WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car carFromDB = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -94,8 +94,9 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long carId) {
         String getAllDriversForCarQuery = "SELECT id, name, license_number "
-                + "FROM taxi.drivers d JOIN taxi.cars_drivers cd "
-                + "ON d.id = cd.driver_id WHERE cd.car_id = ?";
+                + "FROM drivers d JOIN cars_drivers cd "
+                + "ON d.id = cd.driver_id WHERE cd.car_id = ? "
+                + "AND d.is_deleted = FALSE";
         List<Driver> driversForCar = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriversStatement =
