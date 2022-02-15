@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -56,7 +57,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String getQuery = "SELECT c.id AS car_id, model, m.id "
                 + "AS manufacturer_id, m.name, m.country"
                 + " FROM taxi.cars c JOIN taxi.manufacturers m ON c.manufacturer_id = m.id"
@@ -73,7 +74,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        return carFromDB;
+        return Optional.ofNullable(carFromDB);
     }
 
     private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
