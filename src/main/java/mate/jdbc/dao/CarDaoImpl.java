@@ -118,7 +118,21 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        String getAllQuery = "SELECT c.id AS car_id, model, m.id "
+                + "AS manufacturer_id, m.name, m.country"
+                + " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
+                + " WHERE c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllStatement = connection.prepareStatement(getAllQuery)) {
+            ResultSet resultSet = getAllStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+        }
     }
 
     @Override
@@ -134,5 +148,11 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         return null;
+    }
+
+    private Car getCar(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("id", Long.class);
+        String model = resultSet.getString("model");
+        return Car.builder().id(id).model(model).build();
     }
 }
