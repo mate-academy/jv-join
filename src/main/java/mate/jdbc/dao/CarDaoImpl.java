@@ -131,7 +131,7 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars from DB.", e);
         }
     }
 
@@ -142,17 +142,19 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String softDeleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement softDeleteStatement =
+                        connection.prepareStatement(softDeleteQuery)) {
+            softDeleteStatement.setLong(1, id);
+            return softDeleteStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete car with id " + id, e);
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         return null;
-    }
-
-    private Car getCar(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String model = resultSet.getString("model");
-        return Car.builder().id(id).model(model).build();
     }
 }
