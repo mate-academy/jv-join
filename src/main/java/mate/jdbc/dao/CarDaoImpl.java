@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.exception.DataProcessingException;
@@ -17,7 +18,41 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        return null;
+        String insertQuery = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement createCarStatement =
+                        connection.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)
+        ) {
+            createCarStatement.setString(1, car.getModel());
+            createCarStatement.setLong(2, car.getManufacturer().getId());
+            createCarStatement.executeUpdate();
+            ResultSet generatedKeys = createCarStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                Long id = generatedKeys.getObject(1, Long.class);
+                car.setId(id);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't create " + car + ". ", e);
+        }
+        insertDrivers(car);
+        return car;
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) "
+                + "VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement insertDriversToCarStatement =
+                        connection.prepareStatement(insertDriversQuery)) {
+            insertDriversToCarStatement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                insertDriversToCarStatement.setLong(2, driver.getId());
+                insertDriversToCarStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert drivers for car: "
+                    + car + ". ", e);
+        }
     }
 
     @Override
