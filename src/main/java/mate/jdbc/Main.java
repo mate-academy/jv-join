@@ -12,10 +12,12 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
-    private static final DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+    private static final DriverService driverService =
+            (DriverService) injector.getInstance(DriverService.class);
     private static final ManufacturerService manufacturerService =
             (ManufacturerService) injector.getInstance(ManufacturerService.class);
-    private static final CarService carService = (CarService) injector.getInstance(CarService.class);
+    private static final CarService carService =
+            (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
         initDriversToDB();
@@ -65,9 +67,11 @@ public class Main {
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(Manufacturer.builder().id(1L).name("ZAZ").country("Ukraine").build());
         manufacturers.add(Manufacturer.builder().id(2L).name("Toyota").country("Japan").build());
-        manufacturers.add(Manufacturer.builder().id(3L).name("Skoda").country("Czech Republic").build());
+        manufacturers.add(Manufacturer.builder().id(3L).name("Skoda")
+                .country("Czech Republic").build());
         manufacturers.add(Manufacturer.builder().id(4L).name("Lancia").country("Italy").build());
-        manufacturers.add(Manufacturer.builder().id(5L).name("Lotus").country("United Kingdom").build());
+        manufacturers.add(Manufacturer.builder().id(5L).name("Lotus")
+                .country("United Kingdom").build());
         return manufacturers.get(index);
     }
 
