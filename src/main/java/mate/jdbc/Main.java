@@ -19,6 +19,8 @@ public class Main {
         //getCarById(carService, 1L);
 
         //getAllCars(carService);
+
+        //updateCar(carService);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -46,5 +48,27 @@ public class Main {
     private static void getAllCars(CarService carService) {
         List<Car> cars = carService.getAll();
         cars.forEach(System.out::println);
+    }
+
+    private static void updateCar(CarService carService) {
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(1L);
+
+        Driver driver1 = new Driver();
+        driver1.setId(3L);
+        Driver driver2 = new Driver();
+        driver2.setId(4L);
+
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(driver1);
+        drivers.add(driver2);
+
+        Car car = new Car();
+        car.setId(1L);
+        car.setModel("Kopeika");
+        car.setManufacturer(manufacturer);
+        car.setDrivers(drivers);
+
+        System.out.println(carService.update(car));
     }
 }

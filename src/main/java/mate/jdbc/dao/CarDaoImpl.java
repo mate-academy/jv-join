@@ -19,6 +19,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     private static final int INDEX_COLUMN_ONE = 1;
     private static final int INDEX_COLUMN_TWO = 2;
+    private static final int INDEX_COLUMN_THREE = 3;
 
     @Override
     public Car create(Car car) {
@@ -103,7 +104,33 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        return null;
+        String updateCarRequest = "UPDATE cars c SET model = ?, manufacturer_id = ?" +
+                " where id = ? and is_deleted = false;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement updateCarStatement =
+                     connection.prepareStatement(updateCarRequest)) {
+            updateCarStatement.setString(INDEX_COLUMN_ONE, car.getModel());
+            updateCarStatement.setLong(INDEX_COLUMN_TWO, car.getManufacturer().getId());
+            updateCarStatement.setLong(INDEX_COLUMN_THREE, car.getId());
+            updateCarStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't update car in DB. Car: " + car, e);
+        }
+        deleteAllRelationsBetweenCarAndDrivers(car);
+        insertDrivers(car);
+        return car;
+    }
+
+    private void deleteAllRelationsBetweenCarAndDrivers(Car car) {
+        String deleteAllRelationsRequest = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement deleteAllRelationsStatement =
+                     connection.prepareStatement(deleteAllRelationsRequest)) {
+            deleteAllRelationsStatement.setLong(INDEX_COLUMN_ONE, car.getId());
+            deleteAllRelationsStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete drivers from car. Car: " + car, e);
+        }
     }
 
     @Override
