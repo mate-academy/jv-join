@@ -14,6 +14,14 @@ public class Main {
     public static void main(String[] args) {
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
+        //checkCreateNewCarMethod(carService);
+
+        //getCarById(carService, 1L);
+
+
+    }
+
+    private static void checkCreateNewCarMethod(CarService carService) {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(2L);
 
@@ -28,5 +36,10 @@ public class Main {
 
         Car car = new Car("Tavria", manufacturer, drivers);
         Car createdCar = carService.create(car);
+    }
+
+    private static void getCarById(CarService carService, Long id) {
+        Car car = carService.get(id);
+        System.out.println(car);
     }
 }
