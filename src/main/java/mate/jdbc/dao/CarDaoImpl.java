@@ -19,7 +19,6 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     private static final int INDEX_COLUMN_ONE = 1;
     private static final int INDEX_COLUMN_TWO = 2;
-    private static final int INDEX_COLUMN_THREE = 3;
 
     @Override
     public Car create(Car car) {
@@ -58,9 +57,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectRequest = "SELECT c.id as car_id, c.model as car_model, m.id as " +
-                "manufacturer_id, m.name as manufacturer_name, m.country as manufacturer_country" +
-                " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id  where c.id = ?;";
+        String selectRequest = "SELECT c.id as car_id, c.model as car_model, m.id as" +
+                " manufacturer_id, m.name as manufacturer_name, m.country as " +
+                "manufacturer_country FROM cars c JOIN manufacturers m ON " +
+                "c.manufacturer_id = m.id  where c.id = ? and c.is_deleted = false;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -81,7 +81,24 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        String selectAllRequest = "SELECT c.id as car_id, c.model as car_model, m.id as" +
+                " manufacturer_id, m.name as manufacturer_name, m.country as " +
+                "manufacturer_country FROM cars c JOIN manufacturers m ON " +
+                "c.manufacturer_id = m.id where c.is_deleted = false;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllCarsStatement =
+                     connection.prepareStatement(selectAllRequest)) {
+            ResultSet resultSet = getAllCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                Car car = parseCarWithManufacturerFromResultSet(resultSet);
+                car.setDrivers(getDriversForCar(car.getId()));
+                cars.add(car);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get all data from cars table", e);
+        }
+        return cars;
     }
 
     @Override

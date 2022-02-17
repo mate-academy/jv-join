@@ -18,7 +18,7 @@ public class Main {
 
         //getCarById(carService, 1L);
 
-
+        //getAllCars(carService);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -41,5 +41,10 @@ public class Main {
     private static void getCarById(CarService carService, Long id) {
         Car car = carService.get(id);
         System.out.println(car);
+    }
+
+    private static void getAllCars(CarService carService) {
+        List<Car> cars = carService.getAll();
+        cars.forEach(System.out::println);
     }
 }
