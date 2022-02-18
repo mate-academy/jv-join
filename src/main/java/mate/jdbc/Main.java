@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
@@ -23,6 +24,8 @@ public class Main {
         //updateCar(carService);
 
         //deleteCarById(carService, 4L);
+
+        getAllCarsByDriver(carService, 3L);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -76,5 +79,9 @@ public class Main {
 
     private static void deleteCarById(CarService carService, Long id) {
         System.out.println(carService.delete(id));
+    }
+
+    private static void getAllCarsByDriver(CarService carService, Long driverId) {
+        carService.getAllByDriver(driverId).forEach(System.out::println);
     }
 }
