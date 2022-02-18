@@ -27,7 +27,9 @@ public class Main {
 
         //getAllCarsByDriver(carService, 3L);
 
-        addNewDriverToCar(carService);
+        //addNewDriverToCar(carService);
+
+        removeDriverFromCar(carService);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -93,5 +95,13 @@ public class Main {
         Driver driver = new Driver();
         driver.setId(4L);
         carService.addDriverToCar(driver, car);
+    }
+
+    private static void removeDriverFromCar(CarService carService) {
+        Car car = new Car();
+        car.setId(1L);
+        Driver driver = new Driver();
+        driver.setId(3L);
+        carService.removeDriverFromCar(driver, car);
     }
 }
