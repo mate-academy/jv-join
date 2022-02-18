@@ -26,6 +26,8 @@ public class Main {
         //deleteCarById(carService, 4L);
 
         //getAllCarsByDriver(carService, 3L);
+
+        addNewDriverToCar(carService);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -83,5 +85,13 @@ public class Main {
 
     private static void getAllCarsByDriver(CarService carService, Long driverId) {
         carService.getAllByDriver(driverId).forEach(System.out::println);
+    }
+
+    private static void addNewDriverToCar(CarService carService) {
+        Car car = new Car();
+        car.setId(3L);
+        Driver driver = new Driver();
+        driver.setId(4L);
+        carService.addDriverToCar(driver, car);
     }
 }

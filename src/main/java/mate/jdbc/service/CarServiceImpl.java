@@ -1,5 +1,6 @@
 package mate.jdbc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
@@ -43,7 +44,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        Optional<Car> carOptional = carDao.get(car.getId());
+        Car carWithOldDrivers = carOptional.orElseThrow(() ->
+                new DataProcessingException("Can't get car from DB by id: " + car.getId()));
+        List<Driver> drivers = new ArrayList<>(carWithOldDrivers.getDrivers());
+        drivers.add(driver);
+        carWithOldDrivers.setDrivers(drivers);
+        carDao.update(carWithOldDrivers);
     }
 
     @Override
