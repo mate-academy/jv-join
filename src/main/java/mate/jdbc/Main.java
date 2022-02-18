@@ -25,7 +25,7 @@ public class Main {
 
         //deleteCarById(carService, 4L);
 
-        getAllCarsByDriver(carService, 3L);
+        //getAllCarsByDriver(carService, 3L);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
