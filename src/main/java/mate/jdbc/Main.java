@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
@@ -15,19 +14,19 @@ public class Main {
     public static void main(String[] args) {
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        //checkCreateNewCarMethod(carService);
+        checkCreateNewCarMethod(carService);
 
-        //getCarById(carService, 1L);
+        getCarById(carService, 1L);
 
-        //getAllCars(carService);
+        getAllCars(carService);
 
-        //updateCar(carService);
+        updateCar(carService);
 
-        //deleteCarById(carService, 4L);
+        deleteCarById(carService, 4L);
 
-        //getAllCarsByDriver(carService, 3L);
+        getAllCarsByDriver(carService, 3L);
 
-        //addNewDriverToCar(carService);
+        addNewDriverToCar(carService);
 
         removeDriverFromCar(carService);
     }
