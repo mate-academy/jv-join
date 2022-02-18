@@ -21,6 +21,8 @@ public class Main {
         //getAllCars(carService);
 
         //updateCar(carService);
+
+        //deleteCarById(carService, 4L);
     }
 
     private static void checkCreateNewCarMethod(CarService carService) {
@@ -70,5 +72,9 @@ public class Main {
         car.setDrivers(drivers);
 
         System.out.println(carService.update(car));
+    }
+
+    private static void deleteCarById(CarService carService, Long id) {
+        System.out.println(carService.delete(id));
     }
 }
