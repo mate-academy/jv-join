@@ -39,21 +39,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDrivers(Car car) {
-        String insertDriversQuery = "INSERT INTO cars_drivers (cars_id, drivers_id) VALUES (?,?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement addDriverToCarStatement = connection
-                        .prepareStatement(insertDriversQuery)) {
-            addDriverToCarStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                addDriverToCarStatement.setLong(2, driver.getId());
-                addDriverToCarStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to car: " + car, e);
-        }
-    }
-
     @Override
     public Optional<Car> get(Long id) {
         String selectRequest = "SELECT c.id, model, manufacturer_id, name, country "
@@ -67,7 +52,7 @@ public class CarDaoImpl implements CarDao {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
-                car = parseCarWithTaxiServiceFromResultSet(resultSet);
+                car = parseCarWithManufacturerFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get car in DB by id " + id, e);
@@ -89,7 +74,7 @@ public class CarDaoImpl implements CarDao {
                         connection.prepareStatement(selectRequest)) {
             ResultSet resultSet = getCarsStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithTaxiServiceFromResultSet(resultSet));
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get a lust of cars from cars table. ", e);
@@ -147,7 +132,7 @@ public class CarDaoImpl implements CarDao {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithTaxiServiceFromResultSet(resultSet));
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id "
@@ -159,7 +144,22 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car parseCarWithTaxiServiceFromResultSet(ResultSet resultSet) throws SQLException {
+    private void insertDrivers(Car car) {
+        String insertDriversQuery = "INSERT INTO cars_drivers (cars_id, drivers_id) VALUES (?,?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement addDriverToCarStatement = connection
+                        .prepareStatement(insertDriversQuery)) {
+            addDriverToCarStatement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                addDriverToCarStatement.setLong(2, driver.getId());
+                addDriverToCarStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't insert drivers to car: " + car, e);
+        }
+    }
+
+    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
