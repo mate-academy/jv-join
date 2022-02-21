@@ -1,5 +1,6 @@
 package mate.jdbc.model;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,8 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Driver {
+public class Car {
     private Long id;
-    private String name;
-    private String licenseNumber;
+    private String model;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
 }
