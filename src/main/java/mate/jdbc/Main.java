@@ -14,12 +14,12 @@ public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        CarService carService =
-                (CarService) injector.getInstance(CarService.class);
-        DriverService driverService =
-                (DriverService) injector.getInstance(DriverService.class);
+        final ManufacturerService manufacturerService = (ManufacturerService)
+                injector.getInstance(ManufacturerService.class);
+        final CarService carService = (CarService)
+                injector.getInstance(CarService.class);
+        final DriverService driverService = (DriverService)
+                injector.getInstance(DriverService.class);
         Manufacturer manufacturer1 = new Manufacturer("SAAB", "Sweden");
         Manufacturer manufacturer2 = new Manufacturer("Chevrolet", "USA");
         Manufacturer manufacturer3 = new Manufacturer("Alfa Romeo", "Italy");
@@ -28,12 +28,12 @@ public class Main {
         manufacturerService.create(manufacturer2);
         manufacturerService.create(manufacturer3);
         manufacturerService.create(manufacturer4);
-        Driver driver1 = new Driver("Beowulf","ui425387");
-        Driver driver2 = new Driver("Darin","oi769305");
-        Driver driver3 = new Driver("Balin","kl628527");
-        Driver driver4 = new Driver("Frodo","pa762900");
-        Driver driver5 = new Driver("Gimli","jw920035");
-        Driver driver6 = new Driver("Aragorn","ak628411");
+        final Driver driver1 = new Driver("Beowulf","ui425387");
+        final Driver driver2 = new Driver("Darin","oi769305");
+        final Driver driver3 = new Driver("Balin","kl628527");
+        final Driver driver4 = new Driver("Frodo","pa762900");
+        final Driver driver5 = new Driver("Gimli","jw920035");
+        final Driver driver6 = new Driver("Aragorn","ak628411");
         List<Driver> firstDriversArray = new ArrayList<>();
         firstDriversArray.add(driver1);
         firstDriversArray.add(driver2);
