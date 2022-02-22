@@ -23,10 +23,10 @@ public class Main {
         initDriversToDB();
         initManufacturersToDB();
         initCarsToDB();
-        System.out.println(carService.get(23L));
+        System.out.println(carService.get(2L));
         carService.getAll().forEach(System.out::println);
         System.out.println(carService.update(getCarByIndex(2)));
-        System.out.println(carService.delete(22L));
+        System.out.println(carService.delete(1L));
         carService.getAllByDriver(5L).forEach(System.out::println);
         carService.addDriverToCar(getDriverByIndex(0), getCarByIndex(2));
         carService.removeDriverFromCar(getDriverByIndex(3), getCarByIndex(2));
