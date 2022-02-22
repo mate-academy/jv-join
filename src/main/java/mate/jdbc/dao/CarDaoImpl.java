@@ -43,10 +43,10 @@ public class CarDaoImpl implements CarDao {
                 + "cars.manufacturer_id, "
                 + "manufacturers.name, "
                 + "manufacturers.country "
-                + "FROM taxi.cars "
-                + "JOIN taxi.manufacturers "
-                + "ON taxi.cars.manufacturer_id = taxi.manufacturers.id "
-                + "WHERE taxi.cars.id = ? AND taxi.cars.is_deleted = 0;";
+                + "FROM taxi_schema.cars "
+                + "JOIN taxi_schema.manufacturers "
+                + "ON taxi_schema.cars.manufacturer_id = taxi_schema.manufacturers.id "
+                + "WHERE taxi_schema.cars.id = ? AND taxi_schema.cars.is_deleted = 0;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement getCarStatement
@@ -73,10 +73,10 @@ public class CarDaoImpl implements CarDao {
                 + "cars.manufacturer_id, "
                 + "manufacturers.name, "
                 + "manufacturers.country "
-                + "FROM taxi.cars "
-                + "JOIN taxi.manufacturers "
-                + "ON taxi.cars.manufacturer_id = taxi.manufacturers.id "
-                + "WHERE taxi.cars.is_deleted = 0;";
+                + "FROM taxi_schema.cars "
+                + "JOIN taxi_schema.manufacturers "
+                + "ON taxi_schema.cars.manufacturer_id = taxi_schema.manufacturers.id "
+                + "WHERE taxi_schema.cars.is_deleted = 0;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement getAllCarStatement
@@ -96,7 +96,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE taxi.cars SET taxi.cars.is_deleted = TRUE WHERE taxi.cars.id = ?";
+        String query = "UPDATE taxi_schema.cars SET taxi_schema.cars.is_deleted = TRUE WHERE taxi_schema.cars.id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement deleteCarStatement
                             = connection.prepareStatement(query)) {
@@ -109,9 +109,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE taxi.cars "
-                + "SET taxi.cars.manufacturer_id = ?, taxi.cars.model = ? "
-                + "WHERE taxi.cars.id = ? AND taxi.cars.is_deleted = FALSE";
+        String query = "UPDATE taxi_schema.cars "
+                + "SET taxi_schema.cars.manufacturer_id = ?, taxi_schema.cars.model = ? "
+                + "WHERE taxi_schema.cars.id = ? AND taxi_schema.cars.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement updateCarStatement
                             = connection.prepareStatement(query)) {
@@ -134,17 +134,17 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT "
                 + "drivers.id, "
                 + "drivers.name, "
-                + "drivers.license_number, "
+                + "drivers.license, "
                 + "cars.id, "
                 + "cars.model, "
                 + "manufacturers.id, "
                 + "manufacturers.name, "
                 + "manufacturers.country "
-                + "FROM taxi.cars_drivers "
-                + "JOIN taxi.drivers ON taxi.drivers.id = taxi.cars_drivers.driver_id "
-                + "JOIN taxi.cars ON taxi.cars.id = taxi.cars_drivers.car_id "
-                + "JOIN taxi.manufacturers ON taxi.cars.id = taxi.manufacturers.id "
-                + "WHERE taxi.drivers.id = ? AND taxi.drivers.is_deleted = 0";
+                + "FROM taxi_schema.cars_drivers "
+                + "JOIN taxi_schema.drivers ON taxi_schema.drivers.id = taxi_schema.cars_drivers.driver_id "
+                + "JOIN taxi_schema.cars ON taxi_schema.cars.id = taxi_schema.cars_drivers.car_id "
+                + "JOIN taxi_schema.manufacturers ON taxi_schema.cars.id = taxi_schema.manufacturers.id "
+                + "WHERE taxi_schema.drivers.id = ? AND taxi_schema.drivers.is_deleted = 0";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement = connection.prepareStatement(query)) {
@@ -167,11 +167,11 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT "
                 + "drivers.id, "
                 + "drivers.name, "
-                + "drivers.license_number "
-                + "FROM taxi.cars_drivers "
-                + "JOIN taxi.drivers "
-                + "ON taxi.cars_drivers.driver_id = taxi.drivers.id "
-                + "WHERE taxi.cars_drivers.car_id = ? AND taxi.drivers.is_deleted = 0";
+                + "drivers.license "
+                + "FROM taxi_schema.cars_drivers "
+                + "JOIN taxi_schema.drivers "
+                + "ON taxi_schema.cars_drivers.driver_id = taxi_schema.drivers.id "
+                + "WHERE taxi_schema.cars_drivers.car_id = ? AND taxi_schema.drivers.is_deleted = 0";
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement getDriversStatement = connection.prepareStatement(query,
                             Statement.RETURN_GENERATED_KEYS)) {
@@ -197,9 +197,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     public boolean deleteDrivers(Long id) {
-        String query = "UPDATE taxi.drivers "
-                + "SET taxi.drivers.is_deleted = TRUE "
-                + "WHERE taxi.drivers.id = ?";
+        String query = "UPDATE taxi_schema.drivers "
+                + "SET taxi_schema.drivers.is_deleted = TRUE "
+                + "WHERE taxi_schema.drivers.id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteDriversStatement
                         = connection.prepareStatement(query)) {
