@@ -96,7 +96,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE taxi_schema.cars SET taxi_schema.cars.is_deleted = TRUE WHERE taxi_schema.cars.id = ?";
+        String query = "UPDATE taxi_schema.cars SET taxi_schema.cars.is_deleted "
+                + "= TRUE WHERE taxi_schema.cars.id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement deleteCarStatement
                             = connection.prepareStatement(query)) {
@@ -141,9 +142,12 @@ public class CarDaoImpl implements CarDao {
                 + "manufacturers.name, "
                 + "manufacturers.country "
                 + "FROM taxi_schema.cars_drivers "
-                + "JOIN taxi_schema.drivers ON taxi_schema.drivers.id = taxi_schema.cars_drivers.driver_id "
-                + "JOIN taxi_schema.cars ON taxi_schema.cars.id = taxi_schema.cars_drivers.car_id "
-                + "JOIN taxi_schema.manufacturers ON taxi_schema.cars.id = taxi_schema.manufacturers.id "
+                + "JOIN taxi_schema.drivers ON taxi_schema.drivers.id "
+                + "= taxi_schema.cars_drivers.driver_id "
+                + "JOIN taxi_schema.cars ON taxi_schema.cars.id "
+                + "= taxi_schema.cars_drivers.car_id "
+                + "JOIN taxi_schema.manufacturers ON taxi_schema.cars.id "
+                + "= taxi_schema.manufacturers.id "
                 + "WHERE taxi_schema.drivers.id = ? AND taxi_schema.drivers.is_deleted = 0";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -170,10 +174,13 @@ public class CarDaoImpl implements CarDao {
                 + "drivers.license "
                 + "FROM taxi_schema.cars_drivers "
                 + "JOIN taxi_schema.drivers "
-                + "ON taxi_schema.cars_drivers.driver_id = taxi_schema.drivers.id "
-                + "WHERE taxi_schema.cars_drivers.car_id = ? AND taxi_schema.drivers.is_deleted = 0";
+                + "ON taxi_schema.cars_drivers.driver_id "
+                + "= taxi_schema.drivers.id "
+                + "WHERE taxi_schema.cars_drivers.car_id "
+                + "= ? AND taxi_schema.drivers.is_deleted = 0";
         try (Connection connection = ConnectionUtil.getConnection();
-                    PreparedStatement getDriversStatement = connection.prepareStatement(query,
+                    PreparedStatement getDriversStatement
+                            = connection.prepareStatement(query,
                             Statement.RETURN_GENERATED_KEYS)) {
             getDriversStatement.setLong(1, id);
             ResultSet resultSet = getDriversStatement.executeQuery();
