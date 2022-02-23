@@ -13,37 +13,26 @@ public class Main {
 
     public static void main(String[] args) {
         CarService carService = (CarService) injector.getInstance(CarService.class);
-
-        checkCreateNewCarMethod(carService);
-
+        createNewCar(carService);
         getCarById(carService, 1L);
-
         getAllCars(carService);
-
         updateCar(carService);
-
         deleteCarById(carService, 4L);
-
         getAllCarsByDriver(carService, 3L);
-
         addNewDriverToCar(carService);
-
         removeDriverFromCar(carService);
     }
 
-    private static void checkCreateNewCarMethod(CarService carService) {
+    private static void createNewCar(CarService carService) {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(2L);
-
         Driver driver1 = new Driver();
         driver1.setId(1L);
         Driver driver2 = new Driver();
         driver2.setId(2L);
-
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driver1);
         drivers.add(driver2);
-
         Car car = new Car("Tavria", manufacturer, drivers);
         Car createdCar = carService.create(car);
     }
@@ -61,22 +50,18 @@ public class Main {
     private static void updateCar(CarService carService) {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(1L);
-
         Driver driver1 = new Driver();
         driver1.setId(3L);
         Driver driver2 = new Driver();
         driver2.setId(4L);
-
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driver1);
         drivers.add(driver2);
-
         Car car = new Car();
         car.setId(1L);
         car.setModel("Kopeika");
         car.setManufacturer(manufacturer);
         car.setDrivers(drivers);
-
         System.out.println(carService.update(car));
     }
 
