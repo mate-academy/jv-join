@@ -25,14 +25,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
         String createCarQuery = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
-        String createDriversRelationQuery =
-                "INSERT INTO cars_drivers(driver_id, car_id) VALUES (?, ?);";
         try (
                 Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createCarStatement = connection.prepareStatement(createCarQuery,
-                        Statement.RETURN_GENERATED_KEYS);
-                PreparedStatement createDriversRelationStatement =
-                        connection.prepareStatement(createDriversRelationQuery)
+                        Statement.RETURN_GENERATED_KEYS)
         ) {
             createCarStatement.setString(1, car.getModel());
             createCarStatement.setLong(2, car.getManufacturer().getId());
@@ -41,16 +37,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            for (Driver driver : car.getDrivers()) {
-                createDriversRelationStatement.setLong(1, driver.getId());
-                createDriversRelationStatement.setLong(2,car.getId());
-                createDriversRelationStatement.execute();
-            }
-            return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
+            throw new DataProcessingException("Couldn't create car "
                     + car + ". ", e);
         }
+        creteCarRelations(car);
+        return car;
     }
 
     @Override
@@ -123,16 +115,11 @@ public class CarDaoImpl implements CarDao {
         String deleteRelationsQuery =
                 "DELETE FROM cars_drivers "
                         + "where car_id = ?;";
-        String createRelationsQuery =
-                "INSERT INTO cars_drivers (driver_id, car_id) "
-                        + "VALUES (?, ?)";
         try (
                 Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement = connection.prepareStatement(updateCarQuery);
                 PreparedStatement deleteRelationsStatement
-                        = connection.prepareStatement(deleteRelationsQuery);
-                PreparedStatement createRelationsStatement
-                        = connection.prepareStatement(createRelationsQuery)
+                        = connection.prepareStatement(deleteRelationsQuery)
         ) {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
@@ -141,17 +128,12 @@ public class CarDaoImpl implements CarDao {
 
             deleteRelationsStatement.setLong(1, car.getId());
             deleteRelationsStatement.execute();
-
-            for (Driver driver : car.getDrivers()) {
-                createRelationsStatement.setLong(1, driver.getId());
-                createRelationsStatement.setLong(2, car.getId());
-                createRelationsStatement.execute();
-            }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car, e);
         }
+        creteCarRelations(car);
+        return car;
     }
 
     @Override
@@ -203,6 +185,25 @@ public class CarDaoImpl implements CarDao {
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("cant get drivers for car, id = " + id, e);
+        }
+    }
+
+    private void creteCarRelations(Car car) {
+        String createRelationsQuery =
+                "INSERT INTO cars_drivers (driver_id, car_id) "
+                + "VALUES (?, ?)";
+        try (
+                Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement createRelationStatement =
+                        connection.prepareStatement(createRelationsQuery)
+        ) {
+            for (Driver driver : car.getDrivers()) {
+                createRelationStatement.setLong(1, driver.getId());
+                createRelationStatement.setLong(2,car.getId());
+                createRelationStatement.execute();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("cant create car-drivers relation for car:" + car, e);
         }
     }
 }
