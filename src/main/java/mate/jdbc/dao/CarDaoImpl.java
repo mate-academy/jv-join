@@ -10,17 +10,13 @@ import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
-import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private ManufacturerService manufacturerService;
 
     @Override
     public Car create(Car car) {
@@ -38,8 +34,8 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create car "
-                    + car + ". ", e);
+            throw new DataProcessingException("Couldn't create car: "
+                    + car, e);
         }
         creteCarRelations(car);
         return car;
@@ -148,6 +144,38 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
         }
+    }
+
+    public List<Car> getCarsByDriver(Long driverId) {
+        String getByDriverQuery = "SELECT "
+                + "cars.id AS car_id, "
+                + "cars.model AS car_model, "
+                + "m.id AS manufacturer_id, "
+                + "m.name AS manufacturer_name, "
+                + "m.country AS manufacturer_country "
+                + "FROM cars "
+                + "JOIN manufacturers m "
+                + "ON cars.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd "
+                + "ON cars.id = cd.car_id "
+                + "WHERE cars.is_deleted = FALSE AND m.is_deleted = FALSE AND cd.driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (
+                Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(getByDriverQuery)
+        ) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get cars by driver id = " + driverId, e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversOfCar(car.getId()));
+        }
+        return cars;
     }
 
     private Car parseCar(ResultSet resultSet) throws SQLException {

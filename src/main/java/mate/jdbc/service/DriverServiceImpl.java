@@ -20,8 +20,8 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Driver get(Long id) {
         return driverDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get driver from DAO "
-                        + "by id = " + id));
+                .orElseThrow(() -> new NoSuchElementException(
+                        "There is no car with id = " + id));
     }
 
     @Override
