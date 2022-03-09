@@ -83,7 +83,7 @@ public class Main {
         cars.add(Car.builder().id(2L).model("Tacoma")
                 .manufacturer(getManufacturerByIndex(1))
                 .drivers(List.of(getDriverByIndex(0), getDriverByIndex(1))).build());
-        cars.add(Car.builder().id(21L).model("Octavia")
+        cars.add(Car.builder().id(3L).model("Octavia")
                 .manufacturer(getManufacturerByIndex(2))
                 .drivers(List.of(getDriverByIndex(2), getDriverByIndex(3), getDriverByIndex(4)))
                 .build());
