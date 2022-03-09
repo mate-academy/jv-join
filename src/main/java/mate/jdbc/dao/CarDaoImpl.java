@@ -73,11 +73,13 @@ public class CarDaoImpl implements CarDao {
             Car car;
             while (resultSet.next()) {
                 car = parseCarWithManufacturerFromResultSet(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
                 cars.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -94,12 +96,12 @@ public class CarDaoImpl implements CarDao {
             statement.setString(2, car.getModel());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            deleteCarDriverRelations(car);
-            createCarDriverRelations(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
+        deleteCarDriverRelations(car);
+        createCarDriverRelations(car);
         return car;
     }
 
