@@ -93,7 +93,22 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        return null;
+        String updateRequest = "update cars set "
+                + "manufacturer_id = ?, "
+                + "model = ? "
+                + "where id = ? and is_deleted = false;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(updateRequest)) {
+            statement.setLong(1,car.getManufacturer().getId());
+            statement.setString(2, car.getModel());
+            statement.setLong(3,car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't update car with id = " + car.getId(), e);
+        }
+        deleteCarDriverRelations(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -105,6 +120,17 @@ public class CarDaoImpl implements CarDao {
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
+        }
+    }
+
+    private boolean deleteCarDriverRelations(Long carId) {
+        String deleteRequest = "delete from cars_drivers where car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(deleteRequest)) {
+            statement.setLong(1, carId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete relations of car with id " + carId, e);
         }
     }
 
