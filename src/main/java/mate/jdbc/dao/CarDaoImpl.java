@@ -109,10 +109,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public boolean delete(Long id) {
         String deleteCarQuery = "UPDATE cars SET is_deleted = true where id = ?;";
-        Optional<Car> carOptional = get(id);
-        Car car = carOptional.orElseThrow(() -> new DataProcessingException("Couldn't delete"
-                + " relations between drivers and car. ID car: " + id));
-        deleteAllRelationsBetweenCarAndDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarStatement =
                         connection.prepareStatement(deleteCarQuery)) {
