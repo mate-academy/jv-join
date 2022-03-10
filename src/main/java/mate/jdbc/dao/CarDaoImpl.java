@@ -17,7 +17,23 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        return null;
+        String insertCarRequest = "insert into cars (manufacturer_id, model) value (?,?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement insertCarStatement =
+                     connection.prepareStatement(insertCarRequest, Statement.RETURN_GENERATED_KEYS)) {
+            insertCarStatement.setLong(1,car.getManufacturer().getId());
+            insertCarStatement.setString(2,car.getModel());
+            insertCarStatement.executeUpdate();
+            ResultSet getGeneratedKey = insertCarStatement.getGeneratedKeys();
+            if (getGeneratedKey.next()) {
+                Long id = getGeneratedKey.getObject(1, Long.class);
+                car.setId(id);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't create car: " + car, e);
+        }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -123,5 +139,20 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriversRequest = "insert into cars_drivers (driver_id, car_id) value (?,?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement insertDriversStatement =
+                     connection.prepareStatement(insertDriversRequest)) {
+            insertDriversStatement.setLong(2, car.getId());
+            for (Driver driver: car.getDrivers()) {
+                insertDriversStatement.setLong(1, driver.getId());
+                insertDriversStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't insert drivers to DB.", e);
+        }
     }
 }
