@@ -48,7 +48,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN taxi_schema.manufacturers "
                 + "ON taxi_schema.cars.manufacturer_id = taxi_schema.manufacturers.id "
                 + "WHERE taxi_schema.cars.id = ? AND taxi_schema.cars.is_deleted = 0;";
-        Optional<Car> car = null;
+        Optional<Car> car = Optional.empty();
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement getCarStatement
                             = connection.prepareStatement(query)) {
