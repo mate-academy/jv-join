@@ -1,9 +1,6 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
@@ -23,8 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        Optional<Car> carOptional = carDao.get(id);
-        return carOptional.orElseThrow(() ->
+        return carDao.get(id).orElseThrow(() ->
                 new DataProcessingException("Can't find car by id: " + id));
     }
 
@@ -45,25 +41,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        Optional<Car> carOptional = carDao.get(car.getId());
-        Car carWithOldDrivers = carOptional.orElseThrow(() ->
-                new DataProcessingException("Can't get car from DB by id: " + car.getId()));
-        List<Driver> drivers = new ArrayList<>(carWithOldDrivers.getDrivers());
-        drivers.add(driver);
-        carWithOldDrivers.setDrivers(drivers);
-        carDao.update(carWithOldDrivers);
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        Optional<Car> carOptional = carDao.get(car.getId());
-        Car carWithDrivers = carOptional.orElseThrow(() ->
-                new DataProcessingException("Can't get car from DB by id: " + car.getId()));
-        List<Driver> newDrivers = carWithDrivers.getDrivers().stream()
-                .filter(d -> d.getId() != driver.getId())
-                .collect(Collectors.toList());
-        carWithDrivers.setDrivers(newDrivers);
-        carDao.update(carWithDrivers);
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
