@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +50,29 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        String selectCarWithoutDriversRequest = "select c.id as car_id, "
+                + "m.id as manufacturer_id, "
+                + "m.name as manufacturer_name, "
+                + "m.country as manufacturer_country, "
+                + "c.model as car_model "
+                + "from cars c "
+                + "join manufacturers m on c.manufacturer_id = m.id "
+                + "c.is_deleted = false;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+             Statement getCarWithoutDriverStatement =
+                     connection.createStatement()) {
+            ResultSet resultSet = getCarWithoutDriverStatement.executeQuery(selectCarWithoutDriversRequest);
+            while (resultSet.next()) {
+                cars.add(parseCarFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get car from DB", e);
+        }
+        if (!cars.isEmpty()) {
+            cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+        }
+        return cars;
     }
 
     @Override
@@ -101,4 +124,4 @@ public class CarDaoImpl implements CarDao {
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
-    }
+}
