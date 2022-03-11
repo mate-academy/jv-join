@@ -1,5 +1,6 @@
 package mate.jdbc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,7 +44,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        List<Driver> newCarDriversList = new ArrayList<>(car.getDrivers());
+        newCarDriversList.add(driver);
+        car.setDrivers(newCarDriversList);
+        carDao.update(car);
     }
 
     @Override
