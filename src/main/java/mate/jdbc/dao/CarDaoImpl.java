@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -124,6 +125,33 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> allDriverCars = new ArrayList<>();
+        String getAllDriverCarsRequest = "select cd.car_id,"
+                + "m.id as manufacturer_id, "
+                + "m.name as manufacturer_name, "
+                + "m.country as manufacturer_country, "
+                + "c.model as car_model "
+                + "from cars_drivers cd "
+                + "join cars c on cd.car_id = c.id "
+                + "join manufacturers m on m.id = c.manufacturer_id "
+                + "where cd.driver_id = ? and c.is_deleted = false;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement getAllDriverCarsStatement =
+                     connection.prepareStatement(getAllDriverCarsRequest)) {
+            getAllDriverCarsStatement.setLong(1,driverId);
+            ResultSet resultSet = getAllDriverCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                allDriverCars.add(parseCarFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get cars by driver id = " + driverId, e);
+        }
+        allDriverCars.forEach(c -> getDriversForCar(c.getId()));
+        return allDriverCars;
+    }
+
     private boolean deleteCarDriverRelations(Long carId) {
         String deleteRequest = "delete from cars_drivers where car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -147,7 +175,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private List<Driver> getDriversForCar(Long driverId) {
+    private List<Driver> getDriversForCar(Long carId) {
         String selectDriversRequest = "select id, name, license_number"
                 + "from drivers d"
                 + "join cars_drivers cd on d.id = cd.driver_id"
@@ -155,7 +183,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement getCarDriversStatement =
                      connection.prepareStatement(selectDriversRequest)) {
-            getCarDriversStatement.setLong(1, driverId);
+            getCarDriversStatement.setLong(1, carId);
             ResultSet resultSet = getCarDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
@@ -163,7 +191,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-                throw new DataProcessingException("Can't get driver from DB with id = " + driverId, e);
+                throw new DataProcessingException("Can't get driver from DB with id = " + carId, e);
         }
     }
 
