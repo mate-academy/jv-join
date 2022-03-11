@@ -50,7 +50,7 @@ public class Main {
         System.out.println("Create new car: " + car1);
         Car car2 = carService.create(new Car("Focus",SECOND_MANUFACTURER, SECOND_CAR_DRIVERS));
         System.out.println("Create new car: " + car2);
-        Car car3 = carService.create(new Car("Omega",THIRD_MANUFACTURER, FIRST_CAR_DRIVERS));
+        Car car3 = carService.create(new Car("Omega",THIRD_MANUFACTURER, THIRD_CAR_DRIVERS));
         System.out.println("Create new car: " + car3);
         Car car4 = carService.create(new Car("Vectra",THIRD_MANUFACTURER, FOURTH_CAR_DRIVERS));
         System.out.println("Create new car: " + car4);
@@ -76,9 +76,8 @@ public class Main {
         //
         // test DriverServiceImpl.update()
         //
-        Car updatedSecondCar = car2;
-        updatedSecondCar.setModel("Fiesta");
-        carService.update(updatedSecondCar);
+        car2.setModel("Fiesta");
+        carService.update(car2);
         System.out.println("Result of calling method CarServiceImpl.getAll() "
                 + "after updating car with id = 2: ");
         carService.getAll().forEach(System.out::println);
