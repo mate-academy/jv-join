@@ -14,6 +14,7 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
+@Dao
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
