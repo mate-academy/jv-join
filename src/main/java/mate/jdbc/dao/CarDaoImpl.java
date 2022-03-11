@@ -49,7 +49,7 @@ public class CarDaoImpl implements CarDao {
                 + "from cars c "
                 + "join manufacturers m on c.manufacturer_id = m.id "
                 + "where c.id = ? and c.is_deleted = false;";
-        Car car = new Car();
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarWithoutDriverStatement =
                         connection.prepareStatement(selectCarWithoutDriversRequest)) {
@@ -108,7 +108,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3,car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update car with id = " + car.getId(), e);
+            throw new DataProcessingException("Can't update car: " + car, e);
         }
         deleteCarDriverRelations(car.getId());
         insertDrivers(car);

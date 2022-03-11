@@ -18,41 +18,40 @@ public class Main {
             (DriverService) injector.getInstance(DriverService.class);
     private static final ManufacturerService manufacturerService =
             (ManufacturerService) injector.getInstance(ManufacturerService.class);
-    //
-    private static final Manufacturer FIRST_MANUFACTURER =
-            manufacturerService.create(new Manufacturer("Audi","Germany"));
-    private static final Manufacturer SECOND_MANUFACTURER =
-            manufacturerService.create(new Manufacturer("Ford", "America"));
-    private static final Manufacturer THIRD_MANUFACTURER =
-            manufacturerService.create(new Manufacturer("Opel", "Germany"));
-    //
-    private static final Driver FIRST_DRIVER =
-            driverService.create(new Driver("Frank", "12345"));
-    private static final Driver SECOND_DRIVER =
-            driverService.create(new Driver("Alex", "67890"));
-    private static final Driver THIRD_DRIVER =
-            driverService.create(new Driver("Bob", "54321"));
-    //
-    private static final List<Driver> FIRST_CAR_DRIVERS =
-            new ArrayList<>(List.of(FIRST_DRIVER));
-    private static final List<Driver> SECOND_CAR_DRIVERS =
-            new ArrayList<>(List.of(SECOND_DRIVER, THIRD_DRIVER));
-    private static final List<Driver> THIRD_CAR_DRIVERS =
-            new ArrayList<>(List.of(FIRST_DRIVER));
-    private static final List<Driver> FOURTH_CAR_DRIVERS =
-            new ArrayList<>(List.of(FIRST_DRIVER));
 
     public static void main(String[] args) {
+        final Manufacturer firstManufacturer =
+                manufacturerService.create(new Manufacturer("Audi","Germany"));
+        final Manufacturer secondManufacturer =
+                manufacturerService.create(new Manufacturer("Ford", "America"));
+        final Manufacturer thirdManufacturer =
+                manufacturerService.create(new Manufacturer("Opel", "Germany"));
+        //
+        final Driver firstDriver =
+                driverService.create(new Driver("Frank", "12345"));
+        final Driver secondDriver =
+                driverService.create(new Driver("Alex", "67890"));
+        final Driver thirdDriver =
+                driverService.create(new Driver("Bob", "54321"));
+        //
+        final List<Driver> firstCarDrivers =
+                new ArrayList<>(List.of(firstDriver));
+        final List<Driver> secondCarDrivers =
+                new ArrayList<>(List.of(secondDriver, thirdDriver));
+        final List<Driver> thirdCarDrivers =
+                new ArrayList<>(List.of(firstDriver));
+        final List<Driver> fourthCarDrivers =
+                new ArrayList<>(List.of(firstDriver));
         //
         // test DriverServiceImpl.create()
         //
-        Car car1 = carService.create(new Car("RS6",FIRST_MANUFACTURER, FIRST_CAR_DRIVERS));
+        Car car1 = carService.create(new Car("RS6",firstManufacturer, firstCarDrivers));
         System.out.println("Create new car: " + car1);
-        Car car2 = carService.create(new Car("Focus",SECOND_MANUFACTURER, SECOND_CAR_DRIVERS));
+        Car car2 = carService.create(new Car("Focus",secondManufacturer, secondCarDrivers));
         System.out.println("Create new car: " + car2);
-        Car car3 = carService.create(new Car("Omega",THIRD_MANUFACTURER, THIRD_CAR_DRIVERS));
+        Car car3 = carService.create(new Car("Omega",thirdManufacturer, thirdCarDrivers));
         System.out.println("Create new car: " + car3);
-        Car car4 = carService.create(new Car("Vectra",THIRD_MANUFACTURER, FOURTH_CAR_DRIVERS));
+        Car car4 = carService.create(new Car("Vectra",thirdManufacturer, fourthCarDrivers));
         System.out.println("Create new car: " + car4);
         System.out.println(".");
         System.out.println(".");
@@ -68,7 +67,7 @@ public class Main {
         //
         // test DriverServiceImpl.get()
         //
-        Car carWithId1 = carService.get(1L);
+        Car carWithId1 = carService.get(car1.getId());
         System.out.println("Result of calling method CarServiceImpl.get(1): \n" + carWithId1);
         System.out.println(".");
         System.out.println(".");
@@ -87,7 +86,7 @@ public class Main {
         //
         // test DriverServiceImpl.delete()
         //
-        boolean isDeleted = carService.delete(4L);
+        boolean isDeleted = carService.delete(car4.getId());
         System.out.println("Car with id = 4 is deleted: " + isDeleted);
         System.out.println("Result of calling method CarServiceImpl.getAll() "
                 + "after deleting car with id = 4: ");
@@ -100,7 +99,7 @@ public class Main {
         //
         System.out.println("Result of calling method CarServiceImpl.getAllByDriver() "
                 + "with driver id = 1: ");
-        carService.getAllByDriver(1L).forEach(System.out::println);
+        carService.getAllByDriver(firstDriver.getId()).forEach(System.out::println);
         System.out.println(".");
         System.out.println(".");
         System.out.println(".");
@@ -108,10 +107,10 @@ public class Main {
         // test DriverServiceImpl.addDriverToCar()
         //
         System.out.println("Third car drivers before adding new driver:");
-        carService.get(3L).getDrivers().forEach(System.out::println);
-        carService.addDriverToCar(THIRD_DRIVER, car3);
+        carService.get(car3.getId()).getDrivers().forEach(System.out::println);
+        carService.addDriverToCar(thirdDriver, car3);
         System.out.println("Third car drivers after adding new driver:");
-        carService.get(3L).getDrivers().forEach(System.out::println);
+        carService.get(car3.getId()).getDrivers().forEach(System.out::println);
         System.out.println(".");
         System.out.println(".");
         System.out.println(".");
@@ -119,10 +118,10 @@ public class Main {
         // test DriverServiceImpl.removeDriverFromCar()
         //
         System.out.println("Third car drivers before removing driver with id = 3:");
-        carService.get(3L).getDrivers().forEach(System.out::println);
-        carService.removeDriverFromCar(THIRD_DRIVER, car3);
+        carService.get(car3.getId()).getDrivers().forEach(System.out::println);
+        carService.removeDriverFromCar(thirdDriver, car3);
         System.out.println("Third car drivers after removing driver with id = 3:");
-        carService.get(3L).getDrivers().forEach(System.out::println);
+        carService.get(car3.getId()).getDrivers().forEach(System.out::println);
         System.out.println(".");
         System.out.println(".");
         System.out.println(".");
