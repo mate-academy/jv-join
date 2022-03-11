@@ -39,11 +39,11 @@ public class Main {
         bmwCar.setDrivers(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         bmwCar = carService.create(bmwCar);
-        System.out.println(carService.get(1L) + "\n");
+        System.out.println(carService.get(bmwCar.getId()) + "\n");
         bmwCar.setModel("x7");
         bmwCar = carService.update(bmwCar);
-        System.out.println(carService.get(1L) + "\n");
+        System.out.println(carService.get(bmwCar.getId()) + "\n");
         carService.addDriverToCar(driverTwo, bmwCar);
-        System.out.println(carService.get(1L) + "\n");
+        System.out.println(carService.get(bmwCar.getId()) + "\n");
     }
 }
