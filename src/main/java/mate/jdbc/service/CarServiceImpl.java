@@ -52,7 +52,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-
+        List<Driver> newCarDriversList = new ArrayList<>(car.getDrivers());
+        newCarDriversList.remove(driver);
+        car.setDrivers(newCarDriversList);
+        carDao.update(car);
     }
 
     @Override
