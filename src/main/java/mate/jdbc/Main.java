@@ -69,7 +69,7 @@ public class Main {
         // test DriverServiceImpl.get()
         //
         Car carWithId1 = carService.get(1L);
-        System.out.println("Result of calling method CarServiceImpl.get(1): " + carWithId1);
+        System.out.println("Result of calling method CarServiceImpl.get(1): \n" + carWithId1);
         System.out.println(".");
         System.out.println(".");
         System.out.println(".");
@@ -92,6 +92,9 @@ public class Main {
         System.out.println("Result of calling method CarServiceImpl.getAll() "
                 + "after deleting car with id = 4: ");
         carService.getAll().forEach(System.out::println);
+        System.out.println(".");
+        System.out.println(".");
+        System.out.println(".");
         //
         // test DriverServiceImpl.getAllByDriver()
         //

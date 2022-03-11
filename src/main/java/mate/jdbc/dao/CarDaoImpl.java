@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                 + "c.model as car_model "
                 + "from cars c "
                 + "join manufacturers m on c.manufacturer_id = m.id "
-                + "c.is_deleted = false;";
+                + "where c.is_deleted = false;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 Statement getCarWithoutDriverStatement =
@@ -87,7 +87,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get car from DB", e);
+            throw new DataProcessingException("Can't get cars from DB", e);
         }
         if (!cars.isEmpty()) {
             cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
@@ -150,7 +150,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id = " + driverId, e);
         }
-        allDriverCars.forEach(c -> getDriversForCar(c.getId()));
+        allDriverCars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
         return allDriverCars;
     }
 
@@ -179,9 +179,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String selectDriversRequest = "select id, name, license_number"
-                + "from drivers d"
-                + "join cars_drivers cd on d.id = cd.driver_id"
+        String selectDriversRequest = "select id, name, license_number "
+                + "from drivers d "
+                + "join cars_drivers cd on d.id = cd.driver_id "
                 + "where cd.car_id = ? and is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarDriversStatement =
