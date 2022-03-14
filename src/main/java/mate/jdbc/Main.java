@@ -26,10 +26,10 @@ public class Main {
         manufacturerService.create(audiManufacturer);
         Driver driver1 = new Driver();
         driver1.setName("Anton");
-        driver1.setLicenseNumber("12345");
+        driver1.setLicenceNumber("12345");
         Driver driver2 = new Driver();
         driver2.setName("Oleh");
-        driver2.setLicenseNumber("67890");
+        driver2.setLicenceNumber("67890");
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
         driverService.create(driver1);

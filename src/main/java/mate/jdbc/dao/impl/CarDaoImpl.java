@@ -135,13 +135,15 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Long carId = resultSet.getLong("id");
-                Car car = get(carId).get();
+                Car car = parseCar(resultSet);
                 carList.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get list of cars by driver id: "
                     + driverId, e);
+        }
+        for (Car car: carList) {
+            car.setDrivers(getDriversListByCarId(car.getId()));
         }
         return carList;
     }
@@ -191,7 +193,7 @@ public class CarDaoImpl implements CarDao {
         Driver driver = new Driver();
         driver.setId(id);
         driver.setName(name);
-        driver.setLicenseNumber(licenceNumber);
+        driver.setLicenceNumber(licenceNumber);
         return driver;
     }
 

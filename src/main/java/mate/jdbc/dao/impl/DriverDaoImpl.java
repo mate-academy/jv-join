@@ -23,7 +23,7 @@ public class DriverDaoImpl implements DriverDao {
                 PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, driver.getName());
-            statement.setString(2, driver.getLicenseNumber());
+            statement.setString(2, driver.getLicenceNumber());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -80,7 +80,7 @@ public class DriverDaoImpl implements DriverDao {
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setString(1, driver.getName());
-            statement.setString(2, driver.getLicenseNumber());
+            statement.setString(2, driver.getLicenceNumber());
             statement.setLong(3, driver.getId());
             statement.executeUpdate();
             return driver;
