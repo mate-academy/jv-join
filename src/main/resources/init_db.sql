@@ -1,5 +1,13 @@
 CREATE DATABASE `library_db` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
+CREATE TABLE `manufacturers` (
+  `name` varchar(111) DEFAULT NULL,
+  `country` varchar(111) DEFAULT NULL,
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `is_deleted` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8mb3;
+
 CREATE TABLE `drivers` (
   `name` varchar(211) DEFAULT NULL,
   `license_number` varchar(211) DEFAULT NULL,
@@ -27,10 +35,3 @@ CREATE TABLE `cars_drivers` (
   CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
-CREATE TABLE `manufacturers` (
-  `name` varchar(111) DEFAULT NULL,
-  `country` varchar(111) DEFAULT NULL,
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `is_deleted` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8mb3;
