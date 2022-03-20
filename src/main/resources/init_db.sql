@@ -20,7 +20,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
 DROP TABLE IF EXISTS `cars`;
-CREATE TABLE `taxi_service_db`.`cars` (
+CREATE TABLE `cars` (
                                           `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
                                           `manufacturer_id` BIGINT(11) NULL,
                                           `model` VARCHAR(255) NULL,
