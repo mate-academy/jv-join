@@ -20,11 +20,18 @@ public class Main {
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
 
-//        Car car = new Car();
-//        car.setModel("VW");
+        Car car = carDao.get(1L);
+        car.setModel("Golf");
+
+        List<Driver> drivers = new ArrayList<>();
+        Driver driverOleh = driverService.get(4L);
+        drivers.add(driverOleh);
+        car.setDrivers(drivers);
+        carDao.update(car);
+
 //
 //        Manufacturer manufacturer = new Manufacturer();
-//        manufacturer.setName("VW Auto");
+//        manufacturer.setName("VW");
 //        manufacturer.setCountry("Germany");
 //        manufacturer = manufacturerService.create(manufacturer);
 //        car.setManufacturer(manufacturer);
@@ -45,7 +52,7 @@ public class Main {
 //
 //        carDao.create(car);
 
-        List<Car> cars = carDao.getAll();
-        cars.forEach(System.out::println);
+//        List<Car> cars = carDao.getAllByDriver(3L);
+//        cars.forEach(System.out::println);
     }
 }
