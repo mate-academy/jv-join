@@ -20,29 +20,32 @@ public class Main {
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
 
-        Car car = new Car();
-        car.setModel("VW");
+//        Car car = new Car();
+//        car.setModel("VW");
+//
+//        Manufacturer manufacturer = new Manufacturer();
+//        manufacturer.setName("VW Auto");
+//        manufacturer.setCountry("Germany");
+//        manufacturer = manufacturerService.create(manufacturer);
+//        car.setManufacturer(manufacturer);
+//
+//        List<Driver> drivers = new ArrayList<>();
+//        Driver driverAlice = new Driver();
+//        driverAlice.setName("Alice");
+//        driverAlice.setLicenseNumber("22222");
+//        driverAlice = driverService.create(driverAlice);
+//        drivers.add(driverAlice);
+//
+//        Driver driverOleh = new Driver();
+//        driverOleh.setName("Oleh");
+//        driverOleh.setLicenseNumber("44444");
+//        driverOleh = driverService.create(driverOleh);
+//        drivers.add(driverOleh);
+//        car.setDrivers(drivers);
+//
+//        carDao.create(car);
 
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName("VW Auto");
-        manufacturer.setCountry("Germany");
-        manufacturer = manufacturerService.create(manufacturer);
-        car.setManufacturer(manufacturer);
-
-        List<Driver> drivers = new ArrayList<>();
-        Driver driverAlice = new Driver();
-        driverAlice.setName("Alice");
-        driverAlice.setLicenseNumber("22222");
-        driverAlice = driverService.create(driverAlice);
-        drivers.add(driverAlice);
-
-        Driver driverOleh = new Driver();
-        driverOleh.setName("Oleh");
-        driverOleh.setLicenseNumber("44444");
-        driverOleh = driverService.create(driverOleh);
-        drivers.add(driverOleh);
-        car.setDrivers(drivers);
-
-        carDao.create(car);
+        List<Car> cars = carDao.getAll();
+        cars.forEach(System.out::println);
     }
 }
