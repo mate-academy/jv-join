@@ -156,8 +156,8 @@ public class CarDaoImpl implements CarDao {
         String insertDriversRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(insertDriversRequest)) {
+                PreparedStatement statement =
+                        connection.prepareStatement(insertDriversRequest)) {
             statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
@@ -171,8 +171,8 @@ public class CarDaoImpl implements CarDao {
     private void deleteDrivers(Car car) {
         String deleteDriversRequest = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(deleteDriversRequest)) {
+                PreparedStatement statement =
+                        connection.prepareStatement(deleteDriversRequest)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -187,8 +187,8 @@ public class CarDaoImpl implements CarDao {
                 + "ON drivers.id = cars_drivers.driver_id "
                 + "WHERE is_deleted = FALSE AND car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement =
-                     connection.prepareStatement(getRequest)) {
+                PreparedStatement statement =
+                        connection.prepareStatement(getRequest)) {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();

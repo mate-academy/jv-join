@@ -14,25 +14,23 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
-
-        Driver driverAlice = driverService.get(3L);
-        Driver driverOleh = driverService.get(4L);
-        Driver driverAlex = driverService.get(5L);
-
-        Manufacturer manufacturerVW = manufacturerService.get(2L);
-        Manufacturer manufacturerSubaru = manufacturerService.get(3L);
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
         Car carVW = new Car();
         carVW.setModel("Transporter");
+
+        Manufacturer manufacturerVW = manufacturerService.get(2L);
         carVW.setManufacturer(manufacturerVW);
+
         List<Driver> driversVW = new ArrayList<>();
+        Driver driverOleh = driverService.get(4L);
         driversVW.add(driverOleh);
         carVW.setDrivers(driversVW);
+
+        CarService carService = (CarService) injector.getInstance(CarService.class);
 
         carService.create(carVW);
         carVW = carService.get(1L);
@@ -45,8 +43,12 @@ public class Main {
 
         Car carForester = new Car();
         carForester.setModel("Forester");
+
+        Manufacturer manufacturerSubaru = manufacturerService.get(3L);
         carForester.setManufacturer(manufacturerSubaru);
+
         List<Driver> driversForester = new ArrayList<>();
+        Driver driverAlice = driverService.get(3L);
         driversForester.add(driverOleh);
         driversForester.add(driverAlice);
         carForester.setDrivers(driversForester);
@@ -58,6 +60,7 @@ public class Main {
         System.out.println();
         carService.getAllByDriver(driverOleh.getId()).forEach(System.out::println);
 
+        Driver driverAlex = driverService.get(5L);
         carService.addDriverToCar(driverAlex, carForester);
         carService.get(carForester.getId());
 
