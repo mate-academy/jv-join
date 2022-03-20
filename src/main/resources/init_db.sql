@@ -19,6 +19,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `taxi_service_db`.`cars` (
                                           `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
                                           `manufacturer_id` BIGINT(11) NULL,
@@ -30,7 +31,7 @@ CREATE TABLE `taxi_service_db`.`cars` (
                                                   REFERENCES `taxi_service_db`.`manufacturers` (`id`)
                                                   ON DELETE NO ACTION
                                                   ON UPDATE NO ACTION);
-
+DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
                                 `driver_id` BIGINT NOT NULL,
                                 `car_id` BIGINT NOT NULL,
