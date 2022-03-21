@@ -16,10 +16,10 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        Manufacturer firstCar = initializeManufacturer("BMW", "Germany");
-        Manufacturer secondCar = initializeManufacturer("Audi", "Germany");
-        manufacturerService.create(firstCar);
-        manufacturerService.create(secondCar);
+        Manufacturer firstManufacturer = initializeManufacturer("BMW", "Germany");
+        Manufacturer secondManufacturer = initializeManufacturer("Audi", "Germany");
+        manufacturerService.create(firstManufacturer);
+        manufacturerService.create(secondManufacturer);
         System.out.println("Create manufacturers. List of all cars: "
                 + manufacturerService.getAll() + "\n");
         DriverService driverService = (DriverService) injector
@@ -35,13 +35,13 @@ public class Main {
                 + driverService.getAll() + "\n");
         CarService carService = (CarService) injector
                 .getInstance(CarService.class);
-        Car car = initializeCar("someModel", firstCar, drivers);
+        Car car = initializeCar("someModel", firstManufacturer, drivers);
         carService.create(car);
-        System.out.println("Create cars. List of cars: "
+        System.out.println("Create cars. List of all manufacturers: "
                 + carService.getAll() + "\n");
-        car.setManufacturer(secondCar);
+        car.setManufacturer(secondManufacturer);
         carService.update(car);
-        System.out.println("Update car. List of cars: "
+        System.out.println("Update car. List of all manufacturers: "
                 + carService.getAll() + "\n");
         carService.delete(car.getId());
         System.out.println("List of cars after deletion" + "\n");
