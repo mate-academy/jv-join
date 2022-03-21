@@ -16,55 +16,74 @@ public class Main {
     public static void main(String[] args) {
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
+
+        Driver driverOleh = new Driver();
+        driverOleh.setName("Oleh");
+        driverOleh.setLicenseNumber("11111");
+        driverOleh = driverService.create(driverOleh);
+
+        Driver driverAlice = new Driver();
+        driverAlice.setName("ALice");
+        driverAlice.setLicenseNumber("123422");
+        driverAlice = driverService.create(driverAlice);
+
+        Driver driverAlex = new Driver();
+        driverAlex.setName("Alex");
+        driverAlex.setLicenseNumber("222232");
+        driverAlex = driverService.create(driverAlex);
+
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
+        Manufacturer vw = new Manufacturer();
+        vw.setName("VW");
+        vw.setCountry("Germany");
+        vw = manufacturerService.create(vw);
+
+        Manufacturer subaru = new Manufacturer();
+        subaru.setName("Subaru");
+        subaru.setCountry("Japan");
+        subaru = manufacturerService.create(subaru);
+
         Car carVW = new Car();
         carVW.setModel("Transporter");
-
-        Manufacturer manufacturerVW = manufacturerService.get(2L);
-        carVW.setManufacturer(manufacturerVW);
-
+        carVW.setManufacturer(vw);
         List<Driver> driversVW = new ArrayList<>();
-        Driver driverOleh = driverService.get(4L);
         driversVW.add(driverOleh);
         carVW.setDrivers(driversVW);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        carService.create(carVW);
-        carVW = carService.get(1L);
+        carVW = carService.create(carVW);
         System.out.println(carVW);
 
         carVW.setModel("Golf");
-        carService.update(carVW);
-        carVW = carService.get(1L);
+        carVW = carService.update(carVW);
         System.out.println(carVW);
 
         Car carForester = new Car();
         carForester.setModel("Forester");
-
-        Manufacturer manufacturerSubaru = manufacturerService.get(3L);
-        carForester.setManufacturer(manufacturerSubaru);
-
+        carForester.setManufacturer(subaru);
         List<Driver> driversForester = new ArrayList<>();
-        Driver driverAlice = driverService.get(3L);
         driversForester.add(driverOleh);
         driversForester.add(driverAlice);
         carForester.setDrivers(driversForester);
 
         carForester = carService.create(carForester);
-        carService.delete(carForester.getId());
+        boolean delete = carService.delete(carVW.getId());
+        System.out.println("Is deleted " + carVW.getModel() + "? " + delete);
 
+        System.out.println("Get all");
         carService.getAll().forEach(System.out::println);
         System.out.println();
+        System.out.println("Get by Driver " + driverOleh);
         carService.getAllByDriver(driverOleh.getId()).forEach(System.out::println);
 
-        Driver driverAlex = driverService.get(5L);
+        System.out.println();
         carService.addDriverToCar(driverAlex, carForester);
-        carService.get(carForester.getId());
+        System.out.println(carService.get(carForester.getId()));
 
         carService.removeDriverFromCar(driverAlice, carForester);
-        carService.get(carForester.getId());
+        System.out.println(carService.get(carForester.getId()));
     }
 }
