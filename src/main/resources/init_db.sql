@@ -28,7 +28,7 @@ CREATE TABLE `cars` (
   KEY `fk_cars_manufacture_id` (`manufacturer_id`),
   CONSTRAINT `fk_cars_manufacture_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3;
-DROP TABLE IF EXISTS `cars_drivers`;
+ DROP TABLE IF EXISTS `cars_drivers`;
     CREATE TABLE `cars_drivers` (
       `driver_id` bigint NOT NULL,
       `car_id` bigint NOT NULL,
