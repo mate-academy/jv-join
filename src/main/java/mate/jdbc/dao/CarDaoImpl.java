@@ -43,10 +43,10 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT cars.id AS cars_id, cars.model, manufacturers.id "
                 + "AS manufacturer_id, "
                 + "manufacturers.name AS manufacturer_name, manufacturers.country "
-                + "AS manufacturer_country\n"
-                + "FROM cars\n"
-                + "JOIN manufacturers\n"
-                + "ON cars.manufacturer_id = manufacturers.id\n"
+                + "AS manufacturer_country "
+                + "FROM cars "
+                + "JOIN manufacturers "
+                + "ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -70,10 +70,10 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT cars.id AS cars_id, cars.model, manufacturers.id "
                 + "AS manufacturer_id, "
                 + "manufacturers.name AS manufacturer_name, manufacturers.country "
-                + "AS manufacturer_country\n"
-                + "FROM cars\n"
-                + "JOIN manufacturers\n"
-                + "ON cars.manufacturer_id = manufacturers.id\n"
+                + "AS manufacturer_country "
+                + "FROM cars "
+                + "JOIN manufacturers "
+                + "ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -131,12 +131,12 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT cars_drivers.cars_id , cars.model, cars.manufacturer_id, "
                 + "manufacturers.name AS manufacturer_name, manufacturers.country "
-                + "AS manufacturer_country\n"
-                + "FROM cars_drivers \n"
+                + "AS manufacturer_country "
+                + "FROM cars_drivers "
                 + "JOIN cars "
-                + "ON cars_drivers.cars_id = cars.id\n"
+                + "ON cars_drivers.cars_id = cars.id "
                 + "JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id\n"
+                + "ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars_drivers.drivers_id = ? AND cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -194,10 +194,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String query = "SELECT id, name, license_number\n"
-                + "FROM drivers\n"
+        String query = "SELECT id, name, license_number "
+                + "FROM drivers "
                 + "JOIN cars_drivers "
-                + "ON drivers.id = cars_drivers.drivers_id\n"
+                + "ON drivers.id = cars_drivers.drivers_id "
                 + "WHERE cars_drivers.cars_id = ?;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
