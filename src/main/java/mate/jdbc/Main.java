@@ -37,19 +37,16 @@ public class Main {
         drivers.add(driverFirst);
         drivers.add(driverSecond);
         drivers.add(driverThird);
-        System.out.println("Create our drivers. List of all drivers : "
-                + driverService.getAll());
+        System.out.println("Create our drivers. List of all drivers : " + driverService.getAll());
 
         CarService carService = (CarService) injector
                 .getInstance(CarService.class);
         Car car = initializeCar("M5",firstCar, drivers);
         carService.create(car);
-        System.out.println("Create out cars: "
-                + carService.getAll());
+        System.out.println("Create out cars: " + carService.getAll());
         car.setManufacturer(secondCar);
         carService.update(car);
-        System.out.println("Update car: "
-                + carService.getAll());
+        System.out.println("Update car: " + carService.getAll());
         carService.delete(car.getId());
         System.out.println("List of cars after deletion");
         carService.getAllByDriver(driverFirst.getId());
