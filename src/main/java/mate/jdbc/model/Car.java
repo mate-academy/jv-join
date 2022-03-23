@@ -5,11 +5,8 @@ import java.util.Objects;
 
 public class Car {
     private Long id;
-
     private String model;
-
     private Manufacturer manufacturer;
-
     private List<Driver> drivers;
 
     public Car() {
@@ -76,6 +73,6 @@ public class Car {
     public String toString() {
         return "Car{"
                 + "id=" + id + ", model='" + model + '\''
-                + ", manufacturer=" + manufacturer + ", drivers=" + drivers + '}';
+                + ", \n manufacturer=" + manufacturer + ",\n  drivers=" + drivers + '}';
     }
 }

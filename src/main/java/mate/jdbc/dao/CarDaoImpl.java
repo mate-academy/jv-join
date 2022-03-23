@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -54,7 +55,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT model, manufacturers.id, name, country "
                 + "FROM cars "
                 + "INNER JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
@@ -77,7 +78,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
         car.setDrivers(getDrivers(id));
-        return car;
+        return Optional.ofNullable(car);
     }
 
     private List<Driver> getDrivers(Long id) {
@@ -120,7 +121,7 @@ public class CarDaoImpl implements CarDao {
         }
         List<Car> cars = new ArrayList<>();
         for (Long id: idList) {
-            cars.add(get(id));
+            cars.add(get(id).get());
         }
         return cars;
     }
@@ -196,7 +197,7 @@ public class CarDaoImpl implements CarDao {
         }
         List<Car> cars = new ArrayList<>();
         for (Long id: carsIdList) {
-            cars.add(get(id));
+            cars.add(get(id).get());
         }
         return cars;
     }
