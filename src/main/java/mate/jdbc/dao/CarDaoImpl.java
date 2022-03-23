@@ -199,7 +199,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't connection from cars_drivers DB", e);
+            throw new DataProcessingException("Couldn't delete connection from cars_drivers DB", e);
         }
     }
 
