@@ -51,7 +51,7 @@ public class Main {
         System.out.println(carBMW);
 
         Car carMazda = new Car();
-        carMazda.setModel("AnyModel");
+        carMazda.setModel("CX-7");
         carMazda.setManufacturer(mazdaManufacturer);
         List<Driver> driversMazda = new ArrayList<>();
         driversMazda.add(driverOne);
@@ -60,7 +60,7 @@ public class Main {
 
         carMazda = carService.create(carMazda);
         boolean delete = carService.delete(carBMW.getId());
-        System.out.println("Deleted " + carBMW.getModel() + "? " + delete);
+        System.out.println("Deleted " + carBMW.getModel() + " " + delete);
         carService.getAll().forEach(System.out::println);
         System.out.println("Driver " + driverOne);
         carService.getAllByDriver(driverOne.getId()).forEach(System.out::println);
