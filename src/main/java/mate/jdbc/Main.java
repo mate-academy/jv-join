@@ -19,7 +19,14 @@ public class Main {
                 (DriverService) injector.getInstance(DriverService.class);
         Manufacturer hondaManufacturer = new Manufacturer("Honda", "Japan");
         manufacturerService.create(hondaManufacturer);
-        List<Driver> hondaDrivers = List.of(driverService.get(2L), driverService.get(3L));
+        Driver bob = new Driver("bob", "12345");
+        Driver alice = new Driver("alice", "56789");
+        Driver tom = new Driver("tom", "34567");
+        driverService.create(bob);
+        driverService.create(alice);
+        driverService.create(tom);
+        List<Driver> hondaDrivers = List.of(driverService.get(bob.getId()),
+                driverService.get(alice.getId()));
         Car hondaAccord = new Car();
         hondaAccord.setModel("Accord");
         hondaAccord.setManufacturer(hondaManufacturer);
@@ -28,17 +35,18 @@ public class Main {
         carService.create(hondaAccord);
         Manufacturer audiManufacturer = new Manufacturer("Audi", "Germany");
         manufacturerService.create(audiManufacturer);
-        List<Driver> audiDrivers = List.of(driverService.get(4L), driverService.get(5L));
+        List<Driver> audiDrivers = List.of(driverService.get(alice.getId()),
+                driverService.get(tom.getId()));
         Car audiA8 = new Car();
         audiA8.setModel("A8");
         audiA8.setManufacturer(audiManufacturer);
         audiA8.setDrivers(audiDrivers);
         carService.create(audiA8);
         System.out.println(carService.getAll());
-        System.out.println(carService.get(2L));
+        System.out.println(carService.get(tom.getId()));
         audiA8.setModel("a85");
-        System.out.println(carService.getAllByDriver(4L));
+        System.out.println(carService.getAllByDriver(alice.getId()));
         System.out.println(carService.update(audiA8));
-        System.out.println(carService.delete(1L));
+        System.out.println(carService.delete(bob.getId()));
     }
 }
