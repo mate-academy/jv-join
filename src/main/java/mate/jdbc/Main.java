@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -7,8 +8,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.List;
 
 public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
@@ -46,9 +45,12 @@ public class Main {
         Car car2 = new Car("model2",manufacturerService.get(manufacturer2.getId()));
         Car car3 = new Car("model3",manufacturerService.get(manufacturer3.getId()));
 
-        car1.setDrivers(List.of(driverService.get(driver1.getId()), driverService.get(driver2.getId())));
-        car2.setDrivers(List.of(driverService.get(driver3.getId()), driverService.get(driver4.getId())));
-        car3.setDrivers(List.of(driverService.get(driver5.getId()), driverService.get(driver6.getId())));
+        car1.setDrivers(List.of(driverService.get(driver1.getId()),
+                driverService.get(driver2.getId())));
+        car2.setDrivers(List.of(driverService.get(driver3.getId()),
+                driverService.get(driver4.getId())));
+        car3.setDrivers(List.of(driverService.get(driver5.getId()),
+                driverService.get(driver6.getId())));
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
@@ -56,11 +58,12 @@ public class Main {
         carService.create(car2);
         carService.create(car3);
 
-
         car3 = carService.get(car3.getId());
         car3.setManufacturer(manufacturerService.get(manufacturer2.getId()));
-        car3.setDrivers(List.of(driverService.get(driver1.getId()), driverService.get(driver2.getId()),
-                driverService.get(driver3.getId()), driverService.get(driver4.getId())));
+        car3.setDrivers(List.of(driverService.get(driver1.getId()),
+                driverService.get(driver2.getId()),
+                driverService.get(driver3.getId()),
+                driverService.get(driver4.getId())));
         System.out.println(carService.update(car3));
 
         System.out.println(carService.delete(car1.getId()));
