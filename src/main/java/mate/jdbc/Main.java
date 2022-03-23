@@ -13,11 +13,11 @@ import mate.jdbc.service.ManufacturerService;
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
     private static final DriverService driverService =
-        (DriverService) injector.getInstance(DriverService.class);
+            (DriverService) injector.getInstance(DriverService.class);
     private static final ManufacturerService manufacturerService =
-        (ManufacturerService) injector.getInstance(ManufacturerService.class);
+            (ManufacturerService) injector.getInstance(ManufacturerService.class);
     private static final CarService carService =
-        (CarService) injector.getInstance(CarService.class);
+            (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
 
@@ -38,17 +38,17 @@ public class Main {
         mazdaManufacturer.setCountry("USA");
         mazdaManufacturer = manufacturerService.create(mazdaManufacturer);
 
-        Car carBMW = new Car();
-        carBMW.setModel("AnyModel");
-        carBMW.setManufacturer(bmwManufacturer);
-        List<Driver> driversBMW = new ArrayList<>();
-        driversBMW.add(driverOne);
-        carBMW.setDrivers(driversBMW);
-        carBMW = carService.create(carBMW);
-        System.out.println(carBMW);
-        carBMW.setModel("M5");
-        carBMW = carService.update(carBMW);
-        System.out.println(carBMW);
+        Car carBmw = new Car();
+        carBmw.setModel("AnyModel");
+        carBmw.setManufacturer(bmwManufacturer);
+        List<Driver> driversBmw = new ArrayList<>();
+        driversBmw.add(driverOne);
+        carBmw.setDrivers(driversBmw);
+        carBmw = carService.create(carBmw);
+        System.out.println(carBmw);
+        carBmw.setModel("M5");
+        carBmw = carService.update(carBmw);
+        System.out.println(carBmw);
 
         Car carMazda = new Car();
         carMazda.setModel("CX-7");
@@ -59,8 +59,8 @@ public class Main {
         carMazda.setDrivers(driversMazda);
 
         carMazda = carService.create(carMazda);
-        boolean delete = carService.delete(carBMW.getId());
-        System.out.println("Deleted " + carBMW.getModel() + " " + delete);
+        boolean delete = carService.delete(carBmw.getId());
+        System.out.println("Deleted " + carBmw.getModel() + " " + delete);
         carService.getAll().forEach(System.out::println);
         System.out.println("Driver " + driverOne);
         carService.getAllByDriver(driverOne.getId()).forEach(System.out::println);
