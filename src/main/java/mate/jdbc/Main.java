@@ -18,9 +18,9 @@ public class Main {
                 injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Manufacturer manufacturer = new Manufacturer("Ford", "USA");
-        manufacturer.setId(1L);
+        System.out.println(manufacturerService.create(manufacturer));
         Driver jack = new Driver("Jack", "112109");
-        jack.setId(1L);
+        System.out.println(driverService.create(jack));
         Car car = new Car();
         car.setModel("Focus");
         car.setManufacturer(manufacturer);
@@ -29,17 +29,18 @@ public class Main {
         car.setDriverList(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         System.out.println(carService.create(car));
-        System.out.println(carService.get(1L));
+        System.out.println(carService.get(car.getId()));
         car.setModel("Mustang");
         System.out.println(carService.update(car));
+        System.out.println(carService.get(car.getId()));
         for (Car carToIter : carService.getAll()) {
             System.out.println(carToIter);
         }
-        for (Car carToIter : carService.getAllByDriver(1L)) {
+        for (Car carToIter : carService.getAllByDriver(jack.getId())) {
             System.out.println(carToIter);
         }
         Driver mary = new Driver("Mary", "121122");
-        mary.setId(2L);
+        driverService.create(mary);
         carService.addDriverToCar(mary, car);
         carService.removeDriverFromCar(jack, car);
         System.out.println(car);
