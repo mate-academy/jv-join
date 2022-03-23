@@ -22,26 +22,30 @@ public class Main {
     public static void main(String[] args) {
         List<Driver> driversMain = new ArrayList<>();
         Driver firstDriver = driverService.create(new Driver("Barack", "7-04-1776"));
-        Driver secondDriver = driverService.create(new Driver("Joseph", "6-21-1788"));
         driversMain.add(firstDriver);
         Manufacturer firstManufacturer
                 = manufacturerService.create(new Manufacturer("General Motors", "USA"));
-        Manufacturer secondManufacturer = manufacturerService.create(new Manufacturer("Nissan",
-                "Japan"));
         Car firstCar = carService.create(new Car("Hummer H3", firstManufacturer, driversMain));
+        carService.getAllByDriver(firstDriver.getId());
+        System.out.println("Get first created car from the DB:" + carService.get(firstCar.getId()));
+        Driver secondDriver = driverService.create(new Driver("Joseph", "6-21-1788"));
         driversMain.remove(firstDriver);
         driversMain.add(secondDriver);
+        Manufacturer secondManufacturer = manufacturerService.create(new Manufacturer("Nissan",
+                "Japan"));
         Car secondCar = carService.create(new Car("X-Trail", secondManufacturer, driversMain));
-        System.out.println("Get car from the DB:" + carService.get(firstCar.getId()));
+        carService.getAllByDriver(secondDriver.getId());
+        System.out.println("Get second created car from the DB:"
+                + carService.get(secondCar.getId()));
         System.out.println("All cars in the DB: " + carService.getAll());
-        carService.addDriverToCar(firstDriver, firstCar);
-        carService.addDriverToCar(secondDriver,secondCar);
-        carService.getAllByDriver(firstDriver.getId());
         secondCar.setModel("Land Cruiser");
         secondManufacturer.setName("Toyota");
         System.out.println("Updated car in the DB: " + carService.update(secondCar));
-        carService.removeDriverFromCar(firstDriver, firstCar);
+        carService.addDriverToCar(firstDriver, secondCar);
+        carService.removeDriverFromCar(secondDriver, secondCar);
         System.out.println("Car" + firstCar.getModel() + " was deleted: "
                 + carService.delete(firstCar.getId()));
+        System.out.println("Car" + secondCar.getModel() + " was deleted: "
+                + carService.delete(secondCar.getId()));
     }
 }
