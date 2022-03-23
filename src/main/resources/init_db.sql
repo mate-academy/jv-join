@@ -1,5 +1,5 @@
-CREATE SCHEMA IF NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
-USE `taxi_service`;
+CREATE SCHEMA IF NOT EXISTS `taxi_db` DEFAULT CHARACTER SET utf8;
+USE `taxi_db`;
 
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
@@ -26,7 +26,7 @@ CREATE TABLE `cars` (
                         `manufacturer_id` BIGINT NULL,
                         PRIMARY KEY (`id`),
                         CONSTRAINT `cars_manufacturers_fk`
-                            FOREIGN KEY (`manufacturer_id`) REFERENCES `taxi_service`.`manufacturers` (`id`)
+                            FOREIGN KEY (`manufacturer_id`) REFERENCES `taxi_db`.`manufacturers` (`id`)
                                 ON DELETE NO ACTION
                                 ON UPDATE NO ACTION
 );
