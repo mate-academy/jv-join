@@ -75,6 +75,6 @@ public class Main {
         car3.getDrivers().forEach(System.out::println);
         carService.getAll().forEach(System.out::println);
 
-        carService.getAllByDriver(17L).forEach(System.out::println);
+        carService.getAllByDriver(car3.getId()).forEach(System.out::println);
     }
 }
