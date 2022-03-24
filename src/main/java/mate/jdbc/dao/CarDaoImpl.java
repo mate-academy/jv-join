@@ -179,7 +179,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long id) {
-        String getDriverListQuery = "SELECT d.id, d.name, d.license "
+        String getDriverListQuery = "SELECT d.id, d.name, d.license_number "
                 + "FROM drivers d "
                 + "JOIN cars_drivers ca "
                 + "ON d.id = ca.driver_id "
@@ -203,7 +203,7 @@ public class CarDaoImpl implements CarDao {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("d.id", Long.class));
         driver.setName(resultSet.getString("d.name"));
-        driver.setLicenseNumber(resultSet.getString("d.license"));
+        driver.setLicenseNumber(resultSet.getString("d.license_number"));
         return driver;
     }
 }
