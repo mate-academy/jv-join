@@ -41,9 +41,9 @@ public class Main {
         driverService.create(driver6);
         driverService.getAll().forEach(System.out::println);
 
-        Car car1 = new Car("model1",manufacturerService.get(manufacturer1.getId()));
-        Car car2 = new Car("model2",manufacturerService.get(manufacturer2.getId()));
-        Car car3 = new Car("model3",manufacturerService.get(manufacturer3.getId()));
+        Car car1 = new Car("model1", manufacturerService.get(manufacturer1.getId()));
+        Car car2 = new Car("model2", manufacturerService.get(manufacturer2.getId()));
+        Car car3 = new Car("model3", manufacturerService.get(manufacturer3.getId()));
 
         car1.setDrivers(List.of(driverService.get(driver1.getId()),
                 driverService.get(driver2.getId())));
