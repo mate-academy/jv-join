@@ -59,8 +59,8 @@ public class Main {
         carMazda.setDrivers(driversMazda);
 
         carMazda = carService.create(carMazda);
-        boolean delete = carService.delete(carBmw.getId());
-        System.out.println("Deleted " + carBmw.getModel() + " " + delete);
+        boolean wasDeleted = carService.delete(carBmw.getId());
+        System.out.println("Deleted " + carBmw.getModel() + " " + wasDeleted);
         carService.getAll().forEach(System.out::println);
         System.out.println("Driver " + driverOne);
         carService.getAllByDriver(driverOne.getId()).forEach(System.out::println);
