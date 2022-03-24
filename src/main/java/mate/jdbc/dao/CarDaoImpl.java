@@ -56,7 +56,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
+                car = parseCarWithManufacturer(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get driver by id " + id, e);
@@ -79,20 +79,19 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE";
-        Car car = null;
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
+                Car car = parseCarWithManufacturer(resultSet);
                 cars.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars from DB", e);
         }
-        for (Car carFromList : cars) {
-            carFromList.setDrivers(getDriversForCar(carFromList.getId()));
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -143,7 +142,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+                cars.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars by driver with ID = "
@@ -155,7 +154,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car parseCarWithManufacturer(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("car_model"));
