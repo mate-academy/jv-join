@@ -138,7 +138,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car parseCarWithManufacturer(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         car.setId(resultSet.getObject("car_id", Long.class));
