@@ -1,9 +1,9 @@
 package mate.jdbc.util;
 
-    import java.sql.Connection;
-    import java.sql.DriverManager;
-    import java.sql.SQLException;
-    import java.util.Properties;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class ConnectionUtil {
     private static final String URL = "jdbc:mysql://localhost:3306/taxi_service_mysqldb";
