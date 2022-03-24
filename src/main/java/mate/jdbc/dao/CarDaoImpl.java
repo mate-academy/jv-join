@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -54,18 +56,19 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT model, manufacturers.id, name, country "
                 + "FROM cars "
                 + "INNER JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.id = ? AND cars.is_deleted = FALSE";
-        Car car = new Car();
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             Manufacturer manufacturer = new Manufacturer();
             if (resultSet.next()) {
+                car = new Car();
                 manufacturer.setName(resultSet.getString("name"));
                 manufacturer.setCountry(resultSet.getString("country"));
                 manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
@@ -76,8 +79,10 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        car.setDrivers(getDrivers(id));
-        return car;
+        if (car != null) {
+            car.setDrivers(getDrivers(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     private List<Driver> getDrivers(Long id) {
