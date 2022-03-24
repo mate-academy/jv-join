@@ -47,6 +47,6 @@ public class Main {
         audiA8.setModel("a85");
         System.out.println(carService.getAllByDriver(alice.getId()));
         System.out.println(carService.update(audiA8));
-        System.out.println(carService.delete(bob.getId()));
+        System.out.println(carService.delete(hondaAccord.getId()));
     }
 }
