@@ -37,13 +37,3 @@ CREATE TABLE `cars_drivers` (
                                 CONSTRAINT `cars_drivers_cars.fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
                                 CONSTRAINT `cars_drivers_drivers.fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3
-
-CREATE TABLE `cars` (
-                        `id` bigint NOT NULL AUTO_INCREMENT,
-                        `manufacturer_id` bigint NOT NULL,
-                        `model` varchar(255) NOT NULL,
-                        `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
-                        PRIMARY KEY (`id`),
-                        KEY `cars_manufacturers.fk` (`manufacturer_id`),
-                        CONSTRAINT `cars_manufacturers.fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb3
