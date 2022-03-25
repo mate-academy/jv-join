@@ -1,6 +1,5 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
@@ -25,8 +24,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get car from DAO "
-                        + "by id = " + id));
+                .orElseThrow(() -> new NoSuchElementException("There is no car with id = "
+                        + id + " in db"));
     }
 
     @Override
@@ -58,13 +57,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = new ArrayList<>();
-        List<Car> carList = carDao.getAll();
-        for (Car car: carList) {
-            if (car.getDrivers().contains(driverDao.get(driverId).get())) {
-                cars.add(car);
-            }
-        }
-        return cars;
+        return carDao.getAllByDriver(driverId);
     }
 }
