@@ -58,7 +58,7 @@ public class CarDaoImpl implements CarDao {
         String selectRequest = "SELECT c.id as car_id, c.model as car_model, m.id as"
                 + " manufacturer_id, m.name as manufacturer_name, m.country as "
                 + "manufacturer_country FROM cars c JOIN manufacturers m ON "
-                + "c.manufacturer_id = m.id  where c.id = ? and c.is_deleted = false;";
+                + "c.manufacturer_id = m.id  WHERE c.id = ? and c.is_deleted = false;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarStatement =
@@ -207,5 +207,3 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 }
-
-
