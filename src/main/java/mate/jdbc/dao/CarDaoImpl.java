@@ -198,7 +198,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT cars.id, cars.model, manufacturers.name, manufacturers.country, manufacturers.id "
+        String query = "SELECT cars.id, cars.model, manufacturers.name, "
+                + "manufacturers.country, manufacturers.id "
                 + "FROM cars "
                 + "JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
@@ -207,14 +208,15 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = false;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all car by driver with id: ." + driverId, e);
+            throw new DataProcessingException("Couldn't get all car by driver with id: ."
+                    + driverId, e);
         }
         for (Car car: cars) {
             car.setDrivers(null);
