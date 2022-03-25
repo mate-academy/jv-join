@@ -20,7 +20,7 @@ public class Main {
         Manufacturer secondManufacturer = initializeManufacturer("Audi", "Germany");
         manufacturerService.create(firstManufacturer);
         manufacturerService.create(secondManufacturer);
-        System.out.println("Create manufacturers. List of all cars: "
+        System.out.println("Create manufacturers. List of all manufacturers: "
                 + manufacturerService.getAll() + "\n");
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
@@ -37,11 +37,11 @@ public class Main {
                 .getInstance(CarService.class);
         Car car = initializeCar("someModel", firstManufacturer, drivers);
         carService.create(car);
-        System.out.println("Create cars. List of all manufacturers: "
+        System.out.println("Create cars. List of all cars: "
                 + carService.getAll() + "\n");
         car.setManufacturer(secondManufacturer);
         carService.update(car);
-        System.out.println("Update car. List of all manufacturers: "
+        System.out.println("Update car. List of all cars: "
                 + carService.getAll() + "\n");
         carService.delete(car.getId());
         System.out.println("List of cars after deletion" + "\n");
