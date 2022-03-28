@@ -124,13 +124,12 @@ public class CarDaoImpl implements CarDao {
             getCarsForDriverStatement.setLong(1, id);
             ResultSet resultSet = getCarsForDriverStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCarWithoutManufacturerInResult(resultSet));
+                cars.add(getCarWithoutManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars for driver with id " + id, e);
         }
         cars.forEach(car -> {
-            car.setManufacturer(getManufacturerForCar(car.getId()));
             car.setDrivers(getDriversForCar(car.getId()));
         });
         return cars;
@@ -150,7 +149,9 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private Car getCarWithoutManufacturerInResult(ResultSet resultSet) throws SQLException {
+    // I use this method because I have no manufacturers in result set
+    // when I want to get all cars by driver
+    private Car getCarWithoutManufacturer(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         Manufacturer manufacturer = getManufacturerForCar(id);
         String model = resultSet.getString("model");
