@@ -28,7 +28,6 @@ public class Main {
         Car x5 = carService.get(3L);
         Car xc90 = carService.get(4L);
         Car c400 = carService.get(5L);
-        carService.removeDriverFromCar(kate,c400);
         List<Driver> drivers = c400.getDrivers();
         for (Driver driver : drivers) {
             System.out.println(driver);

@@ -1,4 +1,4 @@
-CREATE DATABASE `taxi_db` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE `taxi_db`;
 
 CREATE TABLE `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -8,7 +8,7 @@ CREATE TABLE `cars` (
   PRIMARY KEY (`id`),
   KEY `drivers_manufacturers_fk` (`manufacturer_id`),
   CONSTRAINT `drivers_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `cars_drivers` (
   `driver_id` bigint NOT NULL,
@@ -25,7 +25,7 @@ CREATE TABLE `drivers` (
   `license_number` varchar(45) DEFAULT NULL,
   `is_deleted` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `manufacturers` (
   `id` bigint NOT NULL AUTO_INCREMENT,
