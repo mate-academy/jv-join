@@ -4,25 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Car {
-    private long id;
+    private Long id;
     private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
-    public Car(long id, String model, Manufacturer manufacturer) {
-        this.id = id;
-        this.model = model;
-        this.manufacturer = manufacturer;
-    }
-
-    public Car() {
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

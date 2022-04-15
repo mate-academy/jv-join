@@ -32,7 +32,6 @@ CONSTRAINT `cars_manufacturers_fk`
                                  ON DELETE NO ACTION
                                  ON UPDATE NO ACTION);
 
-USE taxi_service;
 CREATE TABLE `cars_drivers` (
 `car_id` bigint NOT NULL,
 `driver_id` bigint NOT NULL,
