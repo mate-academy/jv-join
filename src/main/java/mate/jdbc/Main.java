@@ -40,9 +40,9 @@ public class Main {
         Car carTeslaS = new Car("Model S", manufacturerTesla, driversTesla);
 
         List<Driver> driversAudi = new ArrayList<>();
-        driversTesla.add(driverKseniia);
-        driversTesla.add(driverBohdan);
-        Car carAudiA5 = new Car("Model S", manufacturerAudi, driversAudi);
+        driversAudi.add(driverKseniia);
+        driversAudi.add(driverBohdan);
+        Car carAudiA5 = new Car("A5", manufacturerAudi, driversAudi);
 
         CarService carService
                 = (CarService) injector.getInstance(CarService.class);
@@ -52,9 +52,10 @@ public class Main {
         System.out.println(carService.getAllByDriver(driverTanya.getId()));
         carService.addDriverToCar(driverTanya, carAudiA5);
         carService.getAll().forEach(System.out::println);
-        carService.delete(driverSonya.getId());
+        driverService.delete(driverSonya.getId());
         carService.removeDriverFromCar(driverSonya, carTeslaS);
         System.out.println(carService.getAllByDriver(driverSonya.getId()));
+        System.out.println(carService.get(carTeslaS.getId()));
         carService.delete(carAudiA5.getId());
     }
 }
