@@ -38,3 +38,14 @@ CREATE TABLE `taxi_db`.`cars` (
                                           REFERENCES `taxi_db`.`manufacturer` (`id`)
                                           ON DELETE NO ACTION
                                           ON UPDATE NO ACTION);
+
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE `cars_drivers`
+(
+    `car_id`    BIGINT NOT NULL,
+    `driver_id` BIGINT NOT NULL,
+    KEY         `cars_drivers_cars_fk` (`car_id`),
+    KEY         `cars_drivers_drivers_fk` (`driver_id`),
+    CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+    CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+);
