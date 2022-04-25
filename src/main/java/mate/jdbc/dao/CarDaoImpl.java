@@ -52,7 +52,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
+                car = parseCar(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get list of all cars", e);
@@ -132,7 +132,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id " + driverId, e);
@@ -141,17 +141,14 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car parseCar(ResultSet resultSet) throws SQLException {
         Long carId = resultSet.getObject("id", Long.class);
         String carModel = resultSet.getString("model");
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("name");
         String manufacturerCountry = resultSet.getString("country");
-        Manufacturer carManufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
-        carManufacturer.setId(manufacturerId);
-        Car car = new Car(carModel, carManufacturer);
-        car.setId(carId);
-        return car;
+        Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
+        return new Car(carModel, manufacturer);
     }
 
     private List<Driver> getDriversForCar(Long carId) {
@@ -166,7 +163,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(parseDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -175,7 +172,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
         Long driverId = resultSet.getObject("id", Long.class);
         String driverName = resultSet.getString("name");
         String driverLicenseNumber = resultSet.getString("license_number");
