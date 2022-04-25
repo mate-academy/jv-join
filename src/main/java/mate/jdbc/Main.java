@@ -14,48 +14,42 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        ManufacturerService manufacturerService
-                = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        ManufacturerService manufacturerService = (ManufacturerService)
+                injector.getInstance(ManufacturerService.class);
+        Manufacturer manufacturer = new Manufacturer("Toyota", "Japan");
+        manufacturerService.create(manufacturer);
 
-        Manufacturer manufacturerTesla = new Manufacturer("Tesla", "USA");
-        Manufacturer manufacturerAudi = new Manufacturer("Audi", "Germany");
-        manufacturerService.create(manufacturerTesla);
-        manufacturerService.create(manufacturerAudi);
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+        Driver firstDriver = new Driver("Peter", "B12456777");
+        Driver secondDriver = new Driver("Bob", "B8769849");
+        Driver thirdDriver = new Driver("Jack", "874550907");
+        Driver fourthDriver = new Driver("Snow", "90859874");
+        driverService.create(firstDriver);
+        driverService.create(secondDriver);
+        driverService.create(thirdDriver);
+        driverService.create(fourthDriver);
 
-        Driver driverTanya = new Driver("Tanya", "123567");
-        Driver driverSonya = new Driver("Sonya", "5654634");
-        Driver driverKseniia = new Driver("Kseniia", "921333567");
-        Driver driverBohdan = new Driver("Bohdan", "42356457");
+        List<Driver> toyotaDrivers = new ArrayList<>();
+        toyotaDrivers.add(firstDriver);
+        toyotaDrivers.add(secondDriver);
+        List<Driver> corollaDrivers = new ArrayList<>();
+        corollaDrivers.add(thirdDriver);
+        corollaDrivers.add(fourthDriver);
 
-        DriverService driverService
-                = (DriverService) injector.getInstance(DriverService.class);
-        driverService.create(driverTanya);
-        driverService.create(driverSonya);
-        driverService.create(driverKseniia);
-        driverService.create(driverBohdan);
+        Car firstCar = new Car();
+        firstCar.setModel("Passat");
+        firstCar.setManufacturer(manufacturer);
+        firstCar.setDrivers(toyotaDrivers);
 
-        List<Driver> driversTesla = new ArrayList<>();
-        driversTesla.add(driverTanya);
-        driversTesla.add(driverSonya);
-        Car carTeslaS = new Car("Model S", manufacturerTesla, driversTesla);
-
-        List<Driver> driversAudi = new ArrayList<>();
-        driversAudi.add(driverKseniia);
-        driversAudi.add(driverBohdan);
-        Car carAudiA5 = new Car("A5", manufacturerAudi, driversAudi);
-
-        CarService carService
-                = (CarService) injector.getInstance(CarService.class);
-        carService.create(carTeslaS);
-        carService.create(carAudiA5);
-
-        System.out.println(carService.getAllByDriver(driverTanya.getId()));
-        carService.addDriverToCar(driverTanya, carAudiA5);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
+        carService.create(firstCar);
+        carService.update(firstCar);
+        System.out.println(carService.get(1L));
+        carService.delete(firstCar.getId());
+        carService.addDriverToCar(firstDriver, firstCar);
+        carService.removeDriverFromCar(firstDriver, firstCar);
         carService.getAll().forEach(System.out::println);
-        driverService.delete(driverSonya.getId());
-        carService.removeDriverFromCar(driverSonya, carTeslaS);
-        System.out.println(carService.getAllByDriver(driverSonya.getId()));
-        System.out.println(carService.get(carTeslaS.getId()));
-        carService.delete(carAudiA5.getId());
+        System.out.println(carService.getAllByDriver(1L));
+
     }
 }
