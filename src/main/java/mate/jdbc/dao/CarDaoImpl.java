@@ -31,7 +31,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create a car: " + car + ". ", e);
+            throw new DataProcessingException("Couldn't create a car: " + car + ".", e);
         }
         insertDrivers(car);
         return car;
@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a car by id: " + id + ". ", e);
+            throw new DataProcessingException("Couldn't get a car by id: " + id + ".", e);
         }
         if (car != null) {
             car.setDrivers(getDriversOfCar(id));
@@ -134,7 +134,7 @@ public class CarDaoImpl implements CarDao {
             return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get cars of driver with id: " + driverId
-                + ". ", e);
+                + ".", e);
         }
     }
 
@@ -148,7 +148,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert drivers to car: " + car + ". ", e);
+            throw new DataProcessingException("Couldn't insert drivers to car: " + car + ".", e);
         }
     }
 
@@ -177,7 +177,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get drivers of car with id: " + id + ". ",
+            throw new DataProcessingException("Couldn't get drivers of car with id: " + id + ".",
                 e);
         }
     }
