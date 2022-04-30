@@ -6,14 +6,15 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class ConnectionUtil {
-    private static final String URL = "YOUR DATABASE URL";
-    private static final String USERNAME = "YOUR USERNAME";
-    private static final String PASSWORD = "YOUR PASSWORD";
-    private static final String JDBC_DRIVER = "YOUR DRIVER";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "root";
+    private static final String DRIVER_NAME = "com.mysql.cj.jdbc.Driver";
+    private static final String URL
+            = "jdbc:mysql://localhost:3306/taxi_service?serverTimezone=UTC";
 
     static {
         try {
-            Class.forName(JDBC_DRIVER);
+            Class.forName(DRIVER_NAME);
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Can't find SQL Driver", e);
         }
