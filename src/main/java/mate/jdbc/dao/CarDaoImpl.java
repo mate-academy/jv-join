@@ -226,11 +226,11 @@ public class CarDaoImpl implements CarDao {
     private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
         String name = resultSet.getObject("name", String.class);
         String licenseNumber = resultSet.getObject("license_number", String.class);
-        Long driver_id = resultSet.getObject("driver_id", Long.class);
+        Long driverId = resultSet.getObject("driver_id", Long.class);
         Driver driver = new Driver();
         driver.setName(name);
         driver.setLicenseNumber(licenseNumber);
-        driver.setId(driver_id);
+        driver.setId(driverId);
         return driver;
     }
 }
