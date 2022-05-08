@@ -24,15 +24,15 @@ public class Main {
         Manufacturer opel = new Manufacturer("opel","germany");
         Manufacturer renault = new Manufacturer("renault", "france");
         Manufacturer kia = new Manufacturer("kia", "korea");
-        System.out.println(manufacturerService.create(opel));
-        System.out.println(manufacturerService.create(renault));
-        System.out.println(manufacturerService.create(kia));
+        manufacturerService.create(opel);
+        manufacturerService.create(renault);
+        manufacturerService.create(kia);
         Driver abram = new Driver("abram", "11111");
         Driver fransua = new Driver("fransua", "22222");
         Driver vova = new Driver("vova", "33333");
-        System.out.println(driverService.create(abram));
-        System.out.println(driverService.create(fransua));
-        System.out.println(driverService.create(vova));
+        driverService.create(abram);
+        driverService.create(fransua);
+        driverService.create(vova);
         List<Driver> driversForFirstCar = new ArrayList<>();
         driversForFirstCar.add(abram);
         List<Driver> driversForSecondCar = new ArrayList<>();
@@ -49,6 +49,12 @@ public class Main {
         k2.setManufacturer(kia);
         k2.setModel("k2");
         k2.setDrivers(driversForThirdCar);
-        System.out.println(carService.create(k2));
+        carService.create(k2);
+        System.out.println(carService.getAll());
+        System.out.println(carService.get(k2.getId()));
+        carService.addDriverToCar(fransua, omega);
+        carService.removeDriverFromCar(abram,omega);
+        System.out.println(carService.getAllByDriver(vova.getId()));
+        System.out.println(carService.getAll());
     }
 }
