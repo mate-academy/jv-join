@@ -29,7 +29,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
-                putDriverInCar(car);
             }
             return car;
         } catch (SQLException e) {
@@ -111,8 +110,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            pushDriverOutOfCar(car.getId());
-            putDriverInCar(car);
+            removeDriverOutOfCar(car.getId());
+            addDriverInCar(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
@@ -126,14 +125,14 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            pushDriverOutOfCar(id);
+            removeDriverOutOfCar(id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
         }
     }
 
-    private void putDriverInCar(Car car) {
+    private void addDriverInCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -148,7 +147,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void pushDriverOutOfCar(Long id) {
+    private void removeDriverOutOfCar(Long id) {
         String query = "DELETE FROM cars_drivers "
                 + " WHERE car_id = ? ;";
         try (Connection connection = ConnectionUtil.getConnection();
