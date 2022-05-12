@@ -9,10 +9,6 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
-    public Car() {
-
-    }
-
     public Car(String model, Manufacturer manufacturer) {
         this.model = model;
         this.manufacturer = manufacturer;
@@ -27,11 +23,6 @@ public class Car {
         this.model = model;
         this.manufacturer = manufacturer;
         this.drivers = drivers;
-    }
-
-    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
-        this(model, manufacturer, drivers);
-        this.id = id;
     }
 
     public Long getId() {
