@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.lib.Injector;
@@ -16,10 +17,9 @@ public class Main {
     public static void main(String[] args) {
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-
-        Driver driverBob = new Driver("Bob", "11211");
-        Driver driverDan = new Driver("Dan", "12345");
-        Driver driverBen = new Driver("Ben", "456789");
+        Driver driverBob = new Driver("Bob", "112911");
+        Driver driverDan = new Driver("Dan", "1263495");
+        Driver driverBen = new Driver("Ben", "4566799");
         driverService.create(driverBob);
         driverService.create(driverDan);
         driverService.create(driverBen);
@@ -33,20 +33,23 @@ public class Main {
         manufacturerService.create(manufacturerToyota);
         manufacturerService.create(manufacturerDaewoo);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carSedan = new Car();
         carSedan.setModel("sedan");
         carSedan.setManufacturer(manufacturerHonda);
+        carSedan.setDrivers(new ArrayList<>());
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(carSedan);
 
         Car carCoupe = new Car();
         carCoupe.setModel("coupe");
         carCoupe.setManufacturer(manufacturerToyota);
+        carCoupe.setDrivers(new ArrayList<>());
         carService.create(carCoupe);
 
         Car carHatchback = new Car();
         carHatchback.setModel("hatchback");
         carHatchback.setManufacturer(manufacturerDaewoo);
+        carHatchback.setDrivers(new ArrayList<>());
         carService.create(carHatchback);
 
         System.out.println(carService.get(2L));
@@ -59,8 +62,6 @@ public class Main {
         carCoupe.setModel("newCoupe");
         manufacturerDaewoo.setId(3L);
         carCoupe.setManufacturer(manufacturerDaewoo);
-
-        System.out.println(carService.update(carCoupe));
 
         carService.addDriverToCar(driverBen, carSedan);
         carService.addDriverToCar(driverBen, carCoupe);
@@ -76,5 +77,9 @@ public class Main {
                 .forEach(System.out::println);
 
         carService.delete(3L);
+
+        System.out.println(carService.update(carCoupe));
+
+        carService.removeDriverFromCar(driverBen, carCoupe);
     }
 }

@@ -1,5 +1,6 @@
 package mate.jdbc.model;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
@@ -7,6 +8,7 @@ public class Car {
     private String model;
     private boolean isDeleted;
     private Manufacturer manufacturer;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -49,6 +51,14 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -61,12 +71,13 @@ public class Car {
         return isDeleted == car.isDeleted
                 && Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
-                && Objects.equals(manufacturer, car.manufacturer);
+                && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(drivers, car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, isDeleted, manufacturer);
+        return Objects.hash(id, model, isDeleted, manufacturer, drivers);
     }
 
     @Override

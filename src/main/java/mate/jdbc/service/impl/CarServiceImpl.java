@@ -3,6 +3,7 @@ package mate.jdbc.service.impl;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -13,6 +14,8 @@ import mate.jdbc.service.CarService;
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
+    @Inject
+    private DriverDao driverDao;
 
     @Override
     public Car create(Car car) {
@@ -41,12 +44,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        carDao.addDriverToCar(driver, car);
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        carDao.removeDriverFromCar(driver, car);
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
