@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -22,14 +23,19 @@ public class Main {
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver driverBob = new Driver("Bob", "12345");
-        Driver driverAlice = new Driver("Alice", "123456");
-        Driver driverRyan = new Driver("Ryan Gosling", "4433");
         driverBob = driverService.create(driverBob);
+        Driver driverAlice = new Driver("Alice", "123456");
         driverAlice = driverService.create(driverAlice);
+        Driver driverRyan = new Driver("Ryan Gosling", "4433");
         driverRyan = driverService.create(driverRyan);
+        Driver driverJessey = new Driver("Jessey", "13531");
+        driverJessey = driverService.create(driverJessey);
 
-        List<Driver> audiDrivers = List.of(driverBob, driverAlice);
-        List<Driver> volkswagenDrivers = List.of(driverRyan);
+        List<Driver> audiDrivers = new ArrayList<>();
+        audiDrivers.add(driverBob);// List.of(driverBob, driverAlice);
+        audiDrivers.add(driverAlice);
+        List<Driver> volkswagenDrivers = new ArrayList<>();
+        volkswagenDrivers.add(driverRyan);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car audiCar = new Car("TT", audiManufacturer, audiDrivers);
@@ -45,7 +51,16 @@ public class Main {
         System.out.println(carService.get(volkswagenCar.getId()));
 
         driverBob.setLicenseNumber("155532");
+
         System.out.println(driverService.update(driverBob));
+
+        carService.addDriverToCar(driverJessey, audiCar);
+        carService.getAll().forEach(System.out::println);
+
+        carService.removeDriverFromCar(driverBob, audiCar);
+        carService.getAll().forEach(System.out::println);
+
+        carService.getAllByDriver(driverRyan.getId()).forEach(System.out::println);
 
     }
 }
