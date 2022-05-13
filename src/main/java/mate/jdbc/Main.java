@@ -21,23 +21,31 @@ public class Main {
         manufacturerService.create(volkswagenManufacturer);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver saslan = new Driver("Saslan", "12345");
-        Driver aslan = new Driver("Aslan", "123456");
-        Driver ryan = new Driver("Ryan Gosling", "4433");
-        driverService.create(saslan);
-        driverService.create(aslan);
-        driverService.create(ryan);
+        Driver driverBob = new Driver("Bob", "12345");
+        Driver driverAlice = new Driver("Alice", "123456");
+        Driver driverRyan = new Driver("Ryan Gosling", "4433");
+        driverBob = driverService.create(driverBob);
+        driverAlice = driverService.create(driverAlice);
+        driverRyan = driverService.create(driverRyan);
 
-        List<Driver> audiDrivers = List.of(saslan, aslan);
-        List<Driver> volkswagenDrivers = List.of(ryan);
+        List<Driver> audiDrivers = List.of(driverBob, driverAlice);
+        List<Driver> volkswagenDrivers = List.of(driverRyan);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car audiCar = new Car("TT", audiManufacturer, audiDrivers);
         Car volkswagenCar = new Car("Golf", volkswagenManufacturer, volkswagenDrivers);
-        carService.create(audiCar);
-        carService.create(volkswagenCar);
-
+        audiCar = carService.create(audiCar);
+        volkswagenCar = carService.create(volkswagenCar);
         List<Car> cars = carService.getAll();
         cars.forEach(System.out::println);
+
+        driverService.delete(driverAlice.getId());
+        carService.getAll().forEach(System.out::println);
+
+        System.out.println(carService.get(volkswagenCar.getId()));
+
+        driverBob.setLicenseNumber("155532");
+        System.out.println(driverService.update(driverBob));
+
     }
 }

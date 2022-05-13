@@ -37,8 +37,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert car to DB: " + car, e);
         }
-        insertDrivers(car);
-        return car;
+        return createCarsDriversRelation(car);
     }
 
     @Override
@@ -141,7 +140,7 @@ public class CarDaoImpl implements CarDao {
                          connection.prepareStatement(deleteCarQuery)) {
             softDeleteCarStatement.setLong(1, carId);
             int numberOfDeletedRows = softDeleteCarStatement.executeUpdate();
-            return numberOfDeletedRows != 0;
+            return numberOfDeletedRows > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car with id: " + carId, e);
         }
@@ -149,7 +148,8 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long carId) {
         String getAllDriversForCarRequest = "SELECT id, name, license_number FROM drivers d "
-                + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?;";
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id"
+                + " WHERE cd.car_id = ? AND d.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllDriversStatement =
                          connection.prepareStatement(getAllDriversForCarRequest)) {
@@ -161,7 +161,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get drivers from car with id: " + carId, e);
+            throw new DataProcessingException("Can't get drivers for car with id: " + carId, e);
         }
     }
 
@@ -218,19 +218,4 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void insertDrivers(Car car) {
-        String insertDriversRequest = "INSERT INTO cars_drivers (car_id, driver_id)"
-                + "VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement addDriverToCarStatement =
-                         connection.prepareStatement(insertDriversRequest)) {
-            addDriverToCarStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                addDriverToCarStatement.setLong(2, driver.getId());
-                addDriverToCarStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't insert drivers to car: " + car, e);
-        }
-    }
 }
