@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create insert car " + car, e);
         }
-        addDriverToCar(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -91,7 +91,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t update car " + car, e);
         }
         deleteDriversFromCar(car.getId());
-        addDriverToCar(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -129,7 +129,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
     
-    private void addDriverToCar(Car car) {
+    private void addDriversToCar(Car car) {
         String query = "INSERT INTO cars_drivers(car_id, driver_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -157,8 +157,10 @@ public class CarDaoImpl implements CarDao {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
-        Manufacturer manufacturer = new Manufacturer(name, country);
+        Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(id);
+        manufacturer.setName(name);
+        manufacturer.setCountry(country);
         return manufacturer;
     }
 
@@ -184,8 +186,10 @@ public class CarDaoImpl implements CarDao {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
-        Driver driver = new Driver(name, licenseNumber);
+        Driver driver = new Driver();
         driver.setId(id);
+        driver.setName(name);
+        driver.setLicenseNumber(licenseNumber);
         return driver;
     }
 
