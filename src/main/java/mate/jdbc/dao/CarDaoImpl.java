@@ -146,8 +146,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    @Override
-    public List<Driver> getDriversForCar(Long id) {
+    private List<Driver> getDriversForCar(Long id) {
         String query = "SELECT drivers.id, drivers.name, drivers.license_number "
                 + "FROM drivers "
                 + "INNER JOIN cars_drivers "
