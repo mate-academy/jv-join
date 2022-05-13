@@ -58,7 +58,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-   @Override
+    @Override
     public List<Car> getAll() {
         String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, "
                 + "m.name, m.country "
@@ -140,7 +140,7 @@ public class CarDaoImpl implements CarDao {
     private void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             for (Driver drivers : car.getDrivers()) {
                 statement.setLong(2, drivers.getId());
@@ -169,7 +169,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON d.id = cd.driver_id WHERE cd.car_id = ?;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -192,7 +192,7 @@ public class CarDaoImpl implements CarDao {
     private void deleteCarDrivers(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
