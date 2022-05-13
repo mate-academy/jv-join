@@ -17,33 +17,32 @@ public class Main {
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
 
-        Manufacturer manufacturer = manufacturerService.get(2L);
-        Driver driver1 = new Driver("Leo", "711199");
-        Driver driver2 = new Driver("Alexa", "922278");
-        driverService.create(driver1);
-        driverService.create(driver2);
-        Car car = new Car(6L,"S1", manufacturer);
-        car.setDrivers(List.of(driver1, driver2));
+        Manufacturer manufacturerBmw = new Manufacturer("BMW", "Germany");
+        manufacturerService.create(manufacturerBmw);
+        Manufacturer manufacturer = manufacturerService.get(1L);
+        Driver driverLeo = new Driver("Leo", "711199");
+        Driver driverAlexa = new Driver("Alexa", "922278");
+        driverService.create(driverLeo);
+        driverService.create(driverAlexa);
+        Car carS1 = new Car(1L,"S1", manufacturer);
+        carS1.setDrivers(List.of(driverLeo, driverAlexa));
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        System.out.println(carService.create(car));
-        System.out.println(carService.get(6L).toString());
+        System.out.println(carService.create(carS1));
+        System.out.println(carService.get(1L).toString());
         carService.getAll().forEach(System.out::println);
-        System.out.println(carService.delete(3L));
 
-        Driver driver3 = new Driver("Masha", "933399");
-        Driver driver4 = new Driver("Stepan", "944491");
-        driverService.create(driver3);
-        driverService.create(driver4);
-        Car carUpdate = new Car(6L,"S3", manufacturer);
-        carUpdate.setDrivers(List.of(driver3, driver4));
-        System.out.println(carService.update(carUpdate));
+        Driver driverMasha = new Driver("Masha", "933399");
+        Driver driverStepan = new Driver("Stepan", "944491");
+        driverService.create(driverMasha);
+        driverService.create(driverStepan);
+        Car carS3 = new Car(1L,"S3", manufacturer);
+        carS3.setDrivers(List.of(driverMasha, driverStepan));
+        System.out.println(carService.update(carS3));
 
-        Car car3 = carService.get(1L);
-        System.out.println(carService.get(1L));
-        Driver driver5 = new Driver("Alisa", "123479");
-        driverService.create(driver5);
-        carService.addDriverToCar(driver5, car3);
+        Driver driverAlisa = new Driver("Alisa", "123479");
+        driverService.create(driverAlisa);
+        carService.addDriverToCar(driverAlisa, carS1);
         System.out.println(carService.get(1L));
         System.out.println(carService.delete(1L));
     }
