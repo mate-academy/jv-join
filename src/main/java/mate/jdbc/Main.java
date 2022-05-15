@@ -46,5 +46,14 @@ public class Main {
         carService.create(carTeslaS);
         carService.create(carAudiA5);
 
+        System.out.println(carService.getAllByDriver(driverRita.getId()));
+        carService.addDriverToCar(driverRita, carAudiA5);
+        carService.getAll().forEach(System.out::println);
+        driverService.delete(driverJon.getId());
+        carService.removeDriverFromCar(driverJon, carTeslaS);
+        System.out.println(carService.getAllByDriver(driverJon.getId()));
+        System.out.println(carService.get(carTeslaS.getId()));
+        carService.delete(carAudiA5.getId());
+
     }
 }
