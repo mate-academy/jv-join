@@ -9,7 +9,6 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
-
     public Car(String model, Manufacturer manufacturer) {
         this.model = model;
         this.manufacturer = manufacturer;
@@ -63,7 +62,8 @@ public class Car {
         }
         Car car = (Car) o;
         return Objects.equals(id, car.id) && Objects.equals(model, car.model)
-                && Objects.equals(manufacturer, car.manufacturer) && Objects.equals(drivers, car.drivers);
+                && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(drivers, car.drivers);
     }
 
     @Override
