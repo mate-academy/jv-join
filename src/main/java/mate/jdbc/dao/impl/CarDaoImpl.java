@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't insert car: " + car, ex);
         }
-        return fillDriversForCar(car);
+        return fillCarDrivers(car);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            ResultSet carSet = statement.executeQuery();
-            if (carSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(carSet);
+            ResultSet carResultSet = statement.executeQuery();
+            if (carResultSet.next()) {
+                car = parseCarWithManufacturerFromResultSet(carResultSet);
             }
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't get car by id: " + id + " from database", ex);
@@ -73,9 +73,9 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE cars.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet carsSet = statement.executeQuery();
-            while (carsSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(carsSet));
+            ResultSet carsResultSet = statement.executeQuery();
+            while (carsResultSet.next()) {
+                cars.add(parseCarWithManufacturerFromResultSet(carsResultSet));
             }
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't get all cars from database", ex);
@@ -101,7 +101,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't update car: " + car, ex);
         }
         deleteCarDrivers(car.getId());
-        fillDriversForCar(car);
+        fillCarDrivers(car);
         return car;
     }
 
@@ -142,7 +142,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car fillDriversForCar(Car car) {
+    private Car fillCarDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
