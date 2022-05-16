@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create car. " + car, e);
         }
-        createRelation(car);
+        createCarDrivers(car);
         return car;
     }
 
@@ -83,7 +83,7 @@ public class CarDaoImpl implements CarDao {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE;";
         removeCarDrivers(car.getId());
-        createRelation(car);
+        createCarDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -178,7 +178,7 @@ public class CarDaoImpl implements CarDao {
         return new Driver(id, name, country);
     }
 
-    private static void createRelation(Car car) {
+    private static void createCarDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
