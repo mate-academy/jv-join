@@ -30,12 +30,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
-                    + car + ". ", e);
+            throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -88,7 +87,7 @@ public class CarDaoImpl implements CarDao {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "where id = ? AND is_deleted = FALSE;";
         deleteCarsDriversRelation(car);
-        createCarsDriversRelation(car);
+        insertDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
@@ -198,31 +197,13 @@ public class CarDaoImpl implements CarDao {
         String query = "DELETE FROM cars_drivers "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement
-                         = connection.prepareStatement(query)) {
+             PreparedStatement statement
+                     = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete cars_drivers "
                     + "relations in DB with car: " + car, e);
         }
-    }
-
-    private Car createCarsDriversRelation(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id)"
-                + "VALUES(?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement
-                         = connection.prepareStatement(query)) {
-            for (Driver driver : car.getDrivers()) {
-                statement.setLong(1, car.getId());
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't create cars - "
-                    + "drivers relations in DB with car: " + car, e);
-        }
-        return car;
     }
 }
