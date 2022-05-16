@@ -23,7 +23,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createCarStatement =
                         connection.prepareStatement(createCarRequest,
-                                Statement.RETURN_GENERATED_KEYS)) {
+                                PreparedStatement.RETURN_GENERATED_KEYS)) {
             createCarStatement.setString(1, car.getModel());
             createCarStatement.setLong(2, car.getManufacturer().getId());
             createCarStatement.executeUpdate();
@@ -41,11 +41,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getCarRequest = "SELECT cars.id, model, manufacturers_id, manufacturers.name, "
-                                       + "manufacturers.country "
-                                    + "FROM cars JOIN manufacturers "
-                                       + "ON cars.manufacturers_id = manufacturers.id "
-                                       + "WHERE cars.id = ? AND cars.is_deleted = false";
+        String getCarRequest = "SELECT c.id, c.model, c.manufacturers_id, mn.name, "
+                                       + "mn.country "
+                                    + "FROM cars c JOIN manufacturers mn "
+                                       + "ON c.manufacturers_id = mn.id "
+                                       + "WHERE c.id = ? AND c.is_deleted = false";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -66,10 +66,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllRequest = "SELECT cars.id, model, manufacturers_id, "
-                                       + "manufacturers.name, country FROM cars "
-                                       + "JOIN manufacturers ON cars.manufacturers_id = "
-                                       + "manufacturers.id WHERE cars.is_deleted = FALSE;";
+        String getAllRequest = "SELECT c.id, c.model, c.manufacturers_id, mn.name, mn.country "
+                                       + "FROM cars c "
+                                       + "INNER JOIN manufacturers mn ON manufacturers_id = mn.id "
+                                       + "WHERE c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement =
@@ -120,14 +120,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllDriverRequest = "SELECT cars.id, model, manufacturers_id, name, country "
-                                             + "FROM cars "
-                                             + "JOIN manufacturers ON cars.manufacturers_id "
-                                             + "= manufacturers.id "
-                                             + "JOIN cars_drivers "
-                                             + "ON cars.id = cars_drivers.car_id "
-                                             + "WHERE cars.is_deleted = false "
-                                             + "AND manufacturers.is_deleted = false "
+        String getAllDriverRequest = "SELECT c.id, model, manufacturers_id, name, country "
+                                             + "FROM cars c "
+                                             + "JOIN manufacturers mn "
+                                             + "ON c.manufacturers_id = mn.id "
+                                             + "JOIN cars_drivers cd "
+                                             + "ON c.id = cd.car_id "
+                                             + "WHERE c.is_deleted = false "
+                                             + "AND mn.is_deleted = false "
                                              + "AND driver_id = ?";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -150,7 +150,7 @@ public class CarDaoImpl implements CarDao {
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufacturers_id", Long.class));
-        manufacturer.setName(resultSet.getString("manufacturers.name"));
+        manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
         car.setId(resultSet.getObject("id", Long.class));

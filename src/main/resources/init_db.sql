@@ -1,5 +1,8 @@
 CREATE DATABASE `taxi_app_db` /*!40100 DEFAULT CHARACTER SET utf8mb3 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
+CREATE SCHEMA IF NOT EXISTS taxi_app_db DEFAULT CHARACTER SET utf8;
+USE taxi_app_db;
+
 CREATE TABLE `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `model` varchar(100) NOT NULL,
