@@ -74,13 +74,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 Car car = getCar(resultSet);
                 car.setDrivers(getDriversForCar(car.getId()));
-                cars.add(car);
             }
-            return cars;
         } catch (SQLException throwable) {
             throw new DataProcessingException("Could not get a list of drivers",
                     throwable);
         }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        return cars;
     }
 
     @Override
@@ -174,14 +174,14 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void removeDriverForCar(Long carId) {
+    private void removeDriverForCar(Long cardId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarDriversStatement = connection.prepareStatement(query)) {
-            deleteCarDriversStatement.setLong(1, carId);
+            deleteCarDriversStatement.setLong(1, cardId);
             deleteCarDriversStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Could not update driver by car id: " + carId,
+            throw new DataProcessingException("Could not update driver by car id: " + cardId,
                     throwable);
         }
     }
