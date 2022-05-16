@@ -197,8 +197,8 @@ public class CarDaoImpl implements CarDao {
         String query = "DELETE FROM cars_drivers "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement
-                     = connection.prepareStatement(query)) {
+                 PreparedStatement statement
+                         = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
