@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
-        insertDrivers(car);
+        createCarsDriversRelation(car);
         return car;
     }
 
