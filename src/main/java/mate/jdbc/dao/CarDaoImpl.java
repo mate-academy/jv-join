@@ -73,7 +73,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             if (resultSet.next()) {
                 Car car = getCar(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
+                cars.add(car);
             }
         } catch (SQLException throwable) {
             throw new DataProcessingException("Could not get a list of drivers",
