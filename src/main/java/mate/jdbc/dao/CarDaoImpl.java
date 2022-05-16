@@ -58,7 +58,6 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getDriversByCar(car));
         }
         return Optional.ofNullable(car);
-
     }
 
     @Override
