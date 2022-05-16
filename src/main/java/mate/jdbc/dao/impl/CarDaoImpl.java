@@ -1,4 +1,4 @@
-package mate.jdbc.dao;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -43,7 +44,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                            = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -66,7 +67,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE ;";
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                            = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
@@ -86,7 +87,7 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE id = ? AND is_deleted = FALSE;";
         removeCarDrivers(car.getId());
         createCarDrivers(car);
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -102,7 +103,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public boolean delete(Long id) {
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -120,7 +121,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
@@ -166,7 +167,7 @@ public class CarDaoImpl implements CarDao {
     private void removeCarDrivers(Long id) {
         String query = "DELETE FROM cars_drivers "
                 + "WHERE car_id = ?;";
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -182,7 +183,7 @@ public class CarDaoImpl implements CarDao {
                 + "INNER JOIN cars_drivers cd "
                 + "ON cd.driver_id = d.id "
                 + "WHERE car_id = ? AND d.is_deleted = FALSE;";
-        try (Connection connection = (Connection) ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, id);
