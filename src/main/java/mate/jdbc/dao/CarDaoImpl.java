@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create " + car, e);
         }
-        setDrivers(car);
+        insertCarDrivers(car);
         return car;
     }
 
@@ -98,7 +98,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't update " + car + " in DB", e);
         }
         deleteCarDrivers(car.getId());
-        setDrivers(car);
+        insertCarDrivers(car);
         return car;
     }
 
@@ -155,7 +155,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM drivers "
                 + "JOIN cars_drivers "
                 + "ON drivers.id = cars_drivers.driver_id "
-                + "WHERE cars_drivers.car_id = ?;";
+                + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -178,7 +178,7 @@ public class CarDaoImpl implements CarDao {
         return new Driver(driverId, driverName, driverLicenseNumber);
     }
 
-    private void setDrivers(Car car) {
+    private void insertCarDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
