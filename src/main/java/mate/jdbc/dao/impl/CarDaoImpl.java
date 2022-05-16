@@ -129,9 +129,9 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
-            ResultSet carsSet = statement.executeQuery();
-            while (carsSet.next()) {
-                cars.add(parseCarWithManufacturerFromResultSet(carsSet));
+            ResultSet carsResultSet = statement.executeQuery();
+            while (carsResultSet.next()) {
+                cars.add(parseCarWithManufacturerFromResultSet(carsResultSet));
             }
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't get cars by driver id: " + driverId, ex);
