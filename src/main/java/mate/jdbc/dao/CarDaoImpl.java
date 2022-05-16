@@ -81,7 +81,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        deleteAllRowsByCarId(car.getId());
+        deleteDrivers(car.getId());
         insertDrivers(car);
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE is_deleted = FALSE AND id = ?";
@@ -127,7 +127,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get list of cars by driver id " + driverId, e);
         }
-        cars.forEach(e -> e.setDrivers(getDriversForCar(e.getId())));
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -189,7 +189,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteAllRowsByCarId(Long carId) {
+    private void deleteDrivers(Long carId) {
         String query = "DELETE FROM cars_drivers cd WHERE cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(query)) {
