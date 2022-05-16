@@ -31,11 +31,9 @@ public class Main {
                 .getInstance(DriverService.class);
 
         Driver petroVasylenko = new Driver("Petro Vasylenko", "AAA 11111");
-        Driver nazarKovalenko = new Driver("Nazar Kovalenko", "BBB 22222");
         Driver illiaDanchuk = new Driver("Illia Danchuk", "CCC 33333");
 
         driverService.create(petroVasylenko);
-        driverService.create(nazarKovalenko);
         driverService.create(illiaDanchuk);
         System.out.println(driverService.getAll());
         System.out.println("__________________________________________________________________");
@@ -52,6 +50,12 @@ public class Main {
         carService.create(carMazda);
         Car carZaz = new Car(autoZaz, "forza");
         carService.create(carZaz);
+        System.out.println(carService.create(carDodge));
+
+        Driver nazarKovalenko = new Driver("Nazar Kovalenko", "BBB 22222");
+        driverService.create(nazarKovalenko);
+        drivers.add(nazarKovalenko);
+        carService.update(carDodge);
         System.out.println(carService.create(carDodge));
     }
 }

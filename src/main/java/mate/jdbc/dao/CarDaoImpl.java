@@ -88,6 +88,7 @@ public class CarDaoImpl implements CarDao {
                         = connection.prepareStatement(query)) {
             statement.setLong(1, car.getManufacturer().getId());
             statement.setString(2, car.getModel());
+            statement.setLong(3, car.getId());
             statement.executeUpdate();
             return car;
         } catch (SQLException e) {
