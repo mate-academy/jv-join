@@ -21,11 +21,6 @@ public class Car {
         this.drivers = drivers;
     }
 
-    public Car(String model, Manufacturer manufacturer) {
-        this.model = model;
-        this.manufacturer = manufacturer;
-    }
-
     public Long getId() {
         return id;
     }
