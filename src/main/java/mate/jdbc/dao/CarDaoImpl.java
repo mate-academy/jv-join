@@ -87,7 +87,7 @@ public class CarDaoImpl implements CarDao {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "where id = ? AND is_deleted = FALSE;";
         deleteCarsDriversRelation(car);
-        insertDrivers(car);
+        createCarsDriversRelation(car);
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
@@ -140,7 +140,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private void insertDrivers(Car car) {
+    private void createCarsDriversRelation(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
