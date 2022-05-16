@@ -174,14 +174,14 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void removeDriverFromCar(Long cardId) {
+    private void removeDriverFromCar(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarDriversStatement = connection.prepareStatement(query)) {
-            deleteCarDriversStatement.setLong(1, cardId);
+            deleteCarDriversStatement.setLong(1, carId);
             deleteCarDriversStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new DataProcessingException("Could not update driver by car id: " + cardId,
+            throw new DataProcessingException("Could not update driver by car id: " + carId,
                     throwable);
         }
     }
