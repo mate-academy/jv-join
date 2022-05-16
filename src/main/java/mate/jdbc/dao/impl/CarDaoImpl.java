@@ -20,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(
                          query, Statement.RETURN_GENERATED_KEYS)) {
@@ -34,8 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't insert car: " + car, ex);
         }
-        fillDriversForCar(car);
-        return car;
+        return fillDriversForCar(car);
     }
 
     @Override
@@ -126,7 +125,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars "
                 + "JOIN cars_drivers ON cars.id = cars_drivers.car_id "
                 + "JOIN manufacturers ON manufacturers.id = cars.manufacturer_id "
-                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = FALSE;";
+                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
@@ -143,7 +142,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private void fillDriversForCar(Car car) {
+    private Car fillDriversForCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -152,6 +151,7 @@ public class CarDaoImpl implements CarDao {
                 statement.setLong(2, driver.getId());
                 statement.executeUpdate();
             }
+            return car;
         } catch (SQLException ex) {
             throw new DataProcessingException("Can't fill drivers for car: " + car, ex);
         }
@@ -176,9 +176,9 @@ public class CarDaoImpl implements CarDao {
         List<Driver> drivers = new ArrayList<>();
         String query = "SELECT id, name, license_number "
                 + "FROM drivers "
-                + "JOIN cars_drivers "
+                + "INNER JOIN cars_drivers "
                 + "ON drivers.id = cars_drivers.driver_id "
-                + "WHERE cars_drivers.car_id = ?;";
+                + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = false;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, carId);
