@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createCarStatement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                        PreparedStatement.RETURN_GENERATED_KEYS)) {
             createCarStatement.setString(1, car.getModel());
             createCarStatement.setLong(2, car.getManufacturer().getId());
             createCarStatement.executeUpdate();
@@ -30,12 +29,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            setDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        setDrivers(car);
+        return car;
     }
 
     @Override
@@ -93,13 +92,13 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.executeUpdate();
-            deleteCarDrivers(car.getId());
-            setDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        deleteCarDrivers(car.getId());
+        setDrivers(car);
+        return car;
     }
 
     @Override
@@ -151,7 +150,6 @@ public class CarDaoImpl implements CarDao {
                 setDriverStatement.setLong(2, driver.getId());
                 setDriverStatement.executeUpdate();
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't set drivers for car "
                     + car + ". ", e);
