@@ -7,10 +7,13 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
-    public Driver() {
+    public Driver(String name, String licenseNumber) {
+        this.name = name;
+        this.licenseNumber = licenseNumber;
     }
 
-    public Driver(String name, String licenseNumber) {
+    public Driver(Long id, String name, String licenseNumber) {
+        this.id = id;
         this.name = name;
         this.licenseNumber = licenseNumber;
     }
@@ -63,7 +66,6 @@ public class Driver {
         return "Driver{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                + ", licenseNumber='" + licenseNumber + '\'' + '}';
     }
 }
