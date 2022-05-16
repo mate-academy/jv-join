@@ -22,12 +22,12 @@ public class Main {
         manufacturerService.create(manufacturerBmw);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver driver1 = new Driver("Vodiy", "NOMER");
-        Driver driver2 = new Driver("InshiyVodiy", "INSHIYNOMER");
-        Driver driver3 = new Driver("SheInshiyVodiy", "SHEINSHI");
-        driverService.create(driver1);
-        driverService.create(driver2);
-        driverService.create(driver3);
+        Driver driverVodiy = new Driver("Vodiy", "NOMER");
+        Driver driverInshiyVodiy = new Driver("InshiyVodiy", "INSHIYNOMER");
+        Driver driverSheInshiyVodiy = new Driver("SheInshiyVodiy", "SHEINSHI");
+        driverService.create(driverVodiy);
+        driverService.create(driverInshiyVodiy);
+        driverService.create(driverSheInshiyVodiy);
 
         List<Driver> firstCarDrivers = new ArrayList<>();
         List<Driver> secondCarDrivers = new ArrayList<>();
@@ -37,17 +37,17 @@ public class Main {
         Car secondCar = new Car("InshaModel", manufacturerToyota, secondCarDrivers);
         carService.create(firstCar);
         carService.create(secondCar);
-        firstCarDrivers.add(driver2);
-        firstCarDrivers.add(driver3);
-        secondCarDrivers.add(driver2);
-        secondCarDrivers.add(driver1);
+        firstCarDrivers.add(driverInshiyVodiy);
+        firstCarDrivers.add(driverSheInshiyVodiy);
+        secondCarDrivers.add(driverInshiyVodiy);
+        secondCarDrivers.add(driverVodiy);
         carService.getAllByDriver(firstCar.getId());
         firstCar.setManufacturer(manufacturerService.get(manufacturerBmw.getId()));
         carService.update(firstCar);
         carService.getAll().forEach(System.out::println);
 
-        carService.removeDriverFromCar(driver3, firstCar);
-        carService.getAllByDriver(driver2.getId()).forEach(System.out::println);
+        carService.removeDriverFromCar(driverSheInshiyVodiy, firstCar);
+        carService.getAllByDriver(driverInshiyVodiy.getId()).forEach(System.out::println);
 
         carService.delete(secondCar.getId());
     }
