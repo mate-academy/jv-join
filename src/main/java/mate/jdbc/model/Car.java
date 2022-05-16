@@ -72,10 +72,10 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return Objects.equals(getId(), car.getId())
-                && Objects.equals(getModel(), car.getModel())
-                && Objects.equals(getManufacturer(), car.getManufacturer())
-                && Objects.equals(getDrivers(), car.getDrivers());
+        return Objects.equals(this.id, car.getId())
+                && Objects.equals(this.model, car.getModel())
+                && Objects.equals(this.manufacturer, car.getManufacturer())
+                && Objects.equals(this.drivers, car.getDrivers());
     }
 
     @Override
