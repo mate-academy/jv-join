@@ -1,5 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
-USE `taxi_service`;
+CREATE SCHEMA IF NOT EXISTS `taxi_db` DEFAULT CHARACTER SET utf8;
 
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
@@ -19,6 +18,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
     `id` bigint NOT NULL AUTO_INCREMENT,
     `model` varchar(255) DEFAULT NULL,
@@ -28,6 +28,7 @@ CREATE TABLE `cars` (
     KEY `cars_manufacturers_fk` (`manufacturer_id`),
     CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`));
 
+DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
     `car_id` bigint NOT NULL,
     `driver_id` bigint NOT NULL,

@@ -34,13 +34,20 @@ public class Main {
         opelDrivers.add(secondDriver);
         List<Driver> renaultDrivers = new ArrayList<>();
         renaultDrivers.add(thirdDriver);
+        renaultDrivers.add(firstDriver);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car newCar = new Car(null,"Megan", secondManufacturer, renaultDrivers);
-        carService.create(newCar);
+        Car opelCar = new Car(null, "Insignia", firstManufacturer, opelDrivers);
+        carService.create(opelCar);
+        Car renaultCar = new Car(null, "Megane", secondManufacturer, renaultDrivers);
+        carService.create(renaultCar);
         List<Car> cars = carService.getAll();
         cars.forEach(System.out::println);
-        List<Car> allByDriver = carService.getAllByDriver(firstDriver.getId());
-        allByDriver.forEach(System.out::println);
+        carService.delete(renaultCar.getId());
+        Driver fourthDriver = new Driver("Oleh", "1113698");
+        driverService.create(fourthDriver);
+        carService.addDriverToCar(secondDriver, renaultCar);
+        carService.removeDriverFromCar(firstDriver, opelCar);
+        carService.getAllByDriver(firstDriver.getId());
 
     }
 }
