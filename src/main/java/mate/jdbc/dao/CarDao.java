@@ -17,3 +17,4 @@ public interface CarDao {
 
     List<Car> getAllByDriver(Long driverId);
 }
+

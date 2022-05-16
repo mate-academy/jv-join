@@ -48,4 +48,3 @@ CREATE TABLE `cars_drivers` (
                                  ON DELETE NO ACTION
                                  ON UPDATE NO ACTION
                                  );
-
