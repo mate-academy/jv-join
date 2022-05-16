@@ -40,9 +40,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getCarRequest = "SELECT c.id, c.model, c.manufacturers_id, mn.name, "
-                                       + "mn.country "
-                                    + "FROM cars c JOIN manufacturers mn "
+        String getCarRequest = "SELECT c.id, c.model, c.manufacturers_id, mn.name, mn.country "
+                                       + "FROM cars c JOIN manufacturers mn "
                                        + "ON c.manufacturers_id = mn.id "
                                        + "WHERE c.id = ? AND c.is_deleted = false";
         Car car = null;
