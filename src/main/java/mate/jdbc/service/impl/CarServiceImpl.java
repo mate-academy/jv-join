@@ -12,7 +12,7 @@ import mate.jdbc.service.CarService;
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-    private static CarDao carDao;
+    private CarDao carDao;
 
     @Override
     public Car create(Car car) {
