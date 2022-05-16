@@ -32,7 +32,7 @@ public class Main {
         driverJessey = driverService.create(driverJessey);
 
         List<Driver> audiDrivers = new ArrayList<>();
-        audiDrivers.add(driverBob);// List.of(driverBob, driverAlice);
+        audiDrivers.add(driverBob);
         audiDrivers.add(driverAlice);
         List<Driver> volkswagenDrivers = new ArrayList<>();
         volkswagenDrivers.add(driverRyan);

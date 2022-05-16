@@ -33,7 +33,6 @@ public class CarDaoImpl implements CarDao {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert car to DB: " + car, e);
         }
@@ -115,8 +114,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String updateRequest = "UPDATE cars SET model = ?, manufacturer_id = ? "
-                + "where id = ? "
-                + "AND is_deleted = FALSE;";
+                + "where id = ? AND is_deleted = FALSE;";
         deleteCarsDriversRelation(car);
         createCarsDriversRelation(car);
         try (Connection connection = ConnectionUtil.getConnection();
