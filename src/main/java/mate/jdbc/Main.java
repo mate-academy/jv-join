@@ -22,9 +22,9 @@ public class Main {
         manufacturerService.create(ford);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver alex = new Driver("alex", "12345");
-        Driver dmitry = new Driver("dmitry", "23456");
-        Driver igor = new Driver("igor", "34567");
+        Driver alex = new Driver("alex", "123456");
+        Driver dmitry = new Driver("dmitry", "234567");
+        Driver igor = new Driver("igor", "345678");
         driverService.create(alex);
         driverService.create(dmitry);
         driverService.create(igor);
@@ -50,7 +50,7 @@ public class Main {
         System.out.println(carService.delete(toyotaCar.getId()));
 
         System.out.println("add and remove driver");
-        Driver ai = new Driver("ai", "09876");
+        Driver ai = new Driver("ai", "098765");
         driverService.create(ai);
         carService.addDriverToCar(ai, fordCar);
         carService.removeDriverFromCar(ai, fordCar);

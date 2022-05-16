@@ -19,10 +19,7 @@ CREATE TABLE `drivers`
     `name`           VARCHAR(225) NOT NULL,
     `license_number` VARCHAR(225) NOT NULL,
     `is_deleted`     TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
-    UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE
-);
+    PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars`
