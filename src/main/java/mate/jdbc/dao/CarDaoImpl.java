@@ -49,7 +49,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                car = getCarFromResultSet(resultSet);
+                car = getCarWithManufacturerFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
@@ -70,7 +70,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCarFromResultSet(resultSet));
+                cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get list of cars "
@@ -93,8 +93,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update " + car
-                    + " in DB.", e);
+            throw new DataProcessingException("Couldn't update " + car + " in DB.", e);
         }
         deleteCarsDriversRelation(car.getId());
         formCarsDriversRelation(car);
@@ -109,8 +108,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete a car by id "
-                    + id, e);
+            throw new DataProcessingException("Couldn't delete a car by id " + id, e);
         }
     }
 
@@ -127,7 +125,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCarFromResultSet(resultSet));
+                cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get list of cars by driver with id: "
@@ -138,7 +136,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void formCarsDriversRelation(Car car) {
-        String query = "INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUE (?, ?)";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUE (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
@@ -164,7 +162,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
+    private Car getCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
