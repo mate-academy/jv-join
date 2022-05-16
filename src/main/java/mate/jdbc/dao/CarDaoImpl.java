@@ -32,8 +32,7 @@ public class CarDaoImpl implements CarDao {
             }
             return createCarDrivers(car);
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create: "
-                    + car + ". ", e);
+            throw new DataProcessingException("Couldn't create: " + car + ". ", e);
         }
     }
 

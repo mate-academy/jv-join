@@ -80,6 +80,6 @@ public class Car {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getModel(), getManufacturer(), getDrivers());
+        return Objects.hash(id, model, manufacturer, drivers);
     }
 }
