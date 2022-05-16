@@ -30,13 +30,13 @@ public class Main {
         modelB.setManufacturer(manufacturerService.create(citroen));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(modelB);
-        for (Car car : carService.getAllByDriver(vasya.getId())) {
-            System.out.println(car);
-        }
         carService.create(modelA);
         System.out.println(modelA);
         Driver petya = new Driver("Petya", "987456");
         carService.addDriverToCar(driverService.create(petya), modelA);
+        for (Car car : carService.getAllByDriver(vasya.getId())) {
+            System.out.println(car);
+        }
         System.out.println(modelA);
         carService.removeDriverFromCar(vasya, modelA);
         System.out.println(modelA);
