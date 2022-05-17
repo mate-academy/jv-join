@@ -43,13 +43,17 @@ public class Main {
         CarService carService = (CarService) injector.getInstance(CarService.class);
         System.out.println("CarService:");
 
-        Car toyotaCamry = new Car("Camry", toyota, toyotaDrivers);
+        Car toyotaModel = new Car("Camry", toyota, toyotaDrivers);
         Car peugeot508 = new Car("508", peugeot, peugeotDrivers);
 
-        carService.create(toyotaCamry);
+        carService.create(toyotaModel);
         carService.create(peugeot508);
         carService.getAll().forEach(System.out::println);
-        carService.addDriverToCar(thirdDriver, toyotaCamry);
-        carService.removeDriverFromCar(firstDriver, peugeot508);
+        carService.addDriverToCar(thirdDriver, toyotaModel);
+        carService.removeDriverFromCar(secondDriver, toyotaModel);
+        toyotaModel.setModel("Corolla");
+        carService.update(toyotaModel);
+        System.out.println("After an update:");
+        carService.getAll().forEach(System.out::println);
     }
 }
