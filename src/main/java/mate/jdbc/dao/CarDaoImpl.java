@@ -112,7 +112,7 @@ public class CarDaoImpl implements CarDao {
             deleteCarStatement.setLong(1, id);
             return deleteCarStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Unable to get all cars from DB", e);
+            throw new RuntimeException("Unable to delete car from DB", e);
         }
     }
 
