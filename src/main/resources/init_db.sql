@@ -36,7 +36,8 @@ CREATE TABLE `cars` (
 DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
                                   `driver_id` BIGINT(11) NOT NULL,
-                                 `car_id` BIGINT(11) NOT NULL,
+                                  `car_id` BIGINT(11) NOT NULL,
+                                  `is_deleted` tinyint DEFAULT '0',
                                  CONSTRAINT `cars_drivers_driver_id_fk`
                                  FOREIGN KEY (`driver_id`)
                                  REFERENCES `taxi_service`.`drivers` (`id`)

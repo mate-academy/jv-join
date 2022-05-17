@@ -9,9 +9,10 @@ public class Car {
     private String model;
     private List<Driver> drivers;
 
-    public Car(Manufacturer manufacturer, String model) {
+    public Car(Manufacturer manufacturer, String model, List<Driver> drivers) {
         this.manufacturer = manufacturer;
         this.model = model;
+        this.drivers = drivers;
     }
 
     public Car() {

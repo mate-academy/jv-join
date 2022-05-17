@@ -31,43 +31,41 @@ public class Main {
 
         Driver petroVasylenko = new Driver("Petro Vasylenko", "AAA 11111");
         Driver illiaDanchuk = new Driver("Illia Danchuk", "CCC 33333");
+        Driver nazarKovalenko = new Driver("Nazar Kovalenko", "BBB 22222");
 
         driverService.create(petroVasylenko);
         driverService.create(illiaDanchuk);
+        driverService.create(nazarKovalenko);
         System.out.println(driverService.getAll());
-        System.out.println("__________________________________________________________________");
 
         List<Driver> drivers = new ArrayList<>();
+        drivers.add(petroVasylenko);
+        drivers.add(illiaDanchuk);
+        drivers.add(nazarKovalenko);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car carMazda = new Car(mazda, "6");
-        carMazda.setDrivers(drivers);
-        System.out.println(carMazda.getDrivers());
-        Car carDodge = new Car(dodge, "challenger");
+
+        Car carMazda = new Car(mazda, "6", drivers);
+        carMazda.setDrivers(List.of(nazarKovalenko));
+        Car carDodge = new Car(dodge, "challenger", drivers);
         carDodge.setDrivers(drivers);
+        Car carZaz = new Car(autoZaz, "forza", drivers);
         carService.create(carMazda);
-        carMazda.setDrivers(drivers);
-        Car carZaz = new Car(autoZaz, "forza");
+        carService.create(carDodge);
         carService.create(carZaz);
         System.out.println(carService.getAll());
+        carService.removeDriverFromCar(illiaDanchuk, carDodge);
+        Driver nikitaMarchuk = new Driver("Nikita Marchuk", "DDD 44444");
+        driverService.create(nikitaMarchuk);
+        carService.addDriverToCar(nikitaMarchuk, carZaz);
 
-        List <Driver> carZazDrivers = new ArrayList<>();
-        carZazDrivers.add(illiaDanchuk);
-        carZazDrivers.add(petroVasylenko);
-        carService.update(carZaz);
-        System.out.println(carZaz);
-        carZaz.getDrivers().addAll(carZazDrivers);
-        Driver nazarKovalenko = new Driver("Nazar Kovalenko", "BBB 22222");
-        driverService.create(nazarKovalenko);
-        carService.addDriverToCar(nazarKovalenko, carZaz);
-        carService.removeDriverFromCar(illiaDanchuk, carZaz);
-        System.out.println(carZaz);
+        carZaz.setModel("Vida");
+        System.out.println(carService.update(carZaz));
+
+        System.out.println(carService.getAllByDriver(petroVasylenko.getId()));
 
         System.out.println(carService.delete(carMazda.getId()));
-        System.out.println("__________________________________________________________________");
 
-        System.out.println(carService.get(carZaz.getId()));
-        System.out.println("__________________________________________________________________");
-        System.out.println(carMazda.getDrivers());
+        System.out.println(carService.get(carDodge.getId()));
     }
 }
