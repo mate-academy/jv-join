@@ -54,11 +54,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getDrivers(car.getId()));
-            }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get a car by id " + id, e);
+        }
+        if (car != null) {
+            car.setDrivers(getDrivers(car.getId()));
         }
         return Optional.ofNullable(car);
     }
@@ -138,14 +138,14 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDrivers(car.getId()));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException(
                     "Can't delete all cars by a driver's id " + driverId, e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDrivers(car.getId()));
+        }
+        return cars;
     }
 
     private void addDrivers(Car car) {
@@ -153,7 +153,7 @@ public class CarDaoImpl implements CarDao {
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement addDriversStatement = connection.prepareStatement(
-                         addDriversRequest, Statement.RETURN_GENERATED_KEYS)) {
+                         addDriversRequest)) {
             addDriversStatement.setLong(2, car.getId());
             for (Driver driver : car.getDrivers()) {
                 addDriversStatement.setLong(1, driver.getId());
