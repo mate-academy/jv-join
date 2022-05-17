@@ -3,7 +3,6 @@ package mate.jdbc.dao;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
 
 public interface CarDao {
     Car create(Car car);
@@ -17,6 +16,4 @@ public interface CarDao {
     boolean delete(Long id);
 
     List<Car> getAllByDriver(Long driverId);
-
-    boolean addDriverToCar(Driver driver, Car car);
 }

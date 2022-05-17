@@ -16,25 +16,30 @@ public class Main {
     public static void main(String[] args) {
         // test your code here
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        driverService.create(new Driver("Sam", "BD-1154"));
-        driverService.create(new Driver("Alise", "HT-8655"));
-        driverService.create(new Driver("Anna", "VF-0909"));
+        Driver sam = new Driver("Sam", "BD-1154");
+        Driver alice = new Driver("Alice", "HT-8655");
+        Driver anna = new Driver("Anna", "VF-0909");
+        driverService.create(sam);
+        driverService.create(alice);
+        driverService.create(anna);
         List<Driver> drivers = new ArrayList<Driver>();
-        drivers.add(driverService.get(1L));
-        drivers.add(driverService.get(2L));
+        drivers.add(driverService.get(sam.getId()));
+        drivers.add(driverService.get(alice.getId()));
 
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        manufacturerService.create(new Manufacturer("Toyota", "Japan"));
-        manufacturerService.create(new Manufacturer("Renault", "France"));
+        Manufacturer toyota = new Manufacturer("Toyota", "Japan");
+        Manufacturer renault = new Manufacturer("Renault", "France");
+        manufacturerService.create(toyota);
+        manufacturerService.create(renault);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(new Car("Camry", manufacturerService.get(1L), drivers));
-        carService.create(new Car("Clio", manufacturerService.get(2L), drivers));
+        carService.create(new Car("Camry", manufacturerService.get(toyota.getId()), drivers));
+        carService.create(new Car("Clio", manufacturerService.get(renault.getId()), drivers));
 
-        System.out.println(carService.get(carService.get(1L).getId()));//GET CAR BY ID
-        carService.addDriverToCar(drivers.get(0), carService.get(1L));//ADD DRIVER-CAR
-        System.out.println(carService.getAllByDriver(carService.get(2L).getId()));//GET ALL CARS
-        carService.delete(carService.get(2L).getId());//MARK CAR AS DELETED
+        System.out.println(carService.get(toyota.getId()));//GET CAR BY ID
+        carService.addDriverToCar(anna, carService.getAll().get(1));//ADD DRIVER-CAR
+        System.out.println(carService.getAllByDriver(sam.getId()));//GET ALL CARS
+        carService.delete(carService.getAll().get(0).getId());//MARK CAR AS DELETED
     }
 }

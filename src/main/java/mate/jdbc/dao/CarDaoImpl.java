@@ -206,25 +206,4 @@ public class CarDaoImpl implements CarDao {
                     + "relations in DB with car: " + car.getModel(), e);
         }
     }
-
-    public boolean addDriverToCar(Driver driver, Car car) {
-        String insertQuery = "INSERT INTO cars_drivers (car_id, driver_id)"
-                + "VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement addCarToDriverStatement =
-                        connection.prepareStatement(
-                             insertQuery, Statement.RETURN_GENERATED_KEYS)) {
-            addCarToDriverStatement.setLong(1, car.getId());
-            addCarToDriverStatement.setLong(2, driver.getId());
-            addCarToDriverStatement.executeUpdate();
-            ResultSet resultSet = addCarToDriverStatement.getGeneratedKeys();
-            //"====> NEW CAR-DRIVER CREATED (DAO)"
-            if (resultSet.next()) {
-                return true;
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't create driver-car " + driver + car, e);
-        }
-        return false;
-    }
 }
