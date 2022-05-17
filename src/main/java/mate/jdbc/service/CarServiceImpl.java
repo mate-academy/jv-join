@@ -41,11 +41,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers() != null) {
-            car.getDrivers().add(driver);
-        } else {
-            car.setDrivers(List.of(driver));
-        }
+        car.getDrivers().add(driver);
         carDao.update(car);
 
     }
