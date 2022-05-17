@@ -78,13 +78,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDrivers(car.getId()));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB ", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDrivers(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -94,9 +94,9 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateStatement = connection.prepareStatement(
                          updateRequest)) {
-            updateStatement.setLong(1, car.getId());
-            updateStatement.setString(2, car.getModel());
-            updateStatement.setLong(3, car.getManufacturer().getId());
+            updateStatement.setString(1, car.getModel());
+            updateStatement.setLong(2, car.getManufacturer().getId());
+            updateStatement.setLong(3, car.getId());
             updateStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update a car " + car, e);
@@ -193,7 +193,7 @@ public class CarDaoImpl implements CarDao {
                 + " FROM drivers AS d"
                 + " JOIN cars_drivers AS cd"
                 + " ON d.id = cd.driver_id"
-                + " WHERE cd.driver_id = ? AND d.is_deleted = FALSE;";
+                + " WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDriverStatement = connection.prepareStatement(
                          getDriversRequest)) {
@@ -215,7 +215,7 @@ public class CarDaoImpl implements CarDao {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
-        driver.setLicenseNumber(resultSet.getString("licenseNumber"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
 }

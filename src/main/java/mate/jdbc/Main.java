@@ -46,9 +46,9 @@ public class Main {
         Car toyotaModel = new Car("Camry", toyota, toyotaDrivers);
         Car peugeot508 = new Car("508", peugeot, peugeotDrivers);
 
-        carService.create(toyotaModel);
-        carService.create(peugeot508);
-        carService.getAll().forEach(System.out::println);
+        System.out.println(carService.create(toyotaModel));
+        System.out.println(carService.create(peugeot508));
+        //carService.getAll().forEach(System.out::println);
         carService.addDriverToCar(thirdDriver, toyotaModel);
         carService.removeDriverFromCar(secondDriver, toyotaModel);
         toyotaModel.setModel("Corolla");
