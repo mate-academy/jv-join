@@ -18,3 +18,25 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `model` varchar(45) DEFAULT NULL,
+                        `manufacturer_id` bigint DEFAULT NULL,
+                        `is_deleted` tinyint NOT NULL DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `id_idx` (`manufacturer_id`),
+                        CONSTRAINT `id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+CREATE TABLE `cars_drivers` (
+                                `id` bigint NOT NULL AUTO_INCREMENT,
+                                `car_id` bigint DEFAULT NULL,
+                                `driver_id` bigint DEFAULT NULL,
+                                PRIMARY KEY (`id`),
+                                KEY `id_cars_idx` (`car_id`),
+                                KEY `id_idx` (`driver_id`),
+                                CONSTRAINT `id_car` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+                                CONSTRAINT `id_driver` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+)
+
+
+
