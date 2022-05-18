@@ -26,9 +26,9 @@ public class CarDaoImpl implements CarDao {
             createCarStatement.setLong(1, car.getManufacturer().getId());
             createCarStatement.setString(2, car.getModel());
             createCarStatement.executeUpdate();
-            ResultSet generatedKeys = createCarStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                Long id = generatedKeys.getObject(1, Long.class);
+            ResultSet generatedKey = createCarStatement.getGeneratedKeys();
+            if (generatedKey.next()) {
+                Long id = generatedKey.getObject(1, Long.class);
                 car.setId(id);
             }
             return car;
@@ -77,9 +77,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars.", e);
         }
         if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+            cars.stream().forEach(car
+                    -> car.setDrivers(getDriversForCar(car.getId())));
         }
         return cars;
     }
@@ -164,9 +163,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars by driver with id: " + driverId, e);
         }
         if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+            cars.stream().forEach(car
+                    -> car.setDrivers(getDriversForCar(car.getId())));
         }
         return cars;
     }
