@@ -30,10 +30,11 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + ".", e);
         }
+        createCarsDriversRelation(car);
+        return car;
     }
 
     @Override
@@ -102,9 +103,7 @@ public class CarDaoImpl implements CarDao {
         deleteCarsDriversRelation(car);
         List<Driver> drivers = car.getDrivers();
         if (drivers != null) {
-            for (Driver driver:drivers) {
-                createCarsDriversRelation(car);
-            }
+            createCarsDriversRelation(car);
         }
         return car;
     }
@@ -167,7 +166,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
+        Long id = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(name, country);
