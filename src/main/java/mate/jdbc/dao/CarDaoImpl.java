@@ -169,7 +169,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert drivers to car. " + car, e);
+            throw new DataProcessingException("Couldn't insert drivers to car " + car, e);
         }
     }
 
