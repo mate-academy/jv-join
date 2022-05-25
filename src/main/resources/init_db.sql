@@ -4,12 +4,12 @@
 --     ENCODING = 'UTF8'
 --     CONNECTION LIMIT = -1;
 
-DROP TABLE IF EXISTS cars_drivers;
-DROP TABLE IF EXISTS cars;
-DROP TABLE IF EXISTS drivers;
-DROP TABLE IF EXISTS manufacturers;
+-- DROP TABLE IF EXISTS cars_drivers;
+-- DROP TABLE IF EXISTS cars;
+-- DROP TABLE IF EXISTS drivers;
+-- DROP TABLE IF EXISTS manufacturers;
 
-CREATE TABLE manufacturers
+CREATE TABLE IF NOT EXISTS manufacturers
 (
     id         BIGSERIAL    NOT NULL,
     name       VARCHAR(100) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE manufacturers
 ALTER TABLE manufacturers
     OWNER to postgres;
 
-CREATE TABLE drivers
+CREATE TABLE IF NOT EXISTS drivers
 (
     id             BIGSERIAL    NOT NULL,
     name           VARCHAR(75)  NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE drivers
 ALTER TABLE drivers
     OWNER to postgres;
 
-CREATE TABLE cars
+CREATE TABLE IF NOT EXISTS cars
 (
     id              BIGSERIAL   NOT NULL,
     model           VARCHAR(35) NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE cars
 ALTER TABLE cars
     OWNER to postgres;
 
-CREATE TABLE cars_drivers
+CREATE TABLE IF NOT EXISTS cars_drivers
 (
     car_id    BIGSERIAL NOT NULL,
     driver_id BIGSERIAL NOT NULL,
