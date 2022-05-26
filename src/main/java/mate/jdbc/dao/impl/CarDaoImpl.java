@@ -144,6 +144,39 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    @Override
+    public void insertDriverFromCar(Driver driverIns, Car car) {
+        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement addDriversStatement
+                        = connection.prepareStatement(insertDriversQuery)) {
+            addDriversStatement.setLong(1, car.getId());
+            addDriversStatement.setLong(2, driverIns.getId());
+            addDriversStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t insert drivers to car: "
+                    + car.getId() + " driverId, " + driverIns.getId(), e);
+
+        }
+    }
+
+    public void deleteDriverFromCar(Driver driverDel, Car car) {
+        String deleteRelationsQuery = "DELETE FROM cars_drivers cd WHERE cd.driver_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement
+                        = connection.prepareStatement(deleteRelationsQuery)) {
+            for (Driver driver : car.getDrivers()) {
+                if (driverDel.equals(driver)) {
+                    statement.setLong(1, driver.getId());
+                    statement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t relation cars_drivers carId:" + car.getId()
+                    + ", driverId; " + driverDel.getId(), e);
+        }
+    }
+
     private void insertDrivers(Car car) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
