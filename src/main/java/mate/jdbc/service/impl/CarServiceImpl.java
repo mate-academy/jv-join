@@ -12,12 +12,9 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
 import mate.jdbc.util.ConnectionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Service
 public class CarServiceImpl implements CarService {
-    private static final Logger log = LogManager.getLogger(CarServiceImpl.class);
 
     @Inject
     private CarDao carDao;
@@ -58,8 +55,6 @@ public class CarServiceImpl implements CarService {
             addDriversStatement.setLong(2, driver.getId());
             addDriversStatement.executeUpdate();
         } catch (SQLException e) {
-            log.error("Can`t insert cars_drivers: car {}, driver {} ",
-                    car.getId(), driver.getId());
             throw new RuntimeException("Can`t insert drivers to car: "
                     + car.getId() + " driverId, " + driver.getId(), e);
 
@@ -79,8 +74,6 @@ public class CarServiceImpl implements CarService {
                 }
             }
         } catch (SQLException e) {
-            log.error("Can`t relation cars_drivers carId: {}, driverId: {} ",
-                    car.getId(), driver.getId(), e);
             throw new RuntimeException("Can`t relation cars_drivers carId:" + car.getId()
                     + ", driverId; " + driver.getId(), e);
         }

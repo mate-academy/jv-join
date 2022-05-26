@@ -15,13 +15,9 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static final Logger log = LogManager.getLogger(CarDaoImpl.class);
-
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) "
@@ -35,10 +31,8 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
-                log.info("{} was created", car);
             }
         } catch (SQLException e) {
-            log.error("Unable to create {}, DataProcessingException {}", car, e);
             throw new DataProcessingException("Couldn't create car. " + car, e);
         }
         insertDrivers(car);
@@ -101,9 +95,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            log.info("Element {}, was updated", car);
         } catch (SQLException e) {
-            log.error("Unable to update {}, DataProcessingException {}", car, e);
             throw new DataProcessingException("Couldn't update a car "
                     + car, e);
         }
@@ -119,11 +111,8 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            log.info("Element with id {}, was deleted", id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Unable to delete car with ID {}, "
-                    + "DataProcessingException {}", id, e);
             throw new DataProcessingException("Couldn't delete a car by id " + id, e);
         }
     }
@@ -166,7 +155,6 @@ public class CarDaoImpl implements CarDao {
                 addDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            log.error("Can`t insert drivers to car: {}", car);
             throw new RuntimeException("Can`t insert drivers to car: " + car, e);
         }
     }

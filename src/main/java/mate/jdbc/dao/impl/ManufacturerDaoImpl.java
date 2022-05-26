@@ -13,12 +13,9 @@ import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 @Dao
 public class ManufacturerDaoImpl implements ManufacturerDao {
-    private static final Logger log = LogManager.getLogger(ManufacturerDaoImpl.class);
 
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
@@ -33,11 +30,9 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 manufacturer.setId(resultSet.getObject(1, Long.class));
-                log.info("{} was created", manufacturer);
             }
             return manufacturer;
         } catch (SQLException e) {
-            log.error("Unable to create {}, DataProcessingException {}", manufacturer, e);
             throw new DataProcessingException("Couldn't create manufacturer. " + manufacturer, e);
         }
     }
@@ -89,10 +84,8 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
             statement.setString(2, manufacturer.getCountry());
             statement.setLong(3, manufacturer.getId());
             statement.executeUpdate();
-            log.info("Element {}, was updated", manufacturer);
             return manufacturer;
         } catch (SQLException e) {
-            log.error("Unable to update {}, DataProcessingException {}", manufacturer, e);
             throw new DataProcessingException("Couldn't update a manufacturer "
                     + manufacturer, e);
         }
@@ -105,11 +98,8 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            log.info("Element with id {}, was deleted", id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            log.error("Unable to delete manufacturer with ID {}, "
-                    + "DataProcessingException {}", id, e);
             throw new DataProcessingException("Couldn't delete a manufacturer by id " + id, e);
         }
     }
