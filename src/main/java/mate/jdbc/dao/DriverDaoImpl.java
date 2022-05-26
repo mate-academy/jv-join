@@ -64,10 +64,11 @@ public class DriverDaoImpl implements DriverDao {
             while (resultSet.next()) {
                 drivers.add(getDriver(resultSet));
             }
-            return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+            throw new DataProcessingException("Couldn't"
+                    + " get a list of drivers from driversDB.", e);
         }
+        return drivers;
     }
 
     @Override
@@ -76,8 +77,8 @@ public class DriverDaoImpl implements DriverDao {
                 + "SET name = ?, license_number = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement
-                        = connection.prepareStatement(query)) {
+                PreparedStatement statement =
+                           connection.prepareStatement(query)) {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenseNumber());
             statement.setLong(3, driver.getId());
