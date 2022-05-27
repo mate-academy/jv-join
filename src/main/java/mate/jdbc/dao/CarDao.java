@@ -7,7 +7,7 @@ import mate.jdbc.model.Driver;
 public interface CarDao extends AbstractDao<Car> {
     List<Car> getAllByDriver(Long driverId);
 
-    void insertDriverFromCar(Driver driver, Car car);
+    void addDriverToCar(Driver driver, Car car);
 
-    void deleteDriverFromCar(Driver driver, Car car);
+    void removeDriverFromCar(Driver driver, Car car);
 }

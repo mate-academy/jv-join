@@ -145,7 +145,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void insertDriverFromCar(Driver driverIns, Car car) {
+    public void addDriverToCar(Driver driverIns, Car car) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement addDriversStatement
@@ -160,7 +160,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    public void deleteDriverFromCar(Driver driverDel, Car car) {
+    public void removeDriverFromCar(Driver driverDel, Car car) {
         String deleteRelationsQuery = "DELETE FROM cars_drivers cd WHERE cd.driver_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
