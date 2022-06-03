@@ -1,15 +1,11 @@
 package mate.jdbc.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.util.ConnectionUtil;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -45,32 +41,13 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         car.getDrivers().add(driver);
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.setLong(2, driver.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Couldn't add " + driver
-                    + " to a car " + car, e);
-        }
+        update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         car.getDrivers().remove(driver);
-        String query = "UPDATE cars_drivers SET is_deleted = TRUE "
-                + "WHERE car_id = ? AND driver_id = ? AND is_deleted = FALSE;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.setLong(2, driver.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Couldn't remove " + driver
-                    + " from the car " + car, e);
-        }
+        update(car);
     }
 
     @Override
