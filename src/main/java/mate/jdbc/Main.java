@@ -5,6 +5,7 @@ import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -15,16 +16,22 @@ public class Main {
     public static void main(String[] args) {
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
+        Driver driverLeo = new Driver("Leo", "T646");
+        driverService.create(driverLeo);
+        Driver driverBob = new Driver("Bob", "8754");
+        driverService.create(driverBob);
         List<Driver> driverList = new ArrayList<>();
-        driverList.add(driverService.get(6L));
-        driverList.add(driverService.get(7L));
+        driverList.add(driverLeo);
+        driverList.add(driverBob);
 
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Manufacturer manufacturerToyota = new Manufacturer("Toyota", "China");
+        manufacturerService.create(manufacturerToyota);
 
         Car toyotaCar = new Car();
         toyotaCar.setModel("ToyotaRav4");
-        toyotaCar.setManufacturer(manufacturerService.get(38L));
+        toyotaCar.setManufacturer(manufacturerService.get(manufacturerToyota.getId()));
         toyotaCar.setDrivers(driverList);
 
         CarService carService
@@ -36,9 +43,9 @@ public class Main {
         //update
         System.out.println("update");
         Car volvoCar = new Car();
-        volvoCar.setId(3L);
+        volvoCar.setId(toyotaCar.getId());
         volvoCar.setModel("Volvo TT");
-        volvoCar.setManufacturer(manufacturerService.get(44L));
+        volvoCar.setManufacturer(manufacturerService.get(manufacturerToyota.getId()));
         volvoCar.setDrivers(driverList);
         System.out.println(carService.update(volvoCar));
         //delete
@@ -46,13 +53,13 @@ public class Main {
         System.out.println(carService.delete(volvoCar.getId()));
         //get all by driver
         System.out.println("get all cars");
-        System.out.println(carService.getAllByDriver(3L));
+        System.out.println(carService.getAllByDriver(driverBob.getId()));
         //add a driver
         System.out.println("add a driver");
-        carService.addDriverToCar(driverService.get(6L), toyotaCar);
+        carService.addDriverToCar(driverBob, toyotaCar);
         //remove a driver
         System.out.println("remove a driver");
-        carService.removeDriverFromCar(driverService.get(6L), toyotaCar);
+        carService.removeDriverFromCar(driverLeo, toyotaCar);
         //get all
         System.out.println("get all");
         carService.getAll().forEach(System.out::println);
