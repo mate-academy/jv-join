@@ -100,7 +100,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        addDriversToCar(car);
         deleteDriversFromCar(car);
         addDriversToCar(car);
         return car;
