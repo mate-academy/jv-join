@@ -26,7 +26,7 @@ CREATE TABLE `cars` (
   PRIMARY KEY (`id`),
   KEY `manufacturers_cars_fk` (`manufacturer_id`),
   CONSTRAINT `manufacturers_cars_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 
 CREATE TABLE `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
@@ -36,4 +36,4 @@ CREATE TABLE `cars` (
   PRIMARY KEY (`id`),
   KEY `manufacturers_cars_fk` (`manufacturer_id`),
   CONSTRAINT `manufacturers_cars_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
