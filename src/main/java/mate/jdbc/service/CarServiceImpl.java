@@ -1,7 +1,6 @@
 package mate.jdbc.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
@@ -42,14 +41,14 @@ public class CarServiceImpl implements CarService {
     public void addDriverToCar(final Driver driver, Car car) {
         List<Driver> drivers = new ArrayList<>(car.getDrivers());
         drivers.add(driver);
-        car.setDrivers(Collections.unmodifiableList(drivers));
+        car.setDrivers(drivers);
         carDao.update(car);
     }
 
     public void removeDriverFromCar(Driver driver, Car car) {
         List<Driver> drivers = new ArrayList<>(car.getDrivers());
         drivers.remove(driver);
-        car.setDrivers(Collections.unmodifiableList(drivers));
+        car.setDrivers(drivers);
         carDao.update(car);
     }
 

@@ -40,21 +40,22 @@ public class Main {
         System.out.println(carService.delete(car.getId()));
         System.out.println(carService.getAll());
         driver = driverService.create(new Driver("Gonzales", "777"));
-        Car car1 = new Car();
-        car1.setModel("Model3");
-        car1.setManufacturer(manufacturerService
+        Car carModelThree = new Car();
+        carModelThree.setModel("Model3");
+        carModelThree.setManufacturer(manufacturerService
                 .create(new Manufacturer("Ford", "USA")));
-        car1.setDrivers(List.of(driverService
+        carModelThree.setDrivers(List.of(driverService
                 .create(new Driver("Peterson", "333"))));
-        car1 = carService.create(car1);
-        carService.addDriverToCar(driver, car1);
-        Car car2 = new Car();
-        car2.setModel("Model4");
-        car2.setManufacturer(manufacturerService.create(new Manufacturer("BMW", "Germany")));
-        car2.setDrivers(List.of(driverService
+        carModelThree = carService.create(carModelThree);
+        carService.addDriverToCar(driver, carModelThree);
+        Car carModelFour = new Car();
+        carModelFour.setModel("Model4");
+        carModelFour.setManufacturer(manufacturerService
+                .create(new Manufacturer("BMW", "Germany")));
+        carModelFour.setDrivers(List.of(driverService
                 .create(new Driver("Robinson", "444"))));
-        car2 = carService.create(car2);
-        carService.addDriverToCar(driver, car2);
+        carModelFour = carService.create(carModelFour);
+        carService.addDriverToCar(driver, carModelFour);
         System.out.println(carService.getAllByDriver(driver.getId()));
     }
 }

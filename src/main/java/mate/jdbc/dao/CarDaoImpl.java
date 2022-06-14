@@ -68,19 +68,23 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
-        Car car;
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 car = getCar(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get all cars from cars DB.", e);
         }
+        if (cars.size() > 0) {
+            for (Car currentCar : cars) {
+                currentCar.setDrivers(getDriversForCar(currentCar.getId()));
+            }
+        }
+        return cars;
     }
 
     @Override
@@ -125,21 +129,25 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers ON cars.id = cars_drivers.car_id "
                 + "WHERE cars_drivers.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
-        Car car;
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 car = getCar(resultSet);
-                car.setDrivers(getDriversForCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars by driver "
                     + driverId + "from carsDB.", e);
         }
+        if (cars.size() > 0) {
+            for (Car currentCar : cars) {
+                currentCar.setDrivers(getDriversForCar(currentCar.getId()));
+            }
+        }
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
