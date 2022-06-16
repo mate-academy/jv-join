@@ -31,7 +31,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = createStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
-                addDriversToCar(connection, car);
+                addDriversToCar(car);
             }
             return car;
         } catch (SQLException e) {
@@ -55,7 +55,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getStatement.executeQuery();
             Car car = null;
             if (resultSet.next()) {
-                List<Driver> drivers = getDriversByCarId(connection, id);
+                List<Driver> drivers = getDriversByCarId(id);
                 car = getCar(resultSet, drivers);
             }
             return Optional.ofNullable(car);
@@ -78,8 +78,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(getAllQuery)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                List<Driver> drivers = getDriversByCarId(connection,
-                        resultSet.getObject(1, Long.class));
+                List<Driver> drivers = getDriversByCarId(resultSet.getObject(1, Long.class));
                 cars.add(getCar(resultSet, drivers));
             }
             return cars;
@@ -101,7 +100,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
             removeDriversFromCar(connection, car.getId());
-            addDriversToCar(connection, car);
+            addDriversToCar(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
@@ -139,8 +138,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                List<Driver> drivers = getDriversByCarId(connection,
-                        resultSet.getObject(1, Long.class));
+                List<Driver> drivers = getDriversByCarId(resultSet.getObject(1, Long.class));
                 cars.add(getCar(resultSet, drivers));
             }
             return cars;
@@ -162,11 +160,12 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addDriversToCar(Connection connection, Car car) {
+    private void addDriversToCar(Car car) {
         String createQuery = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?); ";
-        try (PreparedStatement createStatement
-                     = connection.prepareStatement(createQuery)) {
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement createStatement
+                         = connection.prepareStatement(createQuery)) {
             for (Driver driver : car.getDrivers()) {
                 createStatement.setLong(1, car.getId());
                 createStatement.setLong(2, driver.getId());
@@ -178,8 +177,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversByCarId(Connection connection,
-                                           Long carId) throws SQLException {
+    private List<Driver> getDriversByCarId(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String getQuery = "SELECT drivers.id, drivers.name, drivers.license_number "
                 + "FROM cars_drivers "
@@ -187,8 +185,9 @@ public class CarDaoImpl implements CarDao {
                 + "ON cars_drivers.driver_id = drivers.id "
                 + "WHERE cars_drivers.car_id = ? "
                 + "AND drivers.is_deleted = FALSE";
-        try (PreparedStatement getStatement
-                     = connection.prepareStatement(getQuery)) {
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getStatement
+                         = connection.prepareStatement(getQuery)) {
             getStatement.setLong(1, carId);
             ResultSet resultSet = getStatement.executeQuery();
             while (resultSet.next()) {

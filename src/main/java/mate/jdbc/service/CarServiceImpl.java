@@ -21,7 +21,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id).orElseThrow(()
-                -> new DataProcessingException("Could not get car by id = " + id));
+                -> new DataProcessingException("Could not get car with id = " + id));
     }
 
     @Override
