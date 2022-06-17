@@ -94,8 +94,6 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        deleteDriversFromCar(car.getId());
-        addDriversToCarCarDrivers(car);
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -104,10 +102,12 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car " + car, e);
         }
+        deleteDriversFromCar(car.getId());
+        addDriversToCarCarDrivers(car);
+        return car;
     }
 
     @Override
