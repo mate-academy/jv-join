@@ -10,7 +10,7 @@ import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
 public class Main {
-    private static Injector injector = Injector.getInstance("mate.jdbc");
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
 
@@ -46,35 +46,35 @@ public class Main {
                 (CarService) injector.getInstance(CarService.class);
         carService.create(car1);
 
-        List<Car> all = carService.getAll();
-        all.forEach(System.out::println);
+        List<Car> allCars = carService.getAll();
+        allCars.forEach(System.out::println);
 
-        List<Car> allByDriver = carService.getAllByDriver(11L);
+        List<Car> allByDriver = carService.getAllByDriver(driver.getId());
         allByDriver.forEach(System.out::println);
 
-        System.out.println(carService.get(1L));
+        System.out.println(carService.get(car1.getId()));
 
-        car1 = all.get(0);
+        car1 = allCars.get(0);
         drivers = car1.getDrivers();
         drivers.get(0).setName("Joni D");
         driverService.update(drivers.get(0));
         carService.update(car1);
 
-        all = carService.getAll();
-        all.forEach(System.out::println);
+        allCars = carService.getAll();
+        allCars.forEach(System.out::println);
 
         Driver newDriver = new Driver();
         newDriver.setName("Christopher L");
         newDriver.setLicenseNumber("ER567MN");
         driverService.create(newDriver);
         carService.addDriverToCar(newDriver, car1);
-        all = carService.getAll();
-        all.forEach(System.out::println);
+        allCars = carService.getAll();
+        allCars.forEach(System.out::println);
 
-        Driver removeDriver = all.get(0).getDrivers().get(1);
+        Driver removeDriver = allCars.get(0).getDrivers().get(1);
         carService.removeDriverFromCar(removeDriver, car1);
-        all = carService.getAll();
-        all.forEach(System.out::println);
+        allCars = carService.getAll();
+        allCars.forEach(System.out::println);
         driverService.getAll().forEach(System.out::println);
     }
 }
