@@ -16,14 +16,14 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService mnfService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer1 = new Manufacturer("Nissan", "Japan");
-        Manufacturer manufacturer2 = new Manufacturer("Toyota", "Japan");
-        manufacturer1 = mnfService.create(manufacturer1);
-        manufacturer2 = mnfService.create(manufacturer2);
+        Manufacturer manufacturerOne = new Manufacturer("Nissan", "Japan");
+        Manufacturer manufacturerTwo = new Manufacturer("Toyota", "Japan");
+        manufacturerOne = mnfService.create(manufacturerOne);
+        manufacturerTwo = mnfService.create(manufacturerTwo);
 
-        Driver driverFirst = new Driver("Driver First", "License #1");
-        Driver driverSecond = new Driver("Driver Second", "License #2");
-        Driver driverThird = new Driver("Driver Third", "License #3");
+        Driver driverFirst = new Driver("Driver First", "License #1111111");
+        Driver driverSecond = new Driver("Driver Second", "License #2222222");
+        Driver driverThird = new Driver("Driver Third", "License #3333333");
 
         DriverService drvService = (DriverService)
                 injector.getInstance(DriverService.class);
@@ -40,34 +40,35 @@ public class Main {
         carTwoDrivers.add(driverThird);
 
         Car carOne = new Car();
-        carOne.setManufacturer(manufacturer1);
+        carOne.setManufacturer(manufacturerOne);
         carOne.setModel("80");
         carOne.setDrivers(carOneDrivers);
 
         Car carTwo = new Car();
-        carTwo.setManufacturer(manufacturer2);
+        carTwo.setManufacturer(manufacturerTwo);
         carTwo.setModel("1844");
         carTwo.setDrivers(carTwoDrivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
         carOne = carService.create(carOne);
-        System.out.println(carService.get(carOne.getId()));
+        System.out.println("carOne just created: " + carService.get(carOne.getId()));
 
-        carOne.setManufacturer(manufacturer2);
+        carOne.setManufacturer(manufacturerTwo);
         carOne.setDrivers(carTwoDrivers);
         carService.update(carOne);
-        System.out.println(carService.get(carOne.getId()));
+        System.out.println("carOne updated: " + carService.get(carOne.getId()));
 
-        Driver driverFourth = drvService.create(new Driver("Driver Fourth", "License #4"));
+        Driver driverFourth = drvService.create(new Driver("Driver Fourth", "License #4444444"));
         carService.addDriverToCar(driverFourth, carOne);
-        System.out.println(carService.get(carOne.getId()));
+        System.out.println("carOne, new driver added: " + carService.get(carOne.getId()));
 
-        carService.removeDriverFromCar(driverThird, carOne);
-        System.out.println(carService.get(carOne.getId()));
+        carService.removeDriverFromCar(driverSecond, carOne);
+        System.out.println("carOne, driver removed: " + carService.get(carOne.getId()));
+
+        System.out.println("All cars: " + carService.getAll());
+        System.out.println("Car by driver id: " + carService.getAllByDriver(driverThird.getId()));
 
         carService.delete(carOne.getId());
-
-        System.out.println(carService.getAllByDriver(driverFirst.getId()));
     }
 }
