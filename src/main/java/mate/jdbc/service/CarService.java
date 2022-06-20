@@ -20,4 +20,6 @@ public interface CarService {
     void removeDriverFromCar(Driver driver, Car car);
 
     List<Car> getAllByDriver(Long driverId);
+
+    Car createOrGet(Car car);
 }

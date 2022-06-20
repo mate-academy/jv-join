@@ -16,27 +16,40 @@ public class Main {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturerAudi = new Manufacturer("Audi", "Germany");
-        manufacturerAudi = manufacturerService.create(manufacturerAudi);
+        manufacturerAudi = manufacturerService.createOrGet(manufacturerAudi);
         Manufacturer manufacturerPeugeot = new Manufacturer("Peugeot", "France");
-        manufacturerPeugeot = manufacturerService.create(manufacturerPeugeot);
-        manufacturerService.getAll().forEach(System.out::println);
+        manufacturerPeugeot = manufacturerService.createOrGet(manufacturerPeugeot);
+        Manufacturer manufactureBmw = new Manufacturer("BMW", "Germany");
+        manufactureBmw = manufacturerService.createOrGet(manufactureBmw);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver bob = new Driver("Bob", "123");
-        bob = driverService.create(bob);
+        bob = driverService.createOrGet(bob);
         Driver alice = new Driver("Alice", "234");
-        alice = driverService.create(alice);
+        alice = driverService.createOrGet(alice);
         Driver john = new Driver("John", "345");
-        john = driverService.create(john);
+        john = driverService.createOrGet(john);
         Driver penelope = new Driver("Penelope", "456");
-        penelope = driverService.create(penelope);
+        penelope = driverService.createOrGet(penelope);
         Driver roman = new Driver("Roman", "678");
-        roman = driverService.create(roman);
-        driverService.getAll().forEach(System.out::println);
+        roman = driverService.createOrGet(roman);
 
-        Car carAudiQ7 = new Car("Q7", manufacturerAudi, List.of(bob, alice));
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(carAudiQ7);
-        System.out.println(carAudiQ7);
+        Car carAudiQ7 = new Car("Q7", manufacturerAudi, List.of(bob, alice));
+        carAudiQ7 = carService.createOrGet(carAudiQ7);
+        Car carPeugeot508 = new Car("508", manufacturerPeugeot, List.of(john, penelope));
+        carPeugeot508 = carService.createOrGet(carPeugeot508);
+        Car carBmwI3 = new Car("i3", manufactureBmw, List.of(roman));
+        carBmwI3 = carService.createOrGet(carBmwI3);
+
+        carService.addDriverToCar(bob, carAudiQ7);
+        carService.addDriverToCar(bob, carPeugeot508);
+        carService.addDriverToCar(bob, carBmwI3);
+        System.out.println("getAllByDriver('Bob')");
+        carService.getAllByDriver(bob.getId()).forEach(System.out::println);
+
+        carService.removeDriverFromCar(bob, carAudiQ7);
+        System.out.println("getAll()");
+        carService.getAll().forEach(System.out::println);
     }
 }

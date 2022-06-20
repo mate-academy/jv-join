@@ -2,6 +2,7 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import mate.jdbc.dao.CarsDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -40,17 +41,27 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void addDriverToCar(Driver driver, Car car) {
+    public Car createOrGet(Car car) {
+        Optional<Car> resultOptional
+                = carsDao.findByModelAndManufacturer(car.getModel(), car.getManufacturer());
+        return resultOptional.orElseGet(() -> create(car));
+    }
 
+    @Override
+    public void addDriverToCar(Driver driver, Car car) {
+        car.getDrivers().remove(driver);
+        car.getDrivers().add(driver);
+        carsDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-
+        car.getDrivers().remove(driver);
+        carsDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carsDao.getAllByDriver(driverId);
     }
 }

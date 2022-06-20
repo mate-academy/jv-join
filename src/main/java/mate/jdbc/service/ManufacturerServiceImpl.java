@@ -2,6 +2,7 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -37,5 +38,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     @Override
     public boolean delete(Long id) {
         return manufacturerDao.delete(id);
+    }
+
+    @Override
+    public Manufacturer createOrGet(Manufacturer manufacturer) {
+        Optional<Manufacturer> resultOptional
+                = manufacturerDao.findByNameAndCountry(manufacturer.getName(),
+                manufacturer.getCountry());
+        return resultOptional.orElseGet(() -> create(manufacturer));
     }
 }

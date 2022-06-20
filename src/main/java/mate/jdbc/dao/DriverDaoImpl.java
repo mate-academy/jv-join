@@ -101,6 +101,28 @@ public class DriverDaoImpl implements DriverDao {
         }
     }
 
+    @Override
+    public Optional<Driver> findByNameAndLicence(String name, String licenseNumber) {
+        String query = "SELECT * FROM drivers "
+                + "WHERE name = ? AND license_number = ? AND is_deleted = FALSE";
+        try (
+                Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)
+        ) {
+            statement.setString(1,name);
+            statement.setString(2, licenseNumber);
+            ResultSet resultSet = statement.executeQuery();
+            Driver driver = null;
+            if (resultSet.next()) {
+                driver = getDriver(resultSet);
+            }
+            return Optional.ofNullable(driver);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get driver by name "
+                    + name + " and license number " + licenseNumber, e);
+        }
+    }
+
     private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");

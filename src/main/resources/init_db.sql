@@ -42,16 +42,16 @@ CREATE TABLE `cars`
 DROP TABLE if EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers`
 (
-    `driver_id` bigint(11) NOT NULL,
     `car_id`    bigint(11) NOT NULL,
-    CONSTRAINT `cars_drivers_drivers_fk`
-        FOREIGN KEY (`driver_id`)
-            REFERENCES `drivers` (`id`)
-            ON UPDATE NO ACTION
-            ON DELETE NO ACTION,
+    `driver_id` bigint(11) NOT NULL,
     CONSTRAINT `cars_drivers_cars_fk`
         FOREIGN KEY (`car_id`)
             REFERENCES `cars` (`id`)
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION,
+    CONSTRAINT `cars_drivers_drivers_fk`
+        FOREIGN KEY (`driver_id`)
+            REFERENCES `drivers` (`id`)
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
 );
