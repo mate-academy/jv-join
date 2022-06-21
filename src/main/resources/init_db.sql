@@ -2,7 +2,6 @@ CREATE SCHEMA if NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
 USE
 `taxi_service`;
 
-DROP TABLE if EXISTS `manufacturers`;
 CREATE TABLE `manufacturers`
 (
     `id`         bigint(11) NOT NULL AUTO_INCREMENT,
@@ -12,7 +11,6 @@ CREATE TABLE `manufacturers`
     PRIMARY KEY (`id`)
 );
 
-DROP TABLE if EXISTS `drivers`;
 CREATE TABLE `drivers`
 (
     `id`             bigint(11) NOT NULL AUTO_INCREMENT,
@@ -24,7 +22,6 @@ CREATE TABLE `drivers`
     UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE
 );
 
-DROP TABLE if EXISTS `cars`;
 CREATE TABLE `cars`
 (
     `id`              bigint(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +36,6 @@ CREATE TABLE `cars`
             ON DELETE NO ACTION
 );
 
-DROP TABLE if EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers`
 (
     `car_id`    bigint(11) NOT NULL,
