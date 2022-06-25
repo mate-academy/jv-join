@@ -17,7 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String createQuery = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?)";
@@ -88,7 +87,6 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String updateQuery = "UPDATE cars SET model = ?, manufacturer_id = ?, is_deleted = false"
                 + " WHERE id = ?";
-
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             updateStatement.setString(1, car.getModel());
@@ -139,18 +137,13 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
-        final Car car = new Car();
+        Car car = new Car();
         Manufacturer manufacturer = new Manufacturer();
-        final Long carId = resultSet.getObject("id", Long.class);
-        final String model = resultSet.getString("model");
-        Long manufacturerID = resultSet.getObject("manufacturer_id", Long.class);
-        String name = resultSet.getString("name");
-        String country = resultSet.getString("country");
-        manufacturer.setId(manufacturerID);
-        manufacturer.setName(name);
-        manufacturer.setCountry(country);
-        car.setId(carId);
-        car.setModel(model);
+        car.setId(resultSet.getObject("id", Long.class));
+        car.setModel(resultSet.getString("model"));
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setName(resultSet.getString("name"));
+        manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
         return car;
     }
