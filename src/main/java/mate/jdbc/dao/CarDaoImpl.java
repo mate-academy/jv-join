@@ -19,7 +19,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?,?)";
+        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -42,8 +42,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS car_id, c.model,"
-                + " m.id AS manufacturer_id,"
-                + " m.name AS manufacturer_name, "
+                + "m.id AS manufacturer_id,"
+                + "m.name AS manufacturer_name, "
                 + "m.country AS manufacturer_country "
                 + "FROM cars AS c "
                 + "JOIN manufacturers AS m ON c.manufacturer_id = m.id "
@@ -68,8 +68,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String query = "SELECT c.id AS car_id, c.model,"
-                + " m.id AS manufacturer_id,"
-                + " m.name AS manufacturer_name, "
+                + "m.id AS manufacturer_id,"
+                + "m.name AS manufacturer_name, "
                 + "m.country AS manufacturer_country "
                 + "FROM cars AS c "
                 + "JOIN manufacturers AS m "

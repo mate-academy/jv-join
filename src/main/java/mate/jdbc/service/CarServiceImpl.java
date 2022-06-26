@@ -53,10 +53,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers().remove(driver)) {
-            carDao.update(car);
-        } else {
-            throw new RuntimeException("Couldn't remove driver " + driver + " from car " + car);
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 }
