@@ -33,7 +33,8 @@ public class CarDaoImpl implements CarDao {
                 insertDrivers(car);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Cannot get from cars table car: " + car, e);
+            throw new DataProcessingException("Cannot add cars to table car: " + car, e);
+
         }
         return car;
     }
