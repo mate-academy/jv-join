@@ -1,5 +1,6 @@
 package mate.jdbc.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -41,7 +42,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         if (!isDriverPresentInCar(driver, car)) {
-            car.getDrivers().add(driver);
+            List<Driver> drivers = car.getDrivers();
+            List<Driver> newDrivers = new ArrayList<>(drivers);
+            newDrivers.add(driver);
+            car.setDrivers(newDrivers);
             carDao.update(car);
         } else {
             throw new DataProcessingException("Such driver already in car. " + driver + car);
@@ -51,7 +55,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         if (isDriverPresentInCar(driver, car)) {
-            car.getDrivers().remove(driver);
+            List<Driver> drivers = car.getDrivers();
+            List<Driver> newDrivers = new ArrayList<>(drivers);
+            newDrivers.add(driver);
+            car.setDrivers(newDrivers);
             carDao.update(car);
         } else {
             throw new DataProcessingException("No such driver in car. " + driver + car);
