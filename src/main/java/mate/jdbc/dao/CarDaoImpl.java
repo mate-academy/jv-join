@@ -114,13 +114,10 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(request)) {
             statement.setLong(1, id);
-            if (statement.executeUpdate() > 0) {
-                return true;
-            }
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete driver with id " + id, e);
         }
-        return false;
     }
 
     @Override
