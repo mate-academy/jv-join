@@ -18,9 +18,10 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    public Car(String model, Manufacturer manufacturer) {
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
+        this.drivers = drivers;
     }
 
     public long getId() {
@@ -59,7 +60,7 @@ public class Car {
     public String toString() {
         return "Car={id=" + id
                 + ", model='" + model + "', "
-                + manufacturer;
-//                + ", list of drivers=" + Arrays.toString(drivers.toArray());
+                + manufacturer
+                + ", list of drivers=" + Arrays.toString(drivers.toArray());
     }
 }
