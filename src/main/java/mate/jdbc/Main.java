@@ -20,20 +20,16 @@ public class Main {
                 .getInstance(ManufacturerService.class);
         carService = (CarService) injector.getInstance(CarService.class);
         driverService = (DriverService)injector.getInstance(DriverService.class);
-
         init();
-
         carService.getAll().forEach(System.out::println);
-        Car car = carService.get(1L);
-        car.setModel("FORD");
-        Driver max = new Driver("mad Max", "no license never was");
-        max = driverService.create(max);
-        List<Driver> drivers = car.getDrivers();
-        drivers.add(max);
-        car.setDrivers(drivers);
-        carService.update(car);
-        System.out.println(car);
-        carService.delete(car.getId());
+        System.out.println(carService.getAllByDriver(1L));
+        Driver alonso = driverService.get(1L);
+        carService.addDriverToCar(alonso, carService.get(1L));
+        System.out.println(carService.getAllByDriver(1L));
+        carService.removeDriverFromCar(alonso, carService.get(1L));
+        System.out.println(carService.getAllByDriver(1L));
+        System.out.println(carService.get(4L));
+        carService.delete(4L);
         carService.getAll().forEach(System.out::println);
     }
 
@@ -50,7 +46,7 @@ public class Main {
         norris = driverService.create(norris);
         Driver ricardo = new Driver("Ricardo", "McLaren#32");
         ricardo = driverService.create(ricardo);
-        Driver vandonne = new Driver("Alonso", "McLaren#30");
+        Driver vandonne = new Driver("Vandonne", "McLaren#30");
         vandonne = driverService.create(vandonne);
 
         Manufacturer mcLaren = new Manufacturer("McLaren Technology Group", "UK");

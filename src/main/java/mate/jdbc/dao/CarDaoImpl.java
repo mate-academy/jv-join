@@ -125,6 +125,29 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        String query = "SELECT id, model, manufacturer_id FROM cars "
+                + "INNER JOIN cars_drivers "
+                + "ON cars.id = cars_drivers.car_id "
+                + "WHERE is_deleted = FALSE AND driver_id = ?";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection
+                        .prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Car car = get(resultSet.getLong("id"));
+                cars.add(car);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Cannot find any car from DB by driverId = "
+                    + driverId, e);
+        }
+        return cars;
+    }
+
     private List<Driver> getDrivers(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String queryForDrivers = "SELECT name, license_number, driver_id FROM drivers "
