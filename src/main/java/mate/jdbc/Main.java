@@ -20,17 +20,26 @@ public class Main {
                 .getInstance(ManufacturerService.class);
         carService = (CarService) injector.getInstance(CarService.class);
         driverService = (DriverService)injector.getInstance(DriverService.class);
+
         init();
-        carService.getAll().forEach(System.out::println);
-        carService.getAllByDriver(1L).forEach(System.out::println);
+
+        List<Car> cars = carService.getAll();
+        cars.forEach(System.out::println);
+        cars = carService.getAllByDriver(1L);
+        cars.forEach(System.out::println);
         Driver alonso = driverService.get(1L);
-        carService.addDriverToCar(alonso, carService.get(1L));
-        carService.getAll().forEach(System.out::println);
-        carService.removeDriverFromCar(alonso, carService.get(1L));
-        carService.getAll().forEach(System.out::println);
-        System.out.println(carService.get(4L));
+        Car car = carService.get(1L);
+        carService.addDriverToCar(alonso, car);
+        cars = carService.getAll();
+        cars.forEach(System.out::println);
+        carService.removeDriverFromCar(alonso, car);
+        cars = carService.getAll();
+        cars.forEach(System.out::println);
+        car = carService.get(4L);
+        System.out.println(car);
         carService.delete(4L);
-        carService.getAll().forEach(System.out::println);
+        cars = carService.getAll();
+        cars.forEach(System.out::println);
     }
 
     private static void init() {
