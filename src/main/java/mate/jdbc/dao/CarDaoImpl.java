@@ -72,7 +72,7 @@ public class CarDaoImpl implements CarDao {
                 + " FROM cars"
                 + " JOIN manufacturers"
                 + " ON cars.manufacturer_id = manufacturers.id"
-                + " WHERE cars.is_deleted = FALSE";
+                + " WHERE cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement
@@ -90,7 +90,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ?"
-                + " WHERE id = ? AND is_deleted = FALSE";
+                + " WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement
                         = connection.prepareStatement(updateCarQuery)) {
@@ -108,7 +108,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long carId) {
-        String deleteCarQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String deleteCarQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarStatement
                         = connection.prepareStatement(deleteCarQuery)) {
@@ -127,7 +127,7 @@ public class CarDaoImpl implements CarDao {
                 + " JOIN cars_drivers"
                 + " ON cars.id = cars_drivers.car_id"
                 + " WHERE cars_drivers.driver_id = ?"
-                + " AND is_deleted = FALSE";
+                + " AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement
                         = connection.prepareStatement(getAllCarsByDriverQuery)) {
@@ -161,7 +161,7 @@ public class CarDaoImpl implements CarDao {
 
     private void deleteRelation(Car car) {
         String deleteRelationQuery = "DELETE FROM cars_drivers "
-                + " WHERE cars_drivers.car_id = ?";
+                + " WHERE cars_drivers.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteRelationStatement
                         = connection.prepareStatement(deleteRelationQuery)) {
