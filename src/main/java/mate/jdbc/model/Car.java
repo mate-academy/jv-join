@@ -4,12 +4,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Car {
-    Long id;
-    String model;
-    Manufacturer manufacturer;
-    List<Driver> drivers;
+    private Long id;
+    private String model;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
 
-    public Car() {}
+    public Car() {
+
+    }
 
     public Car(String model, Manufacturer manufacturer) {
         this.model = model;
@@ -80,7 +82,7 @@ public class Car {
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", manufacturer: '" + manufacturer + '\''
-                + ", drivers: '" + drivers+ '\''
+                + ", drivers: '" + drivers + '\''
                 + '}';
     }
 }

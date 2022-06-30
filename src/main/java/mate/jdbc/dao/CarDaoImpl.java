@@ -21,12 +21,13 @@ public class CarDaoImpl implements CarDao {
         String insertCarQuery = "INSERT INTO cars (model,manufacturer_id) VALUES (?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertCarStatement
-                        = connection.prepareStatement(insertCarQuery, Statement.RETURN_GENERATED_KEYS)) {
+                        = connection.prepareStatement(insertCarQuery,
+                        Statement.RETURN_GENERATED_KEYS)) {
             insertCarStatement.setString(1,car.getModel());
             insertCarStatement.setLong(2,car.getManufacturer().getId());
             insertCarStatement.executeUpdate();
             ResultSet generatedKeys = insertCarStatement.getGeneratedKeys();
-            if(generatedKeys.next()) {
+            if (generatedKeys.next()) {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
             }
@@ -176,7 +177,7 @@ public class CarDaoImpl implements CarDao {
         String model = resultSet.getString("model");
         Manufacturer manufacturer
                 = new Manufacturer(resultSet.getString("manufacturer_name"),
-        resultSet.getString("manufacturer_country"));
+                resultSet.getString("manufacturer_country"));
         manufacturer.setId(resultSet.getObject("manufacturer_id",Long.class));
         return new Car(id,model,manufacturer);
     }

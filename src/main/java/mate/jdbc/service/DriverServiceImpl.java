@@ -5,7 +5,6 @@ import java.util.NoSuchElementException;
 import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
-import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
 @Service
