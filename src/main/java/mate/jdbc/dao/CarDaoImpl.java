@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -41,7 +43,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         Car car = new Car();
         String query = "SELECT cars.id, cars.model, manufacturer_id, "
                 + "manufacturers.name, manufacturers.country "
@@ -61,7 +63,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Cannot find car from DB by id = " + id, e);
         }
         car.setDrivers(getDrivers(id));
-        return car;
+        return Optional.of(car);
     }
 
     @Override
@@ -138,8 +140,10 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = get(resultSet.getLong("id"));
-                cars.add(car);
+                if (get(resultSet.getLong("id")).isPresent()) {
+                    Car car = get(resultSet.getLong("id")).get();
+                    cars.add(car);
+                }
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot find any car from DB by driverId = "
