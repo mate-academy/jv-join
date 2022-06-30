@@ -7,8 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
-
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -140,10 +140,11 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                if (get(resultSet.getLong("id")).isPresent()) {
-                    Car car = get(resultSet.getLong("id")).get();
-                    cars.add(car);
-                }
+                Long carId = resultSet.getLong("id");
+                Car car = get(carId)
+                        .orElseThrow(() -> new NoSuchElementException("Could not get car "
+                        + "by id = " + carId));
+                cars.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot find any car from DB by driverId = "
