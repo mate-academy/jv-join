@@ -27,11 +27,13 @@ public class Main {
         driverService.create(driverBil);
 
         Driver driverAlice = new Driver();
-        driverAlice.setId(driverBil.getId());
         driverAlice.setName("Alice");
         driverAlice.setLicenseNumber("12347");
         driverService.create(driverAlice);
-        System.out.println(driverService.update(driverAlice));
+
+        driverAlice.setLicenseNumber("12348");
+        driverService.update(driverAlice);
+        System.out.println(driverService.get(driverAlice.getId()));
 
         driverService.getAll().forEach(System.out::println);
 
@@ -56,11 +58,13 @@ public class Main {
         System.out.println(manufacturerService.delete(manufacturerMazda.getId()));
 
         Manufacturer manufacturerNissan = new Manufacturer();
-        manufacturerNissan.setId(manufacturerMazda.getId());
         manufacturerNissan.setName("Nissan");
         manufacturerNissan.setCountry("Japan");
         manufacturerService.create(manufacturerNissan);
-        System.out.println(manufacturerService.update(manufacturerNissan));
+
+        manufacturerNissan.setName("Nissan Company");
+        manufacturerService.update(manufacturerNissan);
+        System.out.println(manufacturerService.get(manufacturerNissan.getId()));
 
         manufacturerService.getAll().forEach(System.out::println);
 
@@ -85,11 +89,13 @@ public class Main {
         System.out.println(carService.delete(car3.getId()));
 
         Car car4 = new Car();
-        car4.setId(car1.getId());
-        car4.setModel("Nisan Leaf");
+        car4.setModel("Nissan Leaf");
         car4.setManufacturer(manufacturerNissan);
         carService.create(car4);
-        System.out.println(carService.update(car4));
+
+        car4.setModel("Nissan Navara");
+        carService.update(car4);
+        System.out.println(carService.get(car4.getId()));
 
         carService.getAll().forEach(System.out::println);
         carService.getAllByDriver(driverBil.getId()).forEach(System.out::println);
