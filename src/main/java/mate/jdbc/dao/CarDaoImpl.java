@@ -18,13 +18,13 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String insertCarQuery = "INSERT INTO cars (model,manufacturer_id) VALUES (?,?);";
+        String insertCarQuery = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertCarStatement
                         = connection.prepareStatement(insertCarQuery,
                         Statement.RETURN_GENERATED_KEYS)) {
-            insertCarStatement.setString(1,car.getModel());
-            insertCarStatement.setLong(2,car.getManufacturer().getId());
+            insertCarStatement.setString(1, car.getModel());
+            insertCarStatement.setLong(2, car.getManufacturer().getId());
             insertCarStatement.executeUpdate();
             ResultSet generatedKeys = insertCarStatement.getGeneratedKeys();
             if (generatedKeys.next()) {
@@ -52,7 +52,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement
                         = connection.prepareStatement(getCarQuery)) {
-            getCarStatement.setLong(1,id);
+            getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
                 car = getCarWithManufacturer(resultSet);
@@ -94,9 +94,9 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateCarStatement
                         = connection.prepareStatement(updateCarQuery)) {
-            updateCarStatement.setString(1,car.getModel());
-            updateCarStatement.setObject(2,car.getManufacturer().getId());
-            updateCarStatement.setObject(3,car.getId());
+            updateCarStatement.setString(1, car.getModel());
+            updateCarStatement.setObject(2, car.getManufacturer().getId());
+            updateCarStatement.setObject(3, car.getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Can't update from DB by car" + car);
@@ -131,7 +131,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement
                         = connection.prepareStatement(getAllCarsByDriverQuery)) {
-            getAllCarsStatement.setLong(1,driverId);
+            getAllCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
@@ -144,14 +144,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertRelations(Car car) {
-        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?,?);";
+        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement addDriverToCarStatement
                         = connection.prepareStatement(insertDriversQuery,
                         Statement.RETURN_GENERATED_KEYS)) {
-            addDriverToCarStatement.setLong(1,car.getId());
+            addDriverToCarStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
-                addDriverToCarStatement.setLong(2,driver.getId());
+                addDriverToCarStatement.setLong(2, driver.getId());
                 addDriverToCarStatement.executeUpdate();
             }
         } catch (SQLException e) {
@@ -165,7 +165,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteRelationStatement
                         = connection.prepareStatement(deleteRelationQuery)) {
-            deleteRelationStatement.setObject(1,car.getId());
+            deleteRelationStatement.setObject(1, car.getId());
             deleteRelationStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Can't delete car from DB " + car);
