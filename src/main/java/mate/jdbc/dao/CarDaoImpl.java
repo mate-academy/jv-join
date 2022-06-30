@@ -31,11 +31,11 @@ public class CarDaoImpl implements CarDao {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
             }
-            insertRelations(car);
-            return car;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't create a new car from: " + car);
+            throw new RuntimeException("Can't create a new car from: " + car, e);
         }
+        insertRelations(car);
+        return car;
     }
 
     @Override
@@ -57,10 +57,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCarWithManufacturer(resultSet);
             }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
-            throw new RuntimeException("Can't get from DB by id: " + id);
+            throw new RuntimeException("Can't get from DB by id: " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -81,10 +84,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCarWithManufacturer(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new RuntimeException("Can't get all cars from DB", e);
         }
+        if (!cars.isEmpty()) {
+            cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        }
+        return cars;
     }
 
     @Override
@@ -99,7 +105,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setObject(3, car.getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Can't update from DB by car" + car);
+            throw new RuntimeException("Can't update from DB by car" + car, e);
         }
         deleteRelation(car);
         insertRelations(car);
@@ -116,7 +122,7 @@ public class CarDaoImpl implements CarDao {
             int updatedRows = deleteCarStatement.executeUpdate();
             return updatedRows > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete car from DB by id: " + carId);
+            throw new RuntimeException("Can't delete car from DB by id: " + carId, e);
         }
     }
 
@@ -139,7 +145,7 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't get cars from DB by driver id " + driverId);
+            throw new RuntimeException("Can't get cars from DB by driver id " + driverId, e);
         }
     }
 
@@ -155,7 +161,7 @@ public class CarDaoImpl implements CarDao {
                 addDriverToCarStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to car " + car);
+            throw new RuntimeException("Can't insert drivers to car " + car, e);
         }
     }
 
@@ -168,8 +174,40 @@ public class CarDaoImpl implements CarDao {
             deleteRelationStatement.setObject(1, car.getId());
             deleteRelationStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete car from DB " + car);
+            throw new RuntimeException("Can't delete car from DB " + car, e);
         }
+    }
+
+    private List<Driver> getDriversForCar(Long carId) {
+        String getAllDriversForCarQuery = "SELECT id, name, license_number"
+                + " FROM drivers"
+                + " JOIN cars_drivers"
+                + " ON drivers.id = cars_drivers.driver_id"
+                + " WHERE cars_drivers.car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllDriversForCarStatement
+                        = connection.prepareStatement(getAllDriversForCarQuery)) {
+            getAllDriversForCarStatement.setObject(1,carId);
+            ResultSet resultSet = getAllDriversForCarStatement.executeQuery();
+            List<Driver> drivers = new ArrayList<>();
+            while (resultSet.next()) {
+                drivers.add(getDriver(resultSet));
+            }
+            return drivers;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't get drivers from DB for car id" + carId, e);
+        }
+    }
+
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("license_number");
+        Driver driver = new Driver();
+        driver.setId(id);
+        driver.setName(name);
+        driver.setLicenseNumber(licenseNumber);
+        return driver;
     }
 
     private Car getCarWithManufacturer(ResultSet resultSet) throws SQLException {

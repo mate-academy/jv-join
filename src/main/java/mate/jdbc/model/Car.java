@@ -19,9 +19,8 @@ public class Car {
     }
 
     public Car(Long id, String model, Manufacturer manufacturer) {
+        this(model,manufacturer);
         this.id = id;
-        this.model = model;
-        this.manufacturer = manufacturer;
     }
 
     public Long getId() {

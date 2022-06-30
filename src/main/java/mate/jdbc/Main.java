@@ -52,6 +52,7 @@ public class Main {
         carService.addDriverToCar(driverHugo,carModelX);
         Manufacturer volvoManufacturer = new Manufacturer("Volvo","Sweden");
         manufacturerService.create(volvoManufacturer);
+        System.out.println(carService.delete(carX5.getId()));
         Car volvoCar = new Car("V60",volvoManufacturer);
         List<Driver> driversForVolvo = new ArrayList<>();
         driversForVolvo.add(driverOrland);
