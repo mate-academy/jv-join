@@ -25,19 +25,21 @@ public class Main {
 
         List<Car> cars = carService.getAll();
         cars.forEach(System.out::println);
-        cars = carService.getAllByDriver(1L);
+        List<Driver> drivers = driverService.getAll();
+        cars = carService.getAllByDriver(drivers.get(0).getId());
         cars.forEach(System.out::println);
-        Driver alonso = driverService.get(1L);
-        Car car = carService.get(1L);
+        drivers = driverService.getAll();
+        Driver alonso = driverService.get(drivers.get(0).getId());
+        Car car = carService.get(cars.get(0).getId());
         carService.addDriverToCar(alonso, car);
         cars = carService.getAll();
         cars.forEach(System.out::println);
         carService.removeDriverFromCar(alonso, car);
         cars = carService.getAll();
         cars.forEach(System.out::println);
-        car = carService.get(4L);
+        car = cars.get(cars.size() - 1);
         System.out.println(car);
-        carService.delete(4L);
+        carService.delete(car.getId());
         cars = carService.getAll();
         cars.forEach(System.out::println);
     }
