@@ -40,11 +40,11 @@ CREATE TABLE IF NOT EXISTS public.cars_drivers
 (
     driver_id bigint NOT NULL,
     car_id bigint NOT NULL,
-    CONSTRAINT car_id FOREIGN KEY (car_id)
+    CONSTRAINT car_drivers_car_id_fk FOREIGN KEY (car_id)
         REFERENCES public.cars (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT driver_id FOREIGN KEY (driver_id)
+    CONSTRAINT car_drivers_driver_id_fk FOREIGN KEY (driver_id)
         REFERENCES public.drivers (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
