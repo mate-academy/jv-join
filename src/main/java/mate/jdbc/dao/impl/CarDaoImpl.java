@@ -20,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
@@ -86,7 +86,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
-                + "WHERE id = ? AND is_deleted = FALSE";
+                + "WHERE id = ? AND is_deleted = FALSE;";
         removeCarDrivers(car.getId());
         createCarDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
@@ -146,7 +146,6 @@ public class CarDaoImpl implements CarDao {
         String manufacturerCountry = resultSet.getString("country");
         Manufacturer manufacturer =
                 new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
-        
         return new Car(carId, model, manufacturer);
     }
     
