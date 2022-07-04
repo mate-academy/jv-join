@@ -1,4 +1,4 @@
-package mate.jdbc.dao.Impl;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +65,7 @@ public class CarDaoImpl implements CarDao {
     
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.counrty "
+        String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
@@ -104,7 +104,7 @@ public class CarDaoImpl implements CarDao {
     
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE id = ?;";
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -117,11 +117,11 @@ public class CarDaoImpl implements CarDao {
     
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.counrty "
+        String query = "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
-                + "WHERE c.is_deleted = FALSE AND cd.drivers_id = ?;";
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
@@ -154,7 +154,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT d.id, d.name, d.license_number "
                 + "FROM drivers d "
                 + "INNER JOIN cars_drivers cd "
-                + "ON cd.drivers_id = d.id "
+                + "ON cd.driver_id = d.id "
                 + "WHERE car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =

@@ -3,7 +3,6 @@ package mate.jdbc.dao;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
 
 public interface CarDao {
     Car create(Car car);
