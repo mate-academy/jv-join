@@ -133,7 +133,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars by driver "
+            throw new DataProcessingException("Couldn't get a list of cars by driver ID: "
+                    + driverId
                     + "from cars table. ", e);
         }
         return cars;
