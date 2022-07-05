@@ -41,6 +41,4 @@ CREATE TABLE `cars_drivers` (
         CONSTRAINT cars_drivers_cars_fk foreign key ('car_id') references 'cars' ('id'),
         constraint cars_drivers_drivers_fk foreign key ('driver_id') references 'drivers' ('id')
     );
-)
-
 
