@@ -72,6 +72,9 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Driver update(Driver driver) {
+        //update Driver
+        //delete Relations
+        //add Relations
         String query = "UPDATE drivers "
                 + "SET name = ?, license_number = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
