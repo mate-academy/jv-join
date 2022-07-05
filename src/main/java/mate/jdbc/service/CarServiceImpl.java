@@ -49,13 +49,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        driverDao.delete(driver.getId());
-        for (Driver d : car.getDrivers()) {
-            if (d.equals(driver)) {
-                car.getDrivers().remove(driver);
-            }
-        }
-        carDao.update(car);
+        car.getDrivers().remove(driver);
     }
 
     @Override
