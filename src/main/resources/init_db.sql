@@ -31,7 +31,6 @@ CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY(`manufacturer_id`)REFERENCES `man
 CREATE TABLE `cars_drivers` (
   `cars_id` bigint NOT NULL,
   `drivers_id` bigint NOT NULL,
-
 CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`cars_id`) REFERENCES `carі` (`id`),
 CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`drivers_id`) REFERENCES `drivers` (`id`)
 ) ;
