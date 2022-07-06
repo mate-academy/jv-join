@@ -177,7 +177,9 @@ public class CarDaoImpl implements CarDao {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
-        Driver driver = new Driver(name, licenseNumber);
+        Driver driver = new Driver();
+        driver.setName(name);
+        driver.setLicenseNumber(licenseNumber);
         driver.setId(id);
         return driver;
     }
