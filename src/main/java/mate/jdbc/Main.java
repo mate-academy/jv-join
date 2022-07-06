@@ -1,9 +1,11 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -19,28 +21,34 @@ public class Main {
             (DriverService) injector.getInstance(DriverService.class);
 
     public static void main(String[] args) {
-        Car car = new Car();
-        List<Driver> drivers = List.of(driverService.get(5L), driverService.get(6L));
-        car.setModel("Camry");
-        car.setManufacturer(manufacturerService.get(64L));
-        car.setDrivers(drivers);
-        carService.create(car);
+        Manufacturer manufacturerDaewoo = new Manufacturer("Daewoo", "Ukraine");
+        Manufacturer manufacturerSkoda = new Manufacturer("Skoda", "Chez Republic");
+        Manufacturer manufacturerMazda = new Manufacturer("Mazda", "Japan");
 
-        System.out.println(carService.get(3L));
+        manufacturerService.create(manufacturerDaewoo);
+        manufacturerService.create(manufacturerSkoda);
+        manufacturerService.create(manufacturerMazda);
 
+        Driver driverPetya = new Driver("Petya", "AX0001AX");
+        Driver driverIvan = new Driver("Ivan", "AH0002AH");
+        Driver driverMariya = new Driver("Mariya", "AA0003AA");
+        driverService.create(driverPetya);
+        driverService.create(driverIvan);
+        driverService.create(driverMariya);
+
+        List<Driver> driverList = new ArrayList<>();
+        driverList.add(driverPetya);
+        driverList.add(driverIvan);
+        driverList.add(driverMariya);
+
+        Car carModelOctavia = new Car("Octavia", manufacturerSkoda, driverList);
+        carService.create(carModelOctavia);
+
+        carService.getAllByDriver(carModelOctavia.getId());
+        carModelOctavia.setManufacturer(manufacturerService.get(manufacturerMazda.getId()));
+        carService.update(carModelOctavia);
         carService.getAll().forEach(System.out::println);
-
-        System.out.println(carService.delete(1L));
-
-        carService.getAllByDriver(2L).forEach(System.out::println);
-
-        Car updatingCar = carService.get(5L);
-        List<Driver> updatingDrivers = List.of(driverService.get(5L));
-        updatingCar.setModel("Camry");
-        updatingCar.setDrivers(updatingDrivers);
-        carService.update(updatingCar);
-
-        carService.addDriverToCar(driverService.get(4L), carService.get(5L));
-        carService.removeDriverFromCar(driverService.get(4L), carService.get(5L));
+        carService.removeDriverFromCar(driverIvan, carModelOctavia);
+        carService.getAllByDriver(driverIvan.getId()).forEach(System.out::println);
     }
 }
