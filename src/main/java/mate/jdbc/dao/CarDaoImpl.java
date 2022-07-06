@@ -116,7 +116,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverID) {
-        String query = "SELECT c.id, model, manufacturer_id, name, country "
+        String query = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country "
                 + "FROM CARS c "
                 + "JOIN MANUFACTURERS m "
                 + "ON c.manufacturer_id = m.id "
