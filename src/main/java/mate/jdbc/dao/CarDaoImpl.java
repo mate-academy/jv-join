@@ -66,26 +66,23 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id, model, manufacturer_id, name, country "
+        String query = "SELECT c.id, c.model, c.manufacturer_id, name, country "
                 + "FROM CARS c "
                 + "JOIN MANUFACTURERS m "
                 + "ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
-        Car car;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
-                insertDrivers(car);
                 cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
-
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
+        cars.forEach(c -> c.setDriversList(getDriversForACar(c.getId())));
+        return cars;
     }
 
     @Override
@@ -128,20 +125,18 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.id = cd.car_id "
                 + "WHERE c.is_deleted = FALSE AND driver_id = ?;";
         List<Car> cars = new ArrayList<>();
-        Car car;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                car = parseCarWithManufacturerFromResultSet(resultSet);
-                insertDrivers(car);
-                cars.add(car);
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
+        cars.forEach(c -> c.setDriversList(getDriversForACar(c.getId())));
+        return cars;
     }
 
     private void deleteRelationsFromCarsAndDriversByCarsId(Car car) {
