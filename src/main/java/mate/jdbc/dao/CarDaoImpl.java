@@ -65,8 +65,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id, c.model, c.manufacturer_id, m.id AS m_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE";
-        try (
-                Connection connection = ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -90,14 +89,13 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE c.is_deleted = FALSE and cd.driver_id = ?";
-        try (
-                Connection connection = ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car localCar = parseCarFromResult(resultSet);
-                cars.add(localCar);
+                Car car = parseCarFromResult(resultSet);
+                cars.add(car);
             }
         } catch (SQLException e) {
             throw new RuntimeException("cant get the list of all cars with driver with id:"
@@ -111,8 +109,7 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        try (
-                Connection connection = ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
@@ -128,25 +125,25 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = true WHERE id = ?";
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            int numberDeletedRows = statement.executeUpdate();
-            return numberDeletedRows != 0;
+            int numberOfDeletedRows = statement.executeUpdate();
+            return numberOfDeletedRows != 0;
         } catch (SQLException e) {
             throw new RuntimeException("can't delete car with id: " + id, e);
         }
     }
 
-    private void deleteDriversFromCar(Long id) {
+    private void deleteDriversFromCar(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, carId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("cant delete drivers in car: " + id, e);
+            throw new RuntimeException("cant delete drivers in car with id: " + carId, e);
         }
     }
 
@@ -186,7 +183,7 @@ public class CarDaoImpl implements CarDao {
                 statement.setLong(2, driver.getId());
                 statement.executeUpdate();
             } catch (SQLException e) {
-                throw new RuntimeException("cant add driver to cars_drivers: car_id = "
+                throw new RuntimeException("cant add driver to car with id = "
                         + car.getId(), e);
             }
         }
