@@ -14,7 +14,6 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver lens = new Driver("Lens", "12345");
         driverService.create(lens);

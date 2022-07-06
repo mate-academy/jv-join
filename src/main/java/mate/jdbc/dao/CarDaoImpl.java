@@ -35,7 +35,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car: " + car, e);
         }
-        insertDriver(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -86,7 +86,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        deleteRelationsFromCarsAndDrivers(car);
+        deleteRelationsFromCarsAndDriversByCarsId(car);
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -94,7 +94,7 @@ public class CarDaoImpl implements CarDao {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
-            insertDriver(car);
+            insertDrivers(car);
             statement.executeUpdate();
             return car;
         } catch (SQLException e) {
@@ -137,7 +137,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteRelationsFromCarsAndDrivers(Car car) {
+    private void deleteRelationsFromCarsAndDriversByCarsId(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -159,7 +159,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDriver(Car car) {
+    private void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -189,7 +189,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Can't get drivers by car's ID: " + carId, e);
         }
     }
 
