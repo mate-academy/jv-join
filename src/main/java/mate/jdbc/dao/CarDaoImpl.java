@@ -71,7 +71,7 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet resultSet = statement.    executeQuery();
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car;
                 car = getCar(resultSet);
@@ -128,7 +128,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Long id = resultSet.    getLong("id");
+                Long id = resultSet.getLong("id");
                 Car car = get(id)
                         .orElseThrow(() -> new DataProcessingException("Could not get car "
                                 + "by id from DB. Id: " + id));
