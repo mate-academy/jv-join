@@ -197,5 +197,4 @@ public class CarDaoImpl implements CarDao {
         car.setId(resultSet.getObject("car_id", Long.class));
         return car;
     }
-
 }
