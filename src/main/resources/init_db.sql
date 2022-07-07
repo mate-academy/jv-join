@@ -31,7 +31,6 @@ CREATE TABLE `cars` (
 CREATE TABLE `cars_drivers` (
                                 `driver_id` bigint NOT NULL,
                                 `car_id` bigint NOT NULL,
-                                `is_deleted` tinyint NOT NULL DEFAULT '0',
                                 KEY `cars_drivers_drivers_fk` (`driver_id`),
                                 KEY `cars_drivers_cars_fk` (`car_id`),
                                 CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
