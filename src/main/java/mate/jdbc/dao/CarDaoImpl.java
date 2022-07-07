@@ -40,12 +40,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT cars.id, cars.model, manufacturer_id, "
-                + "manufacturers.name, manufacturers.country "
-                + "FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE AND manufacturers.is_deleted = FALSE "
-                + "AND cars.id = ?";
+        String query = "SELECT c.id, c.model, manufacturer_id, "
+                + "m.name, m.country "
+                + "FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = FALSE "
+                + "AND c.id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, id);
@@ -63,15 +63,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT cars.id, cars.model, manufacturer_id, "
-                + "manufacturers.name, manufacturers.country "
-                + "FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE AND manufacturers.is_deleted = FALSE ";
+        String query = "SELECT c.id, c.model, manufacturer_id, "
+                + "m.name, m.country "
+                + "FROM cars c INNER JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = FALSE ";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.    executeQuery();
             while (resultSet.next()) {
                 Car car;
                 car = getCar(resultSet);
@@ -128,7 +128,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Long id = resultSet.getLong("id");
+                Long id = resultSet.    getLong("id");
                 Car car = get(id)
                         .orElseThrow(() -> new DataProcessingException("Could not get car "
                                 + "by id from DB. Id: " + id));
@@ -156,14 +156,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDrivers(Long carId) {
-        List<Driver> drivers = new ArrayList<>();
-        String queryForDrivers = "SELECT name, license_number, driver_id FROM drivers "
-                + "INNER JOIN cars_drivers ON drivers.id = cars_drivers.driver_id "
-                + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = FALSE";
+        String queryForDrivers = "SELECT name, license_number, driver_id FROM drivers d "
+                + "INNER JOIN cars_drivers cd ON d.id = cd.driver_id "
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(queryForDrivers)) {
             statement.setObject(1, carId);
             ResultSet resultSet = statement.executeQuery();
+            List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
                 Driver driver = new Driver();
                 driver.setName(resultSet.getString("name"));
@@ -171,10 +171,10 @@ public class CarDaoImpl implements CarDao {
                 driver.setId(resultSet.getObject("driver_id", Long.class));
                 drivers.add(driver);
             }
+            return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot find driver by id from DB. Id: " + carId, e);
         }
-        return drivers;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
