@@ -46,7 +46,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m "
                 + "ON m.id = c.manufacturer_id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
-        Car car = new Car();
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -57,6 +57,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id "
                     + id + ". ", e);
+        }
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
         }
         return Optional.ofNullable(car);
     }
