@@ -66,5 +66,4 @@ public class Driver {
                 + ", licenseNumber='" + licenseNumber + '\''
                 + '}';
     }
-
 }
