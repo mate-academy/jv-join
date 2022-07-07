@@ -206,8 +206,8 @@ public class CarDaoImpl implements CarDao {
                 Manufacturer manufacturer = new Manufacturer();
                 manufacturer.setName(resultSet.getString("name"));
                 manufacturer.setCountry(resultSet.getString("country"));
-                manufacturer.setId(resultSet.getObject("manufacturer_id"
-                        , Long.class));
+                manufacturer.setId(resultSet.getObject("manufacturer_id",
+                        Long.class));
                 car.setManufacturer(manufacturer);
                 cars.add(car);
             }
