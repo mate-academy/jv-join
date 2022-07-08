@@ -79,11 +79,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from DB", e);
         }
-        if (!allCars.isEmpty()) {
-            for (Car car : allCars) {
-                List<Driver> drivers = getDriversForCar(car.getId());
-                car.setDrivers(drivers);
-            }
+        for (Car car : allCars) {
+            List<Driver> drivers = getDriversForCar(car.getId());
+            car.setDrivers(drivers);
         }
         return allCars;
     }
