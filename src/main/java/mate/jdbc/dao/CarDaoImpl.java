@@ -163,12 +163,16 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("cars.id", Long.class));
         car.setModel(resultSet.getString("cars.model"));
+        car.setManufacturer(parseManufacturerFromResultSet(resultSet));
+        return car;
+    }
+
+    private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
         manufacturer.setName(resultSet.getString("manufacturers.name"));
         manufacturer.setCountry(resultSet.getString("manufacturers.country"));
-        car.setManufacturer(manufacturer);
-        return car;
+        return manufacturer;
     }
 
     private List<Driver> getDriversForCar(Long carId) {
