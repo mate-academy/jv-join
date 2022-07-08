@@ -1,7 +1,105 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
+import mate.jdbc.lib.Injector;
+import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.CarService;
+import mate.jdbc.service.DriverService;
+import mate.jdbc.service.ManufacturerService;
+
 public class Main {
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
+    private static final ManufacturerService manufacturerService
+            = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+    private static final DriverService driverService
+            = (DriverService) injector.getInstance(DriverService.class);
+
     public static void main(String[] args) {
-        // test your code here
+        System.out.println("* Adding two manufacturers to DB:");
+        Manufacturer manufacturerFord = new Manufacturer();
+        manufacturerFord.setName("Ford");
+        manufacturerFord.setCountry("USA");
+        Manufacturer manufacturerFordAdded = manufacturerService.create(manufacturerFord);
+        System.out.println("manufacturer " + manufacturerFordAdded + " added to BD");
+        Manufacturer manufacturerToyota = new Manufacturer();
+        manufacturerToyota.setName("Toyota");
+        manufacturerToyota.setCountry("Japan");
+        Manufacturer manufacturerToyotaAdded = manufacturerService.create(manufacturerToyota);
+        System.out.println("manufacturer " + manufacturerToyotaAdded + " added to BD");
+        System.out.println("* Adding three drivers to DB:");
+        Driver driverBob = new Driver();
+        driverBob.setName("Bob");
+        driverBob.setLicenseNumber("AAA 000001");
+        Driver driverBobAdded = driverService.create(driverBob);
+        System.out.println("driver " + driverBobAdded + " added to BD");
+        Driver driverAlice = new Driver();
+        driverAlice.setName("Alice");
+        driverAlice.setLicenseNumber("BBB 000000");
+        Driver driverAliceAdded = driverService.create(driverAlice);
+        System.out.println("driver " + driverAliceAdded + " added to BD");
+        Driver driverOlga = new Driver();
+        driverOlga.setName("Olga");
+        driverOlga.setLicenseNumber("UUU 123456");
+        Driver driverOlgaAdded = driverService.create(driverOlga);
+        System.out.println("driver " + driverOlgaAdded + " added to BD");
+        System.out.println("* Testing CarService");
+        CarService carService = (CarService) injector.getInstance(CarService.class);
+        System.out.println("* Test create and getAll");
+        System.out.println("* Cars before adding a new car:");
+        carService.getAll().forEach(System.out::println);
+        List<Driver> driversBobAlice = new ArrayList<>();
+        driversBobAlice.add(driverBobAdded);
+        driversBobAlice.add(driverAliceAdded);
+        Car car = new Car();
+        car.setModel("Fiesta");
+        car.setManufacturer(manufacturerFordAdded);
+        car.setDrivers(driversBobAlice);
+        Car createdCar = carService.create(car);
+        System.out.println("Newly created car is: " + createdCar);
+        System.out.println("* Cars after adding a new car:");
+        carService.getAll().forEach(System.out::println);
+        System.out.println("* Test get: getting the previously added car");
+        Long carId = createdCar.getId();
+        Car obtainedCar = carService.get(carId);
+        System.out.println("*The obtained car is:");
+        System.out.println(obtainedCar);
+        System.out.println("* Test update: update the previously added car");
+        System.out.println("* Cars before updating:");
+        carService.getAll().forEach(System.out::println);
+        Car carToUpdate = new Car();
+        carToUpdate.setId(carId);
+        carToUpdate.setModel("Corolla");
+        carToUpdate.setManufacturer(manufacturerToyotaAdded);
+        List<Driver> driversToUpdate = new ArrayList<>();
+        driversToUpdate.add(driverOlgaAdded);
+        carToUpdate.setDrivers(driversToUpdate);
+        carService.update(carToUpdate);
+        System.out.println("* Cars after updating:");
+        carService.getAll().forEach(System.out::println);
+        System.out.println("* Test getAllByDriver");
+        System.out.println("* Cars with driverOlga:");
+        List<Car> carsByDriver = carService.getAllByDriver(driverOlgaAdded.getId());
+        System.out.println(carsByDriver);
+        System.out.println("* Test addDriverToCar");
+        System.out.println("* Cars DB  before adding a driver to a car:");
+        carService.getAll().forEach(System.out::println);
+        carService.addDriverToCar(driverBobAdded, carToUpdate);
+        System.out.println("* Cars DB  after adding driverBob to a car:");
+        carService.getAll().forEach(System.out::println);
+        System.out.println("* Test removeDriverFromCar");
+        System.out.println("* Cars DB  before removing a driver from a car:");
+        carService.getAll().forEach(System.out::println);
+        carService.removeDriverFromCar(driverOlgaAdded, carToUpdate);
+        System.out.println("* Cars DB  after removing driverOlga from a car:");
+        carService.getAll().forEach(System.out::println);
+        System.out.println("* Test delete");
+        System.out.println("* Cars before delete");
+        carService.getAll().forEach(System.out::println);
+        carService.delete(carId);
+        System.out.println("* cars after delete");
+        carService.getAll().forEach(System.out::println);
     }
 }
