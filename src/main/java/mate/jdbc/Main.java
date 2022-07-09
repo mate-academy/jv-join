@@ -39,8 +39,14 @@ public class Main {
         car.setManufacturer(manufacturer);
         car.setDrivers(List.of(driver1, driver2));
 
+        Car car2 = new Car();
+        car2.setModel("Ford");
+        car2.setManufacturer(manufacturer);
+        car2.setDrivers(List.of(driver1, driver2));
+
         carDao.create(car);
-        System.out.println(carDao.get(car.getId()).get());
+        carDao.create(car);
+        carDao.getAll().forEach(System.out::println);
 
 
 //        CarDao carDao = new CarDaoImpl();

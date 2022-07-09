@@ -39,15 +39,13 @@ public class CarDaoImpl implements CarDao {
                 "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id " +
                 "FROM cars c " +
                 "JOIN manufacturers m ON c.manufacturer_id = m.id " +
-                "JOIN cars_drivers cd ON c.id = cd.car_id " +
-                "JOIN drivers d ON cd.driver_id = d.id " +
                 "WHERE TRUE " +
                 "AND c.id = ? " +
-                "AND c.is_deleted = 0 " +
-                "AND d.is_deleted = 0 ";
+                "AND c.is_deleted = 0 ";
         Car car = new Car();
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(getCarRequest)) {
+             PreparedStatement statement = connection.prepareStatement(getCarRequest,
+                     Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -65,7 +63,27 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        String getAllCarsRequest =
+                "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id " +
+                "FROM cars c " +
+                "JOIN manufacturers m ON c.manufacturer_id = m.id " +
+                "WHERE TRUE " +
+                "AND c.is_deleted = 0 ";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllCarsStatement = connection.prepareStatement(getAllCarsRequest,
+                        Statement.RETURN_GENERATED_KEYS)) {
+            ResultSet resultSet = getAllCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+            }
+            for (Car car : cars) {
+                car.setDrivers(getDriversForCar(car.getId()));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return cars;
     }
 
     @Override
@@ -161,5 +179,15 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
+        Car car = new Car();
+        car.setModel(resultSet.getString("model"));
+        String car_id = "car_id";
+        Manufacturer manufacturer = getManufacturerForCar(resultSet.getLong(car_id));
+        car.setManufacturer(manufacturer);
+        car.setId(resultSet.getObject("car_id", Long.class));
+        return car;
     }
 }
