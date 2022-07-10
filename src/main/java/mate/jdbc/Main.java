@@ -6,6 +6,8 @@ import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.CarService;
+import mate.jdbc.service.CarServiceImpl;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 import java.util.List;
@@ -31,13 +33,13 @@ public class Main {
         driverService.create(driver3);
 
 
-        ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance((ManufacturerService.class));
+        ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName("Billy");
         manufacturer.setCountry("France");
         manufacturerService.create(manufacturer);
 
-        CarDao carDao = new CarDaoImpl();
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         Car car = new Car();
         car.setModel("Ford");
         car.setManufacturer(manufacturer);
@@ -48,9 +50,9 @@ public class Main {
         car2.setManufacturer(manufacturer);
         car2.setDrivers(List.of(driver1, driver2, driver3));
 
-        carDao.create(car);
-        carDao.create(car2);
-        carDao.getAllByDriver(1L).forEach(System.out::println);
+        carService.create(car);
+        carService.create(car2);
+        carService.getAllByDriver(1L).forEach(System.out::println);
 
     }
 }
