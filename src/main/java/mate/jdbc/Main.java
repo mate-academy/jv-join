@@ -52,6 +52,5 @@ public class Main {
         carDao.create(car2);
         carDao.getAllByDriver(1L).forEach(System.out::println);
 
-
     }
 }
