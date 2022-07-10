@@ -1,16 +1,14 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDaoImpl;
+import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.CarServiceImpl;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-import java.util.List;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -18,41 +16,54 @@ public class Main {
     public static void main(String[] args) {
         // test your code here
 
-        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver driver1 = new Driver();
-        driver1.setName("Joe");
-        driver1.setLicenseNumber("3K424DgF");
-        driverService.create(driver1);
-        Driver driver2 = new Driver();
-        driver2.setName("Butcher");
-        driver2.setLicenseNumber("kjfwkjfFL");
-        driverService.create(driver2);
-        Driver driver3 = new Driver();
-        driver3.setName("Hello");
-        driver3.setLicenseNumber("Abracadabra");
-        driverService.create(driver3);
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Manufacturer volkswagen = new Manufacturer("Volkswagen", "Germany");
+        Manufacturer volvo = new Manufacturer("Volvo", "Sweden");
+        Manufacturer mazda = new Manufacturer("Mazda", "Japan");
+        manufacturerService.create(volkswagen);
+        manufacturerService.create(volvo);
+        manufacturerService.create(mazda);
 
+        DriverService driverService =
+                (DriverService) injector.getInstance(DriverService.class);
+        Driver alina = new Driver("Alina", "UA123");
+        Driver igor = new Driver("Igor", "UA456");
+        Driver anna = new Driver("Anna", "UA789");
+        driverService.create(alina);
+        driverService.create(igor);
+        driverService.create(anna);
 
-        ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName("Billy");
-        manufacturer.setCountry("France");
-        manufacturerService.create(manufacturer);
+        List<Driver> volkswagenDrivers = new ArrayList<>();
+        volkswagenDrivers.add(alina);
+        volkswagenDrivers.add(anna);
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car car = new Car();
-        car.setModel("Ford");
-        car.setManufacturer(manufacturer);
-        car.setDrivers(List.of(driver1, driver3));
+        List<Driver> volvoDrivers = new ArrayList<>();
+        volvoDrivers.add(igor);
+        volvoDrivers.add(anna);
 
-        Car car2 = new Car();
-        car2.setModel("Ford");
-        car2.setManufacturer(manufacturer);
-        car2.setDrivers(List.of(driver1, driver2, driver3));
+        List<Driver> mazdaDrivers = new ArrayList<>();
+        mazdaDrivers.add(alina);
+        mazdaDrivers.add(igor);
 
-        carService.create(car);
-        carService.create(car2);
-        carService.getAllByDriver(1L).forEach(System.out::println);
+        CarService carService =
+                (CarService) injector.getInstance(CarService.class);
+        Car passat = new Car("Passat", volkswagen, volkswagenDrivers);
+        Car xc90Volvo = new Car("XC90", volvo, volkswagenDrivers);
+        Car cxMazda = new Car("CX-5", mazda, mazdaDrivers);
+        carService.create(passat);
+        carService.create(xc90Volvo);
+        carService.create(cxMazda);
+        System.out.println(carService.get(passat.getId()));
 
+        carService.getAll().forEach(System.out::println);
+
+        carService.delete(passat.getId());
+        xc90Volvo.setModel("XC90 2022");
+        carService.update(xc90Volvo);
+        carService.getAllByDriver(alina.getId()).forEach(System.out::println);
+
+        carService.addDriverToCar(anna, cxMazda);
+        carService.removeDriverFromCar(igor, cxMazda);
     }
 }
