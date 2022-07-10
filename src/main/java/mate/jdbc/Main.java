@@ -25,6 +25,10 @@ public class Main {
         driver2.setName("Butcher");
         driver2.setLicenseNumber("kjfwkjfFL");
         driverService.create(driver2);
+        Driver driver3 = new Driver();
+        driver3.setName("Hello");
+        driver3.setLicenseNumber("Abracadabra");
+        driverService.create(driver3);
 
 
         ManufacturerService manufacturerService = (ManufacturerService) injector.getInstance((ManufacturerService.class));
@@ -37,30 +41,17 @@ public class Main {
         Car car = new Car();
         car.setModel("Ford");
         car.setManufacturer(manufacturer);
-        car.setDrivers(List.of(driver1, driver2));
+        car.setDrivers(List.of(driver1, driver3));
 
         Car car2 = new Car();
         car2.setModel("Ford");
         car2.setManufacturer(manufacturer);
-        car2.setDrivers(List.of(driver1, driver2));
+        car2.setDrivers(List.of(driver1, driver2, driver3));
 
         carDao.create(car);
-        carDao.create(car);
-        carDao.getAll().forEach(System.out::println);
+        carDao.create(car2);
+        carDao.getAllByDriver(1L).forEach(System.out::println);
 
 
-//        CarDao carDao = new CarDaoImpl();
-//        List<Driver> drivers = new ArrayList<>();
-//        drivers.add(new Driver());
-//        drivers.add(new Driver());
-//
-//        Manufacturer manufacturer = new Manufacturer();
-//        manufacturer.setId(2L);
-//
-//        Car car = new Car();
-//        car.setDrivers(drivers);
-//        car.setManufacturer(manufacturer);
-//        car.setModel("Ford");
-//        carDao.create(car);
     }
 }

@@ -1,11 +1,12 @@
-package mate.jdbc.dao;
+package mate.jdbc.service;
 
-import java.util.List;
-import java.util.Optional;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import java.util.List;
+import java.util.Optional;
 
-public interface CarDao {
+public interface CarService {
+
     Car create(Car car);
 
     Optional<Car> get(Long id);
@@ -17,4 +18,8 @@ public interface CarDao {
     boolean delete(Long id);
 
     List<Car> getAllByDriver(Long driverId);
+
+    void addDriverToCar(Driver driver, Car car);
+
+    void removeDriverFromCar(Driver driver, Car car);
 }
