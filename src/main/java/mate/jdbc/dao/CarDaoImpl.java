@@ -69,7 +69,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String getAllCarsRequest =
-                "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, m.name as manufacturer_name, m.country as manufacturer_country "
+                "SELECT c.id AS car_id, c.model, m.id AS manufacturer_id, "
+                + "m.name as manufacturer_name, m.country as manufacturer_country "
                 + "FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = 0 ";
