@@ -54,13 +54,15 @@ public class Main {
         carService.create(passat);
         carService.create(xc90Volvo);
         carService.create(cxMazda);
+        System.out.println("------------------------------------------------------------------------------------------");
         System.out.println(carService.get(passat.getId()));
-
+        System.out.println("------------------------------------------------------------------------------------------");
         carService.getAll().forEach(System.out::println);
 
         carService.delete(passat.getId());
         xc90Volvo.setModel("XC90 2022");
         carService.update(xc90Volvo);
+        System.out.println("------------------------------------------------------------------------------------------");
         carService.getAllByDriver(alina.getId()).forEach(System.out::println);
 
         carService.addDriverToCar(anna, cxMazda);
