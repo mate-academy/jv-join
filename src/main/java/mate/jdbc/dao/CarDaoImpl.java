@@ -40,8 +40,9 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         String getCarRequest =
-                "SELECT c.id AS car_id, c.model, c.manufacturer_id "
+                "SELECT c.id AS car_id, c.model, c.manufacturer_id as manufacturer_id, m.name as manufacturer_name, m.country as manufacturer_country "
                 + "FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? "
                 + "AND c.is_deleted = 0 ";
         Car car = null;
@@ -55,12 +56,12 @@ public class CarDaoImpl implements CarDao {
                 car = new Car();
                 car.setId(id);
                 car.setModel(resultSet.getString("model"));
+                car.setManufacturer(parseManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get Car with id: " + id, e);
         }
         if (car != null) {
-            car.setManufacturer(getManufacturerForCar(car.getId()));
             car.setDrivers(getDriversForCar(id));
         }
         return Optional.ofNullable(car);
@@ -186,32 +187,6 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can' get Drivers for Car: " + car, e);
-        }
-    }
-
-    private Manufacturer getManufacturerForCar(Long carId) {
-        String queryForJoiningTable =
-                "SELECT m.id, m.name, m.country "
-                + "FROM manufacturers m "
-                + "JOIN cars c ON c.manufacturer_id = m.id "
-                + "WHERE c.id = ? "
-                + "AND m.is_deleted = 0 ";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getManufacturerStatement = connection.prepareStatement(
-                        queryForJoiningTable,
-                        Statement.RETURN_GENERATED_KEYS)) {
-            getManufacturerStatement.setLong(1, carId);
-            ResultSet resultSet = getManufacturerStatement.executeQuery();
-            Manufacturer manufacturer = new Manufacturer();
-            if (resultSet.next()) {
-                manufacturer.setId(resultSet.getObject("id", Long.class));
-                manufacturer.setName(resultSet.getString("name"));
-                manufacturer.setCountry(resultSet.getString("country"));
-            }
-            return manufacturer;
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't get Manufacturer for Car with id: "
-                    + carId, e);
         }
     }
 
