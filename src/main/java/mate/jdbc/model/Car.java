@@ -6,7 +6,7 @@ public class Car {
     private Long id;
     private String model;
     private Manufacturer manufacturer;
-//    private List<Driver> drivers;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -40,13 +40,13 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-//    public List<Driver> getDrivers() {
-//        return drivers;
-//    }
-//
-//    public void setDrivers(List<Driver> drivers) {
-//        this.drivers = drivers;
-//    }
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
+    }
 
     @Override
     public String toString() {
@@ -54,7 +54,7 @@ public class Car {
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer
-//                + ", drivers=" + drivers
+                + ", drivers=" + drivers
                 + '}';
     }
 }
