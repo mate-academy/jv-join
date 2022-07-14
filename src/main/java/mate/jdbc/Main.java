@@ -1,5 +1,7 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -7,9 +9,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -25,19 +24,12 @@ public class Main {
         Manufacturer bmw = manufacturerService.get(1L);
         Manufacturer toyota = manufacturerService.get(2L);
         Manufacturer ford = manufacturerService.get(3L);
-//        Manufacturer zaz = manufacturerService.get(4L);
-//        Manufacturer kia = manufacturerService.get(5L);
         Manufacturer volvo = manufacturerService.get(6L);
 
-//        List<Driver> driverList1 = new ArrayList<>();
         List<Driver> driverList2 = new ArrayList<>();
-//        List<Driver> driverList3 = new ArrayList<>();
         List<Driver> driverList4 = new ArrayList<>();
 
-//        driverList1.add(driverService.get(1L));
-//        driverList1.add(driverService.get(2L));
         driverList2.add(driverService.get(3L));
-//        driverList3.add(driverService.get(1L));
         driverList4.add(driverService.get(2L));
         driverList4.add(driverService.get(4L));
 
@@ -75,9 +67,6 @@ public class Main {
         System.out.println("Was: " + car3);
         car3 = carService.update(car3);
         System.out.println("Is: " + car3);
-
-
-        //update car with empty list of drivers
 
         //update car with not empty list of drivers
         System.out.println("update car with not empty list of drivers-------------");
