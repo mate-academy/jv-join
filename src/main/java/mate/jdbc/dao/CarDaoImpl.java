@@ -77,7 +77,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             Map<Car, List<Driver>> driversMapByCar = new HashMap<>();
             while (resultSet.next()) {
-                fillMap(driversMapByCar, resultSet, isDriverId(resultSet));
+                fillMap(driversMapByCar, resultSet);
             }
             return retrieveCarsFromMap(driversMapByCar);
         } catch (SQLException e) {
@@ -119,34 +119,34 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String carsByDriverQuery = GET_ALL_QUERY + " AND drivers.id = ?";
-        Map<Car, List<Driver>> driversMapByCar = new HashMap<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(carsByDriverQuery)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                fillMap(driversMapByCar, resultSet, true);
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException(
                     "Couldn't get a list of cars by driver id=" + driverId + " from DB.", e);
         }
-        String driversByCarQuery = GET_ALL_QUERY + " AND cars.id = ? AND drivers.id != ?";
+        String driversByCarQuery = GET_ALL_QUERY + " AND cars.id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(driversByCarQuery)) {
-            statement.setLong(2, driverId);
-            for (Car car : driversMapByCar.keySet()) {
+            Map<Car, List<Driver>> driversMapByCar = new HashMap<>();
+            for (Car car : cars) {
                 statement.setLong(1, car.getId());
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    fillMap(driversMapByCar, resultSet, true);
+                    fillMap(driversMapByCar, resultSet);
                 }
             }
+            return retrieveCarsFromMap(driversMapByCar);
         } catch (SQLException e) {
             throw new DataProcessingException(
                     "Couldn't get a list of drivers from DB.", e);
         }
-        return retrieveCarsFromMap(driversMapByCar);
     }
 
     private void insertDriversByCarInDB(Car car) {
@@ -190,17 +190,17 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void fillMap(Map<Car, List<Driver>> driversMapByCar,
-                         ResultSet resultSet, boolean isDriverId) throws SQLException {
+                         ResultSet resultSet) throws SQLException {
         Car car = parseCarFromResultSet(resultSet);
         List<Driver> drivers = new ArrayList<>();
         Driver driver = parseDriverFromResultSet(resultSet);
         if (driversMapByCar.containsKey(car)) {
-            if (isDriverId) {
+            if (isDriverId(resultSet)) {
                 driversMapByCar.get(car).add(driver);
             }
             return;
         }
-        if (isDriverId) {
+        if (isDriverId(resultSet)) {
             drivers.add(driver);
         }
         driversMapByCar.put(car, drivers);
