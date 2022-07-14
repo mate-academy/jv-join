@@ -29,7 +29,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
-        if (car.getDrivers().size() > 0) {
+        if (car.getDrivers() != null) {
                 insertRelationForCarQuery(car.getId(), car.getDrivers());
         }
         return car;
@@ -91,7 +91,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update " + car + " in carsDB.", e);
         }
         deleteAllRelationsForCarQuery(car.getId());
-        insertRelationForCarQuery(car.getId(), car.getDrivers());
+        if (car.getDrivers() != null) {
+            insertRelationForCarQuery(car.getId(), car.getDrivers());
+        }
         return car;
     }
 
@@ -135,7 +137,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long id) {
-        String query = "SELECT d.id, d.name, d.licenseNumber FROM drivers d "
+        String query = "SELECT d.id, d.name, d.license_number FROM drivers d "
                 + "JOIN cars_drivers cd ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ? AND is_deleted = FALSE";
         List<Driver> drivers = new ArrayList<>();
@@ -156,7 +158,7 @@ public class CarDaoImpl implements CarDao {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
-        driver.setLicenseNumber(resultSet.getString("licenseNumber"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
 

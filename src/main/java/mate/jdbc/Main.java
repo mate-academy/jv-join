@@ -25,19 +25,19 @@ public class Main {
         Manufacturer bmw = manufacturerService.get(1L);
         Manufacturer toyota = manufacturerService.get(2L);
         Manufacturer ford = manufacturerService.get(3L);
-        Manufacturer zaz = manufacturerService.get(4L);
-        Manufacturer kia = manufacturerService.get(5L);
+//        Manufacturer zaz = manufacturerService.get(4L);
+//        Manufacturer kia = manufacturerService.get(5L);
         Manufacturer volvo = manufacturerService.get(6L);
 
-        List<Driver> driverList1 = new ArrayList<>();
+//        List<Driver> driverList1 = new ArrayList<>();
         List<Driver> driverList2 = new ArrayList<>();
-        List<Driver> driverList3 = new ArrayList<>();
+//        List<Driver> driverList3 = new ArrayList<>();
         List<Driver> driverList4 = new ArrayList<>();
 
-        driverList1.add(driverService.get(1L));
-        driverList1.add(driverService.get(2L));
+//        driverList1.add(driverService.get(1L));
+//        driverList1.add(driverService.get(2L));
         driverList2.add(driverService.get(3L));
-        driverList3.add(driverService.get(1L));
+//        driverList3.add(driverService.get(1L));
         driverList4.add(driverService.get(2L));
         driverList4.add(driverService.get(4L));
 
@@ -89,10 +89,10 @@ public class Main {
         //delete car
         System.out.println("delete car-------------------");
         System.out.println("Car table:");
-        carService.getAll();
+        carService.getAll().forEach(System.out::println);
         carService.delete(6L);
         System.out.println("Car table:");
-        carService.getAll();
+        carService.getAll().forEach(System.out::println);
 
 
     }
