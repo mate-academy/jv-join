@@ -117,6 +117,7 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));

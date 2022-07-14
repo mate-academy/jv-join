@@ -94,6 +94,10 @@ public class Main {
         System.out.println("Car table:");
         carService.getAll().forEach(System.out::println);
 
-
+        //get all cars by driver
+        for (long i = 1L; i < 4L; i++) {
+            System.out.println("All cars for driver ID=" + i);
+            carService.getAllByDriver(i).forEach(System.out::println);
+        }
     }
 }
