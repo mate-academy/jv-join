@@ -44,16 +44,10 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        String query = "INSERT INTO `cars_drivers` (`car_id`, `driver_id`) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.setLong(2, driver.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't add driver " + driver +
-                    " to car " + car + " to DB", e);
-        }
+        List<Driver> driverList = car.getDrivers();
+        driverList.add(driver);
+        car.setDrivers(driverList);
+        carDao.update(car);
     }
 
     @Override
