@@ -15,10 +15,10 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("FILLING MANUFACTURERS DB:");
         List<Manufacturer> manufacturers = List.of(
-                new Manufacturer(null, "VW", "Germany"),
-                new Manufacturer(null, "Ford", "US"),
-                new Manufacturer(null, "Hyundai", "South Korea"),
-                new Manufacturer(null, "Toyota", "Japan"));
+                new Manufacturer("VW", "Germany"),
+                new Manufacturer("Ford", "US"),
+                new Manufacturer("Hyundai", "South Korea"),
+                new Manufacturer("Toyota", "Japan"));
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         for (Manufacturer manufacturer : manufacturers) {
@@ -27,11 +27,11 @@ public class Main {
         System.out.println("Done");
         System.out.println("FILLING DRIVERS:");
         List<Driver> drivers = List.of(
-                new Driver(null, "Bill", "B-001"),
-                new Driver(null, "Jim", "J-002"),
-                new Driver(null, "Frank", "F-003"),
-                new Driver(null, "Lucy", "L-004"),
-                new Driver(null, "Kate", "K-005"));
+                new Driver("Bill", "B-001"),
+                new Driver("Jim", "J-002"),
+                new Driver("Frank", "F-003"),
+                new Driver("Lucy", "L-004"),
+                new Driver("Kate", "K-005"));
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
         for (Driver driver : drivers) {
@@ -41,15 +41,15 @@ public class Main {
         System.out.println("Done");
         System.out.println("CREATING CARS:");
         List<Car> cars = List.of(
-                new Car(null, "Golf", manufacturerService.get(1L)),
-                new Car(null, "Passat", manufacturerService.get(1L)),
-                new Car(null, "Mustang", manufacturerService.get(2L)),
-                new Car(null, "Corolla", manufacturerService.get(4L)));
+                new Car("Golf", manufacturerService.get(1L)),
+                new Car("Passat", manufacturerService.get(1L)),
+                new Car("Mustang", manufacturerService.get(2L)),
+                new Car("Corolla", manufacturerService.get(4L)));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         for (Car car : cars) {
             System.out.println(carService.create(car));
         }
-        Car car = new Car(null, "Camry", manufacturerService.get(4L));
+        Car car = new Car("Camry", manufacturerService.get(4L));
         car.setDrivers(List.of(
                 new Driver(1L, "Bill", "B-001"),
                 new Driver(2L, "Jim", "J-002")));
