@@ -4,7 +4,7 @@ import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.ManufacturerServiceImpl;
 import mate.jdbc.util.ConnectionUtil;
 
 import java.sql.*;
@@ -26,15 +26,18 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
+        if (car.getDrivers().size() > 0) {
+                insertRelationForCarQuery(car.getId(), car.getDrivers());
+        }
+        return car;
     }
 
     @Override
     public Car get(Long id) {
-        String query = "SELECT c.id AS car_id, c.model AS car_model, m.id AS manufacturer_id, "
+        String query = "SELECT c.id AS id, c.model AS model, m.id AS manufacturer_id, "
                     + "m.name AS manufacturer_name, m.country AS manufacturer_country "
                     + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                     + "WHERE c.id = ? AND c.is_deleted = FALSE";
@@ -88,9 +91,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update " + car + " in carsDB.", e);
         }
         deleteAllRelationsForCarQuery(car.getId());
-        for (Driver driver : car.getDrivers()) {
-            insertRelationForCarQuery(car.getId(), driver.getId());
-        }
+        insertRelationForCarQuery(car.getId(), car.getDrivers());
         return car;
     }
 
@@ -125,20 +126,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("car_id", Long.class);
-        String model = resultSet.getString("car_model");
-        Manufacturer manufacturer = parseManufacturerFromResultSet(resultSet);
-        Car car = new Car(model, manufacturer);
+        Long id = resultSet.getObject("id", Long.class);
+        String model = resultSet.getString("model");
+        Car car = new Car(model, new ManufacturerDaoImpl()
+                .get(resultSet.getObject("manufacturer_id", Long.class)).orElseThrow());
         car.setId(id);
         return car;
-    }
-
-    private Manufacturer parseManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("manufacturer_name"));
-        manufacturer.setCountry(resultSet.getString("manufacturer_country"));
-        return manufacturer;
     }
 
     private List<Driver> getDriversForCar(Long id) {
@@ -179,18 +172,20 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertRelationForCarQuery(Long carId, Long driverId) {
+    private void insertRelationForCarQuery(Long carId, List<Driver> drivers) {
         String insertNewRelationForCarQuery = "INSERT INTO `cars_drivers` (`car_id`, `driver_id`) "
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement
                      = connection.prepareStatement(insertNewRelationForCarQuery)) {
-            statement.setLong(1, carId);
-            statement.setLong(2, driverId);
-            statement.executeUpdate();
+            for (Driver driver : drivers) {
+                statement.setLong(1, carId);
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't insert relations fo car ID=" + carId
-                                                + " and driver ID=" + driverId, e);
+                                                + " and list of drivers " + drivers, e);
         }
     }
 
