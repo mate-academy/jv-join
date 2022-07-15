@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't insert car to DB", e);
+            throw new DataProcessingException("Can't insert car to DB " + car, e);
         }
         insertDrivers(car);
         return car;
