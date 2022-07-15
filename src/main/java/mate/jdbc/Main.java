@@ -80,6 +80,22 @@ public class Main {
         System.out.println("Car table:");
         carService.getAll().forEach(System.out::println);
 
+        //addDriverToCar test
+        System.out.println("add driver id=5 to car id=5-------------------");
+        System.out.println("Car table before adding:");
+        carService.getAllByDriver(5L).forEach(System.out::println);
+        carService.addDriverToCar(driverService.get(5L), carService.get(5L));
+        System.out.println("Car table after adding:");
+        carService.getAllByDriver(5L).forEach(System.out::println);
+
+        //removeDriverFromCar test
+        System.out.println("remove driver id=5 from car id=5-------------------");
+        System.out.println("Car table before removing:");
+        carService.getAllByDriver(5L).forEach(System.out::println);
+        carService.removeDriverFromCar(driverService.get(5L), carService.get(5L));
+        System.out.println("Car table after removing:");
+        carService.getAllByDriver(5L).forEach(System.out::println);
+
         //get all cars by driver
         for (long i = 1L; i < 4L; i++) {
             System.out.println("All cars for driver ID=" + i);
