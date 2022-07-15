@@ -15,8 +15,6 @@ public class Main {
 
     public static void main(String[] args) {
         // test your code here
-        ManufacturerService manufacturerService = (ManufacturerService)
-                injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
         List<Driver> driverList2 = new ArrayList<>();
@@ -25,6 +23,9 @@ public class Main {
         driverList2.add(driverService.get(3L));
         driverList4.add(driverService.get(2L));
         driverList4.add(driverService.get(4L));
+
+        ManufacturerService manufacturerService = (ManufacturerService)
+                injector.getInstance(ManufacturerService.class);
 
         Manufacturer ford = manufacturerService.get(3L);
         Car car2 = new Car("Mustang", ford);
