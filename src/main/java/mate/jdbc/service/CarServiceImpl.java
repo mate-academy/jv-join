@@ -1,16 +1,12 @@
 package mate.jdbc.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.util.ConnectionUtil;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -52,16 +48,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ? and driver_id = ?;";
-        try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.setLong(2, driver.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete driver " + driver +
-                    " to car " + car + " from DB", e);
-        }
+        List<Driver> driverList = car.getDrivers().stream()
+                .filter(d -> d != driver)
+                .collect(Collectors.toList());
+        car.setDrivers(driverList);
+        carDao.update(car);
     }
 
     @Override
