@@ -20,9 +20,13 @@ public class Main {
         List<Driver> listOfOneDriver = new ArrayList<>();
         List<Driver> listOfTwoDrivers = new ArrayList<>();
 
-        listOfOneDriver.add(driverService.get(3L));
-        listOfTwoDrivers.add(driverService.get(2L));
-        listOfTwoDrivers.add(driverService.get(4L));
+        Driver testDriverBob = driverService.create(new Driver("TestBob", "15243"));
+        Driver testDriverBill = driverService.create(new Driver("TestBill", "14690"));
+        Driver testDriverWill = driverService.create(new Driver("TestWill", "76573"));
+
+        listOfOneDriver.add(testDriverBob);
+        listOfTwoDrivers.add(testDriverBill);
+        listOfTwoDrivers.add(testDriverWill);
 
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
