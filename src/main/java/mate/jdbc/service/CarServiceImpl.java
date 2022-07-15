@@ -2,7 +2,6 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -49,10 +48,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> driverList = car.getDrivers().stream()
-                                    .filter(d -> !driver.equals(d))
-                                    .collect(Collectors.toList());
-        car.setDrivers(driverList);
+        car.getDrivers().removeIf(driver::equals);
         carDao.update(car);
     }
 
