@@ -17,37 +17,37 @@ public class Main {
         // test your code here
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
-        List<Driver> driverList2 = new ArrayList<>();
-        List<Driver> driverList4 = new ArrayList<>();
+        List<Driver> listOfOneDriver = new ArrayList<>();
+        List<Driver> listOfTwoDrivers = new ArrayList<>();
 
-        driverList2.add(driverService.get(3L));
-        driverList4.add(driverService.get(2L));
-        driverList4.add(driverService.get(4L));
+        listOfOneDriver.add(driverService.get(3L));
+        listOfTwoDrivers.add(driverService.get(2L));
+        listOfTwoDrivers.add(driverService.get(4L));
 
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
 
         Manufacturer ford = manufacturerService.get(3L);
-        Car car2 = new Car("Mustang", ford);
-        car2.setDrivers(driverList2);
+        Car carMustang = new Car("Mustang", ford);
+        carMustang.setDrivers(listOfOneDriver);
         Manufacturer bmw = manufacturerService.get(1L);
-        Car car4 = new Car("745i", bmw);
-        car4.setDrivers(driverList4);
+        Car carBmw745 = new Car("745i", bmw);
+        carBmw745.setDrivers(listOfTwoDrivers);
 
         //create new car without list of drivers
         System.out.println("create new car without list of drivers--------");
         Manufacturer volvo = manufacturerService.get(6L);
-        Car car1 = new Car("Volvo 940", volvo);
-        System.out.println("Was: " + car1);
+        Car carVolvo940 = new Car("Volvo 940", volvo);
+        System.out.println("Was: " + carVolvo940);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        car1 = carService.create(car1);
-        System.out.println("Is: " + car1);
+        carVolvo940 = carService.create(carVolvo940);
+        System.out.println("Is: " + carVolvo940);
 
         //create new car with list of drivers
         System.out.println("create new car with list of drivers------------");
-        System.out.println("Was: " + car2);
-        car2 = carService.create(car2);
-        System.out.println("Is: " + car2);
+        System.out.println("Was: " + carMustang);
+        carMustang = carService.create(carMustang);
+        System.out.println("Is: " + carMustang);
 
         //get car
         System.out.println("get car---------");
@@ -60,18 +60,18 @@ public class Main {
         //update car with null list of drivers
         System.out.println("update car with null list of drivers-------------");
         Manufacturer toyota = manufacturerService.get(2L);
-        Car car3 = new Car("Prado", toyota);
-        car3.setId(3L);
-        System.out.println("Was: " + car3);
-        car3 = carService.update(car3);
-        System.out.println("Is: " + car3);
+        Car carPrado = new Car("Prado", toyota);
+        carPrado.setId(3L);
+        System.out.println("Was: " + carPrado);
+        carPrado = carService.update(carPrado);
+        System.out.println("Is: " + carPrado);
 
         //update car with not empty list of drivers
         System.out.println("update car with not empty list of drivers-------------");
-        car4.setId(4L);
-        System.out.println("Was: " + car4);
-        car4 = carService.update(car4);
-        System.out.println("Is: " + car4);
+        carBmw745.setId(4L);
+        System.out.println("Was: " + carBmw745);
+        carBmw745 = carService.update(carBmw745);
+        System.out.println("Is: " + carBmw745);
 
         //delete car
         System.out.println("delete car-------------------");
