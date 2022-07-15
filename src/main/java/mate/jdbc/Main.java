@@ -12,19 +12,12 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
+
     public static void main(String[] args) {
         // test your code here
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
-        DriverService driverService = (DriverService)
-                injector.getInstance(DriverService.class);
-        CarService carService = (CarService)
-                injector.getInstance(CarService.class);
-
-        Manufacturer bmw = manufacturerService.get(1L);
-        Manufacturer toyota = manufacturerService.get(2L);
-        Manufacturer ford = manufacturerService.get(3L);
-        Manufacturer volvo = manufacturerService.get(6L);
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
         List<Driver> driverList2 = new ArrayList<>();
         List<Driver> driverList4 = new ArrayList<>();
@@ -33,16 +26,19 @@ public class Main {
         driverList4.add(driverService.get(2L));
         driverList4.add(driverService.get(4L));
 
-        Car car1 = new Car("Volvo 940", volvo);
+        Manufacturer ford = manufacturerService.get(3L);
         Car car2 = new Car("Mustang", ford);
         car2.setDrivers(driverList2);
-        Car car3 = new Car("Prado", toyota);
+        Manufacturer bmw = manufacturerService.get(1L);
         Car car4 = new Car("745i", bmw);
         car4.setDrivers(driverList4);
 
         //create new car without list of drivers
         System.out.println("create new car without list of drivers--------");
+        Manufacturer volvo = manufacturerService.get(6L);
+        Car car1 = new Car("Volvo 940", volvo);
         System.out.println("Was: " + car1);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         car1 = carService.create(car1);
         System.out.println("Is: " + car1);
 
@@ -51,7 +47,6 @@ public class Main {
         System.out.println("Was: " + car2);
         car2 = carService.create(car2);
         System.out.println("Is: " + car2);
-
 
         //get car
         System.out.println("get car---------");
@@ -63,6 +58,8 @@ public class Main {
 
         //update car with null list of drivers
         System.out.println("update car with null list of drivers-------------");
+        Manufacturer toyota = manufacturerService.get(2L);
+        Car car3 = new Car("Prado", toyota);
         car3.setId(3L);
         System.out.println("Was: " + car3);
         car3 = carService.update(car3);
