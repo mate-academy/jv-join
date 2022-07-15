@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -94,8 +93,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update " + car + " in carsDB.", e);
         }
-        deleteAllRelationsForCarQuery(car.getId());
         if (car.getDrivers() != null) {
+            deleteAllRelationsForCarQuery(car.getId());
             insertRelationForCarQuery(car.getId(), car.getDrivers());
         }
         return car;
