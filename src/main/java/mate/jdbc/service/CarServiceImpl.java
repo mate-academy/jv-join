@@ -44,7 +44,6 @@ public class CarServiceImpl implements CarService {
     public void addDriverToCar(Driver driver, Car car) {
         List<Driver> driverList = car.getDrivers();
         driverList.add(driver);
-        car.setDrivers(driverList);
         carDao.update(car);
     }
 
