@@ -39,6 +39,8 @@ public class Main {
         drivers.add(new Driver("John","00003"));
         drivers.add(new Driver("Olga","00004"));
         drivers.add(new Driver("Kyrylo","00005"));
+        drivers.add(new Driver("Inna","00006"));
+        drivers.add(new Driver("Nastya","00007"));
 
         for (Driver driver : drivers) {
             try {
@@ -62,6 +64,13 @@ public class Main {
         cars.add(new Car(manufacturers.get(2),"Fusion",new ArrayList<Driver>()));
         cars.add(new Car(manufacturers.get(2),"Fiesta",new ArrayList<Driver>()));
         cars.add(new Car(manufacturers.get(3),"A6",new ArrayList<Driver>()));
+
+        List<Driver> creationDriverlist = new ArrayList<Driver>();
+        creationDriverlist.add(drivers.get(5));
+        creationDriverlist.add(drivers.get(6));
+
+        cars.add(new Car(manufacturers.get(3),"A100",creationDriverlist));
+
         for (Car car : cars) {
             car = carService.create(car);
         }
@@ -71,7 +80,7 @@ public class Main {
             System.out.println(carItem.toString());
         }
 
-        for (int i = 0; i < driverList.size(); i++) {
+        for (int i = 0; i < driverList.size() - 2; i++) {
             carService.addDriverToCar(driverList.get(i),carList.get(i % carList.size()));
         }
 
