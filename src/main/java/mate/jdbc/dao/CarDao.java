@@ -13,10 +13,14 @@ public interface CarDao {
 
     List<Car> getAll();
 
-    List<Car> getAll(Long driverId);
+    List<Car> getAllByDriver(Long driverId);
 
     Car update(Car car);
 
     boolean delete(Long id);
+
+    boolean pairCarDriver(Long carId,Long driverId);
+
+    boolean unpairCarDriver(Long carId,Long driverId);
 
 }

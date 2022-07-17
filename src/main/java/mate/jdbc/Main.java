@@ -21,6 +21,8 @@ public class Main {
         manufacturers.add(new Manufacturer("Mazda","Japan"));
         manufacturers.add(new Manufacturer("Honda","Japan"));
         manufacturers.add(new Manufacturer("Ford","USA"));
+        manufacturers.add(new Manufacturer("Audi","Germany"));
+
         for (Manufacturer manufacturer: manufacturers) {
             manufacturer = manufacturerService.create(manufacturer);
         }
@@ -39,7 +41,12 @@ public class Main {
         drivers.add(new Driver("Kyrylo","00005"));
 
         for (Driver driver : drivers) {
-            driver = driverService.create(driver);
+            try {
+                driver = driverService.create(driver);
+            } catch (RuntimeException e) {
+                System.out.println("Unable to create new driver" + e.toString());
+            }
+
         }
 
         List<Driver> driverList = driverService.getAll();
@@ -49,10 +56,12 @@ public class Main {
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         List<Car> cars = new ArrayList<Car>();
-        cars.add(new Car(manufacturers.get(0).getId(),"CX-9"));
-        cars.add(new Car(manufacturers.get(1).getId(),"Accord"));
-        cars.add(new Car(manufacturers.get(2).getId(),"Focus"));
-
+        cars.add(new Car(manufacturers.get(0),"CX-9",new ArrayList<Driver>()));
+        cars.add(new Car(manufacturers.get(1),"Accord",new ArrayList<Driver>()));
+        cars.add(new Car(manufacturers.get(2),"Focus",new ArrayList<Driver>()));
+        cars.add(new Car(manufacturers.get(2),"Fusion",new ArrayList<Driver>()));
+        cars.add(new Car(manufacturers.get(2),"Fiesta",new ArrayList<Driver>()));
+        cars.add(new Car(manufacturers.get(3),"A6",new ArrayList<Driver>()));
         for (Car car : cars) {
             car = carService.create(car);
         }
@@ -71,8 +80,6 @@ public class Main {
             for (Car car : carService.getAllByDriver(driver.getId())) {
                 System.out.println(car.toString());
             }
-
         }
-
     }
 }

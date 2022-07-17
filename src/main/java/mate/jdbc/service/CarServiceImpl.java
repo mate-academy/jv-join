@@ -3,7 +3,6 @@ package mate.jdbc.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarsDriversDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -14,9 +13,6 @@ public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
 
-    @Inject
-    private CarsDriversDao carsDriversDao;
-
     @Override
     public Car create(Car car) {
         return carDao.create(car);
@@ -24,6 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
+
         return carDao.get(id)
                 .orElseThrow(() -> new NoSuchElementException("Could not get car "
                         + "by id = " + id));
@@ -46,18 +43,27 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        carsDriversDao.pairCarDriver(car.getId(), driver.getId());
+
+        if (car.getDrivers().contains(driver) == false) {
+            car.getDrivers().add(driver);
+        }
+        try {
+            carDao.pairCarDriver(car.getId(), driver.getId());
+        } catch (RuntimeException e) {
+            System.out.println(e.toString());
+        }
 
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        carsDriversDao.unpairCarDriver(car.getId(), driver.getId());
+        car.getDrivers().remove(driver);
+        carDao.unpairCarDriver(car.getId(), driver.getId());
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
 
-        return carDao.getAll(driverId);
+        return carDao.getAllByDriver(driverId);
     }
 }

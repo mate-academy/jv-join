@@ -1,18 +1,22 @@
 package mate.jdbc.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
     private Long id;
-    private Long manufacturerId;
+    private Manufacturer manufacturer;
     private String model;
+    private List<Driver> drivers = new ArrayList<Driver>();
 
     public Car() {
     }
 
-    public Car(Long manufacturerId, String model) {
+    public Car(Manufacturer manufacturer, String model,List<Driver> drivers) {
         this.model = model;
-        this.manufacturerId = manufacturerId;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
     }
 
     public Long getId() {
@@ -23,12 +27,12 @@ public class Car {
         this.id = id;
     }
 
-    public Long getManufacturerId() {
-        return manufacturerId;
+    public Manufacturer getManufacturer() {
+        return manufacturer;
     }
 
-    public void setManufacturerId(Long manufacturerId) {
-        this.manufacturerId = manufacturerId;
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public String getModel() {
@@ -37,6 +41,14 @@ public class Car {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
@@ -50,20 +62,26 @@ public class Car {
         Car car = (Car) o;
         return Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
-                && Objects.equals(manufacturerId, car.manufacturerId);
+                && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(drivers,car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, manufacturerId);
+        return Objects.hash(id, model, manufacturer,drivers);
     }
 
     @Override
     public String toString() {
+        String driversString = "";
+        for (Driver driver : drivers) {
+            driversString += driver.toString() + System.lineSeparator();
+        }
         return "Car{"
                 + "id=" + id
                 + ", model='" + model + '\''
-                + ", manufacturer id='" + manufacturerId + '\''
+                + ", manufacturer id='" + manufacturer.toString() + '\''
+                + ",drivers " + driversString
                 + '}';
     }
 }
