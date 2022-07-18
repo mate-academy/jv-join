@@ -19,8 +19,4 @@ public interface CarDao {
 
     boolean delete(Long id);
 
-    boolean pairCarDriver(Long carId,Long driverId);
-
-    boolean unpairCarDriver(Long carId,Long driverId);
-
 }

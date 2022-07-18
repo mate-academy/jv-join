@@ -108,11 +108,26 @@ public class CarDaoImpl implements CarDao {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
             statement.executeUpdate();
-            return car;
+
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
-                    + car + " in table cars.", e);
+                    + car.toString() + " in table cars.", e);
         }
+        query = "DELETE FROM cars_drivers where car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement
+                        = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't remove "
+                    + car.toString() + " in table cars_drivers.", e);
+        }
+        List<Driver> driverList = car.getDrivers();
+        for (Driver driver : driverList) {
+            pairCarDriver(car.getId(),driver.getId());
+        }
+        return car;
     }
 
     @Override
@@ -167,8 +182,7 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    @Override
-    public boolean pairCarDriver(Long carId, Long driverId) {
+    private boolean pairCarDriver(Long carId, Long driverId) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -177,20 +191,6 @@ public class CarDaoImpl implements CarDao {
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't pair car:" + carId + " driver with id "
-                    + driverId, e);
-        }
-    }
-
-    @Override
-    public boolean unpairCarDriver(Long carId, Long driverId) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ? AND driver_id = ? ;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, carId);
-            statement.setLong(2, driverId);
-            return statement.executeUpdate() > 0;
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't unpair car:" + carId + " driver with id "
                     + driverId, e);
         }
     }

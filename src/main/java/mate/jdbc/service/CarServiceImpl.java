@@ -48,7 +48,7 @@ public class CarServiceImpl implements CarService {
             car.getDrivers().add(driver);
         }
         try {
-            carDao.pairCarDriver(car.getId(), driver.getId());
+            carDao.update(car);
         } catch (RuntimeException e) {
             System.out.println(e.toString());
         }
@@ -58,7 +58,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         car.getDrivers().remove(driver);
-        carDao.unpairCarDriver(car.getId(), driver.getId());
+        carDao.update(car);
     }
 
     @Override
