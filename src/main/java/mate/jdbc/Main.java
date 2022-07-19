@@ -81,7 +81,10 @@ public class Main {
         }
 
         for (int i = 0; i < driverList.size() - 2; i++) {
-            carService.addDriverToCar(driverList.get(i),carList.get(i % carList.size()));
+            if (!carList.get(i % carList.size()).getDrivers().contains(driverList.get(i))) {
+                carService.addDriverToCar(driverList.get(i),carList.get(i % carList.size()));
+            }
+
         }
 
         for (Driver driver : driverList) {

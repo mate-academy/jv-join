@@ -20,7 +20,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-
         return carDao.get(id)
                 .orElseThrow(() -> new NoSuchElementException("There is no car "
                         + "by id = " + id));
@@ -43,16 +42,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
-        if (car.getDrivers().contains(driver) == false) {
-            car.getDrivers().add(driver);
-        }
-        try {
-            carDao.update(car);
-        } catch (RuntimeException e) {
-            System.out.println(e.toString());
-        }
-
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override

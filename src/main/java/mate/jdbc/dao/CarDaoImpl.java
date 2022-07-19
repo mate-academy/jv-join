@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -18,10 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private DriverDao driverDao;
-    @Inject
-    private ManufacturerDao manufacturerDao;
 
     @Override
     public Car create(Car car) {
@@ -88,11 +83,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
         }
         for (Car car: cars) {
-            try {
-                car.setDrivers(getDriversByCarId(car.getId()));
-            } catch (RuntimeException e) {
-                System.out.println(e.toString());
-            }
+            car.setDrivers(getDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -107,26 +98,15 @@ public class CarDaoImpl implements CarDao {
                         = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
+            statement.setLong(3, car.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car.toString() + " in table cars.", e);
         }
-        query = "DELETE FROM cars_drivers where car_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement
-                        = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't remove "
-                    + car.toString() + " in table cars_drivers.", e);
-        }
-        List<Driver> driverList = car.getDrivers();
-        for (Driver driver : driverList) {
-            pairCarDriver(car.getId(),driver.getId());
-        }
+        updateCarDriversList(car);
+
         return car;
     }
 
@@ -149,8 +129,11 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setCountry(resultSet.getString("manufacturers.country"));
         Long id = resultSet.getObject("cars.id", Long.class);
         String model = resultSet.getString("cars.model");
-        Car car = new Car(manufacturer,model,new ArrayList<Driver>());
+        Car car = new Car();
         car.setId(id);
+        car.setManufacturer(manufacturer);
+        car.setModel(model);
+        car.setDrivers(new ArrayList<Driver>());
         return car;
     }
 
@@ -193,6 +176,23 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't pair car:" + carId + " driver with id "
                     + driverId, e);
         }
+    }
+
+    private boolean updateCarDriversList(Car car) {
+
+        String query = "DELETE FROM cars_drivers where car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                pairCarDriver(car.getId(),driver.getId());
+            }
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't remove "
+                    + car.toString() + " in table cars_drivers.", e);
+        }
+
     }
 
     @Override
