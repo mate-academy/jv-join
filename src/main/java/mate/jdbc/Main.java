@@ -48,7 +48,6 @@ public class Main {
             } catch (RuntimeException e) {
                 System.out.println("Unable to create new driver" + e.toString());
             }
-
         }
 
         List<Driver> driverList = driverService.getAll();
@@ -84,7 +83,6 @@ public class Main {
             if (!carList.get(i % carList.size()).getDrivers().contains(driverList.get(i))) {
                 carService.addDriverToCar(driverList.get(i),carList.get(i % carList.size()));
             }
-
         }
 
         for (Driver driver : driverList) {

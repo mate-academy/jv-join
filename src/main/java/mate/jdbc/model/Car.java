@@ -13,7 +13,7 @@ public class Car {
     public Car() {
     }
 
-    public Car(Manufacturer manufacturer, String model,List<Driver> drivers) {
+    public Car(Manufacturer manufacturer,String model,List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
         this.drivers = drivers;
@@ -60,28 +60,24 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return Objects.equals(id, car.id)
-                && Objects.equals(model, car.model)
-                && Objects.equals(manufacturer, car.manufacturer)
+        return Objects.equals(id,car.id)
+                && Objects.equals(model,car.model)
+                && Objects.equals(manufacturer,car.manufacturer)
                 && Objects.equals(drivers,car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, manufacturer,drivers);
+        return Objects.hash(id,model,manufacturer,drivers);
     }
 
     @Override
     public String toString() {
-        String driversString = "";
-        for (Driver driver : drivers) {
-            driversString += driver.toString() + System.lineSeparator();
-        }
         return "Car{"
-                + "id=" + id
-                + ", model='" + model + '\''
-                + ", manufacturer id='" + manufacturer.toString() + '\''
-                + ",drivers " + driversString
+                + "id: " + id
+                + ", model: '" + model + '\''
+                + ", manufacturer: '" + manufacturer.toString() + '\''
+                + ",drivers: " + drivers.toString()
                 + '}';
     }
 }

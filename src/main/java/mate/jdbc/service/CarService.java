@@ -5,7 +5,6 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
 public interface CarService {
-
     Car create(Car car);
 
     Car get(Long id);
@@ -16,10 +15,9 @@ public interface CarService {
 
     boolean delete(Long id);
 
-    void addDriverToCar(Driver driver, Car car);
+    void addDriverToCar(Driver driver,Car car);
 
-    void removeDriverFromCar(Driver driver, Car car);
+    void removeDriverFromCar(Driver driver,Car car);
 
     List<Car> getAllByDriver(Long driverId);
-
 }
