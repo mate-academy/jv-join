@@ -21,7 +21,7 @@ public class Main {
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverService.create(new Driver("John", "1257")));
         Manufacturer mersedes = manufacturerService.get(6L);
-        Car maybach = new Car("Maybach", mersedes , drivers);
+        Car maybach = new Car("Maybach", mersedes, drivers);
         maybach.setId(26L);
         carService.create(maybach);
         System.out.println(carService.get(maybach.getId()));
