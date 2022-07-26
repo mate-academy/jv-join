@@ -5,6 +5,7 @@ import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -18,26 +19,34 @@ public class Main {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         List<Driver> drivers = new ArrayList<>();
-        drivers.add(driverService.get(2L));
-        Car bmwX5 = new Car("BMW X5", manufacturerService.get(1L), drivers);
-        bmwX5.setId(20L);
-        carService.create(bmwX5);
+        drivers.add(driverService.create(new Driver("John", "1257")));
+        Manufacturer mersedes = manufacturerService.get(6L);
+        Car maybach = new Car("Maybach", mersedes , drivers);
+        maybach.setId(26L);
+        carService.create(maybach);
+        System.out.println(carService.get(maybach.getId()));
 
-        List<Driver> driversList = new ArrayList<>();
-        driversList.add(driverService.get(5L));
-        driversList.add(driverService.get(6L));
-        Car skodaFabia = new Car("Skoda Fabia", manufacturerService.get(4L), driversList);
-        skodaFabia.setId(5L);
-        carService.update(skodaFabia);
+        drivers.add(driverService.create(new Driver("Poll", "3698")));
 
-        carService.delete(2L);
+        maybach.setDrivers(drivers);
+        carService.update(maybach);
+        System.out.println(carService.get(maybach.getId()));
 
         carService.getAll().forEach(System.out::println);
 
-        carService.getAllByDriver(6L).forEach(System.out::println);
+        Driver driverBill = new Driver();
+        driverBill.setName("Bill");
+        driverBill.setLicenseNumber("2589");
+        driverService.create(driverBill);
 
-        carService.addDriverToCar(driverService.get(3L), carService.get(2L));
+        carService.addDriverToCar(driverBill, maybach);
 
-        carService.removeDriverFromCar(driverService.get(3L), carService.get(2L));
+        carService.getAllByDriver(driverBill.getId()).forEach(System.out::println);
+
+        carService.removeDriverFromCar(driverBill, maybach);
+        System.out.println(carService.get(maybach.getId()));
+
+        carService.delete(maybach.getId());
+        carService.getAll().forEach(System.out::println);
     }
 }
