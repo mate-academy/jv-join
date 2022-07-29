@@ -165,9 +165,9 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long id) {
         String query = "SELECT * from drivers "
-                + "join cars_drivers "
-                + "on drivers.id = cars_drivers.driver_id "
-                + "where cars_drivers.car_id = ?";
+                + "JOIN cars_drivers "
+                + "ON drivers.id = cars_drivers.driver_id "
+                + "WHERE cars_drivers.car_id = ?";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
@@ -179,7 +179,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete car by id " + id + ".", e);
+            throw new DataProcessingException("Couldn't get drivers for car. Car id = " + id + ".", e);
         }
     }
 
@@ -220,7 +220,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void removeDrivers(Car car) {
-        String query = "DELETE FROM `cars_drivers` WHERE car_id = ?";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
