@@ -75,20 +75,7 @@ public class Car {
                 + "id=" + id
                 + ", manufacturer=" + manufacturer
                 + ", model='" + model + System.lineSeparator()
-                + ", driverList=" + listOut(drivers)
+                + ", driverList=" + drivers.toString()
                 + '}';
-    }
-
-    private String listOut(List<Driver> drivers) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < drivers.size(); i++) {
-            builder.append("{id: ")
-                    .append(drivers.get(i).getId())
-                    .append(", name: ")
-                    .append(drivers.get(i).getName())
-                    .append("}")
-                    .append(System.lineSeparator());
-        }
-        return builder.toString();
     }
 }
