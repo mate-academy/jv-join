@@ -20,14 +20,14 @@ public class Main {
         reno = manufacturerService.create(reno);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver driver1 = new Driver("Ivan Chernenko", "123456");
-        driver1 = driverService.create(driver1);
-        Driver driver2 = new Driver("Maksym Romanov", "654321");
-        driver2 = driverService.create(driver2);
-        Driver driver3 = new Driver("Roman Dzuba", "112233");
-        driver3 = driverService.create(driver3);
-        Driver driver4 = new Driver("Igor Shevchenko", "224311");
-        driver4 = driverService.create(driver4);
+        Driver driverIvanChernenko = new Driver("Ivan Chernenko", "123456");
+        driverIvanChernenko = driverService.create(driverIvanChernenko);
+        Driver driverMaksymRomanov = new Driver("Maksym Romanov", "654321");
+        driverMaksymRomanov = driverService.create(driverMaksymRomanov);
+        Driver driverRomanDzuba = new Driver("Roman Dzuba", "112233");
+        driverRomanDzuba = driverService.create(driverRomanDzuba);
+        Driver driverIgorShevchenko = new Driver("Igor Shevchenko", "224311");
+        driverIgorShevchenko = driverService.create(driverIgorShevchenko);
 
         Car renoLogan = new Car();
         renoLogan.setModel("Reno Logan");
@@ -48,12 +48,12 @@ public class Main {
         audiA4 = carService.create(audiA4);
         audiTt = carService.create(audiTt);
 
-        carService.addDriverToCar(driver1, renoClio);
-        carService.addDriverToCar(driver4, renoClio);
-        carService.addDriverToCar(driver2, audiTt);
-        carService.addDriverToCar(driver3, audiA4);
-        carService.addDriverToCar(driver1, renoLogan);
-        carService.addDriverToCar(driver1, audiA4);
+        carService.addDriverToCar(driverIvanChernenko, renoClio);
+        carService.addDriverToCar(driverIgorShevchenko, renoClio);
+        carService.addDriverToCar(driverMaksymRomanov, audiTt);
+        carService.addDriverToCar(driverRomanDzuba, audiA4);
+        carService.addDriverToCar(driverIvanChernenko, renoLogan);
+        carService.addDriverToCar(driverIvanChernenko, audiA4);
 
         System.out.println(carService.getAll());
 
@@ -61,14 +61,14 @@ public class Main {
 
         System.out.println(carService.getAll());
 
-        System.out.println(carService.getAllByDriver(driver1.getId()));
+        System.out.println(carService.getAllByDriver(driverIvanChernenko.getId()));
 
-        carService.removeDriverFromCar(driver1, audiA4);
+        carService.removeDriverFromCar(driverIvanChernenko, audiA4);
 
-        System.out.println(carService.getAllByDriver(driver1.getId()));
+        System.out.println(carService.getAllByDriver(driverIvanChernenko.getId()));
 
-        carService.addDriverToCar(driver2, renoLogan);
+        carService.addDriverToCar(driverMaksymRomanov, renoLogan);
 
-        System.out.println(carService.getAllByDriver(driver2.getId()));
+        System.out.println(carService.getAllByDriver(driverMaksymRomanov.getId()));
     }
 }
