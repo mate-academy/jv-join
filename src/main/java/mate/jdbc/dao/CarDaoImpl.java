@@ -179,7 +179,8 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get drivers for car. Car id = " + id + ".", e);
+            throw new DataProcessingException("Couldn't get drivers for car. "
+                    + "Car id = " + id + ".", e);
         }
     }
 
