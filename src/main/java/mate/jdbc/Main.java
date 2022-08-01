@@ -34,7 +34,8 @@ public class Main {
         carService.addDriverToCar(driverId7, newCar);
 
         Driver driver = driverService.get(7L);
-        System.out.println("All cars where driver is with id: "+ driver.getId() + System.lineSeparator());
+        System.out.println("All cars where driver is with id: "
+                + driver.getId() + System.lineSeparator());
         carService.getAllByDriver(driver.getId())
                 .forEach(System.out::println);
 
