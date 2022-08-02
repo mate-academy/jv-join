@@ -53,12 +53,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> drivers = car.getDrivers();
-        Driver driverForRemoval = drivers.stream()
-                .filter(d -> d.equals(driver))
-                .findFirst()
-                .get();
-        drivers.remove(driverForRemoval);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 }

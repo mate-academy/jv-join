@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -21,6 +22,7 @@ public class Main {
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         car.setManufacturer(manufacturerService.create(manufacturer));
+        car.setDrivers(new ArrayList<>());
 
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);

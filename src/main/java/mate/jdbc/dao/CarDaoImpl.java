@@ -16,7 +16,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String request = "INSERT INTO cars(model, manufacturer_id) VALUES(?,?);";
@@ -37,10 +36,8 @@ public class CarDaoImpl implements CarDao {
         }
         if (car.getDrivers() != null) {
             car.getDrivers()
-                    .forEach(driver -> addNewRelationCarsDrivers(car.getId(), driver.getId()));
-        } else {
-            car.setDrivers(new ArrayList<>());
-        }
+                    .forEach(driver -> addDriverToCar(car.getId(), driver.getId()));
+        } 
         return car;
     }
 
@@ -111,13 +108,13 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't update car: " + car, e);
         }
-        deleteRelationsCarsDrivers(car.getId());
+        deleteCarDrivers(car.getId());
         car.getDrivers().forEach(driver ->
-                addNewRelationCarsDrivers(car.getId(), driver.getId()));
+                addDriverToCar(car.getId(), driver.getId()));
         return car;
     }
 
-    private void deleteRelationsCarsDrivers(Long carId) {
+    private void deleteCarDrivers(Long carId) {
         String deleteRelationsRequest = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteRelationsStatement
@@ -125,12 +122,12 @@ public class CarDaoImpl implements CarDao {
             deleteRelationsStatement.setLong(1, carId);
             deleteRelationsStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't delete relations in cars_drivers "
+            throw new RuntimeException("Couldn't delete drivers "
                     + "for car by id: " + carId, e);
         }
     }
 
-    private void addNewRelationCarsDrivers(Long carId, Long driverId) {
+    private void addDriverToCar(Long carId, Long driverId) {
         String addRelationRequest = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -140,9 +137,9 @@ public class CarDaoImpl implements CarDao {
             addRelationStatement.setLong(2, driverId);
             addRelationStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't add relations in cars_drivers "
-                    + "between car by id: " + carId
-                    + " and driver by id: " + driverId, e);
+            throw new RuntimeException("Couldn't add driver to car: "
+                    + "car's id: " + carId
+                    + " and driver's id: " + driverId, e);
         }
     }
 
@@ -161,11 +158,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT id "
+        String getAllByDriverRequest = "SELECT c.id AS car_id, model AS car_model, "
+                + "manufacturer_id, "
+                + "name AS manufacturer_name, country AS manufacturer_country "
                 + "FROM cars c "
                 + "JOIN cars_drivers cd "
                 + "ON c.id = cd.car_id "
-                + "WHERE driver_id = ?";
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE driver_id = ?;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement
@@ -173,12 +174,14 @@ public class CarDaoImpl implements CarDao {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                Long carId = resultSet.getObject("id", Long.class);
-                cars.add(get(carId).get());
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get all cars by driver with id: "
                     + driverId, e);
+        }
+        if (!cars.isEmpty()) {
+            cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         }
         return cars;
     }
