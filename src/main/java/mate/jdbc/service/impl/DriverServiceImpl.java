@@ -1,4 +1,4 @@
-package mate.jdbc.service.Impl;
+package mate.jdbc.service.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;

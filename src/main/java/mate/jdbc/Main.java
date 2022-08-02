@@ -49,6 +49,9 @@ public class Main {
         Car c300 = new Car("C300", mercedes, mercedesDrivers);
         Car i340 = new Car("340i", bmw, bmwDrivers);
         Car a6 = new Car("A6", audi, audiDrivers);
+        carService.create(c300);
+        carService.create(i340);
+        carService.create(a6);
         System.out.println(carService.get(c300.getId()));
 
         carService.getAll().forEach(System.out::println);

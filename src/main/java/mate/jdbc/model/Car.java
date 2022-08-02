@@ -7,7 +7,7 @@ public class Car {
     private Long id;
     private String model;
     private Manufacturer manufacturer;
-    List<Driver> drivers;
+    private List<Driver> drivers;
 
     public Car() {
     }

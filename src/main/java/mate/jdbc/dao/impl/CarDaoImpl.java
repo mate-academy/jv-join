@@ -1,4 +1,4 @@
-package mate.jdbc.dao.Impl;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -130,7 +130,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can not get all cars by driver id: " + driverId, e);
         }
-        return null;
+        return carList;
     }
 
     private void insertDrivers(Car car) {
