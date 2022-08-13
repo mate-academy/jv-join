@@ -30,6 +30,7 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
+            addDrivers(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
@@ -71,10 +72,11 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.manufacturer_id = m.id "
                 + "JOIN drivers_cars dc "
                 + "ON c.id = dc.car_id "
-                + "WHERE dc.driver_id = 1 AND c.is_deleted = FALSE;";
+                + "WHERE dc.driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
