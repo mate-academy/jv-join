@@ -31,6 +31,7 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 Long id = resultSet.getObject(1, Long.class);
                 car.setId(id);
+                addDrivers(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create car: " + car, e);
@@ -107,7 +108,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = (?);";
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -127,7 +128,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON c.id = cd.car_id "
                 + "INNER JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE driver_id = (?);";
+                + "WHERE driver_id = ?;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -147,7 +148,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void deleteDrivers(Car car) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = (?);";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
@@ -189,7 +190,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars_drivers cd "
                 + "INNER JOIN drivers d "
                 + "ON cd.driver_id = d.id "
-                + "WHERE cd.car_id = (?) AND d.is_deleted = FALSE;";
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
