@@ -18,8 +18,8 @@ public class Main {
         DriverService driverService = (DriverService) INJECTOR.getInstance(DriverService.class);
         final ManufacturerService manufacturerService =
                 (ManufacturerService) INJECTOR.getInstance(ManufacturerService.class);
-        Driver driver1 = new Driver("Vitaliy", "4432fb1t");
-        Driver driver2 = new Driver("Mykyta", "3216f25t");
+        Driver driver1 = new Driver("Vitaliy", "4432fb1y");
+        Driver driver2 = new Driver("Mykyta", "3216f25y");
         driver1 = driverService.create(driver1);
         driver2 = driverService.create(driver2);
         List<Driver> drivers = new ArrayList<>();
@@ -35,7 +35,7 @@ public class Main {
         System.out.println(carService.get(car1.getId()));
         carService.removeDriverFromCar(driver1, car1);
         System.out.println("Removed driver1 from car1: " + car1);
-        driver1.setLicenseNumber("345kg32t");
+        driver1.setLicenseNumber("345kg32y");
         carService.addDriverToCar(driver1, car1);
         System.out.println("Add driver to car1: " + car1);
         System.out.println("Adding and removing driver work! It shows that method Update works.");
