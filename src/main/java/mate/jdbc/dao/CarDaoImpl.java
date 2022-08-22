@@ -5,8 +5,11 @@ import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,13 +36,15 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Optional<Car> get(Long id) {
-        String query = "SELECT id, model, manufacturer_id "
-                + "FROM cars "
-                + "WHERE id = ? AND is_deleted = FALSE";
+    public Optional<Car> get(Long carId) {
+        String query = "SELECT * "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? AND c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             Car car = null;
             if (resultSet.next()) {
@@ -47,15 +52,20 @@ public class CarDaoImpl implements CarDao {
             }
             return Optional.ofNullable(car);
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get car by id " + id, e);
+            throw new DataProcessingException("Couldn't get car by id " + carId, e);
         }
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String model = resultSet.getString("model");
+        Car car = new Car();
+        car.setId(resultSet.getObject("id", Long.class));
+        car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setName(resultSet.getString("name"));
+        manufacturer.setCountry(resultSet.getString("country"));
+        car.setManufacturer(manufacturer);
+        return car;
     }
 
     @Override
