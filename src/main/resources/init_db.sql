@@ -33,15 +33,13 @@ CREATE TABLE `cars` (
 );
 
 CREATE TABLE `cars_drivers` (
-	`car_id` BIGINT DEFAULT NULL,
-    PRIMARY KEY (`id`),
+	`car_id` BIGINT NOT NULL,
+    `driver_id` BIGINT NOT NULL,
     CONSTRAINT `cars_drivers_cars_fk`
     FOREIGN KEY (`car_id`)
     REFERENCES `taxi_service`.`cars` (`id`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION;
-    `driver_id` BIGINT DEFAULT NULL,
-    PRIMARY KEY (`id`),
+    ON UPDATE NO ACTION,
     CONSTRAINT `cars_drivers_drivers_fk`
     FOREIGN KEY (`driver_id`)
     REFERENCES `taxi_service`.`drivers` (`id`)
