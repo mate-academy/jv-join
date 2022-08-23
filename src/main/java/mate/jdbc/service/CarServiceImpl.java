@@ -52,6 +52,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }

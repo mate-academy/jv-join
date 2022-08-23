@@ -20,6 +20,7 @@ public class Main {
 //        car.setManufacturer(manufacturerDao.get(1L).get());
 //        carDao.create(car);
 //        System.out.println(carService.get(2L));
-        carService.getAll().forEach(System.out::println);
+        //carService.getAll().forEach(System.out::println);
+        carService.getAllByDriver(1L).forEach(System.out::println);
     }
 }
