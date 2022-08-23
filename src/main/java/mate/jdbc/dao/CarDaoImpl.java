@@ -21,6 +21,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car create(Car car) {
+        insertDrivers(car.getDrivers());
         String query = "INSERT INTO cars(model, manufacturer_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement = connection.prepareStatement(query,
@@ -36,7 +37,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        insertDrivers(car.getDrivers());
         insertAllRelationsCarWithDrivers(car);
         return car;
     }
