@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +57,57 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    @Override
+    public List<Car> getAll() {
+        String query = "SELECT * FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
+        List<Car> carList = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                carList.add(getCar(resultSet));
+            }
+            return carList;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+        }
+    }
+
+    @Override
+    public Car update(Car car) {
+        String query = "UPDATE cars "
+                + "SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, car.getModel());
+            statement.setObject(2, car.getManufacturer().getId());
+            statement.setObject(3, car.getId());
+            statement.executeUpdate();
+            return car;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update "
+                    + car + " in carsDB.", e);
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        String query = "UPDATE cars "
+                + "SET is_deleted = TRUE "
+                + "WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete car with id " + id, e);
+        }
+    }
+
     private Car getCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("id", Long.class));
@@ -66,20 +118,5 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
         return car;
-    }
-
-    @Override
-    public List<Car> getAll() {
-        return null;
-    }
-
-    @Override
-    public Car update(Car car) {
-        return null;
-    }
-
-    @Override
-    public boolean delete(Long id) {
-        return false;
     }
 }
