@@ -7,10 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Consumer;
-
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -201,7 +198,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN drivers d ON cd.driver_id = d.id "
                 + "WHERE d.is_deleted = false AND cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement getDriversStatement = connection.prepareStatement(query)) {
+                PreparedStatement getDriversStatement = connection.prepareStatement(query)) {
             getDriversStatement.setLong(1, car.getId());
             ResultSet resultDrivers = getDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
