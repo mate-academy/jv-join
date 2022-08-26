@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Consumer;
+
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -65,23 +67,23 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement("SELECT c.id, "
                         + "model, manufacturer_id, name, country "
                         + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                         + "WHERE c.is_deleted = false")) {
             ResultSet getAllResult = getAllStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (getAllResult.next()) {
                 Car car = parseCar(getAllResult);
                 car.setManufacturer(parseManufacturer(getAllResult));
-                car.setDrivers(getDrivers(connection, car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
             throw new RuntimeException("Can`t get all cars from db.", e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car)));
+        return cars;
     }
 
     @Override
@@ -118,38 +120,25 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long id) {
-        String query = "SELECT car_id FROM cars_drivers WHERE driver_id = ?";
-        List<Long> allCarsId = new ArrayList<>();
+        String query = "SELECT c.id as car_id, model, manufacturer_id, name, country "
+                + "FROM cars_drivers cd JOIN cars c on c.id = cd.car_id "
+                + "    JOIN manufacturers m on m.id = c.manufacturer_id "
+                + "WHERE c.is_deleted = false AND cd.driver_id = ?";
+        List<Car> allCars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             getAllStatement.setLong(1, id);
             ResultSet getAllResult = getAllStatement.executeQuery();
             while (getAllResult.next()) {
-                allCarsId.add(getAllResult.getLong(1));
+                Car car = parseCar(getAllResult);
+                car.setManufacturer(parseManufacturer(getAllResult));
+                allCars.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all car by driver_id " + id, e);
         }
-        List<Car> allCars = new ArrayList<>();
-        allCarsId.forEach(carId -> get(carId)
-                .orElseThrow(() -> new NoSuchElementException("Can`t get car "
-                        + "by id = " + carId)));
+        allCars.forEach(car -> car.setDrivers(getDriversForCar(car)));
         return allCars;
-    }
-
-    private List<Driver> getDrivers(Connection connection, Long id) throws SQLException {
-        String query = "SELECT d.id, name, license_number FROM cars_drivers cd "
-                + "JOIN drivers d ON cd.driver_id = d.id "
-                + "WHERE d.is_deleted = false AND cd.car_id = ?";
-        PreparedStatement getDriversStatement
-                = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        getDriversStatement.setLong(1, id);
-        ResultSet resultDrivers = getDriversStatement.executeQuery();
-        List<Driver> drivers = new ArrayList<>();
-        while (resultDrivers.next()) {
-            drivers.add(parseDriver(resultDrivers));
-        }
-        return drivers;
     }
 
     private Car parseCar(ResultSet resultSet) throws SQLException {
