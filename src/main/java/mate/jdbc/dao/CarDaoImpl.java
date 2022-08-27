@@ -102,8 +102,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        removeDriverFromCar(car);
-        addDriverToCar(car);
+        List<Driver> drivers = car.getDrivers();
+        for (Driver driver : drivers) {
+            removeDriverFromCar(driver, car);
+            addDriverToCar(driver, car);
+        }
         return car;
     }
 
@@ -120,17 +123,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car addDriverToCar(Car car) {
+    public Car addDriverToCar(Driver driver, Car car) {
         String query = "INSERT INTO drivers_cars (car_id, driver_id) VALUES (? , ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection
                         .prepareStatement(query)) {
             statement.setLong(1, car.getId());
-            List<Driver> drivers = car.getDrivers();
-            for (Driver driver : drivers) {
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
+            statement.setLong(2, driver.getId());
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert drivers to car " + car, e);
         }
@@ -138,11 +138,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public boolean removeDriverFromCar(Car car) {
-        String query = "DELETE FROM drivers_cars WHERE car_id = ?";
+    public boolean removeDriverFromCar(Driver driver, Car car) {
+        String query = "DELETE FROM drivers_cars WHERE car_id = ? AND driver_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
+            statement.setLong(2, driver.getId());
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete drivers from car " + car, e);
