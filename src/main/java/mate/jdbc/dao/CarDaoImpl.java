@@ -65,11 +65,12 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         List<Car> cars = new ArrayList<>();
+        String query = "SELECT c.id, "
+                + "model, manufacturer_id, name, country "
+                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getAllStatement = connection.prepareStatement("SELECT c.id, "
-                        + "model, manufacturer_id, name, country "
-                        + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
-                        + "WHERE c.is_deleted = false")) {
+                PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             ResultSet getAllResult = getAllStatement.executeQuery();
             while (getAllResult.next()) {
                 Car car = parseCar(getAllResult);
@@ -207,7 +208,8 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can`t get all drivers for car_id = " + car.getId());
+            throw new DataProcessingException("Can`t get all drivers for car_id = "
+                    + car.getId(), e);
         }
 
     }
