@@ -1,17 +1,17 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.DriverDao;
-import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.service.CarService;
+import mate.jdbc.service.DriverService;
+import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     public static void main(String[] args) {
         Injector injector = Injector.getInstance("mate.jdbc");
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        ManufacturerDao manufacturerDao = (ManufacturerDao)
-                injector.getInstance(ManufacturerDao.class);
-        DriverDao driverDao = (DriverDao) injector.getInstance(DriverDao.class);
+        ManufacturerService manufacturerService = (ManufacturerService)
+                injector.getInstance(ManufacturerService.class);
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         carService.getAll().forEach(System.out::println);
     }
 }
