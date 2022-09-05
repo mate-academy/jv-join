@@ -174,8 +174,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversAssignedCar(Long id) {
-        String queryGetAllDriversAssignedCar = "SELECT id_driver FROM " + TABLE
-                + " WHERE id_car = ?";
+        String queryGetAllDriversAssignedCar = "SELECT id_driver FROM cars_drivers WHERE id_car = ?";
         List<Driver> result = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarDriversStatement =
@@ -189,7 +188,7 @@ public class CarDaoImpl implements CarDao {
                 result.add(driver);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Can't get drivers for the car by id " + id, e);
         }
         return result;
     }
