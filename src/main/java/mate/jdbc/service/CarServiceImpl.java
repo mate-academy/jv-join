@@ -1,9 +1,13 @@
 package mate.jdbc.service;
 
 import java.util.List;
+
+import mate.jdbc.lib.Dao;
+import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
+@Service
 public class CarServiceImpl implements CarService {
     @Override
     public Car create(Car car) {
