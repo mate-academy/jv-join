@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -8,10 +9,9 @@ import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
-import java.util.ArrayList;
-
 public class Main {
     private static final String PACKAGE_NAME = "mate.jdbc";
+
     public static void main(String[] args) {
         Injector injector = Injector.getInstance(PACKAGE_NAME);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);

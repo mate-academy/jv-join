@@ -104,13 +104,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String queryGetAllCars = "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_DELETED + " = FALSE";
+        String queryGetAllCars = "SELECT * FROM " + TABLE + " WHERE "
+                + COLUMN_IS_DELETED + " = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement allCarsStatement = connection.prepareStatement(queryGetAllCars)) {
             ResultSet carsResultSet = allCarsStatement.executeQuery();
             while (carsResultSet.next()) {
-               cars.add(getCar(carsResultSet));
+                cars.add(getCar(carsResultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -174,7 +175,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversAssignedCar(Long id) {
-        String queryGetAllDriversAssignedCar = "SELECT id_driver FROM cars_drivers WHERE id_car = ?";
+        String queryGetAllDriversAssignedCar =
+                "SELECT id_driver FROM cars_drivers WHERE id_car = ?";
         List<Driver> result = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarDriversStatement =
