@@ -22,7 +22,7 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query,
-                     Statement.RETURN_GENERATED_KEYS)) {
+                        Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, car.getManufacturer().getId());
             statement.setString(2, car.getModel());
             statement.executeUpdate();
@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
             }
             return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create car: " + car , e);
+            throw new DataProcessingException("Couldn't create car: " + car, e);
         }
     }
 
