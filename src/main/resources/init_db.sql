@@ -1,33 +1,32 @@
-CREATE SCHEMA IF NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
+CREATE SCHEMA if NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8;
 USE `taxi_service`;
 
 DROP TABLE IF EXISTS `manufacturers`;
 CREATE TABLE `manufacturers` (
-                                        `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+                                        `id` bigint(11) NOT NULL auto_increment,
                                         `name` VARCHAR(225) NOT NULL,
                                         `country` VARCHAR(225) NOT NULL,
-                                        `is_deleted` TINYINT NOT NULL DEFAULT 0,
+                                        `is_deleted` tinyint NOT NULL DEFAULT 0,
                                         PRIMARY KEY (`id`));
 
 DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
-                                  `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+                                  `id` bigint(11) NOT NULL auto_increment,
                                   `name` VARCHAR(225) NOT NULL,
                                   `license_number` VARCHAR(225) NOT NULL,
-                                  `is_deleted` TINYINT NOT NULL DEFAULT 0,
+                                  `is_deleted` tinyint NOT NULL DEFAULT 0,
                                   PRIMARY KEY (`id`),
-                                  UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
-                                  UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+                                  UNIQUE index `id_unique` (id ASC) visible,
+                                  UNIQUE index `license_number_unique` (`license_number` ASC) visible);
 
 
 CREATE TABLE `cars` (
-                                    `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+                                    `id` bigint(11) NOT NULL auto_increment,
                                     `model` VARCHAR(255) NOT NULL,
-                                    `manufacturer_id` BIGINT(11) NOT NULL,
-                                    `is_deleted` TINYINT NOT NULL DEFAULT FALSE,
+                                    `manufacturer_id` bigint(11) NOT NULL,
+                                    `is_deleted` tinyint NOT NULL DEFAULT FALSE,
                                     PRIMARY KEY(`id`));
 
 CREATE TABLE `cars_drivers`(
-									                           `id_car` BIGINT(11) NOT NULL,
-                                    `id_driver` BIGINT(11) NOT NULL);
-
+									                           `id_car` bigint(11) NOT NULL,
+                                    `id_driver` bigint(11) NOT NULL);
