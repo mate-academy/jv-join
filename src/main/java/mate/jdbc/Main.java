@@ -68,5 +68,4 @@ public class Main {
         System.out.println(carService.delete(car.getId()));
         System.out.println("----------------------");
     }
-
 }
