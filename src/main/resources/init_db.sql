@@ -28,9 +28,7 @@ CREATE TABLE `cars` (
 	PRIMARY KEY (`id`),
 	CONSTRAINT `cars_manufacturers_fk`
 	FOREIGN KEY (`manufacturer_id`)
-	REFERENCES `taxi_service`.`manufacturers` (`id`)
-	ON DELETE NO ACTION
-	ON UPDATE NO ACTION);
+	REFERENCES `taxi_service`.`manufacturers` (`id`));
 
 DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
@@ -43,6 +41,4 @@ CREATE TABLE `cars_drivers` (
     ON UPDATE NO ACTION,
     CONSTRAINT `cars_drivers_drivers_fk`
     FOREIGN KEY (`driver_id`)
-    REFERENCES `taxi_service`.`drivers` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+    REFERENCES `taxi_service`.`drivers` (`id`));
