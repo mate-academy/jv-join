@@ -55,7 +55,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDriversForCar(car));
+            car.setDrivers(getDriversByCar(car));
         }
         return Optional.ofNullable(car);
     }
@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
-        cars.forEach(c -> c.setDrivers(getDriversForCar(c)));
+        cars.forEach(c -> c.setDrivers(getDriversByCar(c)));
         return cars;
     }
 
@@ -95,7 +95,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        updateDataOfDrivers(car);
+        deleteDriversFromCar(car);
         insertDrivers(car);
         return car;
     }
@@ -130,7 +130,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all car by driver id " + id, e);
         }
-        cars.forEach(c -> c.setDrivers(getDriversForCar(c)));
+        cars.forEach(c -> c.setDrivers(getDriversByCar(c)));
         return cars;
     }
 
@@ -161,7 +161,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private List<Driver> getDriversForCar(Car car) {
+    private List<Driver> getDriversByCar(Car car) {
         String request = "SELECT d.id, name, license_number FROM cars_drivers cd "
                 + "JOIN drivers d ON cd.driver_id = d.id "
                 + "WHERE d.is_deleted = false AND cd.car_id = ?";
@@ -188,7 +188,7 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private int updateDataOfDrivers(Car car) {
+    private int deleteDriversFromCar(Car car) {
         String request = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(request)) {
