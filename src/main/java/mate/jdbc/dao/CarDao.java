@@ -1,8 +1,8 @@
 package mate.jdbc.dao;
 
-import mate.jdbc.model.Car;
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.model.Car;
 
 public interface CarDao {
 
