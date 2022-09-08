@@ -2,6 +2,7 @@ package mate.jdbc.service;
 
 import java.util.List;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -19,7 +20,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow();
+        try {
+            return carDao.get(id).orElseThrow(Throwable::new);
+        } catch (Throwable e) {
+            throw new DataProcessingException("There is no a car with id " + id, e);
+        }
     }
 
     @Override
@@ -39,17 +44,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        List<Driver> drivers = carDao.get(car.getId()).orElseThrow().getDrivers();
-        drivers.add(driver);
-        car.setDrivers(drivers);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> drivers = carDao.get(car.getId()).orElseThrow().getDrivers();
-        drivers.remove(driver);
-        car.setDrivers(drivers);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
