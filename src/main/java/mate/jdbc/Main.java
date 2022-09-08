@@ -17,17 +17,17 @@ public class Main {
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setCountry("Sweden");
-        manufacturer.setName("Volvo");
+        manufacturer.setCountry("Denmark");
+        manufacturer.setName("MAN");
         manufacturer = manufacturerService.create(manufacturer);
         Driver driver = new Driver();
-        driver.setLicenseNumber("9999999");
-        driver.setName("Billy");
+        driver.setLicenseNumber("000000");
+        driver.setName("John");
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
         driver = driverService.create(driver);
         Car car = new Car();
-        car.setModel("740");
+        car.setModel("S9999");
         car.setDrivers(List.of(driver));
         car.setManufacturer(manufacturer);
         CarService carService =
@@ -45,23 +45,27 @@ public class Main {
         System.out.println("----------------------");
 
         Car updateCar = carFromDB;
-        updateCar.setModel("NEWVOLVO");
+        updateCar.setModel("NEWMAN");
+        driver.setName("Pavel");
+        driver.setLicenseNumber("1111111");
+        driver = driverService.create(driver);
         List<Driver> updateCarDrivers = updateCar.getDrivers();
-        Driver driver2 = new Driver(7L, "Slavik", "98676");
-        updateCarDrivers.add(driver2);
+        updateCarDrivers.add(driver);
         System.out.println(carService.update(updateCar));
         System.out.println("----------------------");
 
-        List<Car> driverCars = carService.getAllByDriver(driver2.getId());
+        List<Car> driverCars = carService.getAllByDriver(driver.getId());
         driverCars.forEach(System.out::println);
         System.out.println("----------------------");
 
-        Driver ivan = new Driver(1L, "Ivan", "123456");
-        carService.addDriverToCar(ivan,carFromDB);
+        driver.setName("Evgen");
+        driver.setLicenseNumber("222222");
+        driver = driverService.create(driver);
+        carService.addDriverToCar(driver,carFromDB);
         System.out.println(carService.get(carFromDB.getId()));
         System.out.println("----------------------");
 
-        carService.removeDriverFromCar(ivan,carFromDB);
+        carService.removeDriverFromCar(driver,carFromDB);
         System.out.println(carService.get(carFromDB.getId()));
         System.out.println("----------------------");
 
