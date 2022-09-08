@@ -16,10 +16,10 @@ public class Main {
 
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver driverJohn = new Driver(1L, "John", "123 52r 12");
-        Driver driverNatalie = new Driver(2L, "Natalie", "152 d34 03");
-        Driver driverMark = new Driver(3L, "Mark", "163 2f2 13");
-        Driver driverAsad = new Driver(4L, "Asad", "123 d31 54");
+        Driver driverJohn = new Driver("John", "123 52r 12");
+        Driver driverNatalie = new Driver("Natalie", "152 d34 03");
+        Driver driverMark = new Driver("Mark", "163 2f2 13");
+        Driver driverAsad = new Driver("Asad", "123 d31 54");
         if (driverService.getAll().isEmpty()) {
             driverService.create(driverJohn);
             driverService.create(driverNatalie);
@@ -30,19 +30,22 @@ public class Main {
 
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer bmwGroup = new Manufacturer(1L, "BMW Group", "Germany");
-        Manufacturer hondaMotor = new Manufacturer(2L, "Honda Motor", "Japan");
+        Manufacturer bmwGroup = new Manufacturer("BMW Group", "Germany");
+        Manufacturer hondaMotor = new Manufacturer("Honda Motor", "Japan");
         if (manufacturerService.getAll().isEmpty()) {
             manufacturerService.create(bmwGroup);
             manufacturerService.create(hondaMotor);
             System.out.println("Inserted manufacturers to db");
         }
 
-        CarService carService = (CarService) injector.getInstance(CarService.class);
         Car bmw = new Car();
+        bmwGroup.setId(1L);
         bmw.setManufacturer(bmwGroup);
         bmw.setModel("x5");
+        driverJohn.setId(1L);
+        driverNatalie.setId(2L);
         bmw.setDrivers(List.of(driverJohn, driverNatalie));
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         Car createdCar = carService.create(bmw);
         System.out.println("Inserted car to db: " + createdCar);
         System.out.println("All cars from db after inserting: ");
@@ -54,8 +57,11 @@ public class Main {
 
         Car honda = new Car();
         honda.setId(createdCarId);
+        hondaMotor.setId(2L);
         honda.setManufacturer(hondaMotor);
         honda.setModel("CR-V");
+        driverMark.setId(3L);
+        driverAsad.setId(4L);
         honda.setDrivers(new ArrayList<>(Arrays.asList(driverMark, driverAsad)));
         System.out.println("Car by id: " + createdCarId
                 + " from db after update: " + carService.update(honda));
