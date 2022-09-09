@@ -91,8 +91,7 @@ public class CarDaoImpl implements CarDao {
         String deleteQuery = "UPDATE cars SET is_deleted = TRUE "
                 + "WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement
-                         = connection.prepareStatement(deleteQuery)) {
+                 PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
             statement.setLong(1, id);
             int numberOfDeletedRows = statement.executeUpdate();
             return numberOfDeletedRows > 0;
@@ -113,24 +112,24 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            removeDriversFromCar(car);
-            insertDriversToCarsDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
+        removeDriversFromCar(car);
+        insertDriversToCarsDrivers(car);
+        return car;
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverQuery = "SELECT cars.id, cars.model, manufacturer_id, "
-                + "manufacturers.name, country "
-                + "FROM cars "
-                + "JOIN cars_drivers ON cars.id = cars_drivers.car_id "
-                + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = FALSE "
-                + "AND cars_drivers.is_deleted = FALSE;";
+        String getAllByDriverQuery = "SELECT c.id, c.model, c.manufacturer_id, "
+                + "man.name, man.country "
+                + "FROM cars AS c "
+                + "JOIN cars_drivers AS cd ON c.id = cd.car_id "
+                + "JOIN manufacturers AS man ON c.manufacturer_id = man.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE "
+                + "AND cd.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getAllByDriverStatement
