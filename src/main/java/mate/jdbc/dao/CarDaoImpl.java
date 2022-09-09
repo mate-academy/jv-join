@@ -149,14 +149,13 @@ public class CarDaoImpl implements CarDao {
 
     private void assignDriversToTheCar(Car car) {
         String query = "INSERT INTO cars_drivers (id_car, id_driver) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection()) {
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement createCarsDriversStatement =
+                        connection.prepareStatement(query)) {
             for (Driver driver: car.getDrivers()) {
-                try (PreparedStatement createCarsDriversStatement =
-                             connection.prepareStatement(query)) {
-                    createCarsDriversStatement.setLong(1, car.getId());
-                    createCarsDriversStatement.setLong(2, driver.getId());
-                    createCarsDriversStatement.executeUpdate();
-                }
+                createCarsDriversStatement.setLong(1, car.getId());
+                createCarsDriversStatement.setLong(2, driver.getId());
+                createCarsDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't assign drivers for the car " + car, e);
