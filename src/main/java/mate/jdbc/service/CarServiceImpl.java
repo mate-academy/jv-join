@@ -20,11 +20,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        try {
-            return carDao.get(id).orElseThrow(Throwable::new);
-        } catch (Throwable e) {
-            throw new DataProcessingException("There is no a car with id " + id, e);
-        }
+        return carDao.get(id)
+                .orElseThrow(() -> new DataProcessingException("There is no a car with id " + id));
     }
 
     @Override
