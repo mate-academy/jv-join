@@ -8,7 +8,6 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
-
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
