@@ -2,6 +2,7 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -37,5 +38,12 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public boolean delete(Long id) {
         return driverDao.delete(id);
+    }
+
+    @Override
+    public Driver createOrGet(Driver driver) {
+        Optional<Driver> resultOptional
+                = driverDao.findByNameAndLicence(driver.getName(), driver.getLicenseNumber());
+        return resultOptional.orElseGet(() -> create(driver));
     }
 }

@@ -14,4 +14,6 @@ public interface DriverDao {
     Driver update(Driver driver);
 
     boolean delete(Long id);
+
+    Optional<Driver> findByNameAndLicence(String name, String licenseNumber);
 }

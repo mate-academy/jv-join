@@ -13,4 +13,6 @@ public interface DriverService {
     Driver update(Driver driver);
 
     boolean delete(Long id);
+
+    Driver createOrGet(Driver driver);
 }
