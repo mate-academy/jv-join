@@ -65,20 +65,19 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT * FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
                 + " WHERE c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            List<Car> cars = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car = getCar(resultSet);
-                List<Driver> drivers = getDriversFromCar(car);
-                car.setDrivers(drivers);
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all the cars from DB", e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversFromCar(car)));
+        return cars;
     }
 
     @Override

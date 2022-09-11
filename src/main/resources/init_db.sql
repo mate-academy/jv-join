@@ -21,22 +21,21 @@ CREATE TABLE `drivers` (
 
 DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
-                        `id` bigint NOT NULL AUTO_INCREMENT,
-                        `model` varchar(150) DEFAULT NULL,
-                        `manufacturer_id` bigint DEFAULT NULL,
-                        `is_deleted` tinyint NOT NULL DEFAULT '0',
+                        `id` BIGINT NOT NULL AUTO_INCREMENT,
+                        `model` VARCHAR(150) DEFAULT NULL,
+                        `manufacturer_id` BIGINT DEFAULT NULL,
+                        `is_deleted` TINYINT NOT NULL DEFAULT '0',
                         PRIMARY KEY (`id`),
                         KEY `cars_manufacturers_fk` (`manufacturer_id`),
                         CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3;
+)
 
 DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
-                                `car_id` bigint NOT NULL,
-                                `driver_id` bigint NOT NULL,
+                                `car_id` BIGINT NOT NULL,
+                                `driver_id` BIGINT NOT NULL,
                                 KEY `cars_drivers_cars_fk` (`car_id`),
                                 KEY `cars_drivers_drivers_fk` (`driver_id`),
                                 CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
                                 CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
+)
