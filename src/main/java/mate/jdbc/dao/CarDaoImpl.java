@@ -64,12 +64,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query ="SELECT cars.id AS car_id, cars.manufacturer_id, cars.model AS car_model, " +
-                "manufacturers.name AS manufacturer_name, " +
-                "manufacturers.country AS manufacturer_country " +
-                "FROM cars " +
-                "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id " +
-                "WHERE cars.is_deleted = FALSE;";
+        String query = "SELECT cars.id AS car_id, cars.manufacturer_id, cars.model AS car_model, "
+                + "manufacturers.name AS manufacturer_name, "
+                + "manufacturers.country AS manufacturer_country "
+                + "FROM cars "
+                + "JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
+                + "WHERE cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -91,7 +91,20 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        return null;
+        String query = "UPDATE cars SET manufacturer_id = ?, model = ? "
+                + "WHERE id = ? AND is_deleted = FALSE;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, car.getManufacturer().getId());
+            preparedStatement.setString(2, car.getModel());
+            preparedStatement.setLong(3, car.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't update car " + car + ".", e);
+        }
+        deleteDriversForCarFromDB(car.getId());
+        insertDriversForCarToDB(car);
+        return car;
     }
 
     @Override
@@ -102,6 +115,18 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         return null;
+    }
+
+    private boolean deleteDriversForCarFromDB(Long carId) {
+        String query = "DELETE FROM cars_drivers WHERE driver_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query);) {
+            preparedStatement.setLong(1, carId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete drivers for car with id=" + carId, e);
+        }
+        return true;
     }
 
     private boolean insertDriversForCarToDB(Car car) {
