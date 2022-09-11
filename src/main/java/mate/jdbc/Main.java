@@ -36,5 +36,7 @@ public class Main {
         carService.removeDriverFromCar(hamilton, lexusCar);
         System.out.println(carService.get(lexusCar.getId()));
         carService.getAll().forEach(System.out::println);
+        System.out.println("------------");
+        carService.getAllByDriver(vettel.getId()).forEach(System.out::println);
     }
 }

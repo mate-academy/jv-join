@@ -38,21 +38,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDrivers(Car car) {
-        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(insertDriversQuery)) {
-            statement.setLong(1, car.getId());
-            for (Driver driver: car.getDrivers()) {
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert driver into car: "
-                    + car + ". ", e);
-        }
-    }
-
     @Override
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS car_id, model, m.id "
@@ -119,20 +104,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private static void deleteConnectionsCarsDrivers(Car car) {
-        String deleteConnectionsQuery = "DELETE FROM taxi_service_db.cars_drivers "
-                + "WHERE car_id = ?;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteConnectionsStatement
-                        = connection.prepareStatement(deleteConnectionsQuery)) {
-            deleteConnectionsStatement.setLong(1, car.getId());
-            deleteConnectionsStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update "
-                    + car + " in carsDB.", e);
-        }
-    }
-
     @Override
     public boolean delete(Long id) {
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
@@ -164,6 +135,35 @@ public class CarDaoImpl implements CarDao {
                     + driverId, e);
         }
         return cars;
+    }
+
+    private static void deleteConnectionsCarsDrivers(Car car) {
+        String deleteConnectionsQuery = "DELETE FROM taxi_service_db.cars_drivers "
+                + "WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement deleteConnectionsStatement
+                     = connection.prepareStatement(deleteConnectionsQuery)) {
+            deleteConnectionsStatement.setLong(1, car.getId());
+            deleteConnectionsStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update "
+                    + car + " in carsDB.", e);
+        }
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement = connection.prepareStatement(insertDriversQuery)) {
+            statement.setLong(1, car.getId());
+            for (Driver driver: car.getDrivers()) {
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert driver into car: "
+                    + car + ". ", e);
+        }
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
