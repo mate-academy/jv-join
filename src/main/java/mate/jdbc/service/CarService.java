@@ -12,7 +12,7 @@ public interface CarService {
 
     List<Car> getAll();
 
-    Car update(Driver driver);
+    Car update(Car car);
 
     boolean delete(Long id);
 
