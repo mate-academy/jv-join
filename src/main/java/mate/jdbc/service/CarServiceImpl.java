@@ -2,22 +2,16 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDriverDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
-import mate.jdbc.model.CarDriver;
 import mate.jdbc.model.Driver;
 
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
-    @Inject
-    private CarDriverDao carDriverDao;
 
     @Override
     public Car create(Car car) {
@@ -47,22 +41,31 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        CarDriver carDriver = new CarDriver(car.getId(), driver.getId());
-        carDriverDao.create(carDriver);
+        List<Driver> driverList = car.getDrivers();
+        boolean flag = false;
+        for (Driver driverCar: driverList) {
+            if (driverCar.equals(driver)) {
+                flag = true;
+                break;
+            }
+        }
+        if (!flag) {
+            driverList.add(driver);
+            car.setDrivers(driverList);
+            carDao.update(car);
+        }
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        CarDriver carDriver = new CarDriver(car.getId(), driver.getId());
-        carDriverDao.delete(carDriver);
+        List<Driver> driverList = car.getDrivers();
+        driverList.remove(driver);
+        car.setDrivers(driverList);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<CarDriver> carsDriverList = carDriverDao.getByDriverId(driverId);
-        return carsDriverList.stream()
-                .map(e -> carDao.get(e.getCarId()).orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return carDao.getAllCarByDriverId(driverId);
     }
 }

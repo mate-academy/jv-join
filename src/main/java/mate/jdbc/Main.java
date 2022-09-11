@@ -40,13 +40,21 @@ public class Main {
 
         System.out.println("*** Step 3. Cars ");
         CarService carsService = (CarService) injector.getInstance(CarService.class);
-        Car carFirst = new Car(null, opel, "Opel Vectra", null);
+        Car carFirst = new Car();
+        carFirst.setManufacturer(opel);
+        carFirst.setModel("Opel Vectra");
         carFirst = carsService.create(carFirst);
         System.out.println(carFirst);
-        Car carSecond = new Car(null, mazda, "Mazda V6", null);
+
+        Car carSecond = new Car();
+        carSecond.setManufacturer(mazda);
+        carSecond.setModel("Mazda V6");
         carSecond = carsService.create(carSecond);
         System.out.println(carSecond);
-        Car carThird = new Car(null, jac, "Jac J7", null);
+
+        Car carThird = new Car();
+        carThird.setManufacturer(jac);
+        carThird.setModel("Jac J7");
         carThird = carsService.create(carThird);
         System.out.println(carThird);
 

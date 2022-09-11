@@ -11,6 +11,8 @@ public interface CarDao {
 
     List<Car> getAll();
 
+    List<Car> getAllCarByDriverId(Long driverId);
+
     Car update(Car car);
 
     boolean delete(Long id);
