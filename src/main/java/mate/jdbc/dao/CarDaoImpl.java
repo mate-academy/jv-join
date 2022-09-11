@@ -44,7 +44,7 @@ public class CarDaoImpl implements CarDao {
                 + "manufacturers.country AS manufacturer_country "
                 + "FROM cars JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
-        Car car = null;
+        Car car = new Car();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);

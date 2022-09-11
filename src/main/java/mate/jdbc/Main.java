@@ -8,6 +8,9 @@ import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
@@ -27,8 +30,14 @@ public class Main {
         manufacturerService.create(hyundai);
         manufacturerService.create(kia);
         //create a car
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(driverDima);
+        drivers.add(driverOleg);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car sonata = new Car(null, "Sonata", hyundai, null);
+        Car sonata = new Car(null, "Sonata", hyundai, drivers);
         carService.create(sonata);
+        // get a car
+        Car carFromDb = carService.get(1L);
+        System.out.println(carFromDb);
     }
 }
