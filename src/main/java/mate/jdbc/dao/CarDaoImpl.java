@@ -141,8 +141,8 @@ public class CarDaoImpl implements CarDao {
         String deleteConnectionsQuery = "DELETE FROM taxi_service_db.cars_drivers "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement deleteConnectionsStatement
-                     = connection.prepareStatement(deleteConnectionsQuery)) {
+                PreparedStatement deleteConnectionsStatement
+                        = connection.prepareStatement(deleteConnectionsQuery)) {
             deleteConnectionsStatement.setLong(1, car.getId());
             deleteConnectionsStatement.executeUpdate();
         } catch (SQLException e) {
@@ -154,7 +154,7 @@ public class CarDaoImpl implements CarDao {
     private void insertDrivers(Car car) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(insertDriversQuery)) {
+                PreparedStatement statement = connection.prepareStatement(insertDriversQuery)) {
             statement.setLong(1, car.getId());
             for (Driver driver: car.getDrivers()) {
                 statement.setLong(2, driver.getId());
