@@ -10,7 +10,6 @@ public class Car {
     private List<Driver> drivers;
 
     public Car() {
-
     }
 
     public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {

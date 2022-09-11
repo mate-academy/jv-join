@@ -8,7 +8,6 @@ public class Driver {
     private String licenseNumber;
 
     public Driver() {
-
     }
 
     public Driver(Long id, String name, String licenseNumber) {
