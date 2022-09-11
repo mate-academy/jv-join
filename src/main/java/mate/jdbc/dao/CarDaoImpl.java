@@ -109,7 +109,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete car with id=" + id, e);
+        }
     }
 
     @Override
@@ -122,11 +129,10 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             preparedStatement.setLong(1, carId);
-            preparedStatement.executeUpdate();
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete drivers for car with id=" + carId, e);
         }
-        return true;
     }
 
     private boolean insertDriversForCarToDB(Car car) {
