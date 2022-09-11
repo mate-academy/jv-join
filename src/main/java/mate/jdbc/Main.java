@@ -29,15 +29,26 @@ public class Main {
         Manufacturer kia = new Manufacturer(null, "KIA", "Korea");
         manufacturerService.create(hyundai);
         manufacturerService.create(kia);
-        //create a car
+        //method create
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverDima);
         drivers.add(driverOleg);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car sonata = new Car(null, "Sonata", hyundai, drivers);
-        carService.create(sonata);
-        // get a car
+        Car carSonata = new Car(null, "Sonata", hyundai, drivers);
+        carService.create(carSonata);
+        // method get
         Car carFromDb = carService.get(1L);
         System.out.println(carFromDb);
+        // method getAll
+        Car carKia = new Car(null, "Kia", kia, drivers);
+        carService.create(carKia);
+        List<Car> cars = carService.getAll();
+        cars.stream().forEach(System.out::println);
+        // method update
+        drivers.remove(0);
+        carKia.setModel("NO");
+        carService.update(carKia);
+        System.out.println(carService.get(carKia.getId()));
+
     }
 }

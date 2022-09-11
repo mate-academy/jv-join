@@ -140,7 +140,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private boolean deleteDriversForCarFromDB(Long carId) {
-        String query = "DELETE FROM cars_drivers WHERE driver_id = ?;";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query);) {
             preparedStatement.setLong(1, carId);
