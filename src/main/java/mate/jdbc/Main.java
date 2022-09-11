@@ -26,8 +26,9 @@ public class Main {
         Manufacturer kia = new Manufacturer(null, "KIA", "Korea");
         manufacturerService.create(hyundai);
         manufacturerService.create(kia);
-        //create cars
+        //create a car
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car carOne = new Car(null, "Sonata", hyundai, null);
+        Car sonata = new Car(null, "Sonata", hyundai, null);
+        carService.create(sonata);
     }
 }
