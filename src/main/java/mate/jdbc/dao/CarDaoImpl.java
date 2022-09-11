@@ -54,11 +54,10 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id = " + id + " .", e);
         }
-        if (car == null) {
-            return Optional.empty();
+        if (car != null) {
+            car.setDrivers(getDriversFromCar(car));
         }
-        car.setDrivers(getDriversFromCar(car));
-        return Optional.of(car);
+        return Optional.ofNullable(car);
     }
 
     @Override
