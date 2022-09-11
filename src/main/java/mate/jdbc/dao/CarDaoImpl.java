@@ -121,7 +121,22 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String query = "SELECT * FROM cars_drivers WHERE driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, driverId);
+            preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.getResultSet();
+            while (resultSet.next()) {
+                Long carId = resultSet.getObject("car_id", Long.class);
+                Car car = get(carId).orElse(null);
+                cars.add(car);
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't get all cars by driver id=" + driverId, e);
+        }
     }
 
     private boolean deleteDriversForCarFromDB(Long carId) {
