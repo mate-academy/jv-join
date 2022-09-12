@@ -232,5 +232,4 @@ public class CarDaoImpl implements CarDao {
                     + carId + " from cars_driversDB.", e);
         }
     }
-
 }
