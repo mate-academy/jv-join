@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all car", e);
+            throw new DataProcessingException("Couldn't get all cars", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setLong(3, car.getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update " + car, e);
+            throw new DataProcessingException("Can't update a car: " + car, e);
         }
         deleteDrivers(car);
         insertDrivers(car);
