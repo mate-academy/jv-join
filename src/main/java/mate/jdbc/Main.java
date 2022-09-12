@@ -39,11 +39,11 @@ public class Main {
         System.out.println(cars);
 
         /* Add Driver to Car */
-        Car newCar = carService.get(4L).get();
+        Car newCar = carService.get(4L);
         carService.addDriverToCar(driver2, newCar);
 
         /* Update Car */
-        Car updatedCar = carService.get(4L).get();
+        Car updatedCar = carService.get(4L);
         updatedCar.setId(4L);
         updatedCar.setModel("New Model");
         updatedCar.setDrivers(drivers);
