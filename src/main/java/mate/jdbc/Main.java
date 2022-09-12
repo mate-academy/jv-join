@@ -22,7 +22,7 @@ public class Main {
         newManufacturer.setName("Toyota");
         newManufacturer.setCountry("Japan");
         Manufacturer toyota = manufacturerService.create(newManufacturer);
-        System.out.println("savedManufacturer = " + toyota);
+        System.out.println("createdManufacturer = " + toyota);
           /////getAll manufacturers/////
         List<Manufacturer> manufacturers = manufacturerService.getAll();
         manufacturers.forEach(System.out::println);
@@ -35,7 +35,7 @@ public class Main {
         newDriver.setName("Bohdan");
         newDriver.setLicenseNumber(String.valueOf(new Random().nextInt(999999999)));
         Driver bohdan = driverService.create(newDriver);
-        System.out.println("savedDriver = " + bohdan);
+        System.out.println("createdDriver = " + bohdan);
         /////getAll drivers/////
         List<Driver> drivers = driverService.getAll();
         drivers.forEach(System.out::println);
@@ -44,20 +44,23 @@ public class Main {
         CarService carService = (CarService)
                 injector.getInstance(CarService.class);
         /////create toyota RAV4 /////
+        Car newCarToyotaRav4 = new Car();
+        newCarToyotaRav4.setManufacturer(manufacturerService.get(toyota.getId()));
+        newCarToyotaRav4.setModel("RAV4");
+        newCarToyotaRav4.setDrivers(drivers);
         Car createdCar = carService
-                .create(new Car("RAV4", manufacturerService.get(toyota.getId())));
-        createdCar.setDrivers(drivers);
+                .create(newCarToyotaRav4);
         System.out.println("createdCar = " + createdCar);
         /////get/////
         Car toyotaRav4 = carService.get(createdCar.getId());
-        System.out.println("toyota RAV4 = " + toyotaRav4);
+        System.out.println("getCar = " + toyotaRav4);
         /////update/////
 //        Car updateBmvX5 = new Car(bohdan.getId(), "Bohdan", "951753654");
 //        Car updatedCar = carService.update(updateBohdan);
 //        System.out.println("updatedCar = " + updatedCar);
         /////delete/////
-        boolean isDeletedCar = carService.delete(createdCar.getId());
-        System.out.println("deleteCar = " + isDeletedCar);
+//        boolean isDeletedCar = carService.delete(createdCar.getId());
+//        System.out.println("deleteCar = " + isDeletedCar);
         /////getAll/////
 //        List<Car> cars = carService.getAll();
 //        cars.forEach(System.out::println);
