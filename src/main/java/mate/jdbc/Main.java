@@ -13,6 +13,11 @@ import mate.jdbc.service.ManufacturerService;
 public class Main {
     private static final String PACKAGE = "mate.jdbc";
     private static final Injector injector = Injector.getInstance(PACKAGE);
+    // i've taken out this list of main because i have a problem
+    // with declaration length usage (maven)
+    private static List<Driver> catDrivers = new ArrayList<>();
+    private static List<Driver> teslaDrivers = new ArrayList<>();
+    private static List<Driver> banderoMachineDrivers = new ArrayList<>();
 
     public static void main(String[] args) {
         /*MANUFACTURER*/
@@ -29,18 +34,15 @@ public class Main {
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
         Driver catDriver = new Driver(null, "Petro", "1ff5og");
-        List<Driver> catDrivers = new ArrayList<>();
         driverService.create(catDriver);
         catDrivers.add(catDriver);
 
         Driver teslaDriver = new Driver(null, "Galyna", "12t3g2");
-        List<Driver> teslaDrivers = new ArrayList<>();
         driverService.create(teslaDriver);
         catDrivers.add(teslaDriver);
 
         Driver banderoCarDriver1 = new Driver(null, "Dmytro", "12hh54");
         Driver banderoCarDriver2 = new Driver(null, "Anna", "12662h");
-        List<Driver> banderoMachineDrivers = new ArrayList<>();
         driverService.create(banderoCarDriver1);
         catDrivers.add(banderoCarDriver1);
         driverService.create(banderoCarDriver2);
