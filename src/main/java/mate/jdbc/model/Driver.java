@@ -37,7 +37,6 @@ public class Driver {
     }
 
     public void setLicenseNumber(String licenseNumber) {
-
         this.licenseNumber = licenseNumber;
     }
 

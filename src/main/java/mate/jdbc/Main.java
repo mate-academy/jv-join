@@ -58,14 +58,15 @@ public class Main {
         driverCars.forEach(System.out::println);
         System.out.println("----------------------");
 
-        driver.setName("Evgen");
-        driver.setLicenseNumber("222222");
-        driver = driverService.create(driver);
-        carService.addDriverToCar(driver,carFromDB);
+        Driver addedDriver = new Driver();
+        addedDriver.setName("Evgen");
+        addedDriver.setLicenseNumber("222222");
+        addedDriver = driverService.create(addedDriver);
+        carService.addDriverToCar(addedDriver,carFromDB);
         System.out.println(carService.get(carFromDB.getId()));
         System.out.println("----------------------");
 
-        carService.removeDriverFromCar(driver,carFromDB);
+        carService.removeDriverFromCar(addedDriver,carFromDB);
         System.out.println(carService.get(carFromDB.getId()));
         System.out.println("----------------------");
 

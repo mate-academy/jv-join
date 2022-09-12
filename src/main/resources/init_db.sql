@@ -30,10 +30,8 @@ CREATE TABLE `cars` (
 CREATE TABLE `cars_drivers` (
                                 `car_id` bigint NOT NULL,
                                 `driver_id` bigint NOT NULL,
-                                `is_deleted` tinyint(1) NOT NULL DEFAULT '0',
                                 KEY `cars_drivers_cars_id` (`car_id`),
                                 KEY `cars_drivers_drivers_id` (`driver_id`),
                                 CONSTRAINT `cars_drivers_cars_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
                                 CONSTRAINT `cars_drivers_drivers_id` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
