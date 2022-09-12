@@ -25,8 +25,8 @@ public class Main {
                 (DriverService) injector.getInstance(DriverService.class);
         Driver yarik = new Driver(null, "Yarik", "JV7777777JV");
         Driver oleg = new Driver(null, "Oleg", "QQ1111111HT");
-        yarik = driverService.create(yarik);
-        oleg = driverService.create(oleg);
+        driverService.create(yarik);
+        driverService.create(oleg);
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         Car bugattiVeyron = new Car(null, "Veyron", bugatti, List.of(yarik));
@@ -50,7 +50,7 @@ public class Main {
         Car updateCar = carGetId;
         updateCar.setModel("New Rolls Royce Fantom");
         Driver dmytro = new Driver(null, "Dmytro", "MA000000JV");
-        dmytro = driverService.create(dmytro);
+        driverService.create(dmytro);
         List<Driver> updateCarDrivers = updateCar.getDrivers();
         updateCarDrivers.add(dmytro);
         System.out.println(carService.update(updateCar));

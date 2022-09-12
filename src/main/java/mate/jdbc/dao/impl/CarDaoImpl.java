@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
             }
             return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
+            throw new DataProcessingException("Couldn't create a car: "
                     + car + ". ", e);
         }
     }
@@ -98,8 +98,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update car "
                     + car, e);
         }
-        removeDriversCar(car);
-        insertCarsDrivers(car);
+        removeDriversFromCar(car);
+        insertDriversForCar(car);
         return car;
     }
 
@@ -137,7 +137,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars.", e);
+            throw new DataProcessingException("Couldn't get a list of cars for driver with id "
+                    + driverId, e);
         }
         for (Car car : cars) {
             car.setDrivers(getDrivers(car.getId()));
@@ -168,11 +169,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Driver driver = new Driver();
-                driver.setId(resultSet.getObject("id", Long.class));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
-                drivers.add(driver);
+                drivers.add(createDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -180,21 +177,28 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void removeDriversCar(Car car) {
-        String query = "UPDATE cars_drivers SET is_deleted = TRUE "
-                + "WHERE car_id = ?;";
+    private Driver createDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
+        return driver;
+    }
+
+    private void removeDriversFromCar(Car car) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create car"
+            throw new DataProcessingException("Couldn't delete drivers from car: "
                     + car + ". ", e);
         }
     }
 
-    private void insertCarsDrivers(Car car) {
+    private void insertDriversForCar(Car car) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -206,14 +210,8 @@ public class CarDaoImpl implements CarDao {
                 insertDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create car"
+            throw new DataProcessingException("Couldn't insert drivers for car"
                     + car + ". ", e);
         }
     }
 }
-
-
-
-
-
-
