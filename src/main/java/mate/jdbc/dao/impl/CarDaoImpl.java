@@ -141,8 +141,8 @@ public class CarDaoImpl implements CarDao {
     private void deleteReferenceFromCarDrivers(Car car) {
         String deleteRelationWithCarDrivers = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement preparedStatement = connection
-                     .prepareStatement(deleteRelationWithCarDrivers)) {
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement(deleteRelationWithCarDrivers)) {
             preparedStatement.setLong(1, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
@@ -155,8 +155,8 @@ public class CarDaoImpl implements CarDao {
         String createRelationWithCarDrivers = "INSERT INTO cars_drivers(driver_id, car_id) "
                 + "VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement preparedStatement = connection
-                     .prepareStatement(createRelationWithCarDrivers)) {
+                PreparedStatement preparedStatement = connection
+                        .prepareStatement(createRelationWithCarDrivers)) {
             List<Driver> drivers = car.getDrivers();
             preparedStatement.setLong(2, car.getId());
             for (Driver driver : drivers) {
@@ -168,8 +168,6 @@ public class CarDaoImpl implements CarDao {
                     + "by carId = " + car.getId(), throwables);
         }
     }
-
-
 
     private List<Driver> getDriversForCar(Car car) {
         String query = "SELECT d.id, name, license_number FROM cars_drivers cd "
