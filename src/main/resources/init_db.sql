@@ -35,5 +35,5 @@ CREATE TABLE `cars_drivers` (
                                 KEY `cars_drivers_drivers_fk` (`driver_id`),
                                 KEY `car_id` (`car_id`),
                                 CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`),
-                                CONSTRAINT `cars_drivers_ibfk_1` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`)
+                                CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`)
 );
