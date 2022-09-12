@@ -80,6 +80,10 @@ public class Main {
         carService.addDriverToCar(bob, toyotaRav4);
         carService.addDriverToCar(bob, toyotaRav4);
         System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
+        carService.removeDriverFromCar(bob, toyotaRav4);
+        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
+        carService.removeDriverFromCar(bob, toyotaRav4);
+        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
 //        System.out.p//rintln("toyotaRav4 = " + toyotaRav4);
         /////removeDriverFromCar/////
 
