@@ -20,8 +20,7 @@ INSERT INTO `manufacturers` (`id`, `name`, `country`) VALUES
 							(8,'Peugeot','France'),
 							(9,'Fiat','Italy'),
 							(10,'Honda','Japan'),
-							(11,'Lexus','Japan'),
-							(12,'Toyota','Japan');
+							(11,'Lexus','Japan');
 
 DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
@@ -64,10 +63,17 @@ CREATE TABLE `taxi_service`.`cars_drivers` (
 		CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (driver_id) REFERENCES `taxi_service`.`drivers` (`id`));
 
 INSERT INTO `taxi_service`.`cars_drivers` (`car_id`, `driver_id`) VALUES  
-											(1, 1);
+											(1, 1),
+                                            (1, 2),
+                                            (1, 3);
         
 -- ALTER TABLE `manufacturers` AUTO_INCREMENT = 1;
 SELECT * FROM taxi_service.manufacturers;
-SELECT * FROM taxi_service.drivers;
 SELECT * FROM taxi_service.cars;
+SELECT * FROM taxi_service.drivers;
 SELECT * FROM taxi_service.cars_drivers;
+
+TRUNCATE `taxi_service`.`cars_drivers`;
+TRUNCATE `taxi_service`.`drivers`;
+TRUNCATE `taxi_service`.`cars`;
+TRUNCATE `taxi_service`.`manufacturers`;
