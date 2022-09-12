@@ -69,15 +69,12 @@ public class Car {
 
     @Override
     public String toString() {
-        String driversString = drivers == null
-                ? "null"
-                : drivers.stream().map(Driver::toString).collect(Collectors.joining("; "));
         return "Car{"
                 + "id=" + id
                 + ", manufacturer=" + manufacturer
                 + ", model='" + model + '\''
-                + ", drivers= {"
-                + driversString
+                + ", drivers={"
+                + drivers.stream().map(Driver::toString).collect(Collectors.joining("; "))
                 + '}';
     }
 }
