@@ -42,30 +42,19 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         List<Driver> driverList = car.getDrivers();
-        boolean flag = false;
-        for (Driver driverCar: driverList) {
-            if (driverCar.equals(driver)) {
-                flag = true;
-                break;
-            }
-        }
-        if (!flag) {
-            driverList.add(driver);
-            car.setDrivers(driverList);
-            carDao.update(car);
-        }
+        driverList.add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         List<Driver> driverList = car.getDrivers();
         driverList.remove(driver);
-        car.setDrivers(driverList);
         carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getAllCarByDriverId(driverId);
+        return carDao.getAllByDriver(driverId);
     }
 }
