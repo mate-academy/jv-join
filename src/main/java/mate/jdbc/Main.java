@@ -18,19 +18,19 @@ public class Main {
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer lexus = manufacturerService.create(
-                new Manufacturer(null, "Lexus", "Japan"));
+                new Manufacturer("Lexus", "Japan"));
         Manufacturer bmw = manufacturerService.create(
-                new Manufacturer(null, "BMW", "Germany"));
+                new Manufacturer("BMW", "Germany"));
         Driver vettel = driverService.create(
-                new Driver(null, "Seb Vettel", "GE2011BR"));
+                new Driver("Seb Vettel", "GE2011BR"));
         Driver alonso = driverService.create(
-                new Driver(null, "Fernando Alonso", "CHAMP06"));
+                new Driver("Fernando Alonso", "CHAMP06"));
         Driver hamilton = driverService.create(
-                new Driver(null, "Lewis Hamilton", "LOH21CENT"));
+                new Driver("Lewis Hamilton", "LOH21CENT"));
         Car lexusCar = carService.create(
-                new Car(null, "IS200", lexus, List.of(hamilton, vettel)));
+                new Car("IS200", lexus, List.of(hamilton, vettel)));
         Car bmwCar = carService.create(
-                new Car(null, "525", bmw, List.of(hamilton, alonso)));
+                new Car("525", bmw, List.of(hamilton, alonso)));
         carService.delete(bmwCar.getId());
         carService.addDriverToCar(alonso, lexusCar);
         carService.removeDriverFromCar(hamilton, lexusCar);
