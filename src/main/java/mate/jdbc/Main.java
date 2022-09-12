@@ -1,10 +1,8 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.TreeSet;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -26,7 +24,7 @@ public class Main {
         newManufacturer.setCountry("Japan");
         Manufacturer toyota = manufacturerService.create(newManufacturer);
         System.out.println("createdManufacturer = " + toyota);
-          /////getAll manufacturers/////
+        /////getAll manufacturers/////
         List<Manufacturer> manufacturers = manufacturerService.getAll();
         manufacturers.forEach(System.out::println);
 
@@ -34,10 +32,10 @@ public class Main {
         DriverService driverService = (DriverService)
                 injector.getInstance(DriverService.class);
         /////create driver/////
-        Driver newDriver = new Driver();
-        newDriver.setName("Bohdan");
-        newDriver.setLicenseNumber(String.valueOf(new Random().nextInt(999999999)));
-        Driver bohdan = driverService.create(newDriver);
+        Driver bohdan = new Driver();
+        bohdan.setName("Bohdan");
+        bohdan.setLicenseNumber(String.valueOf(new Random().nextInt(999999999)));
+        bohdan = driverService.create(bohdan);
         System.out.println("createdDriver = " + bohdan);
         /////getAll drivers/////
         System.out.println("-------getAllDrivers-------");
@@ -58,36 +56,40 @@ public class Main {
         /////get/////
         Car toyotaRav4 = carService.get(createdCar.getId());
         System.out.println("getCar = " + toyotaRav4);
-        /////update/////
-//        Car updateBmvX5 = new Car(bohdan.getId(), "Bohdan", "951753654");
-//        Car updatedCar = carService.update(updateBohdan);
-//        System.out.println("updatedCar = " + updatedCar);
-        /////delete/////
-//        boolean isDeletedCar = carService.delete(createdCar.getId());
-//        System.out.println("deleteCar = " + isDeletedCar);
         /////getAll/////
         System.out.println("-------getAllCars-------");
         List<Car> cars = carService.getAll();
         cars.forEach(System.out::println);
         /////addDriverToCar/////
-        newDriver.setName("Bob");
-        newDriver.setLicenseNumber(String.valueOf(new Random().nextInt(999999999)));
-        Driver bob = driverService.create(newDriver);
+        Driver bob = new Driver();
+        bob.setName("Bob");
+        bob.setLicenseNumber(String.valueOf(new Random().nextInt(999999999)));
+        bob = driverService.create(bob);
         System.out.println("createdDriver = " + bob);
+
+        System.out.println("-------getAllDrivers-------");
+        drivers = driverService.getAll();
+        drivers.forEach(System.out::println);
+
         carService.addDriverToCar(bob, toyotaRav4);
         System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
         carService.addDriverToCar(bob, toyotaRav4);
         carService.addDriverToCar(bob, toyotaRav4);
         carService.addDriverToCar(bob, toyotaRav4);
-        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
-        carService.removeDriverFromCar(bob, toyotaRav4);
-        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
-        carService.removeDriverFromCar(bob, toyotaRav4);
-        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
-//        System.out.p//rintln("toyotaRav4 = " + toyotaRav4);
+
         /////removeDriverFromCar/////
+        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
+        carService.removeDriverFromCar(bob, toyotaRav4);
+        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
+        carService.removeDriverFromCar(bob, toyotaRav4);
+        System.out.println("toyotaRav4.allDrivers = " + carService.get(toyotaRav4.getId()));
+
+        carService.addDriverToCar(bob, toyotaRav4);
 
         /////getAllByDriver/////
-
+        List<Car> bohdanCars = carService.getAllByDriver(bohdan.getId());
+        System.out.println("bohdanCars = " + bohdanCars);
+        List<Car> bobCars = carService.getAllByDriver(bob.getId());
+        System.out.println("bobCars = " + bobCars);
     }
 }
