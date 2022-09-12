@@ -145,15 +145,15 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get driver by id " + id, e);
+            throw new DataProcessingException("Couldn't get drivers by car Id " + carId, e);
         }
     }
 
     private Driver parseDriver(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
-            driver.setId(resultSet.getObject(1,Long.class));
-            driver.setName(resultSet.getString("name"));
-            driver.setLicenseNumber(resultSet.getString("license_number"));
+        driver.setId(resultSet.getObject(1, Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
     }
 }
