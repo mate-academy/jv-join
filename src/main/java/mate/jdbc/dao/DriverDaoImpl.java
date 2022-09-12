@@ -99,6 +99,7 @@ public class DriverDaoImpl implements DriverDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete driver with id " + id, e);
         }
+
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
