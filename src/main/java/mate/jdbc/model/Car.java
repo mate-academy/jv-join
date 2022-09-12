@@ -63,7 +63,7 @@ public class Car {
         return Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
-                && driversEquals(car.getDrivers());
+                && Objects.equals(drivers, car.drivers);
     }
 
     @Override
@@ -77,41 +77,7 @@ public class Car {
                 + "id=" + id
                 + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer.toString()
-                + ", drivers='" + driversToString(drivers) + '\''
+                + ", drivers='" + drivers + '\''
                 + '}';
-    }
-
-    private String driversToString(List<Driver> drivers) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Driver driver : drivers) {
-            stringBuilder.append(driver.toString());
-        }
-        return stringBuilder.toString();
-    }
-
-    private boolean driversEquals(List<Driver> drivers) {
-        if (this.drivers == drivers) {
-            return true;
-        }
-        if (drivers == null || this.drivers.size() != drivers.size()) {
-            return false;
-        }
-        if (this.drivers.isEmpty() && drivers.isEmpty()) {
-            return true;
-        }
-        boolean result;
-        for (Driver thisDriver : this.drivers) {
-            result = false;
-            for (Driver driver : drivers) {
-                if (Objects.equals(thisDriver, driver)) {
-                    result = true;
-                    break;
-                }
-            }
-            if (!result) {
-                return false;
-            }
-        }
-        return true;
     }
 }
