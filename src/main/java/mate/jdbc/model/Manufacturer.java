@@ -20,7 +20,6 @@ public class Manufacturer {
         this.id = id;
     }
 
-
     public Long getId() {
         return id;
     }
