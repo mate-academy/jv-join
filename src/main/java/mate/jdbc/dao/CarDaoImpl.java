@@ -53,8 +53,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.getResultSet();
             if (resultSet.next()) {
                 car = getCar(resultSet);
-                car.setManufacturer(getManufacturer(resultSet));
-                car.setDrivers(getDrivers(resultSet));
             }
             return Optional.ofNullable(car);
         } catch (SQLException e) {
@@ -77,8 +75,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 Car car = getCar(resultSet);
-                car.setManufacturer(getManufacturer(resultSet));
-                car.setDrivers(getDrivers(resultSet));
                 cars.add(car);
             }
             return cars;
@@ -136,8 +132,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 Car car = getCar(resultSet);
-                car.setManufacturer(getManufacturer(resultSet));
-                car.setDrivers(getDrivers(resultSet));
                 cars.add(car);
             }
             return cars;
@@ -192,6 +186,8 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("car_model"));
+        car.setManufacturer(getManufacturer(resultSet));
+        car.setDrivers(getDrivers(resultSet));
         return car;
     }
 
