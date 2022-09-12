@@ -19,7 +19,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
-CREATE TABLE CARS
+CREATE TABLE cars
 (
     id               BIGINT AUTO_INCREMENT
         PRIMARY KEY,

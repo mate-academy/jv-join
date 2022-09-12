@@ -54,7 +54,7 @@ public class CarDaoImpl implements CarDao {
             }
             return Optional.ofNullable(car);
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get car");
+            throw new DataProcessingException("Couldn't get car by id: " + id, e);
         }
     }
 
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all car");
+            throw new DataProcessingException("Couldn't get all car", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setLong(3, car.getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update " + car + " in DB", e);
+            throw new DataProcessingException("Can't update " + car, e);
         }
         deleteDrivers(car);
         insertDrivers(car);
