@@ -28,6 +28,5 @@ CREATE TABLE `cars` (
                                     PRIMARY KEY(`id`));
 
 CREATE TABLE `cars_drivers`(
-									                           `id_car` bigint(11) NOT NULL,
-                                    `id_driver` bigint(11) NOT NULL);
-
+        `car_id` bigint(11) NOT NULL,
+        `driver_id` bigint(11) NOT NULL);

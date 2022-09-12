@@ -24,13 +24,13 @@ public class Main {
         Driver veteran = driverService.create(new Driver(null, "Veteran", "000001"));
         Driver lucky = driverService.create(new Driver(null, "Lucky", "7777777"));
 
-        Manufacturer mersProducer = manufacturerService
+        Manufacturer mersManufacturer = manufacturerService
                 .create(new Manufacturer(null, "Daimler AG", "Germany"));
-        Manufacturer audiProducer = manufacturerService
+        Manufacturer audiManufacturer = manufacturerService
                 .create(new Manufacturer(null, "Volkswagen Group", "Germany"));
 
-        Car mers = carService.create(new Car(null, "S600", mersProducer, new ArrayList<>()));
-        Car audi = carService.create(new Car(null, "A8", audiProducer, new ArrayList<>()));
+        Car mers = carService.create(new Car(null, "S600", mersManufacturer, new ArrayList<>()));
+        Car audi = carService.create(new Car(null, "A8", audiManufacturer, new ArrayList<>()));
         carService.addDriverToCar(lucky, mers);
         carService.addDriverToCar(veteran, mers);
         carService.addDriverToCar(bombilla, audi);
