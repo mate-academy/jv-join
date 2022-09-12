@@ -40,14 +40,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getCarQuery = "SELECT c.id, c.model , m.id, m.name, m.county "
+        String getCarQuery = "SELECT c.id, c.model , c.manufacturer_id, m.name, m.country "
                 + "FROM cars c INNER JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id"
+                + "ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
                         connection.prepareStatement(getCarQuery)) {
+            getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
                 car = parseCarFromResultSet(resultSet);
@@ -63,10 +64,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getCarQuery = "SELECT c.id, c.model , m.id, m.name, m.county "
+        String getCarQuery = "SELECT c.id, c.model , c.manufacturer_id, m.name, m.country "
                 + "FROM cars c INNER JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id"
-                + "c.is_deleted = FALSE;";
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -88,8 +89,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ?"
-                + "WHERE id = ? AND id_deleted = FALSE;";
+        String updateCarQuery = "UPDATE cars SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement =
                         connection.prepareStatement(updateCarQuery)) {
@@ -107,7 +108,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String updateCarQuery = "UPDATE cars SET is_deleted = TRUE"
+        String updateCarQuery = "UPDATE cars SET is_deleted = TRUE "
                 + "WHERE id = ? AND id_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement =
@@ -122,10 +123,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverQuery = "SELECT c.id, c.model, c.manufacturer_id, "
-                + "m.name, m.country"
-                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
-                + "JOIN cars_drivers cd ON c.id = cd.car_id"
-                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
+                + "m.name, m.country "
+                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd ON c.id = cd.car_id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -198,8 +199,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversByCarId(Long id) {
-        String getDriversRequest = "SELECT d.id, d.name, d.license_number"
-                + "FROM drivers d JOIN cars_drivers cd"
+        String getDriversRequest = "SELECT d.id, d.name, d.license_number "
+                + "FROM drivers d JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id WHERE cd.car_id = ?;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
