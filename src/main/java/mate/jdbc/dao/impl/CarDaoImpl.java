@@ -34,21 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't create car = " + car, throwables);
         }
-        String createRelationWithCarDrivers = "INSERT INTO cars_drivers(driver_id, car_id) "
-                + "VALUES(?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement(createRelationWithCarDrivers)) {
-            List<Driver> drivers = car.getDrivers();
-            preparedStatement.setLong(2, car.getId());
-            for (Driver driver : drivers) {
-                preparedStatement.setLong(1, driver.getId());
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't add reference between drivers and their cars, "
-                    + "by carId = " + car.getId(), throwables);
-        }
+        createReferenceToCarDrivers(car);
         return car;
     }
 
@@ -88,33 +74,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwables) {
             throw new DataProcessingException("Can't update car = " + car, throwables);
         }
-
-        String deleteRelationWithCarDrivers = "DELETE FROM cars_drivers WHERE car_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement(deleteRelationWithCarDrivers)) {
-            preparedStatement.setLong(1, car.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't delete reference between drivers "
-                    + " and their cars, " + "by car_id = " + car, throwables);
-        }
-
-        String createRelationWithCarDrivers = "INSERT INTO cars_drivers(driver_id, car_id) "
-                + "VALUES(?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement preparedStatement = connection
-                        .prepareStatement(createRelationWithCarDrivers)) {
-            List<Driver> drivers = car.getDrivers();
-            preparedStatement.setLong(2, car.getId());
-            for (Driver driver : drivers) {
-                preparedStatement.setLong(1, driver.getId());
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException throwables) {
-            throw new DataProcessingException("Can't add reference between drivers and their cars "
-                    + car, throwables);
-        }
+        deleteReferenceFromCarDrivers(car);
+        createReferenceToCarDrivers(car);
         return car;
     }
 
@@ -176,6 +137,39 @@ public class CarDaoImpl implements CarDao {
                     + "by car_id = " + id, throwables);
         }
     }
+
+    private void deleteReferenceFromCarDrivers(Car car) {
+        String deleteRelationWithCarDrivers = "DELETE FROM cars_drivers WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement(deleteRelationWithCarDrivers)) {
+            preparedStatement.setLong(1, car.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Can't delete reference between drivers "
+                    + " and their cars, " + "by car_id = " + car, throwables);
+        }
+    }
+
+    private void createReferenceToCarDrivers(Car car) {
+        String createRelationWithCarDrivers = "INSERT INTO cars_drivers(driver_id, car_id) "
+                + "VALUES(?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection
+                     .prepareStatement(createRelationWithCarDrivers)) {
+            List<Driver> drivers = car.getDrivers();
+            preparedStatement.setLong(2, car.getId());
+            for (Driver driver : drivers) {
+                preparedStatement.setLong(1, driver.getId());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Can't add reference between drivers and their cars, "
+                    + "by carId = " + car.getId(), throwables);
+        }
+    }
+
+
 
     private List<Driver> getDriversForCar(Car car) {
         String query = "SELECT d.id, name, license_number FROM cars_drivers cd "
