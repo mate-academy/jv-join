@@ -7,10 +7,17 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
-    public Driver(Long id, String name, String licenseNumber) {
-        this.id = id;
+    public Driver() {
+    }
+
+    public Driver(String name, String licenseNumber) {
         this.name = name;
         this.licenseNumber = licenseNumber;
+    }
+
+    public Driver(Long id, String name, String licenseNumber) {
+        this(name, licenseNumber);
+        this.id = id;
     }
 
     public Long getId() {
@@ -47,21 +54,21 @@ public class Driver {
         }
         Driver driver = (Driver) o;
         return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber);
+                    && Objects.equals(name, driver.name)
+                    && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 
     @Override
-    public int hashCode() {
+     public int hashCode() {
         return Objects.hash(id, name, licenseNumber);
     }
 
     @Override
     public String toString() {
         return "Driver{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                    + "id=" + id
+                    + ", name='" + name + '\''
+                    + ", licenseNumber='" + licenseNumber + '\''
+                    + '}';
     }
 }
