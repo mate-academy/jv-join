@@ -56,7 +56,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDRiversForCar(id));
+            car.setDrivers(getDriversForCar(id));
         }
         return Optional.ofNullable(car);
     }
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
             for (Car car: cars) {
-                car.setDrivers(getDRiversForCar(car.getId()));
+                car.setDrivers(getDriversForCar(car.getId()));
             }
             return cars;
         } catch (SQLException e) {
@@ -176,7 +176,7 @@ public class CarDaoImpl implements CarDao {
         return new Car(id, model, manufacturer, null);
     }
 
-    private List<Driver> getDRiversForCar(Long carId) {
+    private List<Driver> getDriversForCar(Long carId) {
         String getAllDriversForCarRequest = "SELECT id, name, license_number FROM drivers d "
                 + "JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();

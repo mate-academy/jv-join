@@ -53,7 +53,7 @@ public class CarServiceImpl implements CarService {
         if (drivers.contains(driver)) {
             drivers.remove(driver);
         } else {
-            throw new DataProcessingException("Car " + car + "doesn't contain driver " + driver);
+            throw new DataProcessingException("Car " + car + " doesn't contain driver " + driver);
         }
         car.setDrivers(drivers);
         carDao.update(car);
