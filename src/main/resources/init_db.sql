@@ -55,7 +55,19 @@ INSERT INTO `taxi_service`.`cars` (`manufacturer_id`, `model`) VALUES
 										('4', 'X5'),
 										('4', 'X3');
 
+
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE `taxi_service`.`cars_drivers` (
+									  `car_id` BIGINT NOT NULL,
+                                      `driver_id` BIGINT NOT NULL,
+		CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (car_id) REFERENCES `taxi_service`.`cars` (`id`),
+		CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (driver_id) REFERENCES `taxi_service`.`drivers` (`id`));
+
+INSERT INTO `taxi_service`.`cars_drivers` (`car_id`, `driver_id`) VALUES  
+											(1, 1);
+        
 -- ALTER TABLE `manufacturers` AUTO_INCREMENT = 1;
 SELECT * FROM taxi_service.manufacturers;
 SELECT * FROM taxi_service.drivers;
 SELECT * FROM taxi_service.cars;
+SELECT * FROM taxi_service.cars_drivers;
