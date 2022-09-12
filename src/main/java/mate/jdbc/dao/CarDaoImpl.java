@@ -17,7 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static final int ID_POSITION = 1;
 
     @Override
     public Car create(Car car) {
@@ -30,7 +29,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
-                car.setId(generatedKeys.getObject(ID_POSITION, Long.class));
+                car.setId(generatedKeys.getObject(1, Long.class));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create car " + car + " .", e);
@@ -55,7 +54,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id = " + id + " .", e);
         }
         if (car != null) {
-            car.setDrivers(getDriversFromCar(car));
+            car.setDrivers(getDriversForCar(car));
         }
         return Optional.ofNullable(car);
     }
@@ -74,7 +73,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all the cars from DB", e);
         }
-        cars.forEach(car -> car.setDrivers(getDriversFromCar(car)));
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car)));
         return cars;
     }
 
@@ -91,7 +90,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car " + car + " .", e);
         }
-        clearDriversFromDbByCar(car);
+        clearDriversForCar(car);
         pushCarDriversToDb(car);
         return car;
     }
@@ -125,11 +124,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get all cars by driverId = "
                     + driverId + " .", e);
         }
-        cars.forEach(car -> car.setDrivers(getDriversFromCar(car)));
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car)));
         return cars;
     }
 
-    private void clearDriversFromDbByCar(Car car) {
+    private void clearDriversForCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -168,7 +167,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversFromCar(Car car) {
+    private List<Driver> getDriversForCar(Car car) {
         String query = "SELECT id, name, license_number FROM cars_drivers cd JOIN drivers d "
                 + "ON cd.driver_id = d.id WHERE cd.car_id = ? AND d.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
