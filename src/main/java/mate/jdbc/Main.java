@@ -62,7 +62,7 @@ public class Main {
 //        boolean isDeletedCar = carService.delete(createdCar.getId());
 //        System.out.println("deleteCar = " + isDeletedCar);
         /////getAll/////
-//        List<Car> cars = carService.getAll();
-//        cars.forEach(System.out::println);
+        List<Car> cars = carService.getAll();
+        cars.forEach(System.out::println);
     }
 }

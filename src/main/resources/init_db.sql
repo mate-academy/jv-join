@@ -63,8 +63,8 @@ CREATE TABLE `taxi_service`.`cars_drivers` (
 		CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (driver_id) REFERENCES `taxi_service`.`drivers` (`id`));
 
 INSERT INTO `taxi_service`.`cars_drivers` (`car_id`, `driver_id`) VALUES  
-											(1, 1),
-                                            (1, 2),
+											(2, 1),
+                                            (3, 2),
                                             (1, 3);
         
 -- ALTER TABLE `manufacturers` AUTO_INCREMENT = 1;
