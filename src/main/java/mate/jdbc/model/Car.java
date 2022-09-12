@@ -3,7 +3,6 @@ package mate.jdbc.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class Car {
     private Long id;
@@ -74,7 +73,7 @@ public class Car {
                 + ", manufacturer=" + manufacturer
                 + ", model='" + model + '\''
                 + ", drivers={"
-                + drivers.stream().map(Driver::toString).collect(Collectors.joining("; "))
+                + drivers
                 + '}';
     }
 }
