@@ -25,9 +25,9 @@ public class Main {
 
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
-        Driver yaroslav = new Driver(null, "Yaroslav", "0123");
-        Driver eugene = new Driver(null, "Eugene", "0234");
-        Driver volodimir = new Driver(null, "Volodimir", "0345");
+        Driver yaroslav = new Driver(null, "Yaroslav", "01234");
+        Driver eugene = new Driver(null, "Eugene", "02344");
+        Driver volodimir = new Driver(null, "Volodimir", "03454");
         driverService.create(yaroslav);
         driverService.create(eugene);
         driverService.create(volodimir);

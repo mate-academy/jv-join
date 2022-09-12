@@ -30,8 +30,7 @@ public class CarDaoImpl implements CarDao {
             createCarStatement.executeUpdate();
             ResultSet resultSet = createCarStatement.getGeneratedKeys();
             if (resultSet.next()) {
-                Long id = resultSet.getObject(1, Long.class);
-                car.setId(id);
+                car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
@@ -54,7 +53,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
                 car = parseCar(resultSet);
-                car.setManufacturer(parseManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id = "
@@ -78,7 +76,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
                 Car car = parseCar(resultSet);
-                car.setManufacturer(parseManufacturer(resultSet));
                 cars.add(car);
             }
         } catch (SQLException e) {
@@ -135,7 +132,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = selectAllCarsStatement.executeQuery();
             while (resultSet.next()) {
                 Car car = parseCar(resultSet);
-                car.setManufacturer(parseManufacturer(resultSet));
                 carsByDriver.add(car);
             }
         } catch (SQLException e) {
@@ -149,6 +145,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("c.id", Long.class));
         car.setModel(resultSet.getString("model"));
+        car.setManufacturer(parseManufacturer(resultSet));
         return car;
     }
 
