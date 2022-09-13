@@ -101,14 +101,13 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, driverId);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCar(resultSet);
-                if (car != null) {
-                    car.setDrivers(getDriversForCar(car.getId()));
-                }
-                cars.add(car);
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -200,6 +199,7 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setId(manufacturerId);
         manufacturer.setName(manufacturerName);
         manufacturer.setCountry(manufacturerCountry);
+
         Long carId = resultSet.getObject("car_id", Long.class);
         String model = resultSet.getString("model");
         Car car = new Car();
