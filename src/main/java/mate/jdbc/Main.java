@@ -13,49 +13,47 @@ import mate.jdbc.service.ManufacturerService;
 public class Main {
     private static final String PACKAGE = "mate.jdbc";
     private static final Injector injector = Injector.getInstance(PACKAGE);
-    // i've taken out this list of main because i have a problem
-    // with declaration length usage (maven)
-    private static List<Driver> catDrivers = new ArrayList<>();
-    private static List<Driver> teslaDrivers = new ArrayList<>();
-    private static List<Driver> banderoMachineDrivers = new ArrayList<>();
 
     public static void main(String[] args) {
         /*MANUFACTURER*/
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer caterpillar = new Manufacturer(null, "Caterpillar", "USA");
+        Manufacturer caterpillar = new Manufacturer("Caterpillar", "USA");
         manufacturerService.create(caterpillar);
-        Manufacturer tesla = new Manufacturer(null, "Tesla", "USA");
+        Manufacturer tesla = new Manufacturer("Tesla", "USA");
         manufacturerService.create(tesla);
-        Manufacturer banderoMachine = new Manufacturer(null, "Bandero Machine", "Ukraine");
+        Manufacturer banderoMachine = new Manufacturer("Bandero Machine", "Ukraine");
         manufacturerService.create(banderoMachine);
 
         /*DRIVERS*/
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
-        Driver catDriver = new Driver(null, "Petro", "1ff5og");
+        List<Driver> catDrivers = new ArrayList<>();
+        Driver catDriver = new Driver("Petro", "1ff5og");
         driverService.create(catDriver);
         catDrivers.add(catDriver);
 
-        Driver teslaDriver = new Driver(null, "Galyna", "12t3g2");
+        List<Driver> teslaDrivers = new ArrayList<>();
+        Driver teslaDriver = new Driver("Galyna", "12t3g2");
         driverService.create(teslaDriver);
-        catDrivers.add(teslaDriver);
+        teslaDrivers.add(teslaDriver);
 
-        Driver banderoCarDriver1 = new Driver(null, "Dmytro", "12hh54");
-        Driver banderoCarDriver2 = new Driver(null, "Anna", "12662h");
+        List<Driver> banderoMachineDrivers = new ArrayList<>();
+        Driver banderoCarDriver1 = new Driver("Dmytro", "12hh54");
+        Driver banderoCarDriver2 = new Driver("Anna", "12662h");
         driverService.create(banderoCarDriver1);
-        catDrivers.add(banderoCarDriver1);
         driverService.create(banderoCarDriver2);
-        catDrivers.add(banderoCarDriver2);
+        banderoMachineDrivers.add(banderoCarDriver1);
+        banderoMachineDrivers.add(banderoCarDriver2);
 
         /*CAR SERVICE*/
         CarService carService = (CarService)
                 injector.getInstance(CarService.class);
-        Car teslaCar = new Car(null, "Sedan", tesla, teslaDrivers);
+        Car teslaCar = new Car("Sedan", tesla, teslaDrivers);
         carService.create(teslaCar);
-        Car banderoCar = new Car(null, "Pickup", banderoMachine, banderoMachineDrivers);
+        Car banderoCar = new Car("Pickup", banderoMachine, banderoMachineDrivers);
         carService.create(banderoCar);
-        Car catCar = new Car(null, "Off-highway Truck", caterpillar, catDrivers);
+        Car catCar = new Car("Off-highway Truck", caterpillar, catDrivers);
         carService.create(catCar);
 
         System.out.println("All data from DB");
