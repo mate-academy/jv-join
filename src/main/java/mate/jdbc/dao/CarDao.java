@@ -5,7 +5,6 @@ import java.util.Optional;
 import mate.jdbc.model.Car;
 
 public interface CarDao {
-
     Car create(Car car);
 
     Optional<Car> get(Long id);
