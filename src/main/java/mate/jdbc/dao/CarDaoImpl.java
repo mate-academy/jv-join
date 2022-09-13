@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        addDriverToCar(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -101,8 +101,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update a car "
                     + car, e);
         }
-        addDriverToCar(car);
         removeDriverFromCar(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -139,13 +139,13 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException(
                     "Can't get car from list by driver id: " + driverId, e);
         }
-        for (Car item : cars) {
-            item.setDrivers(getDriversForByCar(item.getId()));
+        for (Car car : cars) {
+            car.setDrivers(getDriversForByCar(car.getId()));
         }
         return cars;
     }
 
-    private void addDriverToCar(Car car) {
+    private void addDriversToCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -201,9 +201,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("license_number");
-        return new Driver(id, name, licenseNumber);
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber("license_number");
+        return driver;
     }
 }
