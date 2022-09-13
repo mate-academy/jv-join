@@ -123,14 +123,14 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver with id: "
                     + driverId + ". ", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car));
+        }
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
