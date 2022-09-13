@@ -32,5 +32,6 @@ public class Main {
         carService.removeDriverFromCar(driver, car);
         carService.addDriverToCar(driver, car);
         System.out.println(carService.getAll());
+
     }
 }
