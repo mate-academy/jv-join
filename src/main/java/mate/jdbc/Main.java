@@ -16,18 +16,18 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        Manufacturer mercedes = new Manufacturer(null, "Mercedes", "Germany");
-        Manufacturer lada = new Manufacturer(null, "Lada", "Ukraine");
-        Manufacturer mazda = new Manufacturer(null, "Mazda", "Japan");
+        Manufacturer mercedes = new Manufacturer("Mercedes", "Germany");
+        Manufacturer lada = new Manufacturer("Lada", "Ukraine");
+        Manufacturer mazda = new Manufacturer("Mazda", "Japan");
         manufacturerService.create(mercedes);
         manufacturerService.create(lada);
         manufacturerService.create(mazda);
 
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
-        Driver yaroslav = new Driver(null, "Yaroslav", "01234");
-        Driver eugene = new Driver(null, "Eugene", "02344");
-        Driver volodimir = new Driver(null, "Volodimir", "03454");
+        Driver yaroslav = new Driver("Yaroslav", "01234");
+        Driver eugene = new Driver("Eugene", "02344");
+        Driver volodimir = new Driver("Volodimir", "03454");
         driverService.create(yaroslav);
         driverService.create(eugene);
         driverService.create(volodimir);
