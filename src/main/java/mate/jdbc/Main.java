@@ -12,15 +12,11 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        //create drivers
-
-        //create manufacture
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer manufacturerPorsche =
                 manufacturerService.create(
                         new Manufacturer(1L, "Porsche", "Germany"));
-
         Car firstCar = new Car();
         Car secondCar = new Car();
 
