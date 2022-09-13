@@ -17,10 +17,10 @@ public class Main {
                 (DriverService) injector.getInstance(DriverService.class);
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturer = new Manufacturer(null, "Tesla Inc.", "USA");
+        Manufacturer manufacturer = new Manufacturer("Tesla Inc.", "USA");
         manufacturer = manufacturerService.create(manufacturer);
-        Driver firstDriver = new Driver(null, "William Carrington", "345");
-        Driver secondDriver = new Driver(null, "John Bourbon", "346");
+        Driver firstDriver = new Driver("William Carrington", "345");
+        Driver secondDriver = new Driver("John Bourbon", "346");
         driverService.create(firstDriver);
         driverService.create(secondDriver);
 
@@ -32,7 +32,7 @@ public class Main {
                 (CarService) injector.getInstance(CarService.class);
         System.out.println(carService.create(car));
 
-        Driver driver = new Driver(null, "Alex Gray", "111");
+        Driver driver = new Driver("Alex Gray", "111");
         driver = driverService.create(driver);
         car.setModel("Tesla Model S");
         car.setManufacturer(manufacturerService.get(manufacturer.getId()));

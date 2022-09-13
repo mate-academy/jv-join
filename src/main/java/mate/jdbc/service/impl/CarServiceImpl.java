@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElse(null);
+        return carDao.get(id).orElseThrow();
     }
 
     @Override
@@ -40,17 +40,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        List<Driver> driversList = car.getDriversList();
-        driversList.add(driver);
-        car.setDriversList(driversList);
+        car.getDriversList().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> driversList = car.getDriversList();
-        driversList.remove(driver);
-        car.setDriversList(driversList);
+        car.getDriversList().remove(driver);
         carDao.update(car);
     }
 

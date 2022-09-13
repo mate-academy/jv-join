@@ -50,4 +50,3 @@ CREATE TABLE taxi_service.cars_drivers
         FOREIGN KEY (`driver_id`)
             REFERENCES taxi_service.drivers (`id`)
 );
-
