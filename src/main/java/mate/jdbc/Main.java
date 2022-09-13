@@ -35,11 +35,11 @@ public class Main {
         drivers2.forEach(driverService::create);
 
         Manufacturer manufacturerLexus = new Manufacturer("Lexus", "Japan");
-        Manufacturer manufacturerJaguar = new Manufacturer ("Jaguar", "UK");
+        Manufacturer manufacturerJaguar = new Manufacturer("Jaguar", "UK");
         manufacturerService.create(manufacturerLexus);
         manufacturerService.create(manufacturerJaguar);
 
-        Car car = new Car( "ES", manufacturerLexus, drivers);
+        Car car = new Car("ES", manufacturerLexus, drivers);
         Car car1 = new Car("XF", manufacturerJaguar, drivers2);
         Car car2 = new Car(car1.getId(), "LS", manufacturerLexus, drivers2);
 
