@@ -41,9 +41,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT id, manufacturer_id, model "
-                + "FROM cars "
-                + "WHERE id = ? AND is_deleted = FALSE";
+        String query = "SELECT c.id, model, m.id, m.name, m.country "
+                + "FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -60,7 +61,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT * FROM cars WHERE is_deleted = FALSE";
+        String query = "SELECT c.id, model, m.id, m.name, m.country "
+                + "FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -144,7 +148,7 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException(
-                    "Can't insert new cars_drivers relationship by " + car, e);
+                    "Can't add drivers for car " + car, e);
         }
     }
 
@@ -161,17 +165,11 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        String query = "SELECT id FROM manufacturers WHERE id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            Long id = resultSet.getObject("id", Long.class);
-            String model = resultSet.getString("model");
-            statement.setLong(1, resultSet.getObject("manufacturer_id", Long.class));
-            ResultSet manufacturerResultSet = statement.executeQuery();
-            Manufacturer manufacturer = parseManufacturer(manufacturerResultSet);
-            List<Driver> drivers = getDriversByCarId(id);
-            return new Car(id, model, manufacturer, drivers);
-        }
+        Long id = resultSet.getObject("id", Long.class);
+        String model = resultSet.getString("model");
+        Manufacturer manufacturer = parseManufacturer(resultSet);
+        List<Driver> drivers = getDriversByCarId(id);
+        return new Car(id, model, manufacturer, drivers);
     }
 
     private List<Driver> getDriversByCarId(Long carId) {
