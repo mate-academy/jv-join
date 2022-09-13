@@ -36,12 +36,12 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
     }
 
     @Override
-    public Optional<Manufacturer> get(Long id) {
+    public Optional<Manufacturer> get(Long ManufacturerId) {
         String query = "SELECT * FROM manufacturers"
                 + " WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, ManufacturerId);
             ResultSet resultSet = statement.executeQuery();
             Manufacturer manufacturer = null;
             if (resultSet.next()) {
@@ -49,7 +49,7 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
             }
             return Optional.ofNullable(manufacturer);
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get manufacturer by id " + id, e);
+            throw new DataProcessingException("Couldn't get manufacturer by id " + ManufacturerId, e);
         }
     }
 
@@ -90,15 +90,16 @@ public class ManufacturerDaoImpl implements ManufacturerDao {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(Long ManufacturerId) {
         String query = "UPDATE manufacturers SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, ManufacturerId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete a manufacturer by id " + id, e);
+            throw new DataProcessingException(
+                    "Couldn't delete a manufacturer by idManufacturer " + ManufacturerId, e);
         }
     }
 
