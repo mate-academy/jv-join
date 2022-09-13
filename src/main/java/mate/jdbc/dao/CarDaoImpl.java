@@ -54,7 +54,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get car with id: " + id + ". ", e);
         }
         if (car != null) {
-            car.setDrivers(getDriversFromCar(car));
+            car.setDrivers(getDriversForCar(car));
         }
         return Optional.ofNullable(car);
     }
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get list of cars from database.", e);
         }
         for (Car car : cars) {
-            car.setDrivers(getDriversFromCar(car));
+            car.setDrivers(getDriversForCar(car));
         }
         return cars;
     }
@@ -112,7 +112,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars_drivers cd JOIN cars c ON cd.car_id = c.id "
+        String query = "SELECT * FROM cars c JOIN cars_drivers cd ON cd.car_id = c.id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -149,8 +149,8 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private List<Driver> getDriversFromCar(Car car) {
-        String query = "SELECT d.id, d.name, d.license_number FROM cars_drivers cd JOIN drivers d "
+    private List<Driver> getDriversForCar(Car car) {
+        String query = "SELECT d.id, d.name, d.license_number FROM drivers d JOIN cars_drivers cd "
                 + "ON cd.driver_id = d.id WHERE d.is_deleted = false AND cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -159,11 +159,11 @@ public class CarDaoImpl implements CarDao {
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
                 drivers.add(getDriver(resultSet));
-
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get list of drivers from database.", e);
+            throw new DataProcessingException("Can't get list of drivers from database for car: "
+                    + ". ", e);
         }
     }
 
