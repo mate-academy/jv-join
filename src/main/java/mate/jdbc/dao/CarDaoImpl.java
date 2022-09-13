@@ -17,7 +17,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars(model, manufacturer_id) VALUES(?, ?)";
