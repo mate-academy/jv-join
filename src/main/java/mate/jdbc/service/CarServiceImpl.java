@@ -2,8 +2,6 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
@@ -69,9 +67,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return carDao.getAllByDriver(driverId).stream()
-                .map(opt -> opt.orElse(null))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+        return carDao.getAllByDriver(driverId);
     }
 }

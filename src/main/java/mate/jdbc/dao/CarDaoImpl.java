@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -74,12 +75,12 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get driver by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getAllDriversFromCarId(id));
+            car.setDrivers(getDriversByCarId(id));
         }
         return Optional.ofNullable(car);
     }
 
-    private List<Driver> getAllDriversFromCarId(Long carId) {
+    private List<Driver> getDriversByCarId(Long carId) {
         String getAllDriversQuery = "SELECT id, name, license_number "
                 + "FROM drivers "
                 + "JOIN cars_drivers "
@@ -126,7 +127,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from DB.", e);
         }
         for (Car car: cars) {
-            car.setDrivers(getAllDriversFromCarId(car.getId()));
+            car.setDrivers(getDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -174,35 +175,23 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete driver with id " + id, e);
+            throw new DataProcessingException("Couldn't delete car with id " + id, e);
         }
     }
 
     @Override
-    public List<Optional<Car>> getAllByDriver(Long driverId) {
-        String getAllCarIdsQuery = "SELECT car_id "
-                + "FROM cars_drivers "
-                + "JOIN cars "
-                + "ON id = car_id "
-                + "WHERE driver_id = ?";
-        List<Long> carIds = new ArrayList<>();
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement getAllCarIdsStatement =
-                        connection.prepareStatement(getAllCarIdsQuery)) {
-            getAllCarIdsStatement.setLong(1, driverId);
-            ResultSet resultSet = getAllCarIdsStatement.executeQuery();
-            while (resultSet.next()) {
-                carIds.add(resultSet.getObject("car_id", Long.class));
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> allCars = getAll();
+        List<Car> carsWithDriver = new ArrayList<>();
+        for (Car car: allCars) {
+            for (Driver driver: car.getDrivers()) {
+                if (Objects.equals(driver.getId(), driverId)) {
+                    carsWithDriver.add(car);
+                    break;
+                }
             }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't get all car ids by driver id: " + driverId, e);
         }
-        List<Optional<Car>> cars = new ArrayList<>();
-        for (Long id: carIds) {
-            cars.add(get(id));
-        }
-
-        return cars;
+        return carsWithDriver;
     }
 
     private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
