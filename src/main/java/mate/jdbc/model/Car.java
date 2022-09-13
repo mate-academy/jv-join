@@ -22,6 +22,12 @@ public class Car {
         this.id = id;
     }
 
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+        this.model = model;
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
