@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + " .", e);
         }
-        insertDrivers(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -95,8 +95,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car: " + car, e);
         }
-        deleteDrivers(car);
-        insertDrivers(car);
+        deleteDriversFromCar(car);
+        addDriversToCar(car);
         return car;
     }
 
