@@ -84,12 +84,12 @@ public class CarDaoImpl implements CarDao {
             statement.setString(2, car.getModel());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            removeDriverFromCar(car);
-            addDriverToCar(car.getDrivers(), car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car: " + car, e);
         }
+        removeDriverFromCar(car);
+        addDriverToCar(car.getDrivers(), car);
+        return car;
     }
 
     @Override
