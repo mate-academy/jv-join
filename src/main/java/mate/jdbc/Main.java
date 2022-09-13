@@ -40,7 +40,7 @@ public class Main {
         nissanDrivers.add(george);
 
         System.out.println("Run tests:");
-        System.out.println("--------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------");
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         Car ferrariCar = new Car("250 Testa Rossa", ferrari, ferrariDrivers);
@@ -52,33 +52,44 @@ public class Main {
         System.out.println(carService.create(nissanCar));
         System.out.println("Car " + nissanCar.getManufacturer().getName()
                 + " " + nissanCar.getModel() + " was created successfully!");
-        System.out.println("__________________________________________________");
+        System.out.println("_____________________________________________________________________");
 
         System.out.println("Get all data from the DB:");
         carService.getAll().forEach(System.out::println);
-        System.out.println("--------------------------------------------------");
+        System.out.println("---------------------------------------------------------------------");
 
         carService.addDriverToCar(george, ferrariCar);
         System.out.println(carService.get(ferrariCar.getId()));
         System.out.println(george.getName() + " was add to the car: "
                 + ferrariCar.getManufacturer().getName() + " " + ferrariCar.getModel());
-        System.out.println("__________________________________________________");
+        System.out.println("_____________________________________________________________________");
 
-        System.out.println("Get all by driver " + george.getName() + " id" + george.getId());
+        System.out.println("Get all by driver " + george.getName() + ":");
         System.out.println(carService.getAllByDriver(george.getId()));
-        System.out.println("__________________________________________________");
+        System.out.println("_____________________________________________________________________");
+
+        System.out.println("Add driver " + george.getName() + " to the car "
+                + ferrariCar.getManufacturer().getName() + " " + ferrariCar.getModel());
+        System.out.println(ferrariCar.getManufacturer().getName() + " " + ferrariCar.getModel()
+                + " has total driver amount before adding new driver: " + ferrariDrivers.size());
+        carService.addDriverToCar(george, ferrariCar);
+        System.out.println(ferrariCar.getManufacturer().getName() + " " + ferrariCar.getModel()
+                + " has total driver amount after adding one new driver: " + ferrariDrivers.size());
+        System.out.println("_____________________________________________________________________");
 
         System.out.println("Remove driver " + george.getName() + " from the car "
                 + nissanCar.getManufacturer().getName() + " " + nissanCar.getModel());
+        System.out.println(nissanCar.getManufacturer().getName() + " " + nissanCar.getModel()
+                + " has total driver amount before deleting a driver: " + nissanDrivers.size());
         carService.removeDriverFromCar(george, nissanCar);
         System.out.println(nissanCar.getManufacturer().getName() + " "
-                + nissanCar.getModel() + " have total driver amount: "
-                + nissanCar.getDrivers().size());
-        System.out.println("__________________________________________________");
+                + nissanCar.getModel() + " has total driver amount after deleting one driver: "
+                + nissanDrivers.size());
+        System.out.println("_____________________________________________________________________");
 
         System.out.println("Delete car " + nissanCar.getManufacturer().getName()
                             + " " + nissanCar.getModel() + " from the DB");
         System.out.println(carService.delete(nissanCar.getId()));
-        System.out.println("----<The end of the tests>----");
+        System.out.println("------------<The end of the tests------------");
     }
 }
