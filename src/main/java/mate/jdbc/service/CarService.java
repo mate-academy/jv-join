@@ -21,4 +21,3 @@ public interface CarService {
 
     void removeDriverFromCar(Driver driver, Car car);
 }
-
