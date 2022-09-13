@@ -74,7 +74,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't get a list of cars from carsDB.", e);
+            throw new RuntimeException("Couldn't get a list of cars.", e);
         }
         cars.forEach(car -> car.setDrivers(getDriversForCar(car)));
         return cars;
@@ -91,8 +91,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update "
-                    + car + " in carsDB.", e);
+            throw new DataProcessingException("Couldn't update a car "
+                    + car + " .", e);
         }
         deleteCarWithDrivers(car);
         insertCarWithDrivers(car);
