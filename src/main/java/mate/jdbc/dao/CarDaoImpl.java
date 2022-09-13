@@ -29,11 +29,11 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
-                insertToCarsDriversTable(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car " + car, e);
         }
+        insertToCarsDriversTable(car);
         return car;
     }
 
