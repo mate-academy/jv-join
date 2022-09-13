@@ -16,13 +16,13 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerDao manufacturerDao =
                 (ManufacturerDao) injector.getInstance(ManufacturerDao.class);
-        Manufacturer nissan = new Manufacturer(null,"Nissan","Japan");
+        Manufacturer nissan = new Manufacturer("Nissan","Japan");
         manufacturerDao.create(nissan);
 
-        Manufacturer porsche = new Manufacturer(null,"Porsche","Germany");
+        Manufacturer porsche = new Manufacturer("Porsche","Germany");
         manufacturerDao.create(porsche);
 
-        Manufacturer audi = new Manufacturer(null,"Audi","Germany");
+        Manufacturer audi = new Manufacturer("Audi","Germany");
         manufacturerDao.create(audi);
 
         manufacturerDao.getAll().forEach(System.out::println);
@@ -31,17 +31,17 @@ public class Main {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
         List<Driver> nissanDriver = new ArrayList<>();
-        Driver rostyslav = new Driver(null,"Rostyslav","95A555999");
+        Driver rostyslav = new Driver("Rostyslav","95A555999");
         driverService.create(rostyslav);
         nissanDriver.add(rostyslav);
 
         List<Driver> porscheDriver = new ArrayList<>();
-        Driver vadym = new Driver(null,"Vadym","85B255999");
+        Driver vadym = new Driver("Vadym","85B255999");
         driverService.create(vadym);
         porscheDriver.add(vadym);
 
         List<Driver> audiDriver = new ArrayList<>();
-        Driver valentyn = new Driver(null,"Valentyn","87R455999");
+        Driver valentyn = new Driver("Valentyn","87R455999");
         driverService.create(valentyn);
         audiDriver.add(valentyn);
 
@@ -50,11 +50,11 @@ public class Main {
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        Car nissanCar = new Car(null,"Nissan Z",nissan,nissanDriver);
+        Car nissanCar = new Car("Nissan Z",nissan,nissanDriver);
         carService.create(nissanCar);
-        Car porscheCar = new Car(null,"Taycan",porsche,porscheDriver);
+        Car porscheCar = new Car("Taycan",porsche,porscheDriver);
         carService.create(porscheCar);
-        Car audiCar = new Car(null,"TT RS",audi,audiDriver);
+        Car audiCar = new Car("TT RS",audi,audiDriver);
         carService.create(audiCar);
 
         carService.getAll().forEach(System.out::println);

@@ -136,10 +136,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car parseCar(ResultSet resultSet) throws SQLException {
-        Car car = new Car(null, null,null,null);
+        Car car = new Car();
         car.setId(resultSet.getLong("id"));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer(null, null,null);
+        Manufacturer manufacturer = new Manufacturer();
         manufacturer.setId(resultSet.getLong("manufacturer_id"));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
@@ -148,8 +148,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver parseDriver(ResultSet resultDrivers) throws SQLException {
-        Driver driver = new Driver(null, null,null);
-        driver.setId(resultDrivers.getLong("d.id"));
+        Driver driver = new Driver();
+        driver.setId(resultDrivers.getLong("id"));
         driver.setName(resultDrivers.getString("name"));
         driver.setLicenseNumber(resultDrivers.getString("license_number"));
         return driver;

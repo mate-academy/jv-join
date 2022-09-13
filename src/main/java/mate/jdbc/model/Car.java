@@ -16,6 +16,15 @@ public class Car {
         this.drivers = drivers;
     }
 
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
+    }
+
+    public Car() {
+    }
+
     public Long getId() {
         return id;
     }
