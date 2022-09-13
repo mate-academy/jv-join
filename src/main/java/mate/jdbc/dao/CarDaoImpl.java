@@ -39,7 +39,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id, model, manufacturer_id, name, country FROM cars c "
+        String query = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = false AND c.id = ?;";
         Car car = null;
@@ -61,7 +61,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id, model, manufacturer_id, name, country FROM cars c "
+        String query = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = false";
         List<Car> cars = new ArrayList<>();
@@ -150,7 +150,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversFromCar(Car car) {
-        String query = "SELECT id, name, license_number FROM cars_drivers cd JOIN drivers d "
+        String query = "SELECT d.id, d.name, d.license_number FROM cars_drivers cd JOIN drivers d "
                 + "ON cd.driver_id = d.id WHERE d.is_deleted = false AND cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
