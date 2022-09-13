@@ -31,7 +31,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
+            throw new DataProcessingException("Couldn't create a car "
                     + car + ". ", e);
         }
         insertDrivers(car);
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars.", e);
         }
         for (Car car: cars) {
             car.setDrivers(getDriversForCar(car.getId()));
@@ -96,10 +96,10 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update "
+            throw new DataProcessingException("Couldn't update a car "
                     + car + " in carsDB.", e);
         }
-        deleteConnectionsCarsDrivers(car);
+        deleteDriversFromCar(car);
         insertDrivers(car);
         return car;
     }
@@ -137,7 +137,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private static void deleteConnectionsCarsDrivers(Car car) {
+    private static void deleteDriversFromCar(Car car) {
         String deleteConnectionsQuery = "DELETE FROM taxi_service_db.cars_drivers "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -186,15 +186,15 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllDriversStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(parseDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get drivers from DB.", e);
+            throw new DataProcessingException("Can't get drivers for car with id: " + carId, e);
         }
     }
 
-    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
