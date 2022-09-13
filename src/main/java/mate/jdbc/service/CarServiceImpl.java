@@ -21,7 +21,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id).orElseThrow(
-                () -> new NoSuchElementException("Element with id: " + id + " not exist"));
+                () -> new NoSuchElementException("Car with id: " + id + " not exist"));
     }
 
     @Override
