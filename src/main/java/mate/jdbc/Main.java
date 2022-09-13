@@ -16,16 +16,16 @@ public class Main {
     public static void main(String[] args) {
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        Manufacturer toyota = new Manufacturer(null,"Toyota", "Japan");
-        Manufacturer bmw = new Manufacturer(null,"BMW", "Germany");
+        Manufacturer toyota = new Manufacturer("Toyota", "Japan");
+        Manufacturer bmw = new Manufacturer("BMW", "Germany");
         toyota = manufacturerService.create(toyota);
         bmw = manufacturerService.create(bmw);
         System.out.println("Create 2 manufacturers");
         manufacturerService.getAll().forEach(System.out::println);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver mike = new Driver(null, "Mike", "AE4552UA");
-        Driver bob = new Driver(null, "Bob", "BOB");
+        Driver mike = new Driver("Mike", "AE4552UA");
+        Driver bob = new Driver("Bob", "BOB");
         driverService.create(mike);
         driverService.create(bob);
         System.out.println("Add 2 drivers");
@@ -37,8 +37,8 @@ public class Main {
         toyotaDrivers.add(bob);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car toyotaCar = new Car(null,"Corola", toyota, toyotaDrivers);
-        Car bmwCar = new Car(null,"i4", bmw, bmwDrivers);
+        Car toyotaCar = new Car("Corola", toyota, toyotaDrivers);
+        Car bmwCar = new Car("i4", bmw, bmwDrivers);
         System.out.println(carService.getAll());
         System.out.println("Create 2 cars");
 
