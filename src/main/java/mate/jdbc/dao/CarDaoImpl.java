@@ -153,7 +153,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteDrivers(Car car) {
+    private void deleteDriversFromCar(Car car) {
         String deleteDriversQuery = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement deleteCarDriversStatement
