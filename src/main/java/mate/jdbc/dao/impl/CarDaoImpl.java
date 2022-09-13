@@ -18,7 +18,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
@@ -45,11 +44,11 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id, model, m.id AS manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                      PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
@@ -97,7 +96,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Coldn't update car " + car, e);
         }
-        removeDriverFromCar(car);
+        removeDriversFromCar(car);
         addDriversToCar(car);
         return car;
     }
@@ -156,7 +155,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private Driver createDriver(ResultSet resultSet) throws SQLException {
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
@@ -176,7 +175,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                drivers.add(createDriver(resultSet));
+                drivers.add(parseDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -199,7 +198,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void removeDriverFromCar(Car car) {
+    private void removeDriversFromCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement statement
