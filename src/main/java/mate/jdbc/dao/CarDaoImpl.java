@@ -112,7 +112,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllByDriver(Long id) {
+    public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT c.id, model, manufacturer_id, name, country "
                 + "FROM cars_drivers cd JOIN cars c ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
@@ -120,7 +120,7 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car = parseCar(resultSet);
@@ -128,7 +128,7 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException(
-                    "Couldn't get a list of all car by driver_id" + id, e);
+                    "Couldn't get a list of all car by driver's id'" + driverId, e);
         }
         cars.forEach(car -> car.setDrivers(getDriversForCar(car)));
         return cars;
