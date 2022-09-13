@@ -7,22 +7,22 @@ public class Car {
     private Long id;
     private String model;
     private Manufacturer manufacturer;
-    private List<Driver> driversList;
+    private List<Driver> drivers;
 
     public Car() {
     }
 
-    public Car(String model, Manufacturer manufacturer, List<Driver> driversList) {
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
-        this.driversList = driversList;
+        this.drivers = drivers;
     }
 
     public Car(Long id, String model, Manufacturer manufacturer, List<Driver> driversList) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
-        this.driversList = driversList;
+        this.drivers = driversList;
     }
 
     public Long getId() {
@@ -49,12 +49,12 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    public List<Driver> getDriversList() {
-        return driversList;
+    public List<Driver> getDrivers() {
+        return drivers;
     }
 
-    public void setDriversList(List<Driver> driversList) {
-        this.driversList = driversList;
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
@@ -69,12 +69,12 @@ public class Car {
         return Objects.equals(id, car.id)
                 && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
-                && Objects.equals(driversList, car.driversList);
+                && Objects.equals(drivers, car.drivers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, model, manufacturer, driversList);
+        return Objects.hash(id, model, manufacturer, drivers);
     }
 
     @Override
@@ -82,6 +82,6 @@ public class Car {
         return "Car{id=" + id
                 + ", mode='" + model + '\''
                 + ", manufacturer=" + manufacturer
-                + ", driversList=" + driversList + '}';
+                + ", driversList=" + drivers + '}';
     }
 }

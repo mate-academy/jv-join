@@ -27,7 +27,7 @@ public class Main {
         Car car = new Car();
         car.setModel("Tesla X");
         car.setManufacturer(manufacturer);
-        car.setDriversList(driverService.getAll());
+        car.setDrivers(driverService.getAll());
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         System.out.println(carService.create(car));
@@ -36,7 +36,7 @@ public class Main {
         driver = driverService.create(driver);
         car.setModel("Tesla Model S");
         car.setManufacturer(manufacturerService.get(manufacturer.getId()));
-        car.setDriversList(List.of(driverService.get(driver.getId())));
+        car.setDrivers(List.of(driverService.get(driver.getId())));
 
         System.out.println(carService.update(car));
     }
