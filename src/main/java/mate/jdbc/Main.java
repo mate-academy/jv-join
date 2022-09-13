@@ -14,9 +14,9 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        Manufacturer chery = new Manufacturer(1L, "Chery", "China");
+        Manufacturer chery = new Manufacturer("Chery", "China");
 
-        Manufacturer ford = new Manufacturer(2L, "Ford", "USA");
+        Manufacturer ford = new Manufacturer("Ford", "USA");
 
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
@@ -63,10 +63,10 @@ public class Main {
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
         System.out.println("Create 2 cars");
-        Car fordMondeo = new Car(1L,"Mondeo", ford, driverList);
+        Car fordMondeo = new Car("Mondeo", ford, driverList);
         carService.create(fordMondeo);
         System.out.println(carService.get(fordMondeo.getId()));
-        Car cheryKimo = new Car(2L, "Kimo", chery, driverList);
+        Car cheryKimo = new Car("Kimo", chery, driverList);
         carService.create(cheryKimo);
         System.out.println(carService.get(cheryKimo.getId()));
 
