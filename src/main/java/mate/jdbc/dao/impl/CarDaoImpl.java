@@ -37,7 +37,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        insertDrivers(car);
+        insertDriversForCar(car);
         return car;
     }
 
@@ -75,16 +75,15 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCar(resultSet);
-                if (car != null) {
-                    car.setDrivers(getDriversForCar(car.getId()));
-                }
-                cars.add(car);
+                cars.add(parseCar(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -127,8 +126,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        deleteDrivers(car);
-        insertDrivers(car);
+        deleteDriversForCar(car);
+        insertDriversForCar(car);
         return car;
     }
 
@@ -144,7 +143,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteDrivers(Car car) {
+    private void deleteDriversForCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -175,7 +174,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertDrivers(Car car) {
+    private void insertDriversForCar(Car car) {
         String query = "INSERT INTO `taxi_service`.`cars_drivers` (`car_id`, `driver_id`) "
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
