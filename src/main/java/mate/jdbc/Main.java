@@ -29,16 +29,16 @@ public class Main {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
         List<Driver> bmwDrivers = new ArrayList<>();
-        Driver misha = new Driver("Mihael", "257254");
+        Driver misha = new Driver("Mihael", "2514654");
         driverService.create(misha);
         bmwDrivers.add(misha);
 
-        Driver timur = new Driver("Timur", "25427522");
+        Driver timur = new Driver("Timur", "251425422");
         driverService.create(timur);
         bmwDrivers.add(timur);
         List<Driver> teslaDrivers = new ArrayList<>();
 
-        Driver alex = new Driver("Alex", "651698516");
+        Driver alex = new Driver("Alex", "651614516");
         driverService.create(alex);
         teslaDrivers.add(alex);
 
