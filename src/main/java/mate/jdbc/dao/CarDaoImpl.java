@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -52,7 +51,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 car = parseCar(resultSet);
-//                car.setManufacturer(parseManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car with id " + id + "!", e);
@@ -209,7 +207,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update drivers for car by carId " + carId + "!", e);
+            throw new DataProcessingException(
+                    "Can't update drivers for car by carId " + carId + "!", e);
         }
     }
 }
