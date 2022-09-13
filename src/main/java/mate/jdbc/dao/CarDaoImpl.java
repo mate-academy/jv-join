@@ -53,13 +53,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getAllDrivers(car.getId()));
-            }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getAllDrivers(car.getId()));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -73,9 +73,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                car.setManufacturer(getManufacturer(resultSet));
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars from DB", e);
@@ -85,10 +83,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDrivers(Long id) {
-        String query = "SELECT cars_drivers.car_id, d.*"
-                + "FROM cars_drivers "
-                + "JOIN drivers d on d.id = cars_drivers.driver_id "
-                + "WHERE d.is_deleted = false AND cars_drivers.car_id = ?";
+        String query = "SELECT cd.car_id, drivers.*"
+                + "FROM drivers "
+                + "JOIN cars_drivers cd on drivers.id = cd.driver_id "
+                + "WHERE drivers.is_deleted = false AND cd.car_id = ?";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
