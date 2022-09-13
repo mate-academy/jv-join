@@ -22,8 +22,6 @@ public class Main {
         Manufacturer nissan = new Manufacturer(
                 "Nissan", "Japan");
         manufacturerService.create(nissan);
-        Manufacturer dodge = new Manufacturer("Dodge", "USA");
-        manufacturerService.create(dodge);
 
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
@@ -64,6 +62,18 @@ public class Main {
         System.out.println(carService.get(ferrariCar.getId()));
         System.out.println(george.getName() + " was add to the car: "
                 + ferrariCar.getManufacturer().getName() + " " + ferrariCar.getModel());
+        System.out.println("__________________________________________________");
+
+        System.out.println("Get all by driver " + george.getName() + " id" + george.getId());
+        System.out.println(carService.getAllByDriver(george.getId()));
+        System.out.println("__________________________________________________");
+
+        System.out.println("Remove driver " + george.getName() + " from the car "
+                + nissanCar.getManufacturer().getName() + " " + nissanCar.getModel());
+        carService.removeDriverFromCar(george, nissanCar);
+        System.out.println(nissanCar.getManufacturer().getName() + " "
+                + nissanCar.getModel() + " have total driver amount: "
+                + nissanCar.getDrivers().size());
         System.out.println("__________________________________________________");
 
         System.out.println("Delete car " + nissanCar.getManufacturer().getName()
