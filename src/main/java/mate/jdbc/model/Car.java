@@ -9,6 +9,21 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
+    public Car() {
+    }
+
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
     public Long getId() {
         return id;
     }
@@ -50,7 +65,9 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return Objects.equals(id, car.id) && Objects.equals(model, car.model) && Objects.equals(manufacturer, car.manufacturer) && Objects.equals(drivers, car.drivers);
+        return Objects.equals(id, car.id) && Objects.equals(model, car.model)
+                && Objects.equals(manufacturer, car.manufacturer)
+                && Objects.equals(drivers, car.drivers);
     }
 
     @Override
