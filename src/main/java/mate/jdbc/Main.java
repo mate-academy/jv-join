@@ -12,26 +12,25 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     public static void main(String[] args) {
-        Injector injector = Injector.getInstance("mate.jdbc");
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setCountry("America");
         manufacturer.setName("AmericanManufacrturer");
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer createdManufacturer = manufacturerService.create(manufacturer);
-
         Driver driver = new Driver();
         driver.setLicenseNumber("7");
         driver.setName("Sany");
         Driver driver1 = new Driver();
         driver1.setName("Carl");
         driver1.setLicenseNumber("4");
+        Injector injector = Injector.getInstance("mate.jdbc");
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver createdDriver = driverService.create(driver);
         Driver createdDriver1 = driverService.create(driver1);
         Car car = new Car();
         car.setModel("busik");
         car.setDrivers(new ArrayList<>(List.of(createdDriver, createdDriver1)));
+        ManufacturerService manufacturerService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        Manufacturer createdManufacturer = manufacturerService.create(manufacturer);
         car.setManufacturer(createdManufacturer);
         System.out.println(car);
         CarService carService = (CarService) injector.getInstance(CarService.class);
