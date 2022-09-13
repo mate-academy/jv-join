@@ -31,5 +31,6 @@ public class Main {
         System.out.println(driverService.getAll());
         System.out.println(carService.getAll());
         System.out.println(carService.getAll());
+        System.out.println(carService.getAll());
     }
 }
