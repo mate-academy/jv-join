@@ -30,8 +30,8 @@ CREATE TABLE `cars` (
                                 ON DELETE NO ACTION
                                 ON UPDATE NO ACTION);
 CREATE TABLE `cars_drivers` (
-                                `car_id` bigint NOT NULL,
-                                `driver_id` bigint NOT NULL,
+                                `car_id` BIGINT NOT NULL,
+                                `driver_id` BIGINT NOT NULL,
                                 KEY `cars_drivers_cars_id` (`car_id`),
                                 KEY `cars_drivers_drivers_id` (`driver_id`),
                                 CONSTRAINT `cars_drivers_cars_id` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),

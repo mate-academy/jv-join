@@ -38,7 +38,7 @@ public class Main {
         gold.add(alex);
         platinum.add(alice);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        System.out.println("Create 3 cars!");
+        System.out.println("Create 3 cars");
         Car mercedesCls = new Car("Cls", mercedes, gold);
         carService.create(mercedesCls);
         System.out.println(carService.get(mercedesCls.getId()));
@@ -49,15 +49,15 @@ public class Main {
         carService.create(audiQ);
         System.out.println(carService.get(audiQ.getId()));
         System.out.println("--------");
-        System.out.println("Delete audi car!");
+        System.out.println("Delete audi car");
         carService.delete(audiQ.getId());
         System.out.println(carService.getAll());
         System.out.println("--------");
-        System.out.println("Remove Bob driver from mercedes Cls!");
+        System.out.println("Remove Bob driver from mercedes Cls");
         carService.removeDriverFromCar(bob, mercedesCls);
         System.out.println(carService.get(mercedesCls.getId()));
         System.out.println("-----------");
-        System.out.println("Add Alice driver to teslaM!");
+        System.out.println("Add Alice driver to teslaM");
         carService.addDriverToCar(alice, teslaM);
         System.out.println(carService.get(teslaM.getId()));
         System.out.println("----------");
