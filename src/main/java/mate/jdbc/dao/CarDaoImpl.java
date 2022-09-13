@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car: " + car, e);
         }
-        insertDrivers(car);
+        addNewDriversForCar(car);
         return car;
     }
 
@@ -91,12 +91,12 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setString(1, car.getModel());
             preparedStatement.setLong(2, car.getManufacturer().getId());
             preparedStatement.setLong(3, car.getId());
-
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
         }
-        remove(car);
-        insertDrivers(car);
+        removeOldDriversForCar(car);
+        addNewDriversForCar(car);
         return car;
     }
 
@@ -116,7 +116,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT cars.id, model, manufacturer_id, name, country "
-                + "FROM cars_drivers  JOIN cars ON cars.id = cars_drivers.car_id "
+                + "FROM cars JOIN cars_drivers ON cars.id = cars_drivers.car_id "
                 + "JOIN manufacturers ON manufacturers.id = cars.manufacturer_id "
                 + "WHERE cars.is_deleted = FALSE AND cars_drivers.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
@@ -136,7 +136,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private void insertDrivers(Car car) {
+    private void addNewDriversForCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -150,7 +150,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void remove(Car car) {
+    private void removeOldDriversForCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
