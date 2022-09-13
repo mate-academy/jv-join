@@ -34,7 +34,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create car. " + car + ". ", e);
         }
-        insertAllRelationsCarWithDrivers(car);
+        insertRelationsWithCarAndDrivers(car);
         return car;
     }
 
@@ -101,8 +101,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update a car " + car, e);
         }
-        deleteAllRelationsCarWithDrivers(car.getId());
-        insertAllRelationsCarWithDrivers(car);
+        deleteRelationsWithCarAndDrivers(car.getId());
+        insertRelationsWithCarAndDrivers(car);
         return car;
     }
 
@@ -167,7 +167,7 @@ public class CarDaoImpl implements CarDao {
         return manufacturer;
     }
 
-    private int deleteAllRelationsCarWithDrivers(Long carId) {
+    private int deleteRelationsWithCarAndDrivers(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement
@@ -180,21 +180,21 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private boolean insertAllRelationsCarWithDrivers(Car car) {
+    private boolean insertRelationsWithCarAndDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertStatement = connection.prepareStatement(query)) {
             insertStatement.setLong(1, car.getId());
-            int numOfUpdatedLines = 0;
+            int amountOfUpdatedLines = 0;
             List<Driver> drivers = car.getDrivers();
             for (Driver driver : drivers) {
                 insertStatement.setLong(2, driver.getId());
                 insertStatement.executeUpdate();
-                numOfUpdatedLines++;
+                amountOfUpdatedLines++;
             }
-            return numOfUpdatedLines == drivers.size();
+            return amountOfUpdatedLines == drivers.size();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert relation cars with drivers. "
+            throw new DataProcessingException("Couldn't insert relations with cars and drivers. "
                     + car, e);
         }
     }
