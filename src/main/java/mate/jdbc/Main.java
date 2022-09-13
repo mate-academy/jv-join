@@ -43,8 +43,8 @@ public class Main {
         System.out.println("\n Created 3 drivers \n");
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car bmwCar = new Car("x5",bmw, bmwDrivers);
-        Car toyotaCar = new Car("camry",toyota,toyotaDrivers);
+        Car bmwCar = new Car("x5", bmw, bmwDrivers);
+        Car toyotaCar = new Car("camry", toyota, toyotaDrivers);
         carService.create(bmwCar);
         carService.create(toyotaCar);
 

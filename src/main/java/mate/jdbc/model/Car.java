@@ -18,11 +18,6 @@ public class Car {
         this.drivers = drivers;
     }
 
-    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
-        this(model, manufacturer, drivers);
-        this.id = id;
-    }
-
     public long getId() {
         return id;
     }

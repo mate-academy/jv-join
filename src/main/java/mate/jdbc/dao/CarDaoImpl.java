@@ -31,10 +31,10 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
+            throw new DataProcessingException("Couldn't create a car: "
                         + car + ". ", e);
         }
-        insertDrivers(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -74,7 +74,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars.", e);
         }
         cars.forEach(c -> c.setDrivers(getDriversByCar(c)));
         return cars;
@@ -92,11 +92,11 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update "
+            throw new DataProcessingException("Couldn't update a car: "
                     + car + " in carsDB.", e);
         }
         deleteDriversFromCar(car);
-        insertDrivers(car);
+        addDriversToCar(car);
         return car;
     }
 
@@ -113,7 +113,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-public List<Car> getAllByDriver(Long id) {
+    public List<Car> getAllByDriver(Long driverId) {
         String request = "SELECT c.id as car_id, model, manufacturer_id, name, country "
                 + "FROM cars_drivers cd JOIN cars c ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
@@ -121,20 +121,20 @@ public List<Car> getAllByDriver(Long id) {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(request)) {
-            statement.setLong(1, id);
+            statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car = getCar(resultSet);
                 cars.add(car);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all car by driver id " + id, e);
+            throw new DataProcessingException("Couldn't get all cars by driver id " + driverId, e);
         }
         cars.forEach(c -> c.setDrivers(getDriversByCar(c)));
         return cars;
     }
 
-    private void insertDrivers(Car car) {
+    private void addDriversToCar(Car car) {
         String request = "INSERT INTO cars_drivers (car_id, driver_id) "
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -145,16 +145,16 @@ public List<Car> getAllByDriver(Long id) {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert drivers into car ", e);
+            throw new DataProcessingException("Couldn't add drivers to car ", e);
         }
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setId(resultSet.getObject("c.id", Long.class));
+        car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("c.manufacturer_id", Long.class));
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("name"));
         manufacturer.setCountry(resultSet.getString("country"));
         car.setManufacturer(manufacturer);
@@ -182,7 +182,7 @@ public List<Car> getAllByDriver(Long id) {
 
     private Driver parseDrivers(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
-        driver.setId(resultSet.getLong("d.id"));
+        driver.setId(resultSet.getLong("id"));
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
