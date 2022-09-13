@@ -55,13 +55,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = parseCarWithManufacturerFromResultSet(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getDriversForCar(id));
-            }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -80,13 +80,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars from DB", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -100,12 +100,12 @@ public class CarDaoImpl implements CarDao {
             updateStatement.setLong(2, car.getManufacturer().getId());
             updateStatement.setLong(3, car.getId());
             updateStatement.executeUpdate();
-            addDriverToCar(car);
-            removeDriverFromCar(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update a car " + car, e);
         }
+        addDriverToCar(car);
+        removeDriverFromCar(car);
+        return car;
     }
 
     @Override
