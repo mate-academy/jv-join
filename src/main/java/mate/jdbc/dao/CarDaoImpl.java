@@ -39,22 +39,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDrivers(Car car) {
-        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement insertDriversStatement =
-                        connection.prepareStatement(insertDriversQuery)) {
-            insertDriversStatement.setLong(1, car.getId());
-            for (Driver driver: car.getDrivers()) {
-                insertDriversStatement.setLong(2, driver.getId());
-                insertDriversStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert cars - "
-                    + "drivers relations to the db. Car: " + car, e);
-        }
-    }
-
     @Override
     public Optional<Car> get(Long id) {
         String query = "SELECT cars.id, model, manufacturer_id, name, country "
@@ -78,35 +62,6 @@ public class CarDaoImpl implements CarDao {
             car.setDrivers(getDriversByCarId(id));
         }
         return Optional.ofNullable(car);
-    }
-
-    private List<Driver> getDriversByCarId(Long carId) {
-        String getAllDriversQuery = "SELECT id, name, license_number "
-                + "FROM drivers "
-                + "JOIN cars_drivers "
-                + "ON id = driver_id "
-                + "WHERE car_id = ?";
-        List<Driver> drivers = new ArrayList<>();
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement getAllDriversStatement =
-                         connection.prepareStatement(getAllDriversQuery)) {
-            getAllDriversStatement.setLong(1, carId);
-            ResultSet resultSet = getAllDriversStatement.executeQuery();
-            while (resultSet.next()) {
-                drivers.add(parseDriverFromResultSet(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't receive a list of "
-                    + "drivers from car id: " + carId, e);
-        }
-        return drivers;
-    }
-
-    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("license_number");
-        return new Driver(id, name, licenseNumber);
     }
 
     @Override
@@ -153,20 +108,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void deleteAllRelationsToDrivers(Long carId) {
-        String deleteRelationsQuery = "DELETE FROM cars_drivers "
-                + "WHERE car_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement deleteRelationsStatement =
-                        connection.prepareStatement(deleteRelationsQuery)) {
-            deleteRelationsStatement.setLong(1, carId);
-            deleteRelationsStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete relations between "
-                    + "cars and drivers by car id: " + carId, e);
-        }
-    }
-
     @Override
     public boolean delete(Long id) {
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
@@ -202,5 +143,64 @@ public class CarDaoImpl implements CarDao {
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
         return new Car(id, model, manufacturer);
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement insertDriversStatement =
+                         connection.prepareStatement(insertDriversQuery)) {
+            insertDriversStatement.setLong(1, car.getId());
+            for (Driver driver: car.getDrivers()) {
+                insertDriversStatement.setLong(2, driver.getId());
+                insertDriversStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert cars - "
+                    + "drivers relations to the db. Car: " + car, e);
+        }
+    }
+
+    private List<Driver> getDriversByCarId(Long carId) {
+        String getAllDriversQuery = "SELECT id, name, license_number "
+                + "FROM drivers "
+                + "JOIN cars_drivers "
+                + "ON id = driver_id "
+                + "WHERE car_id = ?";
+        List<Driver> drivers = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement getAllDriversStatement =
+                         connection.prepareStatement(getAllDriversQuery)) {
+            getAllDriversStatement.setLong(1, carId);
+            ResultSet resultSet = getAllDriversStatement.executeQuery();
+            while (resultSet.next()) {
+                drivers.add(parseDriverFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't receive a list of "
+                    + "drivers from car id: " + carId, e);
+        }
+        return drivers;
+    }
+
+    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("license_number");
+        return new Driver(id, name, licenseNumber);
+    }
+
+    private void deleteAllRelationsToDrivers(Long carId) {
+        String deleteRelationsQuery = "DELETE FROM cars_drivers "
+                + "WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement deleteRelationsStatement =
+                         connection.prepareStatement(deleteRelationsQuery)) {
+            deleteRelationsStatement.setLong(1, carId);
+            deleteRelationsStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete relations between "
+                    + "cars and drivers by car id: " + carId, e);
+        }
     }
 }
