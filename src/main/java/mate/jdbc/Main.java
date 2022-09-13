@@ -19,10 +19,10 @@ public class Main {
         final ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
         final CarService carService = (CarService) injector.getInstance(CarService.class);
-        Driver driver = new Driver(null, "Vasyl", "MLO-12345");
-        Driver driver1 = new Driver(null, "Edward", "PLO-17325");
-        Driver driver2 = new Driver(null, "Paul", "MNO-13945");
-        Driver driver3 = new Driver(null, "Ilana", "ACK-12345");
+        Driver driver = new Driver("Vasyl", "MLO-12345");
+        Driver driver1 = new Driver("Edward", "PLO-17325");
+        Driver driver2 = new Driver("Paul", "MNO-13945");
+        Driver driver3 = new Driver("Ilana", "ACK-12345");
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driver);
         drivers.add(driver1);
@@ -34,13 +34,13 @@ public class Main {
         drivers.forEach(driverService::create);
         drivers2.forEach(driverService::create);
 
-        Manufacturer manufacturerLexus = new Manufacturer(null, "Lexus", "Japan");
-        Manufacturer manufacturerJaguar = new Manufacturer(null, "Jaguar", "UK");
+        Manufacturer manufacturerLexus = new Manufacturer("Lexus", "Japan");
+        Manufacturer manufacturerJaguar = new Manufacturer ("Jaguar", "UK");
         manufacturerService.create(manufacturerLexus);
         manufacturerService.create(manufacturerJaguar);
 
-        Car car = new Car(null, "ES", manufacturerLexus, drivers);
-        Car car1 = new Car(null, "XF", manufacturerJaguar, drivers2);
+        Car car = new Car( "ES", manufacturerLexus, drivers);
+        Car car1 = new Car("XF", manufacturerJaguar, drivers2);
         Car car2 = new Car(car1.getId(), "LS", manufacturerLexus, drivers2);
 
         carService.create(car);
