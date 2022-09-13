@@ -177,8 +177,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert cars with drivers. "
-                    + car, e);
+            throw new DataProcessingException("Couldn't add drivers to car: " + car, e);
         }
     }
 
@@ -196,9 +195,8 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers "
+            throw new DataProcessingException("Couldn't get a list of drivers for car: "
                     + car, e);
         }
-
     }
 }
