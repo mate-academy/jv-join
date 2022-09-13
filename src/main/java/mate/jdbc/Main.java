@@ -27,7 +27,7 @@ public class Main {
                 .getInstance(DriverService.class);
 
         System.out.println("Create driver");
-        Driver valera = new Driver(null, "Valera", "121189213");
+        Driver valera = new Driver(null, "Valera", "1213189213");
         Driver createdDriver = driverService.create(valera);
         System.out.println(createdDriver);
 
@@ -52,7 +52,7 @@ public class Main {
 
         getCarById.setModel("Audi");
         createdDriver.setName("Igor");
-        createdDriver.setLicenseNumber("312819931223");
+        createdDriver.setLicenseNumber("3128193931223");
 
         System.out.println("Update car");
         createdDriver = driverService.create(createdDriver);
@@ -65,7 +65,7 @@ public class Main {
         driversCars.forEach(System.out::println);
 
         System.out.println("Add new driver to car");
-        Driver addedDriver = new Driver(null, "Mykola", "1121981223123");
+        Driver addedDriver = new Driver(null, "Mykola", "11213981223123");
         driverService.create(addedDriver);
         carService.addDriverToCar(addedDriver, getCarById);
         System.out.println(carService.get(getCarById.getId()));
