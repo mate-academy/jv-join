@@ -130,7 +130,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t get all "
                   + "Cars by drivers id: " + driverId, throwables);
         }
-
         for (Car car : cars) {
             car.setDrivers(getDriversForCar(car.getId()));
         }
@@ -169,7 +168,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t get "
                   + "Drivers from DB by Cars id:" + id, throwables);
         }
-
         return drivers;
     }
 
