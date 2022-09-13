@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete car with id " + id + "!", e);
+            throw new DataProcessingException("Can't get car with id " + id + "!", e);
         }
         if (car != null) {
             car.setDrivers(getAllDriversForCar(car));
@@ -129,7 +129,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car = parseCar(resultSet);
-                car.setManufacturer(parseManufacturer(resultSet));
                 cars.add(car);
             }
         } catch (SQLException e) {
