@@ -8,7 +8,7 @@ import mate.jdbc.model.Driver;
 public interface CarService {
     Car create(Car car);
 
-    Optional<Car> get(Long id);
+    Car get(Long id);
 
     List<Car> getAll();
 
