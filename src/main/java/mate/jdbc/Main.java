@@ -21,12 +21,11 @@ public class Main {
         System.out.println(manufacturerService.getAll());
         System.out.println(driverService.getAll());
         System.out.println(carService.getAll());
-        Driver ivan = driverService.create(new Driver(null, "Ivan", "11233"));
-        Driver sevan = driverService.create(new Driver(null, "Sevan", "87654"));
-        Car chiron = new Car();
-        chiron.setModel("Chiron");
-        chiron.setManufacturer(manufacturerService.create(new Manufacturer(null,
-                "Bugatti", "France")));
+        Driver ivan = driverService.create(new Driver(0L, "Ivan", "11233"));
+        Driver sevan = driverService.create(new Driver(0L, "Sevan", "87654"));
+        Manufacturer bugatti = new Manufacturer(0L,"Bugatti", "France");
+        Car chiron = new Car(0L,"Chiron", bugatti);
+        chiron.setManufacturer(bugatti);
         chiron.setDrivers(List.of(ivan,sevan));
         System.out.println(manufacturerService.getAll());
         System.out.println(driverService.getAll());

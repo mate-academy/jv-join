@@ -35,7 +35,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        pushCarDriversToDb(car);
+        addDriversForCar(car);
         return car;
     }
 
@@ -92,7 +92,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update car " + car + " .", e);
         }
         deleteDriversForCar(car);
-        pushCarDriversToDb(car);
+        addDriversForCar(car);
         return car;
     }
 
@@ -110,7 +110,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars_drivers AS cd JOIN cars AS c ON cd.car_id = c.id "
+        String query = "SELECT * FROM cars AS c JOIN cars_drivers AS cd ON cd.car_id = c.id "
                 + "JOIN manufacturers AS m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
@@ -130,15 +130,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
-        car.setId(resultSet.getObject("c.id", Long.class));
-        car.setModel(resultSet.getString("model"));
+        Long id = resultSet.getObject("c.id", Long.class);
+        String model = resultSet.getString("model");
         Long manufacturerId = resultSet.getObject("m.id", Long.class);
         String manufacturerName = resultSet.getString("name");
         String manufacturerCountry = resultSet.getString("country");
-        car.setManufacturer(new Manufacturer(manufacturerId,
-                manufacturerName, manufacturerCountry));
-        return car;
+        Manufacturer manufacturer = new Manufacturer(manufacturerId,
+                manufacturerName, manufacturerCountry);
+        return new Car(id,model,manufacturer);
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
@@ -165,7 +164,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void pushCarDriversToDb(Car car) {
+    private void addDriversForCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -191,5 +190,4 @@ public class CarDaoImpl implements CarDao {
                     + car + " .", e);
         }
     }
-
 }
