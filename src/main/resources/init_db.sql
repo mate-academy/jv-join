@@ -37,4 +37,3 @@ CREATE TABLE `cars_drivers` (
                           REFERENCES `cars` (`id`),
                           CONSTRAINT `cars_drivers_drivers_id` FOREIGN KEY (`driver_id`)
                           REFERENCES `drivers` (`id`))
-
