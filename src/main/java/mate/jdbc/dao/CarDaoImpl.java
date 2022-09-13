@@ -121,11 +121,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = new ArrayList<>();
         String query = "SELECT cars.id, cars.model, cars.manufacturer_id,"
                 + "manufacturers.name, manufacturers.country "
                 + "FROM cars, cars_drivers, manufacturers "
                 + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = false;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
