@@ -2,16 +2,15 @@ package mate.jdbc.service.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import mate.jdbc.dao.ManufacturerDao;
+import mate.jdbc.dao.ManufacturerService;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
-import mate.jdbc.service.ManufacturerService;
 
 @Service
-public class ManufacturerServiceImpl implements ManufacturerService {
+public class ManufacturerServiceImpl implements mate.jdbc.service.ManufacturerService {
     @Inject
-    private ManufacturerDao manufacturerDao;
+    private ManufacturerService manufacturerDao;
 
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
