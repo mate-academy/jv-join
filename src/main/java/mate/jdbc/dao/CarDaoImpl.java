@@ -58,7 +58,7 @@ public class CarDaoImpl implements CarDao {
                 "FROM cars c " +
                 "JOIN manufacturers m " +
                 "ON c.manufacturer_id = m.id " +
-                "WHERE c.id = ?;";
+                "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(selectRequest)){
@@ -122,7 +122,8 @@ public class CarDaoImpl implements CarDao {
         String selectRequest = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, m.country " +
                 "FROM cars c " +
                 "JOIN manufacturers m " +
-                "ON c.manufacturer_id = m.id;";
+                "ON c.manufacturer_id = m.id " +
+                "WHERE c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(selectRequest)){
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -166,17 +167,39 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can`t delete link with drivers for car " + car, e);
+            throw new DataProcessingException("Can`t remove drivers from car " + car, e);
         }
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String deleteRequest = "UPDATE cars "
+                + "SET is_deleted = TRUE "
+                + "WHERE id = ? AND is_deleted = FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(deleteRequest)){
+            preparedStatement.setLong(1, id);
+            return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can`t delete car in with id " + id, e);
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String selectRequest = "SELECT car_id FROM cars_drivers WHERE driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(selectRequest)){
+            preparedStatement.setLong(1, driverId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(get(resultSet.getLong("car_id")).get());
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException
+                    ("Can`t get all cars for driver with id " + driverId, e);
+        }
+        return cars;
     }
 }
