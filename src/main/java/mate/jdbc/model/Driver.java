@@ -7,11 +7,25 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
-    public Driver(Long id, String name, String licenseNumber) {
+    private Driver(Long id, String name, String licenseNumber) {
         this.id = id;
         this.name = name;
         this.licenseNumber = licenseNumber;
     }
+
+    private Driver(String name, String licenseNumber) {
+        this.name = name;
+        this.licenseNumber = licenseNumber;
+    }
+
+    public static Driver of(Long id, String name, String licenseNumber) {
+        return new Driver (id, name, licenseNumber);
+    }
+
+    public static Driver of(String name, String licenseNumber) {
+        return new Driver (name, licenseNumber);
+    }
+
 
     public Long getId() {
         return id;

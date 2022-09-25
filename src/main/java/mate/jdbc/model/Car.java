@@ -22,12 +22,22 @@ public class Car {
         this.drivers = drivers;
     }
 
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
     public static Car of(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         return new Car(id, model, manufacturer, drivers);
     }
 
     public static Car of(String model, Manufacturer manufacturer, List<Driver> drivers) {
         return new Car(model, manufacturer, drivers);
+    }
+
+    public static Car of(Long id, String model, Manufacturer manufacturer) {
+        return new Car(id, model, manufacturer);
     }
 
     public Long getId() {
