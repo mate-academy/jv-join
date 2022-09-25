@@ -47,9 +47,10 @@ public class CarServiceImpl implements CarService {
             List<Driver> drivers = new ArrayList<>();
             drivers.add(driver);
             car.setDrivers(drivers);
+        } else {
+            car.getDrivers().add(driver);
+            carDao.update(car);
         }
-        car.getDrivers().add(driver);
-        carDao.update(car);
     }
 
     @Override
