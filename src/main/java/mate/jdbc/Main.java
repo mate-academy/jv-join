@@ -27,6 +27,8 @@ public class Main {
         List<Driver> drivers = List.of(newDriver1, newDriver2, existingDriver);
         System.out.println(carService.create(Car.of("Logan", newManufacturer, drivers)));*/
         //System.out.println(carService.get(3L));
+        //System.out.println(carService.delete(14L));
+        //System.out.println(carService.getAll());
 
     }
 }

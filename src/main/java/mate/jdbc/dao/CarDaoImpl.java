@@ -67,7 +67,25 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        String getAllQuery =
+                "SELECT c.id AS car_id, model, m.id as manufacturer_id, name, country "
+                        + "FROM cars c "
+                        + "JOIN manufacturers m "
+                        + "ON c.manufacturer_id = m.id "
+                        + "WHERE c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllCarsStatement
+                        = connection.prepareStatement(getAllQuery)) {
+            ResultSet resultSet = getAllCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get a list of drivers from DB.", e);
+        }
+        cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+        return cars;
     }
 
     @Override
@@ -77,7 +95,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String softDeleteCarQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement softDeleteCarStatement
+                        = connection.prepareStatement(softDeleteCarQuery)) {
+            softDeleteCarStatement.setLong(1, id);
+            return  softDeleteCarStatement.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete car with id: " + id + ". ", e);
+        }
     }
 
     @Override
