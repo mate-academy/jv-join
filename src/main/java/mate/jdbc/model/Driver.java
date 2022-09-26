@@ -19,13 +19,12 @@ public class Driver {
     }
 
     public static Driver of(Long id, String name, String licenseNumber) {
-        return new Driver (id, name, licenseNumber);
+        return new Driver(id, name, licenseNumber);
     }
 
     public static Driver of(String name, String licenseNumber) {
-        return new Driver (name, licenseNumber);
+        return new Driver(name, licenseNumber);
     }
-
 
     public Long getId() {
         return id;
