@@ -28,7 +28,9 @@ public class Main {
         System.out.println(carService.create(Car.of("Logan", newManufacturer, drivers)));*/
         //System.out.println(carService.get(3L));
         //System.out.println(carService.delete(14L));
-        //System.out.println(carService.getAll());
+        //carService.getAll().forEach(System.out::println);
+        //carService.getAllByDriver(3L).forEach(System.out::println);
+
 
     }
 }

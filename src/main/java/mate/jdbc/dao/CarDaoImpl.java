@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Dao
 public class CarDaoImpl implements CarDao {
@@ -84,7 +86,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get a list of drivers from DB.", e);
         }
-        cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -108,7 +110,29 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String getAllCarsIdByDriverQuery = "SELECT id "
+                + "FROM cars c "
+                + "JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "WHERE driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllCarsIdByDriverStatement
+                        = connection.prepareStatement(getAllCarsIdByDriverQuery)) {
+            getAllCarsIdByDriverStatement.setLong(1, driverId);
+            ResultSet resultSet = getAllCarsIdByDriverStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(Car.of(resultSet.getObject(1, Long.class)));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't find car in DB by driver id "
+                    + driverId + ". ", e);
+        }
+        return cars.stream()
+                .map(c -> get(c.getId())
+                        .orElseThrow(() -> new NoSuchElementException("Could not get driver "
+                        + "by id = " + c.getId())))
+                .collect(Collectors.toList());
     }
 
     private void insertDrivers (Car car) {

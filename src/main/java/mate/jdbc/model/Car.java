@@ -22,10 +22,14 @@ public class Car {
         this.drivers = drivers;
     }
 
-    public Car(Long id, String model, Manufacturer manufacturer) {
+    private Car(Long id, String model, Manufacturer manufacturer) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
+    }
+
+    private Car(Long id) {
+        this.id = id;
     }
 
     public static Car of(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
@@ -38,6 +42,10 @@ public class Car {
 
     public static Car of(Long id, String model, Manufacturer manufacturer) {
         return new Car(id, model, manufacturer);
+    }
+
+    public static Car of(Long id) {
+        return new Car(id);
     }
 
     public Long getId() {
