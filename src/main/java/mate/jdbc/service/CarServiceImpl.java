@@ -1,17 +1,12 @@
 package mate.jdbc.service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.util.ConnectionUtil;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -51,32 +46,17 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        String insertDriverToCar = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement insertDriverToCarStatement
-                        = connection.prepareStatement(insertDriverToCar)) {
-            insertDriverToCarStatement.setLong(1, car.getId());
-            insertDriverToCarStatement.setLong(2, driver.getId());
-            insertDriverToCarStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't add driver :" + driver
-                    + " to car: " + car + ". ", e);
-        }
+        List<Driver> driversFromCar = car.getDrivers();
+        driversFromCar.add(driver);
+        car.setDrivers(car.getDrivers());
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        String removeDriverFromCarQuery = "DELETE FROM cars_drivers "
-                + "WHERE car_id = ? AND driver_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement removeDriverFromCarStatement
-                        = connection.prepareStatement(removeDriverFromCarQuery)) {
-            removeDriverFromCarStatement.setLong(1, car.getId());
-            removeDriverFromCarStatement.setLong(2, driver.getId());
-            removeDriverFromCarStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete driver :" + driver
-                    + " from car: " + car + ". ", e);
-        }
+        List<Driver> driversFromCar = car.getDrivers();
+        driversFromCar.remove(driver);
+        car.setDrivers(car.getDrivers());
+        carDao.update(car);
     }
 }
