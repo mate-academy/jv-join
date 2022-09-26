@@ -28,10 +28,6 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
-    private Car(Long id) {
-        this.id = id;
-    }
-
     public static Car of(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         return new Car(id, model, manufacturer, drivers);
     }
@@ -42,10 +38,6 @@ public class Car {
 
     public static Car of(Long id, String model, Manufacturer manufacturer) {
         return new Car(id, model, manufacturer);
-    }
-
-    public static Car of(Long id) {
-        return new Car(id);
     }
 
     public Long getId() {
