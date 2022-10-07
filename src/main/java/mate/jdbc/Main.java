@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -14,51 +13,39 @@ public class Main {
 
     public static void main(String[] args) {
         // test your code here
-        ManufacturerService manufacturerService =
+        final ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer jeep = new Manufacturer();
         jeep.setName("jeep");
         jeep.setCountry("USA");
-        final Manufacturer createdManufacturer = manufacturerService.create(jeep);
+        jeep.setId(33L);
+        manufacturerService.create(jeep);
+        Manufacturer lexus = new Manufacturer();
+        lexus.setName("Lexus");
+        lexus.setCountry("Italy");
+        lexus.setId(34L);
+        manufacturerService.create(lexus);
+        manufacturerService.delete(1L);
 
-        final DriverService driverService =
-                (DriverService) injector.getInstance(DriverService.class);
-        Driver alex = new Driver();
-        alex.setId(null);
-        alex.setName("Alex");
-        alex.setLicenseNumber("121385");
-        driverService.create(alex);
-
-        Driver veronika = new Driver();
-        veronika.setId(null);
-        veronika.setName("Veronika");
-        veronika.setLicenseNumber("05082020");
-        final Driver createdDriver = driverService.create(veronika);
-
-        final CarService carService =
+        CarService carService =
                 (CarService) injector.getInstance(CarService.class);
-        Car car = new Car();
-        car.setModel("1300");
-        car.setManufacturer(createdManufacturer);
-        car.setDrivers(List.of(alex));
-        Car carCreated = carService.create(car);
+        Car jeepWl = new Car("WL", manufacturerService.get(14L));
+        carService.create(jeepWl);
+        Car lexus570 = new Car("570", manufacturerService.get(13L));
+        carService.create(lexus570);
+        Car updateCar = new Car(1L,"Toyota",manufacturerService.get(2L));
+        carService.update(updateCar);
+        carService.delete(3L);
 
-        Car getCarById = carService.get(carCreated.getId());
-        getCarById.setModel("Renault");
-        createdDriver.setName("Ivan");
-        createdDriver.setLicenseNumber("148877");
+        DriverService driverService =
+                (DriverService) injector.getInstance(DriverService.class);
+        Driver veronika = new Driver(33L, "Veronika","05082020");
+        Driver danylo = new Driver(34L, "Danylo", "08062013");
+        driverService.create(veronika);
+        driverService.create(danylo);
 
-        List<Driver> updateDrivers = getCarById.getDrivers();
-        updateDrivers.add(createdDriver);
-        System.out.println(carService.update(getCarById));
-
-        List<Car> driversCar = carService.getAllByDriver(getCarById.getId());
-        driversCar.forEach(System.out::println);
-
-        Driver john = new Driver(null,"John","123456789");
-        driverService.create(john);
-        carService.addDriverToCar(john, getCarById);
-
-        carService.removeDriverFromCar(john,getCarById);
+        carService.addDriverToCar(driverService.get(33L), carService.get(13L));
+        carService.addDriverToCar(driverService.get(34L), carService.get(14L));
+        carService.removeDriverFromCar(driverService.get(33L), carService.get(13L));
     }
 }

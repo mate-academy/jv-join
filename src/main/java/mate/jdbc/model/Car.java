@@ -9,17 +9,20 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
-    public Car() {
-    }
-
-    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
+    public Car(String model, Manufacturer manufacturer) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
-        this.drivers = drivers;
     }
 
-    public Car(String jeep, Manufacturer jeep1, List<Driver> jeepDriver) {
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
+    public Car() {
+
     }
 
     public Long getId() {
