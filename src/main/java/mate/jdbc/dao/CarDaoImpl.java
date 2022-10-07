@@ -56,8 +56,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         Car car = null;
-        String query = "SELECT c.id, model,manufacturers_id, m.name as manufacturers_name," +
-                " m.country FROM cars as c JOIN manufacturers as m "
+        String query = "SELECT c.id, model,manufacturers_id, m.name as manufacturers_name,"
+                + " m.country FROM cars as c JOIN manufacturers as m "
                 + "ON c.manufacturers_id = m.id WHERE c.id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
