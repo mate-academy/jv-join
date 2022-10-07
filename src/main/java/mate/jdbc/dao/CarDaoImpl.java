@@ -56,8 +56,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         Car car = null;
-        String query = "SELECT c.id, model,manufacturers_id, m.name as manufacturers_name,"
-                + " m.country FROM cars as c JOIN manufacturers as m "
+        String query = "SELECT c.id, model,manufacturers_id, m.name AS manufacturers_name,"
+                + " m.country FROM cars AS c JOIN manufacturers AS m "
                 + "ON c.manufacturers_id = m.id WHERE c.id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -77,9 +77,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id, model , manufacturers_id, m.name as manufacturers_name,"
-                + " m.country as country FROM cars as c JOIN manufacturers as m "
-                + "on c.manufacturers_id = m.id WHERE c.is_deleted = FALSE";
+        String query = "SELECT c.id, model , manufacturers_id, m.name AS manufacturers_name,"
+                + " m.country AS country FROM cars AS c JOIN manufacturers AS m "
+                + "ON c.manufacturers_id = m.id WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -176,8 +176,8 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long id) {
         List<Driver> drivers = new ArrayList<>();
-        String query = "SELECT id, name, license_number FROM drivers as d "
-                + "JOIN cars_drivers as cd on d.id = cd.drivers_id "
+        String query = "SELECT id, name, license_number FROM drivers AS d "
+                + "JOIN cars_drivers AS cd ON d.id = cd.drivers_id "
                 + "WHERE cd.cars_id = ?  AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
