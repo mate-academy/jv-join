@@ -82,13 +82,13 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET manufacturer_id = ?, model = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        deleteAllRelations(car.getId());
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getManufacturer().getId());
             statement.setString(2, car.getModel());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
+            deleteAllRelations(car.getId());
             insertDrivers(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "

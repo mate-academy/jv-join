@@ -18,14 +18,14 @@ public class Main {
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         carService.getAll().forEach(System.out::println);
-        System.out.println(carService.get(4L));
         Manufacturer manufacturer = manufacturerService.get(2L);
-        Driver driver = driverService.get(2L);
+        Driver driver = driverService.get(4L);
         Car car = new Car(6L,"A55",manufacturer,List.of(driver));
         carService.create(car);
         carService.update(new Car(4L,"A55",manufacturer,List.of(driver)));
         carService.delete(5L);
         carService.addDriverToCar(driver,car);
         carService.removeDriverFromCar(driver,car);
+        System.out.println(carService.get(4L));
     }
 }
