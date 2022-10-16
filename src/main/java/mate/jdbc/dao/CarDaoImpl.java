@@ -126,6 +126,7 @@ public class CarDaoImpl implements CarDao {
             List<Driver> drivers = getDriversByCarId(car.getId());
             car.setDrivers(drivers);
         });
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
@@ -144,7 +145,7 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDriversByCarId(Long id) {
         List<Driver> drivers = new ArrayList<>();
         String query = "SELECT * FROM cars_drivers cd "
-                + "JOIN drivers d "
+                + "LEFT JOIN drivers d "
                 + "ON cd.driver_id = d.id "
                 + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
