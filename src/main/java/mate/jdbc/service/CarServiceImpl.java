@@ -8,7 +8,7 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
 @Service
-public class CarServiceImpl implements CarService{
+public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
 
