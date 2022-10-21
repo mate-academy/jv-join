@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(RuntimeException::new);
+        return carDao.get(id).orElseThrow(() -> new RuntimeException("Couldn't get car by id"));
     }
 
     @Override
