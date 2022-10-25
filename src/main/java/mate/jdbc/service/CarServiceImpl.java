@@ -21,7 +21,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id).orElseThrow(
-                () -> new RuntimeException("Could get Car by id: " + id + ". Value is null")
+                () -> new RuntimeException("Their is no Car with id: " + id + " in the DB.")
         );
     }
 
@@ -47,25 +47,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers() == null) {
-            List<Driver> drivers = new ArrayList<>();
-            drivers.add(driver);
-            car.setDrivers(drivers);
-            update(car);
-        } else {
-            final List<Driver> drivers = car.getDrivers();
-            if (!drivers.contains(driver)) {
-                drivers.add(driver);
-                update(car);
-            }
-        }
+        car.getDrivers().add(driver);
+        update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers() != null) {
             car.getDrivers().remove(driver);
             update(car);
-        }
     }
 }
