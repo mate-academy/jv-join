@@ -14,12 +14,12 @@ public class CarServiceImpl implements CarService {
     private CarDao carDao;
 
     @Override
-    public Car create(final Car car) {
+    public Car create(Car car) {
         return carDao.create(car);
     }
 
     @Override
-    public Car get(final Long id) {
+    public Car get(Long id) {
         return carDao.get(id).orElseThrow(
                 () -> new RuntimeException("Could get Car by id: " + id + ". Value is null")
         );
@@ -31,22 +31,22 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car update(final Car car) {
+    public Car update(Car car) {
         return carDao.update(car);
     }
 
     @Override
-    public boolean delete(final Long id) {
+    public boolean delete(Long id) {
         return carDao.delete(id);
     }
 
     @Override
-    public List<Car> getAllByDriver(final Long driverId) {
+    public List<Car> getAllByDriver(Long driverId) {
         return carDao.getAllByDriver(driverId);
     }
 
     @Override
-    public void addDriverToCar(final Driver driver, final Car car) {
+    public void addDriverToCar(Driver driver, Car car) {
         if (car.getDrivers() == null) {
             List<Driver> drivers = new ArrayList<>();
             drivers.add(driver);
@@ -62,7 +62,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void removeDriverFromCar(final Driver driver, final Car car) {
+    public void removeDriverFromCar(Driver driver, Car car) {
         if (car.getDrivers() != null) {
             car.getDrivers().remove(driver);
             update(car);
