@@ -1,4 +1,4 @@
-package mate.jdbc.model;
+package mate.jdbc.jdbc.model;
 
 import java.util.Objects;
 
@@ -6,9 +6,6 @@ public class Manufacturer {
     private Long id;
     private String name;
     private String country;
-
-    public Manufacturer() {
-    }
 
     public Manufacturer(Long id, String name, String country) {
         this.id = id;

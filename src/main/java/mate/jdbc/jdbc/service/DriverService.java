@@ -1,6 +1,6 @@
-package mate.jdbc.service;
+package mate.jdbc.jdbc.service;
 
-import mate.jdbc.model.Driver;
+import mate.jdbc.jdbc.model.Driver;
 
 import java.util.List;
 

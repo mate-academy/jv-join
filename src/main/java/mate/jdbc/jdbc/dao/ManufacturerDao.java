@@ -1,6 +1,6 @@
-package mate.jdbc.dao;
+package mate.jdbc.jdbc.dao;
 
-import mate.jdbc.model.Manufacturer;
+import mate.jdbc.jdbc.model.Manufacturer;
 
 import java.util.List;
 import java.util.Optional;
