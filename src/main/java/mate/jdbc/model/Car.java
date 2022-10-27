@@ -7,7 +7,7 @@ public class Car {
     private String model;
     private Manufacturer manufacturer;
 
-    List<Driver> drivers;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -15,6 +15,12 @@ public class Car {
     public Car(String model, Manufacturer manufacturer) {
         this.model = model;
         this.manufacturer = manufacturer;
+    }
+
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
     }
 
     public Car(Long id, String model, Manufacturer manufacturer) {
@@ -29,7 +35,6 @@ public class Car {
         this.manufacturer = manufacturer;
         this.drivers = drivers;
     }
-
 
     public Long getId() {
         return id;
@@ -65,11 +70,11 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", model='" + model + '\'' +
-                ", manufacturer=" + manufacturer +
-                ", drivers=" + drivers +
-                '}';
+        return "Car{"
+                + "id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers
+                + '}';
     }
 }

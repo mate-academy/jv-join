@@ -1,13 +1,12 @@
 package mate.jdbc.service.impl;
 
+import java.util.List;
+import java.util.NoSuchElementException;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.ManufacturerService;
-
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
