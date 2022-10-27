@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Dao
 public class CarDaoImpl implements CarDao {
@@ -142,6 +143,10 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't find cars by driver id " + driverId, e);
+        }
+        for (Car car : cars) {
+            List<Driver> drivers = getDriversForCar(car.getId());
+            car.setDrivers(drivers);
         }
         return cars;
     }
