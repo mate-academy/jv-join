@@ -72,11 +72,11 @@ public class Main {
         System.out.println(carService.get(bentleyArnage.getId()));
 
         System.out.println(carService.getAll());
-        System.out.println("--------");
+        System.out.println("---");
         carService.removeDriverFromCar(driverAang, ferrariEnzo);
         System.out.println("Remove driverAang from ferrariEnzo!");
         System.out.println(carService.get(ferrariEnzo.getId()));
-        System.out.println("-----------");
+        System.out.println("---");
         carService.addDriverToCar(driverZuko, bentleyArnage);
         System.out.println("Add driverZuko to bentleyArnage!");
     }
