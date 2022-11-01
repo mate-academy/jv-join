@@ -17,9 +17,9 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Manufacturer bogdan = manufacturerService.get(17L);
-        final Driver driver = driverService.get(5L);
-        Car tractor = new Car("TRAKTOR",bogdan);
+        Manufacturer bogdan = manufacturerService.get(5L);
+        final Driver driver = driverService.get(3L);
+        Car tractor = new Car("Madagaskar",bogdan,List.of(driver));
         carService.create(tractor);
         System.out.println(carService.get(1L));
         Driver fedya = new Driver("fedya","de987456");
@@ -33,7 +33,7 @@ public class Main {
         System.out.println(cars);
         carService.delete(2L);
         List<Car> allCars = carService.getAll();
-        cars.forEach((x) -> System.out.println(x));
+        allCars.forEach((x) -> System.out.println(x));
         List<Car> carsByDriver = carService.getAllByDriver(1L);
         carsByDriver.forEach((x) -> System.out.println(x));
         Driver driver3 = driverService.get(3L);
