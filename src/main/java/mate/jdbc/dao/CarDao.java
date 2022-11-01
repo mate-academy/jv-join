@@ -1,23 +1,19 @@
 package mate.jdbc.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
 
 public interface CarDao {
     Car create(Car car);
 
     Car get(Long id);
 
-    List<Car> getAll();
+    List<Car> getAll() throws SQLException;
 
     Car update(Car car);
 
     boolean delete(Long id);
-
-    void addDriverToCar(Driver driver, Car car);
-
-    void removeDriverFromCar(Driver driver, Car car);
 
     List<Car> getAllByDriver(Long driverId);
 }
