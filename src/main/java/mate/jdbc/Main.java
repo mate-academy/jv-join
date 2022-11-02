@@ -1,6 +1,7 @@
 package mate.jdbc;
 
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -37,7 +38,7 @@ public class Main {
         List<Car> carsByDriver = carService.getAllByDriver(1L);
         carsByDriver.forEach((x) -> System.out.println(x));
         Driver driver3 = driverService.get(3L);
-        Car getCar = carService.get(33L);
+        Optional<Car> getCar = carService.get(33L);
         carService.addDriverToCar(driver,car);
         Driver driver1 = driverService.get(1L);
         Driver driver5 = driverService.get(5L);
