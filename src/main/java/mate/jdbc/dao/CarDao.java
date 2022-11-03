@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
 
 public interface CarDao {
     Car create(Car car);
@@ -18,8 +17,4 @@ public interface CarDao {
     boolean delete(Long id);
 
     List<Car> getAllByDriver(Long driverId);
-
-    void addDriverToCar(Driver driver, Car car);
-
-    void removeDriverFromCar(Driver driver, Car car);
 }

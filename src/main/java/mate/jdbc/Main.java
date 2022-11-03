@@ -20,15 +20,15 @@ public class Main {
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Manufacturer bogdan = manufacturerService.get(5L);
         final Driver driver = driverService.get(3L);
-        Car tractor = new Car("Madagaskar",bogdan,List.of(driver));
+        Car tractor = new Car("Madagaskar", bogdan, List.of(driver));
         carService.create(tractor);
         System.out.println(carService.get(1L));
-        Driver fedya = new Driver("fedya","de987456");
-        Driver misha = new Driver("misha","au111111");
+        Driver fedya = new Driver("fedya", "de987456");
+        Driver misha = new Driver("misha", "au111111");
         Driver vitya = driverService.get(4L);
         Manufacturer getbmw = manufacturerService.get(12L);
         System.out.println(vitya);
-        Car car = new Car("Land Cruser",getbmw, List.of(vitya));
+        Car car = new Car("Land Cruser", getbmw, List.of(vitya));
         System.out.println(carService.create(car));
         List<Car> cars = carService.getAll();
         System.out.println(cars);
@@ -39,11 +39,21 @@ public class Main {
         carsByDriver.forEach((x) -> System.out.println(x));
         Driver driver3 = driverService.get(3L);
         Optional<Car> getCar = carService.get(33L);
-        carService.addDriverToCar(driver,car);
+        carService.addDriverToCar(driver, car);
         Driver driver1 = driverService.get(1L);
         Driver driver5 = driverService.get(5L);
         Manufacturer man = manufacturerService.get(13L);
-        Car newCar = new Car(35L,"ARMAGEDON",man,List.of(driver1,driver5));
+        Car newCar = new Car(35L, "ARMAGEDON", man, List.of(driver1, driver5));
         System.out.println(carService.update(newCar));
+        Driver d = driverService.get(2L);
+        Manufacturer m1 = manufacturerService.get(5L);
+        Car fantom = new Car(24L, "FANTOM", m1, List.of(d));
+        System.out.println(carService.update(fantom));
+        Driver d1 = driverService.get(1L);
+        Driver d2 = driverService.get(5L);
+        Optional<Car> carGet = carService.get(24L);
+        System.out.println(carGet);
+        carService.addDriverToCar(d1, car);
+        carService.removeDriverFromCar(d1, car);
     }
 }
