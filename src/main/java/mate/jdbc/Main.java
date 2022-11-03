@@ -22,7 +22,7 @@ public class Main {
         manufacturer.setName("Porse Group");
 
         Driver driver = new Driver();
-        driver.setLicenseNumber("Ivan's License");
+        driver.setLicenseNumber("Ivan's1 License");
         driver.setName("Ivan Aldokhin");
 
         List<Driver> allDrivers = new ArrayList<>();
@@ -46,7 +46,7 @@ public class Main {
 
         Driver driverIgor = new Driver();
         driverIgor.setName("Igor");
-        driverIgor.setLicenseNumber("Igor's license");
+        driverIgor.setLicenseNumber("Igor's1 license");
         Driver driverIgorFromService = driverService.create(driverIgor);
 
         carService.addDriverToCar(driverIgorFromService,carFromService);
