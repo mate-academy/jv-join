@@ -1,6 +1,5 @@
 package mate.jdbc.dao;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.model.Car;
@@ -10,7 +9,7 @@ public interface CarDao {
 
     Optional<Car> get(Long id);
 
-    List<Car> getAll() throws SQLException;
+    List<Car> getAll();
 
     Car update(Car car);
 

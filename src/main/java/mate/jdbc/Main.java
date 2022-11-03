@@ -37,23 +37,21 @@ public class Main {
         allCars.forEach((x) -> System.out.println(x));
         List<Car> carsByDriver = carService.getAllByDriver(1L);
         carsByDriver.forEach((x) -> System.out.println(x));
-        Driver driver3 = driverService.get(3L);
+        Driver kolya = driverService.get(3L);
         Optional<Car> getCar = carService.get(33L);
         carService.addDriverToCar(driver, car);
-        Driver driver1 = driverService.get(1L);
-        Driver driver5 = driverService.get(5L);
+        Driver vasya = driverService.get(1L);
+        Driver serega = driverService.get(5L);
         Manufacturer man = manufacturerService.get(13L);
-        Car newCar = new Car(35L, "ARMAGEDON", man, List.of(driver1, driver5));
+        Car newCar = new Car(35L, "ARMAGEDON", man, List.of(vasya, serega));
         System.out.println(carService.update(newCar));
-        Driver d = driverService.get(2L);
-        Manufacturer m1 = manufacturerService.get(5L);
-        Car fantom = new Car(24L, "FANTOM", m1, List.of(d));
+        Driver zenya = driverService.get(2L);
+        Manufacturer raketa = manufacturerService.get(5L);
+        Car fantom = new Car(24L, "FANTOM", raketa, List.of(zenya));
         System.out.println(carService.update(fantom));
-        Driver d1 = driverService.get(1L);
-        Driver d2 = driverService.get(5L);
         Optional<Car> carGet = carService.get(24L);
         System.out.println(carGet);
-        carService.addDriverToCar(d1, car);
-        carService.removeDriverFromCar(d1, car);
+        carService.addDriverToCar(vasya, car);
+        carService.removeDriverFromCar(vasya, car);
     }
 }

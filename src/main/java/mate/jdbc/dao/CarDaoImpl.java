@@ -66,10 +66,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAll() throws SQLException {
-        Car newCar = null;
+    public List<Car> getAll() {
         List<Car> cars = new ArrayList<>();
-        List<Driver> drivers = new ArrayList<>();
         String query = "SELECT cars.id, "
                 + "cars.model, cars.manufacturer_id, "
                 + " manufacturers.name, manufacturers.country "
@@ -77,12 +75,11 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers "
                 + "ON manufacturers.id = manufacturer_id "
                 + "ORDER BY cars.id;";
-        ResultSet resultSet = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            resultSet = statement.executeQuery();
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                newCar = getCar(resultSet);
+                Car newCar = getCar(resultSet);
                 cars.add(newCar);
             }
         } catch (SQLException e) {
