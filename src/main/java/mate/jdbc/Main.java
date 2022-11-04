@@ -71,7 +71,10 @@ public class Main {
                 = new Manufacturer(null, TEST_MANUFACTURER_NAME, TEST_MANUFACTURER_COUNTRY);
         carManufacturer = manufacturerService.create(carManufacturer);
         Driver carDriver = new Driver(null, TEST_DRIVER_NAME, TEST_DRIVER_LICENSE);
+        Driver secondDriver = new Driver(null, TEST_DRIVER_NAME + "_2",
+                TEST_DRIVER_LICENSE + "_2");
         carDriver = driverService.create(carDriver);
+        secondDriver = driverService.create(secondDriver);
         Car car = new Car(null, TEST_CAR_MODEL, carManufacturer, List.of(carDriver));
         System.out.println("Car created: " + carService.create(car));
         System.out.println("Same car, but accessed through get: "
@@ -80,6 +83,9 @@ public class Main {
         System.out.println("Car updated: " + carService.update(car));
         System.out.println("Cars by driver: " + carDriver + ": "
                 + carService.getAllByDriver(carDriver.getId()));
+        carService.addDriverToCar(secondDriver, car);
+        carService.removeDriverFromCar(carDriver, car);
+        System.out.println("All cars after replacement of driver: " + carService.getAll());
         if (carService.delete(car.getId())) {
             System.out.println("Car deleted");
         }
