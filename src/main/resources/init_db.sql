@@ -21,7 +21,7 @@ CREATE TABLE `driver` (
 
 DROP TABLE IF EXISTS `car`;
 CREATE TABLE `car` (
-                       `id` bigint NOT NULL,
+                       `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
                        `manufacturer_id` bigint DEFAULT NULL,
                        `model` varchar(45) NOT NULL,
                        `is_deleted` tinyint NOT NULL DEFAULT '0',
