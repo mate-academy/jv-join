@@ -2,7 +2,6 @@ package mate.jdbc.service;
 
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.DriverDao;
-import mate.jdbc.dao.GenericDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Driver;

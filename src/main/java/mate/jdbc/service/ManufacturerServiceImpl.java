@@ -7,7 +7,8 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
 
 @Service
-public class ManufacturerServiceImpl extends GenericServiceImpl<Manufacturer> implements ManufacturerService {
+public class ManufacturerServiceImpl extends GenericServiceImpl<Manufacturer>
+        implements ManufacturerService {
     @Inject
     private ManufacturerDao manufacturerDao;
 

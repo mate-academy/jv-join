@@ -64,7 +64,6 @@ public class Main {
     }
 
     private static void testCarService() {
-        CarService carService = (CarService) injector.getInstance(CarService.class);
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
@@ -78,6 +77,7 @@ public class Main {
         secondDriver = driverService.create(secondDriver);
         List<Driver> drivers = new ArrayList<>();
         drivers.add(carDriver);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         Car car = new Car(null, TEST_CAR_MODEL, carManufacturer, drivers);
         System.out.println("Car created: " + carService.create(car));
         System.out.println("Same car, but accessed through get: "
