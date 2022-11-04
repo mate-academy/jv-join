@@ -69,7 +69,7 @@ public class CarDaoImpl implements CarDao {
                 + "m.id as manufacturer_id, m.name as manufacturer_name, m.country as manufacturer_country "
                 + "FROM car c "
                 + "JOIN manufacturer m ON c.manufacturer_id = m.id "
-                + "WHERE AND c.is_deleted = FALSE AND m.is_deleted = false";
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = false";
         List<Car> cars;
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -94,6 +94,7 @@ public class CarDaoImpl implements CarDao {
                       = connection.prepareStatement(query)) {
             statement.setLong(1, car.getManufacturer().getId());
             statement.setString(2, car.getModel());
+            statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
@@ -123,8 +124,8 @@ public class CarDaoImpl implements CarDao {
                 + "m.id as manufacturer_id, m.name as manufacturer_name, m.country as manufacturer_country "
                 + "FROM car c "
                 + "JOIN manufacturer m ON c.manufacturer_id = m.id "
-                + "JOIN car_driver cd ON c.id = cd.car_id"
-                + "WHERE AND c.is_deleted = FALSE AND m.is_deleted = false "
+                + "JOIN car_driver cd ON c.id = cd.car_id "
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = false "
                 + "AND cd.driver_id = ?";
         List<Car> cars;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -173,10 +174,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getCarDrivers(Car car) {
-        String query = "SELECT d.id as id, d.name as name, d.license_number as licence_number "
+        String query = "SELECT d.id as id, d.name as name, d.license_number as license_number "
                 + "FROM car c "
                 + "JOIN car_driver cd ON c.id = cd.car_id "
-                + "JOIN driver d ON cd.id = d.id "
+                + "JOIN driver d ON cd.driver_id = d.id "
                 + "WHERE c.id =  ? AND c.is_deleted = false AND d.is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
