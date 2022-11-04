@@ -1,7 +1,6 @@
 package mate.jdbc.service;
 
 import java.util.NoSuchElementException;
-import mate.jdbc.dao.GenericDao;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -20,7 +19,7 @@ public class ManufacturerServiceImpl extends GenericServiceImpl<Manufacturer> im
     }
 
     @Override
-    protected GenericDao<Manufacturer> getDao() {
+    protected ManufacturerDao getDao() {
         return manufacturerDao;
     }
 }

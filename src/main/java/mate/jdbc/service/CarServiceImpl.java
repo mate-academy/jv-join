@@ -39,7 +39,7 @@ public class CarServiceImpl extends GenericServiceImpl<Car> implements CarServic
     }
 
     @Override
-    protected GenericDao<Car> getDao() {
+    protected CarDao getDao() {
         return carDao;
     }
 }

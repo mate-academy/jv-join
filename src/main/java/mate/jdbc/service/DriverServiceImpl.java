@@ -20,7 +20,7 @@ public class DriverServiceImpl extends GenericServiceImpl<Driver> implements Dri
     }
 
     @Override
-    protected GenericDao<Driver> getDao() {
+    protected DriverDao getDao() {
         return driverDao;
     }
 }
