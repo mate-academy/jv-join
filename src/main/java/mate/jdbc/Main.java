@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 import mate.jdbc.lib.Injector;
@@ -75,7 +76,9 @@ public class Main {
                 TEST_DRIVER_LICENSE + "_2");
         carDriver = driverService.create(carDriver);
         secondDriver = driverService.create(secondDriver);
-        Car car = new Car(null, TEST_CAR_MODEL, carManufacturer, List.of(carDriver));
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(carDriver);
+        Car car = new Car(null, TEST_CAR_MODEL, carManufacturer, drivers);
         System.out.println("Car created: " + carService.create(car));
         System.out.println("Same car, but accessed through get: "
                 + carService.get(car.getId()));
