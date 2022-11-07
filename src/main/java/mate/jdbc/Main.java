@@ -73,7 +73,7 @@ public class Main {
         carService.create(thrieMazda);
         carService.create(fiftyEightPeugeot);
 
-        Car firstCar = carService.get(1L);
+        Car firstCar = carService.get(2L);
         System.out.println(firstCar);
 
         List<Car> allCar = carService.getAll();
