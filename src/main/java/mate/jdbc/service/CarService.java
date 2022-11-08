@@ -1,10 +1,9 @@
 package mate.jdbc.service;
 
-import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
-
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
 
 public interface CarService {
     Car create(Car car);
