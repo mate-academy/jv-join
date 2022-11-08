@@ -1,6 +1,3 @@
 .idea/*
 *.iml
 target/*
-
-#temp
-src/main/java/mate/jdbc/util/ConnectionUtil.java

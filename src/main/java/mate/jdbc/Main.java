@@ -15,12 +15,15 @@ public class Main {
         manufacturer.setId(1L);
         Car car = new Car();
         car.setManufacturer(manufacturer);
-        car.setModel("Dodge");
-        carService.create(car);
+        car.setModel("Chev");
+        car.setId(1L);
+        carService.update(car);
+//        carService.create(car);
+
+        carService.getAll().forEach(c -> System.out.println(c.getModel()));
 
         System.out.println();
 
-        carService.getAll().forEach(c -> System.out.println(c.getModel()));
         System.out.println(carService.get(1L).get().getManufacturer().getName());
     }
 }
