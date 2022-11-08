@@ -115,18 +115,32 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void addDriverFromCar(Driver driver, Car car) {
-
-    }
-
-    @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-
-    }
-
-    @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String query = "SELECT cars.id AS cars_id, "
+                + "cars.model AS model, "
+                + "manufacturers.id AS manufacturers_id, "
+                + "manufacturers.name AS manufacturers_name, "
+                + "manufacturers.country AS manufacturers_country "
+                + "FROM cars "
+                + "JOIN cars_drivers "
+                + "ON cars.id = cars_drivers.car_id "
+                + "JOIN manufacturers "
+                + "ON cars.manufacturer_id = manufacturers.id "
+                + " WHERE driver_id = ?;";
+        //                 + "JOIN drivers "
+        //                + "ON drivers.id = cars_drivers.driver_id"
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, driverId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get all cars by driver", e);
+        }
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) {

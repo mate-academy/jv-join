@@ -19,7 +19,11 @@ public class Main {
         car.setId(1L);
 //        carService.update(car);
 //        carService.create(car);
-        System.out.println(carService.delete(1L));
+//        System.out.println(carService.delete(1L));
+        carService.getAllByDriver(1L).forEach(c -> System.out.println(c.getModel()));
+        carService.getAllByDriver(1L).forEach(c -> System.out.println(c.getManufacturer().getName()));
+
+        System.out.println();
 
         carService.getAll().forEach(c -> System.out.println(c.getModel()));
 

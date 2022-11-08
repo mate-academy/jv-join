@@ -61,3 +61,32 @@ INSERT INTO cars (model, manufacturer_id) VALUES ("Ford", 1);
 UPDATE cars SET model = "Chev", manufacturer_id = 1 WHERE id = 1 AND is_deleted = FALSE;
 
 UPDATE cars SET is_deleted = TRUE WHERE id = ?;
+
+SELECT * FROM cars JOIN cars_drivers ON cars.id = cars_drivers.car_id WHERE driver_id = 1;
+
+
+SELECT cars.id AS cars_id,
+cars.model AS model,
+manufacturers.id AS manufacturers_id,
+manufacturers.name AS manufacturers_name,
+manufacturers.country AS manufacturers_country
+FROM cars
+JOIN cars_drivers
+ON cars.id = cars_drivers.car_id
+JOIN manufacturers
+ON cars.manufacturer_id = manufacturers.id
+WHERE cars_drivers.driver_id = 1;
+
+
+
+SELECT cars.id AS cars_id,
+cars.model AS model,
+manufacturers.id AS manufacturers_id,
+manufacturers.name AS manufacturers_name
+manufacturers.country AS manufacturers_country
+FROM cars
+JOIN cars_drivers
+ON cars.id = cars_drivers.car_id
+JOIN manufacturers
+ON cars.manufacturer_id = manufacturers.id
+WHERE cars_drivers.driver_id = ?;
