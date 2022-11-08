@@ -93,6 +93,7 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(2, car.getManufacturer().getId());
             preparedStatement.setLong(3, car.getId());
             preparedStatement.executeUpdate();
+            updateDrivers(car, connection);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update cat from carsDB", e);
@@ -127,8 +128,6 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
                 + " WHERE driver_id = ?;";
-        //                 + "JOIN drivers "
-        //                + "ON drivers.id = cars_drivers.driver_id"
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -141,6 +140,22 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get all cars by driver", e);
         }
         return cars;
+    }
+
+    private void updateDrivers(Car car, Connection connection) throws SQLException {
+        List<Driver> drivers = car.getDrivers();
+        String removeQuery = "DELETE FROM cars_drivers WHERE car_id = ?";
+        PreparedStatement preparedStatementRemove = connection.prepareStatement(removeQuery);
+        preparedStatementRemove.setLong(1, car.getId());
+        preparedStatementRemove.executeUpdate();
+
+        String addQuery = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?)";
+        PreparedStatement preparedStatementAdd = connection.prepareStatement(addQuery);
+        for (Driver driver : drivers) {
+            preparedStatementAdd.setLong(1, driver.getId());
+            preparedStatementAdd.setLong(2, car.getId());
+            preparedStatementAdd.executeUpdate();
+        }
     }
 
     private Car getCar(ResultSet resultSet) {
