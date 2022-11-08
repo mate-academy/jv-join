@@ -3,6 +3,7 @@ package mate.jdbc.dao.impl;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -14,7 +15,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+@Dao
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
@@ -22,31 +25,38 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
-        String query = "SELECT cars.id AS cars.id, cars.model AS model,"
-                + "manufacturers.id AS manufacturers.id, manufacturers.name AS manufacturers.name, "
-                + "manufacturers.country as manufacturers.country"
-                + " FROM cars JOIN manufacturers "
+    public Optional<Car> get(Long id) {
+        String query = "SELECT cars.id AS cars_id, "
+                + "cars.model AS model, "
+                + "manufacturers.id AS manufacturers_id, "
+                + "manufacturers.name AS manufacturers_name, "
+                + "manufacturers.country AS manufacturers_country "
+                + "FROM cars JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE AND cars.id = ?;";
+                + "WHERE cars.is_deleted = FALSE "
+                + "AND cars.id = ?;";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return getCar(resultSet);
+                car = getCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Could`t get car from carDB");
+            throw new DataProcessingException("Could`t get car from carDB", e);
         }
+        return Optional.ofNullable(car);
     }
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT cars.id AS cars.id, cars.model AS model,"
-                + "manufacturers.id AS manufacturers.id, manufacturers.name AS manufacturers.name, "
-                + "manufacturers.country as manufacturers.country"
-                + " FROM cars JOIN manufacturers "
+        String query = "SELECT cars.id AS cars_id, "
+                + "cars.model AS model, "
+                + "manufacturers.id AS manufacturers_id, "
+                + "manufacturers.name AS manufacturers_name, "
+                + "manufacturers.country AS manufacturers_country "
+                + "FROM cars JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
                 + "WHERE cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
@@ -90,7 +100,7 @@ public class CarDaoImpl implements CarDao {
     private Car getCar(ResultSet resultSet) {
         Car car = new Car();
         try {
-            car.setId(resultSet.getObject("id", Long.class));
+            car.setId(resultSet.getObject("cars_id", Long.class));
             car.setModel(resultSet.getString("model"));
             car.setManufacturer(getManufacturer(resultSet));
         } catch (SQLException e) {
@@ -102,12 +112,12 @@ public class CarDaoImpl implements CarDao {
     private Manufacturer getManufacturer(ResultSet resultSet) {
         Manufacturer manufacturer = new Manufacturer();
         try {
-            manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
-            manufacturer.setName(resultSet.getString("manufacturers.name"));
-            manufacturer.setCountry(resultSet.getString("manufacturers.country"));
+            manufacturer.setId(resultSet.getObject("manufacturers_id", Long.class));
+            manufacturer.setName(resultSet.getString("manufacturers_name"));
+            manufacturer.setCountry(resultSet.getString("manufacturers_country"));
         } catch (SQLException e) {
             throw new DataProcessingException("Parsing result set for manufacturer error");
         }
-        return manufacturer
+        return manufacturer;
     }
 }

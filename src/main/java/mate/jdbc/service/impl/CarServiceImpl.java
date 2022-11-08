@@ -8,6 +8,7 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -20,7 +21,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         return carDao.get(id);
     }
 

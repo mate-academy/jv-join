@@ -42,7 +42,16 @@ CREATE TABLE `cars_drivers` (
                                     REFERENCES `taxi_service`.`drivers` (`id`));
 
 SELECT cars.id, cars.model AS model,
- manufacturers.id, manufacturers.name, manufacturers.country as country
-                 FROM cars JOIN manufacturers
-                ON cars.manufacturer_id = manufacturers.id
-                WHERE cars.is_deleted = FALSE AND cars.id = 1;
+manufacturers.id, manufacturers.name, manufacturers.country as country
+FROM cars JOIN manufacturers
+ON cars.manufacturer_id = manufacturers.id
+WHERE cars.is_deleted = FALSE AND cars.id = 1;
+
+SELECT cars.id AS cars_id,
+cars.model AS model,
+manufacturers.id AS manufacturers_id,
+manufacturers.name AS manufacturers_name,
+manufacturers.country AS manufacturers_country
+FROM cars JOIN manufacturers
+ON cars.manufacturer_id = manufacturers.id
+WHERE cars.is_deleted = FALSE;
