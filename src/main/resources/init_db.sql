@@ -57,3 +57,5 @@ ON cars.manufacturer_id = manufacturers.id
 WHERE cars.is_deleted = FALSE;
 
 INSERT INTO cars (model, manufacturer_id) VALUES ("Ford", 1);
+
+UPDATE cars SET model = "Chev", manufacturer_id = 1 WHERE id = 1 AND is_deleted = FALSE;
