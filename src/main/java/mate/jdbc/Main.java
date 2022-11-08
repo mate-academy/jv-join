@@ -17,13 +17,14 @@ public class Main {
         car.setManufacturer(manufacturer);
         car.setModel("Chev");
         car.setId(1L);
-        carService.update(car);
+//        carService.update(car);
 //        carService.create(car);
+        System.out.println(carService.delete(1L));
 
         carService.getAll().forEach(c -> System.out.println(c.getModel()));
 
         System.out.println();
 
-        System.out.println(carService.get(1L).get().getManufacturer().getName());
+        System.out.println(carService.get(2L).get().getManufacturer().getName());
     }
 }
