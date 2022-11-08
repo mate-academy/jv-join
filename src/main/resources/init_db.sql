@@ -40,3 +40,9 @@ CREATE TABLE `cars_drivers` (
                                   CONSTRAINT `cars_drivers_drivers_fk`
                                     FOREIGN KEY (`driver_id`)
                                     REFERENCES `taxi_service`.`drivers` (`id`));
+
+SELECT cars.id, cars.model AS model,
+ manufacturers.id, manufacturers.name, manufacturers.country as country
+                 FROM cars JOIN manufacturers
+                ON cars.manufacturer_id = manufacturers.id
+                WHERE cars.is_deleted = FALSE AND cars.id = 1;
