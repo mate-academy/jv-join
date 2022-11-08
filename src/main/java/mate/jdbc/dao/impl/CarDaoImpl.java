@@ -9,10 +9,7 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +18,21 @@ import java.util.Optional;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        return null;
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            preparedStatement.setString(1, car.getModel());
+            preparedStatement.setLong(2, car.getManufacturer().getId());
+            preparedStatement.executeUpdate();
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if (resultSet.next()) {
+                Long id = resultSet.getObject(1, Long.class);
+                car.setId(id);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Could`t create car in carDB", e);
+        }
+        return car;
     }
 
     @Override

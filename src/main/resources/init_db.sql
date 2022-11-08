@@ -55,3 +55,5 @@ manufacturers.country AS manufacturers_country
 FROM cars JOIN manufacturers
 ON cars.manufacturer_id = manufacturers.id
 WHERE cars.is_deleted = FALSE;
+
+INSERT INTO cars (model, manufacturer_id) VALUES ("Ford", 1);
