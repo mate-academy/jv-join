@@ -11,7 +11,6 @@ public class Car {
     private List<Driver> drivers;
 
     public Car() {
-        drivers = new ArrayList<>();
     }
 
     public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
