@@ -22,11 +22,11 @@ public class Main {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Driver firstDriver = new Driver();
         firstDriver.setName("bob");
-        firstDriver.setLicenseNumber("BobLicenseNumber6");
+        firstDriver.setLicenseNumber("BobLicenseNumber7");
         driverService.create(firstDriver);
         Driver secondDriver = new Driver();
         secondDriver.setName("alice");
-        secondDriver.setLicenseNumber("AliceLicenseNumber6");
+        secondDriver.setLicenseNumber("AliceLicenseNumber7");
         driverService.create(secondDriver);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
