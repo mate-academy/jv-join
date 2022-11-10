@@ -123,14 +123,13 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long id) {
         List<Car> cars = new ArrayList<>();
         String getAllByDriverQuery =
-                "SELECT joined_table.car_id, joined_table.model, manufacturer_id, "
-                        + "manufacturers.name, manufacturers.country "
-                        + "FROM manufacturers "
-                        + "INNER JOIN ("
-                        + "SELECT * FROM cars "
-                        + "INNER JOIN drivers_cars ON cars.id = drivers_cars.car_id"
-                        + ") as joined_table ON manufacturers.id = joined_table.car_id;";
-
+                "SELECT c.model, c.id AS car_id, m.id AS manufacturer_id, m.name, m.country "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection
                         .prepareStatement(getAllByDriverQuery)) {

@@ -118,5 +118,9 @@ public class Main {
         System.out.println("Get all cars: ");
         carService.getAll().forEach(System.out::println);
         System.out.println();
+
+        System.out.println("Get all cars by driver " + alex.getName() + " with id: "
+                + alex.getId());
+        System.out.println(carService.getAllByDriver(alex.getId()));
     }
 }
