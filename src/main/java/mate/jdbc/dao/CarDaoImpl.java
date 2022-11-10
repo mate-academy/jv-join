@@ -34,16 +34,6 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void addDriverToCar(Driver driver, Car car) {
-
-    }
-
-    @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-
-    }
-
-    @Override
     public List<Car> getAllByDriver(Long driverId) {
         return null;
     }
