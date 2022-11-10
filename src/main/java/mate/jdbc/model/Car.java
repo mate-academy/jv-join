@@ -8,6 +8,7 @@ public class Car {
 
     public Car() {
     }
+
     public Car(Long id, String model) {
         this.id = id;
         this.model = model;
