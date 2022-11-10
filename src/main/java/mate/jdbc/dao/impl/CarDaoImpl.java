@@ -69,12 +69,15 @@ public class CarDaoImpl implements CarDao {
                 + " FROM cars c"
                 + " Join manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE c.is_deleted = FALSE;";
+        List<Car> cars;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(selectRequest)) {
-            return getListByResultSet(statement.executeQuery());
+            cars = getListByResultSet(statement.executeQuery());
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all car", e);
         }
+        cars.forEach(x -> x.setDrivers(getAllDrivers(x.getId())));
+        return cars;
     }
 
     @Override
@@ -114,14 +117,17 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = false AND driver_id = ?;";
+        List<Car> cars;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(selectRequest)) {
             statement.setLong(1, driverId);
-            return getListByResultSet(statement.executeQuery());
+            cars = getListByResultSet(statement.executeQuery());
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars by this driver id - "
                     + driverId, e);
         }
+        cars.forEach(x -> x.setDrivers(getAllDrivers(x.getId())));
+        return cars;
     }
 
     private void insertDrivers(Car car) {
@@ -197,7 +203,6 @@ public class CarDaoImpl implements CarDao {
             car = parseCarFromResultSet(resultSet);
             cars.add(car);
         }
-        cars.forEach(x -> x.setDrivers(getAllDrivers(x.getId())));
         return cars;
     }
 }
