@@ -188,7 +188,6 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversByCar(Car car) {
-        List<Driver> drivers = new ArrayList<>();
         String query = "SELECT d.id, d.name, d.license_number "
                 + "FROM cars_drivers as cd "
                 + "JOIN drivers as d "
@@ -199,13 +198,14 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             ResultSet resultSet = statement.executeQuery();
+            List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
                 drivers.add(getDriverFromResultSet(resultSet));
             }
+            return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all drivers from DB by car " + car, e);
         }
-        return drivers;
     }
 
     private Driver getDriverFromResultSet(ResultSet resultSet) throws SQLException {
