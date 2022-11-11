@@ -30,11 +30,12 @@ public class CarDaoImpl implements CarDao {
             if (generatedKeys.next()) {
                 car.setId(generatedKeys.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        addCarDrivers(car.getDrivers(), car);
+        return car;
     }
 
     @Override
@@ -56,7 +57,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id + ". ", e);
         }
-        assert car != null;
         car.setDrivers(getCarDrivers(id));
         return Optional.of(car);
     }
@@ -105,7 +105,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarStatement = connection.prepareStatement(query)) {
             deleteCarStatement.setLong(1, id);
@@ -127,13 +127,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsByDriverStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Car car = new Car();
-                car.setId(resultSet.getObject("car_id", Long.class));
-                Manufacturer manufacturer = new Manufacturer();
-                manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-                car.setManufacturer(manufacturer);
-                car.setModel(resultSet.getString("model"));
-                cars.add(car);
+                cars.add(setCar(resultSet));
             }
             return cars;
         } catch (SQLException e) {
@@ -209,7 +203,22 @@ public class CarDaoImpl implements CarDao {
                 addCarDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Couldn't add drivers to car", e);
+        }
+    }
+
+    private Car setCar(ResultSet resultSet) {
+        try {
+            Car car = new Car();
+            car.setId(resultSet.getObject("car_id", Long.class));
+            Manufacturer manufacturer = new Manufacturer();
+            manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+            car.setManufacturer(manufacturer);
+            car.setModel(resultSet.getString("model"));
+            car.setDrivers(getCarDrivers(car.getId()));
+            return car;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't set car", e);
         }
     }
 }
