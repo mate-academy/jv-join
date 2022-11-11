@@ -6,7 +6,6 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
