@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -49,19 +50,19 @@ public class Main {
     }
 
     private static List<Car> getCars(List<Manufacturer> manufacturers, List<Driver> drivers) {
-        int randomIdx = 0;
+        int idx = 0;
         Car toyota = new Car();
         toyota.setModel("Camri");
-        toyota.setManufacturer(manufacturers.get(randomIdx));
-        toyota.setDrivers(List.of(drivers.get(randomIdx), drivers.get(++randomIdx)));
+        toyota.setManufacturer(manufacturers.get(idx));
+        toyota.setDrivers(new ArrayList<>(List.of(drivers.get(idx), drivers.get(++idx))));
         Car audi = new Car();
         audi.setModel("E-Tron");
-        audi.setManufacturer(manufacturers.get(randomIdx));
-        audi.setDrivers(List.of(drivers.get(randomIdx), drivers.get(++randomIdx)));
+        audi.setManufacturer(manufacturers.get(idx));
+        audi.setDrivers(new ArrayList<>(List.of(drivers.get(idx), drivers.get(++idx))));
         Car tesla = new Car();
         tesla.setModel("Model S");
-        tesla.setManufacturer(manufacturers.get(randomIdx));
-        tesla.setDrivers(List.of(drivers.get(0), drivers.get(randomIdx)));
+        tesla.setManufacturer(manufacturers.get(idx));
+        tesla.setDrivers(new ArrayList<>(List.of(drivers.get(0), drivers.get(idx))));
         return List.of(toyota, audi, tesla);
     }
 
