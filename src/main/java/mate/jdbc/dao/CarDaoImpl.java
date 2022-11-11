@@ -58,7 +58,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id + ". ", e);
         }
         car.setDrivers(getCarDrivers(id));
-        return Optional.of(car);
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -119,7 +119,8 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT c.id AS car_id, manufacturer_id, model "
                 + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id"
-                + " WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
+                + " WHERE cd.driver_id = ? AND c.is_deleted = FALSE AND "
+                + "d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsByDriverStatement
                         = connection.prepareStatement(query)) {
