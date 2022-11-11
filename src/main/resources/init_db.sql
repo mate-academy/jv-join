@@ -34,7 +34,3 @@ CREATE TABLE `manufacturers` (
                         `is_deleted` tinyint DEFAULT '0',
                         PRIMARY KEY (`id`)
 );
-
-
-
-
