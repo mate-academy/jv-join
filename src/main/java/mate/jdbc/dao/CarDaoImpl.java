@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -119,21 +121,20 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT * FROM cars_drivers WHERE driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        List<Long> carsId = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Long id = resultSet.getObject(1, Long.class);
-                if (get(id).isPresent()) {
-                    cars.add(get(id).get());
-                }
+                carsId.add(resultSet.getObject(1, Long.class));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from db", e);
         }
+        carsId.forEach(i -> get(i).ifPresent(cars::add));
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
