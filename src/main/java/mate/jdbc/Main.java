@@ -78,7 +78,7 @@ public class Main {
         carService.addDriverToCar(dan, mustang);
         carService.removeDriverFromCar(dmytro, camaro);
         System.out.println("\nCars that maxine use \n");
-        carService.getAllByDriver(maxine.getId()).stream().forEach(System.out::println);
+        carService.getAllByDriver(maxine.getId()).forEach(System.out::println);
         //                      cars that maxine use
         //Car{id=3, manufacturer_id=2, model='civic 2019',
         //                  manufacturer=Manufacturer{id=2, name='Honda', country='Japan'}}
