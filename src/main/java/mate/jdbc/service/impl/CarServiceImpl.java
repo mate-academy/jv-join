@@ -1,6 +1,5 @@
 package mate.jdbc.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
@@ -22,7 +21,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                        .orElseThrow(() -> new RuntimeException("thing"));
+                        .orElseThrow(() -> new RuntimeException("Can't get car with id = " + id));
     }
 
     @Override
@@ -48,9 +47,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> drivers = new ArrayList<>(car.getDrivers());
-        drivers.remove(driver);
-        car.setDrivers(drivers);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
