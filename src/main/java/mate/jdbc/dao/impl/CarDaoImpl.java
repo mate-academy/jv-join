@@ -54,12 +54,13 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 car = getCarWithoutListOfDrivers(resultSet);
-                car.setDrivers(getDriverList(car.getId()));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        return Optional.ofNullable(car);
+        Optional<Car> optionalCar = Optional.ofNullable(car);
+        optionalCar.ifPresent(i -> i.setDrivers(getDriverList(i.getId())));
+        return optionalCar;
     }
 
     @Override
@@ -77,7 +78,6 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Car car = getCarWithoutListOfDrivers(resultSet);
-                car.setDrivers(getDriverList(car.getId()));
                 cars.add(car);
             }
         } catch (SQLException e) {
