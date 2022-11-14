@@ -5,7 +5,7 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.DeleteAll;
+//import mate.jdbc.service.DeleteAll;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
@@ -13,7 +13,7 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        DeleteAll.delAll();
+        //DeleteAll.delAll();
         // |__ only for stuff!!!
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
@@ -80,10 +80,12 @@ public class Main {
         System.out.println("\nCars that maxine use \n");
         carService.getAllByDriver(maxine.getId()).forEach(System.out::println);
         //                      cars that maxine use
-        //Car{id=3, manufacturer_id=2, model='civic 2019',
-        //                  manufacturer=Manufacturer{id=2, name='Honda', country='Japan'}}
-        //Car{id=4, manufacturer_id=3, model='mustang 2014',
-        //                  manufacturer=Manufacturer{id=3, name='Ford', country='USA'}}
+        //Car{id=3, manufacturerId=2, model='civic 2019',
+        //       manufacturer=Manufacturer{id=2, name='Honda', country='Japan'},
+        //      drivers=[Driver{id=null, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
+        //Car{id=4, manufacturerId=3, model='mustang 2014',
+        //      manufacturer=Manufacturer{id=3, name='Ford', country='USA'},
+        //      drivers=[Driver{id=null, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
 
     }
 }
