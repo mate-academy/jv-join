@@ -11,6 +11,7 @@ import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
@@ -122,6 +123,7 @@ public class CarDaoImpl implements CarDao {
                     + ", model=" + car.getModel()
                     + ", manufacturer_id=" + car.getManufacturerId(), e);
         }
+        addDriverToCar(car);
         return car;
     }
 
@@ -151,5 +153,23 @@ public class CarDaoImpl implements CarDao {
         car.setModel(resultSet.getString("model"));
         car.setManufacturer(manufacturer);
         return car;
+    }
+
+    private void addDriverToCar(Car car) {
+        if (car.getDrivers().isEmpty()) {
+            return;
+        }
+        String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(2, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                statement.setLong(1, driver.getId());
+            }
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("can not add driver to car. Params:"
+                   + car, e);
+        }
     }
 }

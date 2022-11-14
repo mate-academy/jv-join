@@ -14,7 +14,7 @@ public class Main {
 
     public static void main(String[] args) {
         //DeleteAll.delAll();
-        // |__ only for stuff!!!
+
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer chevrolet = new Manufacturer("Chevrolet", "USA");
@@ -51,6 +51,7 @@ public class Main {
         car.setManufacturerId(honda.getId());
         car.setModel("civic 2019");
         carService.update(car);
+
         System.out.println("\nUpdated LIST OF CARS: \n");
         carService.getAll().forEach(System.out::println);
         // |__                                  cars DB after update
@@ -73,19 +74,26 @@ public class Main {
         dan = driverService.create(dan);
 
         carService.addDriverToCar(dmytro, camaro);
+        carService.addDriverToCar(dmytro, civic);
+        carService.addDriverToCar(dmytro, mustang);
+
         carService.addDriverToCar(maxine, civic);
         carService.addDriverToCar(maxine, mustang);
         carService.addDriverToCar(dan, mustang);
+
         carService.removeDriverFromCar(dmytro, camaro);
-        System.out.println("\nCars that maxine use \n");
+        System.out.println("\nCars that maxine use");
         carService.getAllByDriver(maxine.getId()).forEach(System.out::println);
         //                      cars that maxine use
-        //Car{id=3, manufacturerId=2, model='civic 2019',
-        //       manufacturer=Manufacturer{id=2, name='Honda', country='Japan'},
-        //      drivers=[Driver{id=null, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
+        //Car{id=3, manufacturerId=2, model='civic',
+        //              manufacturer=Manufacturer{id=2, name='Honda', country='Japan'},
+        //              drivers=[Driver{id=2, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
         //Car{id=4, manufacturerId=3, model='mustang 2014',
-        //      manufacturer=Manufacturer{id=3, name='Ford', country='USA'},
-        //      drivers=[Driver{id=null, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
+        //              manufacturer=Manufacturer{id=3, name='Ford', country='USA'},
+        //              drivers=[Driver{id=2, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
+
+        System.out.println("\n Cars that dmytro use");
+        carService.getAllByDriver(dmytro.getId()).forEach(System.out::println);
 
     }
 }

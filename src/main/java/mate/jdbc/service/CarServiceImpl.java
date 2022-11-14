@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDriverDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -20,9 +19,6 @@ public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
 
-    @Inject
-    private CarDriverDao carDriverDao;
-
     @Override
     public Car create(Car car) {
         return carDao.create(car);
@@ -30,7 +26,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow();
+        return carDao.get(id)
+                .orElseThrow(() -> new DataProcessingException("Can not get car "
+                + "by id=" + id));
     }
 
     @Override
@@ -51,21 +49,21 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         car.getDrivers().add(driver);
-        carDriverDao.addDriverToCar(driver, car);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         car.getDrivers().remove(driver);
-        carDriverDao.removeDriverFromCar(driver, car);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
-        String query = "SELECT drivers.name, drivers.license_number,"
+        String query = "SELECT drivers.id, drivers.name, drivers.license_number,"
                 + " manufacturers.name as manufacturer, manufacturers.country, "
-                + "cars.id, cars.model "
+                + "cars.id AS carId, cars.model "
                 + "FROM  cars_drivers "
                 + "INNER JOIN cars on cars_drivers.car_id = cars.id "
                 + "inner JOIN manufacturers on cars.manufacturer_id = manufacturers.id "
@@ -77,10 +75,11 @@ public class CarServiceImpl implements CarService {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Driver driver = new Driver();
+                driver.setId(resultSet.getLong("id"));
                 driver.setName(resultSet.getString("name"));
                 driver.setLicenseNumber(resultSet.getString("license_number"));
                 Car car = new Car();
-                car.setId(resultSet.getLong("id"));
+                car.setId(resultSet.getLong("carId"));
                 car.setModel(resultSet.getString("model"));
                 car.setManufacturerId(get(car.getId()).getManufacturerId());
                 car.setManufacturer(get(car.getId()).getManufacturer());
