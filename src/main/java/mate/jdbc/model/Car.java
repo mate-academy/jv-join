@@ -1,5 +1,7 @@
 package mate.jdbc.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Car {
@@ -7,6 +9,7 @@ public class Car {
     private Long manufacturerId;
     private String model;
     private Manufacturer manufacturer;
+    private List<Driver> drivers = new ArrayList<>();
 
     public Car(Long id, Long manufacturerId, String model, Manufacturer manufacturer) {
         this.id = id;
@@ -27,6 +30,14 @@ public class Car {
     }
 
     public Car() {
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     public Manufacturer getManufacturer() {
@@ -85,9 +96,10 @@ public class Car {
     public String toString() {
         return "Car{"
                 + "id=" + id
-                + ", manufacturer_id=" + manufacturerId
+                + ", manufacturerId=" + manufacturerId
                 + ", model='" + model + '\''
                 + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers
                 + '}';
     }
 }

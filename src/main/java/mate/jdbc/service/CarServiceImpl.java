@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.dao.CarDriverDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -18,6 +19,9 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
+
+    @Inject
+    private CarDriverDao carDriverDao;
 
     @Override
     public Car create(Car car) {
@@ -46,32 +50,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, driver.getId());
-            statement.setLong(2, car.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("can not add driver to car. Params:"
-                    + driver.toString()
-                    + " " + car.toString());
-        }
+        car.getDrivers().add(driver);
+        carDriverDao.addDriverToCar(driver, car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        String query = "DELETE FROM cars_drivers "
-                + "WHERE driver_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, driver.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("can not remove driver from car. Params:"
-                    + driver.toString()
-                    + " " + car.toString(), e);
-        }
+        car.getDrivers().remove(driver);
+        carDriverDao.removeDriverFromCar(driver, car);
     }
 
     @Override
@@ -90,11 +76,15 @@ public class CarServiceImpl implements CarService {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
+                Driver driver = new Driver();
+                driver.setName(resultSet.getString("name"));
+                driver.setLicenseNumber(resultSet.getString("license_number"));
                 Car car = new Car();
                 car.setId(resultSet.getLong("id"));
                 car.setModel(resultSet.getString("model"));
                 car.setManufacturerId(get(car.getId()).getManufacturerId());
                 car.setManufacturer(get(car.getId()).getManufacturer());
+                car.getDrivers().add(driver);
                 cars.add(car);
             }
             return cars;

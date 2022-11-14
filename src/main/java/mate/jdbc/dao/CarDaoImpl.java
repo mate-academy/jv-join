@@ -77,7 +77,32 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("", e);
+            throw new DataProcessingException("Can not get info from cars, manufacturers dbs", e);
+        }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> cars = new ArrayList<>();
+        String query = "SELECT drivers.name, drivers.license_number,"
+                + " manufacturers.name as manufacturer, manufacturers.country, "
+                + "cars.id, cars.model "
+                + "FROM  cars_drivers "
+                + "INNER JOIN cars on cars_drivers.car_id = cars.id "
+                + "inner JOIN manufacturers on cars.manufacturer_id = manufacturers.id "
+                + "INNER JOIN drivers on cars_drivers.driver_id = drivers.id "
+                + "WHERE driver_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(createNewCar(resultSet));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new DataProcessingException("can not get a list of cars of driver. "
+                    + "Params: id=" + driverId, e);
         }
     }
 
@@ -108,7 +133,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             statement.executeUpdate();
-            return true;
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can not delete car by id. Params: "
                     + "id=" + id, e);
