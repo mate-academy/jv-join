@@ -44,7 +44,8 @@ public class CarDaoImpl implements CarDao {
         String sqlQuery = "SELECT c.model car_model, m.id manufacturer_id, "
                 + "m.name manufacturer_name, m.country manufacturer_country "
                 + "FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id WHERE c.id = ? AND is_deleted = FALSE";
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement = connection.prepareStatement(sqlQuery)) {
             getStatement.setLong(1, id);
@@ -68,7 +69,8 @@ public class CarDaoImpl implements CarDao {
         String sqlQuery = "SELECT c.id car_id, c.model car_model, m.id manufacturer_id, "
                 + "m.name manufacturer_name, m.country manufacturer_country "
                 + "FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE;";
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement = connection.prepareStatement(sqlQuery)) {
             ResultSet resultSet = getStatement.executeQuery();
@@ -104,7 +106,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String sqlQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ? AND is_deleted = FALSE;";
+        String sqlQuery = "UPDATE cars SET is_deleted = TRUE "
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(sqlQuery)) {
             deleteStatement.setLong(1, id);
@@ -131,7 +134,9 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDrivers(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String sqlQuery = "SELECT id, name, license_number "
-                + "FROM drivers JOIN cars_drivers ON car_id = ? WHERE is_deleted = FALSE;";
+                + "FROM drivers "
+                + "JOIN cars_drivers ON car_id = ? "
+                + "WHERE is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDrivers = connection.prepareStatement(sqlQuery)) {
             getDrivers.setLong(1, carId);
