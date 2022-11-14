@@ -54,7 +54,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
@@ -81,10 +80,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
-        if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDrivers(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDrivers(car.getId()));
         }
         return cars;
     }
@@ -96,7 +93,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON cd.car_id = c.id "
-                + "WHERE cd.driver_id = ?; ";
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE; ";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -108,9 +105,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't get cars by driverID:"
                     + driverId, e);
-        }
-        if (cars.isEmpty()) {
-            return cars;
         }
         for (Car car : cars) {
             car.setDrivers(getDrivers(car.getId()));
@@ -132,7 +126,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
-                    + car + " in driversDB.", e);
+                    + car + " in carsDB.", e);
         }
         deleteAllDrivers(car.getId());
         insertDrivers(car);
