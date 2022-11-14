@@ -184,7 +184,6 @@ public class CarDaoImpl implements CarDao {
                 insertDriversStatement.setLong(2, driver.getId());
                 insertDriversStatement.executeUpdate();
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert drivers into the car - " + car, e);
         }
