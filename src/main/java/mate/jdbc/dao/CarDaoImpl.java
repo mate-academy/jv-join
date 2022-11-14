@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
@@ -75,9 +76,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
-        if (cars.size() != 0) {
-            cars.forEach(i -> i.setDrivers(getDriversForCar(i.getId())));
-        }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -97,7 +96,10 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        if (!car.getDrivers().equals(getDriversForCar(car.getId()))) {
+        List<Driver> drivers = car.getDrivers();
+        List<Driver> driversFromDb = getDriversForCar(car.getId());
+        if (drivers.size() != driversFromDb.size()
+                || !new HashSet<>(drivers).containsAll(driversFromDb)) {
             deleteRelationsFromCarsDrivers(car);
             insertDrivers(car);
         }
@@ -118,20 +120,22 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars_drivers WHERE driver_id = ?;";
+        String query = "SELECT c.id, model, manufacturer_id, mn.name, mn.country "
+                + "FROM cars c JOIN manufacturers mn ON c.manufacturer_id = mn.id "
+                + "JOIN cars_drivers cd ON c.id = cd.car_id"
+                + "WHERE cd.driver_id = ? AND c.is_deleted = false;";
         List<Car> cars = new ArrayList<>();
-        List<Long> carsId = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carsId.add(resultSet.getObject(1, Long.class));
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from db", e);
         }
-        carsId.forEach(i -> get(i).ifPresent(cars::add));
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
