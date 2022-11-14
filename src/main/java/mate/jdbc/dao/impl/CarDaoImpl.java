@@ -153,7 +153,6 @@ public class CarDaoImpl implements CarDao {
         String carModel = resultSet.getString("model");
         Manufacturer carManufacturer = getManufacturer(resultSet);
         return new Car(carModel, carManufacturer, null, carID);
-
     }
 
     private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
@@ -178,7 +177,6 @@ public class CarDaoImpl implements CarDao {
                 drivers.add(getDriver(resultSet));
             }
             return drivers;
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get list of "
                     + "driver car with id =  " + id, e);
