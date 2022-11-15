@@ -35,7 +35,7 @@ public class Main {
         Driver bob = driverService.create(driver);
         carService.addDriverToCar(bob, audiA1);
         carService.removeDriverFromCar(bob, audiA1);
-        List<Car> cars = carService.getAllByDriver(1L);
+        List<Car> cars = carService.getAllByDriver(bob.getId());
         System.out.println(cars);
         carService.delete(audiA1.getId());
     }

@@ -56,15 +56,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = carDao.getAll();
-        List<Car> result = new ArrayList<>();
-        for (Car car : cars) {
-            for (Driver driver : car.getDrivers()) {
-                if (driver.getId().equals(driverId)) {
-                    result.add(car);
-                }
-            }
-        }
-        return result;
+        return carDao.getAllByDriver(driverId);
     }
 }
