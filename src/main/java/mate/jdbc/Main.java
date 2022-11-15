@@ -3,6 +3,8 @@ package mate.jdbc;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -15,20 +17,28 @@ public class Main {
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        carService.create(new Car(null, "Q7", manufacturerService.get(1L),
-                List.of(driverService.get(2L), driverService.get(3L))));
-        System.out.println(carService.get(5L));
+
+        Manufacturer manufacturer = new Manufacturer(null, "Audi", "Germany");
+        Manufacturer audi = manufacturerService.create(manufacturer);
+        Driver driver = new Driver(null, "Ivan", "1234");
+        Driver ivanDriver = driverService.create(driver);
+        Car audiCar = carService.create(new Car(null, "Q7", audi, List.of(ivanDriver)));
+        Long idAudiCar = audiCar.getId();
+
+        System.out.println(carService.get(idAudiCar));
         System.out.println(carService.getAll());
 
-        System.out.println(carService.delete(10L));
+        System.out.println(carService.delete(idAudiCar));
         System.out.println(carService.getAll());
 
-        System.out.println(carService.getAllByDriver(2L));
+        System.out.println(carService.getAllByDriver(ivanDriver.getId()));
 
-        carService.update(new Car(1L, "R8", manufacturerService.get(1L),
-                List.of(driverService.get(5L))));
+        Driver driver1 = new Driver(null, "Oleh", "4321");
+        Driver olehDriver = driverService.create(driver1);
+        carService.update(new Car(idAudiCar, "R8", audi,
+                List.of(olehDriver)));
 
-        carService.addDriverToCar(driverService.get(2L), carService.get(1L));
-        carService.removeDriverFromCar(driverService.get(2L), carService.get(1L));
+        carService.addDriverToCar(ivanDriver, audiCar);
+        carService.removeDriverFromCar(ivanDriver, audiCar);
     }
 }
