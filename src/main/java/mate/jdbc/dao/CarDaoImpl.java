@@ -145,8 +145,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(2, car.getId());
-            List<Driver> driversForCar = car.getDrivers();
-            for (Driver driver : driversForCar) {
+            for (Driver driver : car.getDrivers()) {
                 statement.setLong(1, driver.getId());
                 statement.executeUpdate();
             }
