@@ -18,3 +18,24 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+DROP TABLE IF EXISTS 'cars';
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `manufacturer_id` bigint NOT NULL,
+                        `model` varchar(255) NOT NULL,
+                        `is_deleted` tinyint DEFAULT '0',
+                        PRIMARY KEY (`id`),
+                        KEY `cars_manufacturers_id_fk_idx` (`manufacturer_id`),
+                        CONSTRAINT `cars_manufacturers_id_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+);
+DROP TABLE IF EXISTS 'cars_drivers';
+CREATE TABLE `cars_drivers` (
+                                `driver_id` bigint NOT NULL,
+                                `car_id` bigint NOT NULL,
+                                PRIMARY KEY (`driver_id`,`car_id`),
+                                KEY `cars_drivers_driver_fk_idx` (`driver_id`),
+                                KEY `cars_drivers_car_fk_idx` (`car_id`) /*!80000 INVISIBLE */,
+                                CONSTRAINT `cars_drivers_car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+                                CONSTRAINT `cars_drivers_driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+);
+
