@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
         }
-        cars.forEach(c -> c.setDrivers(getDrivers(c.getId())));
+        cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
         return cars;
     }
 
@@ -108,7 +108,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String query = "UPDATE cars SET is_deleted = TRUE "
+                + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -184,7 +185,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void addCarsDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
