@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 Car car = parseCar(resultSet);
-                car.getDrivers().addAll(getDriversFromCar(car));
+                car.setDrivers(getDriversFromCar(car));
                 cars.add(car);
             }
             return cars;
@@ -104,12 +104,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Driver driver = new Driver();
-                driver.setId(resultSet.getLong("id"));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
                 Car car = parseCar(resultSet);
-                car.getDrivers().add(driver);
+                car.getDrivers().add(parseDriver(resultSet));
                 cars.add(car);
             }
             return cars;
@@ -179,11 +175,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                Driver driver = new Driver();
-                driver.setId(resultSet.getLong("driverId"));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
-                drivers.add(driver);
+                drivers.add(parseDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -207,5 +199,13 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("can not add driver to car. Params:"
                    + car, e);
         }
+    }
+
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getLong("id"));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
+        return driver;
     }
 }

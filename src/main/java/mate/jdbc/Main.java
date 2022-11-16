@@ -12,7 +12,6 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer chevrolet = new Manufacturer("Chevrolet", "USA");
@@ -69,23 +68,5 @@ public class Main {
 
         System.out.println("\n Cars List");
         carService.getAll().forEach(System.out::println);
-
-        /*
-        Cars List
-        Car{id=1, manufacturerId=1, model='camaro 2.0'
-                , manufacturer=Manufacturer{id=1, name='Chevrolet', country='USA'}
-                        , drivers=[Driver{id=1, name='Dmytro', licenseNumber='DMT5430725430RLJG'}]}
-        Car{id=2, manufacturerId=1, model='camaro 2.0 2020',
-                manufacturer=Manufacturer{id=1, name='Chevrolet', country='USA'}, drivers=[]}
-        Car{id=3, manufacturerId=2, model='civic'
-                , manufacturer=Manufacturer{id=2, name='Honda', country='Japan'}
-                        , drivers=[Driver{id=1, name='Dmytro', licenseNumber='DMT5430725430RLJG'}
-                              , Driver{id=2, name='Maxine', licenseNumber='MXTT55432745866539CS'}]}
-        Car{id=4, manufacturerId=3, model='mustang 2014'
-                , manufacturer=Manufacturer{id=3, name='Ford', country='USA'}
-                        , drivers=[Driver{id=1, name='Dmytro', licenseNumber='DMT5430725430RLJG'}
-                            , Driver{id=2, name='Maxine', licenseNumber='MXTT55432745866539CS'}
-                            , Driver{id=3, name='Denis', licenseNumber='DNS785999214146NS'}]}
-         */
     }
 }
