@@ -14,10 +14,10 @@ public class Main {
 
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver bob = new Driver("Bob", "123qwe456rty");
-        Driver alice = new Driver("Alice", "789uio123asd");
-        Driver john = new Driver("John", "1234qwer5678");
-        Driver mike = new Driver("Mike", "7890asdf6543");
+        Driver bob = new Driver("Bob", "11");
+        Driver alice = new Driver("Alice", "21");
+        Driver john = new Driver("John", "31");
+        Driver mike = new Driver("Mike", "41");
         driverService.create(john);
         driverService.create(mike);
         driverService.create(bob);

@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -57,7 +56,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDriversForCar(id));
+            car.setDrivers(getDriversByCarId(id));
         }
         return Optional.ofNullable(car);
     }
@@ -77,7 +76,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get cars", e);
         }
-        cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+        cars.forEach(c -> c.setDrivers(getDriversByCarId(c.getId())));
         return cars;
     }
 
@@ -113,24 +112,28 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars_drivers WHERE driver_id = ?";
-        List<Long> carIds = new ArrayList<>();
+        String query = "SELECT c.id, c.model, m.name, m.country, manufacturer_id "
+                + "FROM cars c "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd ON cd.car_id = c.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE; ";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Long carId = resultSet.getObject("car_id", Long.class);
-                carIds.add(carId);
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get cars by driver id " + driverId, e);
+            throw new DataProcessingException("Can't get cars by driverID:"
+                    + driverId, e);
         }
-        return carIds.stream()
-                .map(this::get)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toList());
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCarId(driverId));
+        }
+        return cars;
     }
 
     private void insertDriversIntoCar(Car car) {
@@ -147,7 +150,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversForCar(Long id) {
+    private List<Driver> getDriversByCarId(Long id) {
         String query = "SELECT d.* FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -179,11 +182,15 @@ public class CarDaoImpl implements CarDao {
     private Car getCar(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String model = resultSet.getString("model");
-        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+        Manufacturer manufacturer = getManufacturer(resultSet);
+        return new Car(id, model, manufacturer, null);
+    }
+
+    private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("manufacturer_id", Long.class);
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
-        Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
-        return new Car(id, model, manufacturer, null);
+        return new Manufacturer(id, name, country);
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {

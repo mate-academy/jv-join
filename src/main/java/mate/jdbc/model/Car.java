@@ -52,4 +52,12 @@ public class Car {
     public void setDrivers(List<Driver> driversList) {
         this.drivers = driversList;
     }
+
+    @Override
+    public String toString() {
+        return "Car{" + "id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers + '}';
+    }
 }
