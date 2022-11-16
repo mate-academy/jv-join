@@ -54,6 +54,7 @@ public class Main {
         System.out.println(carService.getAll());
         Car renaultKwidUpdated = carService.get(1L);
         renaultKwidUpdated.setModel("Kwid RLX");
+        renaultKwidUpdated.setDrivers(driversWest);
         carService.update(renaultKwidUpdated);
         System.out.println("Car service updated: ");
         System.out.println(carService.getAll());
