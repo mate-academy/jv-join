@@ -56,8 +56,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT* FROM cars c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE";
+        String query = "SELECT*"
+                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
         List<Car> carList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query);) {
@@ -73,8 +74,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE cars SET model = ? manufacturer_id ? WHERE id = ?";
-
+        String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query);) {
             statement.setString(1, car.getModel());
@@ -105,7 +106,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.*, m.name, m.country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
-                + "ON manufacturer_id = m.id "
+                + "ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd "
                 + "ON c.id = cd.car_id "
                 + "WHERE c.is_deleted = FALSE "
