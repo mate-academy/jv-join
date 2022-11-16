@@ -40,11 +40,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query =
-                "SELECT c.id as car_id, c.model as car_model, mf.id as manufacturer_id, "
-                        + "mf.name as manufacturer_name, mf.country as manufacturer_country "
-                        + "FROM cars c JOIN manufacturers mf ON c.manufacturer_id = mf.id "
-                        + "WHERE c.id = ? AND c.is_deleted = FALSE;";
+        String query = "SELECT cars.id as car_id, cars.model as car_model, "
+                        + "manufacturers.id as manufacturer_id, manufacturers.name as "
+                        + "manufacturer_name, manufacturers.country as manufacturer_country "
+                        + "FROM cars JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
+                        + "WHERE cars.id = ? AND cars.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -62,11 +62,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query =
-                "SELECT c.id as car_id, c.model as car_model, mf.id as manufacturer_id, "
-                        + "mf.name as manufacturer_name, mf.country as manufacturer_country "
-                        + "FROM cars c JOIN manufacturers mf ON c.manufacturer_id = mf.id "
-                        + "WHERE c.is_deleted = FALSE;";
+        String query = "SELECT cars.id as car_id, cars.model as car_model, manufacturers.id as "
+                        + "manufacturer_id, manufacturers.name as manufacturer_name, "
+                        + "manufacturers.country as manufacturer_country "
+                        + "FROM cars JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
+                        + "WHERE cars.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -83,10 +83,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id as car_id, c.model as car_model, mf.id as manufacturer_id, "
-                + "mf.name as manufacturer_name, mf.country as manufacturer_country "
-                + "FROM cars_drivers c_d JOIN cars c ON c_d.car_id = c.id JOIN manufacturers mf ON "
-                + "c.manufacturer_id = mf.id WHERE driver_id = ? AND c.is_deleted = FALSE;";
+        String query = "SELECT cars.id as car_id, cars.model as car_model, manufacturers.id "
+                + "as manufacturer_id, manufacturers.name as manufacturer_name, "
+                + "manufacturers.country as manufacturer_country FROM cars_drivers JOIN cars "
+                + "ON cars_drivers.car_id = cars.id JOIN manufacturers ON "
+                + "cars.manufacturer_id = manufacturers.id WHERE driver_id = ? "
+                + "AND cars.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -151,9 +153,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversByCarId(Long id) {
-        String query = "SELECT driver_id, d.name as driver_name, d.license_number "
-                + "FROM cars_drivers c_d JOIN drivers d ON c_d.driver_id = d.id "
-                + "WHERE c_d.car_id = ? AND d.is_deleted = FALSE;";
+        String query = "SELECT driver_id, drivers.name as driver_name, drivers.license_number "
+                + "FROM cars_drivers JOIN drivers ON cars_drivers.driver_id = drivers.id "
+                + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
