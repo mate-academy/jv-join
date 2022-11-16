@@ -54,7 +54,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        car.ifPresent(value -> value.setDrivers(getDriversList(id)));
+        car.ifPresent(value -> value.setDrivers(getDriversByCarId(id)));
         return car;
     }
 
@@ -126,6 +126,9 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 carList.add(getCar(resultSet));
             }
+            for (Car car : carList) {
+                car.setDrivers(getDriversByCarId(id));
+            }
             return carList;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars with id:" + id, e);
@@ -193,7 +196,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriversList(Long carId) {
+    private List<Driver> getDriversByCarId(Long carId) {
         String carDriver = "SELECT id, name, license_number FROM drivers"
                 + " JOIN cars_drivers ON drivers.id = cars_drivers.driver_id"
                 + " WHERE is_deleted = FALSE AND cars_drivers.car_id = ?;";
