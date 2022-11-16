@@ -18,3 +18,14 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+CREATE TABLE `cars` (
+                        `id` bigint NOT NULL AUTO_INCREMENT,
+                        `manufacturer_id` int DEFAULT NULL,
+                        `model` varchar(255) DEFAULT NULL,
+                        `is_deleted` tinyint DEFAULT 0,
+                        PRIMARY KEY (`id`)
+);
+CREATE TABLE `cars_drivers` (
+                                `driver_id` bigint DEFAULT NULL,
+                                `car_id` int DEFAULT NULL
+);
