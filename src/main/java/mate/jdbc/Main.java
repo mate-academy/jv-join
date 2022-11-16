@@ -12,8 +12,18 @@ public class Main {
     public static void main(String[] args) {
         CarService carService = (CarService) INJECTOR.getInstance(CarService.class);
         DriverService driverService = (DriverService) INJECTOR.getInstance(DriverService.class);
-        Driver driver = driverService.get(1L);
+//        Driver driver = new Driver();
+//        driver.setName("Mykola");
+//        driver.setLicenseNumber("777777");
+//        driverService.create(driver);
+
+//        Driver driver = driverService.get(1L);
         Car car = carService.get(1L);
-        carService.removeDriverFromCar(driver, car);
+        Driver driver = driverService.get(3L);
+        carService.addDriverToCar(driver, car);
+        System.out.println(carService.getAllByDriver(3L));
+//        carService.removeDriverFromCar(driver, car);
+//        System.out.println(car);
+//        System.out.println(carService.getAll());
     }
 }

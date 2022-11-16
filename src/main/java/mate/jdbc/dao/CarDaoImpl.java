@@ -72,9 +72,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getDriversForCar(id));
-            }
             return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a car with id: " + id, e);
@@ -91,7 +88,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            disconnectDriversAndCar(car.getId());
+            disconnectDriversAndCar(car);
             connectDriversWith(car);
             return car;
         } catch (SQLException e) {
@@ -121,31 +118,25 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Long> carIdList = new ArrayList<>();
-            while (resultSet.next()) {
-                carIdList.add(resultSet.getObject("car_id", Long.class));
-            }
             List<Car> carList = new ArrayList<>();
-            for (Long id : carIdList) {
-                Optional<Car> optionalCar = get(id);
-                optionalCar.ifPresent(carList::add);
+            while (resultSet.next()) {
+                carList.add(get(resultSet.getObject("car_id", Long.class)).orElseThrow());
             }
             return carList;
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list for driver id: " + driverId, e);
         }
     }
 
-    private void disconnectDriversAndCar(Long id) {
+    private void disconnectDriversAndCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException(
-                    "Couldn't disconnect drivers from the car with id: " + id, e);
+                    "Couldn't disconnect drivers from the car: " + car, e);
         }
     }
 
@@ -192,7 +183,9 @@ public class CarDaoImpl implements CarDao {
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
-        return new Car(carId, model, manufacturer, null);
+        Car car = new Car(carId, model, manufacturer, null);
+        car.setDrivers(getDriversForCar(carId));
+        return car;
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
