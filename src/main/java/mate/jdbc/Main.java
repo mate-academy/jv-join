@@ -39,7 +39,7 @@ public class Main {
         Car update = carService.update(car2);
         boolean delete = carService.delete(1L);
         List<Car> all = carService.getAll();
-        List<Car> allByDriver = carService.getAllByDriver(1L);
+        List<Car> allByDriver = carService.getAllByDriver(8L);
         carService.removeDriverFromCar(driver2, car3);
     }
 }
