@@ -82,7 +82,9 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
         PreparedStatement statement = connection.prepareStatement(query)) {
-
+            statement.setString(1, car.getModel());
+            statement.setLong(2, car.getManufacturer().getId());
+            statement.setLong(3, car.getId());
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update the car: " + car, e);
         }
