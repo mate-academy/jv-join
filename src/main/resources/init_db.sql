@@ -8,7 +8,7 @@ CREATE TABLE `manufacturers` (
     `country` varchar(225) NOT NULL,
     `is_deleted` tinyint NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 DROP TABLE IF EXISTS `drivers`;
 CREATE TABLE `drivers` (
@@ -18,7 +18,7 @@ CREATE TABLE `drivers` (
     `is_deleted` tinyint NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     UNIQUE KEY `id_UNIQUE` (`id`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
@@ -29,7 +29,7 @@ CREATE TABLE `cars` (
     PRIMARY KEY (`id`),
     KEY `cars_manufacturers_fk` (`manufacturer_id`),
     CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
 DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
@@ -39,4 +39,4 @@ CREATE TABLE `cars_drivers` (
     KEY `cars_drivers_drivers_fk` (`driver_id`),
     CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
     CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
