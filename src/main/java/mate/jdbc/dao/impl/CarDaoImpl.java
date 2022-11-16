@@ -12,6 +12,7 @@ import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
@@ -82,10 +83,12 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t update car " + car, e);
         }
+        deleteRelationsForCar(car.getId());
+        insertDriversIntoCar(car);
+        return car;
     }
 
     @Override
@@ -134,5 +137,31 @@ public class CarDaoImpl implements CarDao {
         manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
         car.setManufacturer(manufacturer);
         return car;
+    }
+
+    private void deleteRelationsForCar(Long id) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete cars drivers relations by car id "
+                    + id, e);
+        }
+    }
+
+    private void insertDriversIntoCar(Car car) {
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert drivers into car " + car, e);
+        }
     }
 }
