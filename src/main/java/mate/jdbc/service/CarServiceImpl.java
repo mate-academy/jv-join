@@ -1,11 +1,11 @@
 package mate.jdbc.service;
 
+import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import java.util.List;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -19,36 +19,43 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return null;
+        return carDao.get(id).orElseThrow(()
+                -> new RuntimeException("Couldn't get the car with id: " + id));
     }
 
     @Override
     public List<Car> getAll() {
-        return null;
+        return carDao.getAll();
     }
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
-    }
-
-    @Override
-    public void addDriverToCar(Driver driver, Car car) {
-
-    }
-
-    @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-
+        return carDao.delete(id);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
+    }
+
+    @Override
+    public void addDriverToCar(Driver driver, Car car) {
+        List<Driver> drivers = car.getDrivers();
+        drivers.add(driver);
+        car.setDrivers(drivers);
+        update(car);
+    }
+
+    @Override
+    public void removeDriverFromCar(Driver driver, Car car) {
+        List<Driver> drivers = car.getDrivers();
+        drivers.remove(driver);
+        car.setDrivers(drivers);
+        update(car);
     }
 }
