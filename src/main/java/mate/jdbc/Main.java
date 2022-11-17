@@ -13,12 +13,12 @@ public class Main {
     public static void main(String[] args) {
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        Driver driverMaksim = new Driver(-1L, "Maksim", "SDD 232231");
-        Driver driverOleh = new Driver(-1L, "Oleh", "RES 759745");
-        Driver driverOlha = new Driver(-1L, "Olha", "GGH 368823");
-        Manufacturer audi = new Manufacturer(-1L, "Audi", "Germany");
-        Manufacturer mitsubishi = new Manufacturer(-2L, "Mitsubishi", "Japan");
-        Manufacturer mercedes = new Manufacturer(-3L, "Mercedes", "Germany");
+        Driver driverMaksim = new Driver("Maksim", "SDD 232231");
+        Driver driverOleh = new Driver("Oleh", "RES 759745");
+        Driver driverOlha = new Driver("Olha", "GGH 368823");
+        Manufacturer audi = new Manufacturer("Audi", "Germany");
+        Manufacturer mitsubishi = new Manufacturer("Mitsubishi", "Japan");
+        Manufacturer mercedes = new Manufacturer("Mercedes", "Germany");
         List<Car> cars = List.of(
                 new Car("Q7", audi, List.of(driverMaksim)),
                 new Car("Sport", mitsubishi, List.of(driverOleh)),
