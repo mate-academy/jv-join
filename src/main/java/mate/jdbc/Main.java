@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -8,11 +9,9 @@ import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
-import java.util.List;
-
 public class Main {
-
     private static final Injector injector = Injector.getInstance("mate.jdbc");
+
     public static void main(String[] args) {
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
@@ -49,8 +48,10 @@ public class Main {
         System.out.println(driverService.delete(aliceAlicenko.getId()));
         System.out.println("-=-=-=-");
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car skodaOctavia = new Car("Skoda Octavia", skodaCzech, List.of(bobBobenko, aliceAlicenko));
-        Car bmwX5 = new Car("BMW X5", bmwGermany, List.of(jackJackovych, petroMostavchuk, harryPotter));
+        Car skodaOctavia = new Car("Skoda Octavia", skodaCzech, List.of(
+                bobBobenko, aliceAlicenko));
+        Car bmwX5 = new Car("BMW X5", bmwGermany, List.of(
+                jackJackovych, petroMostavchuk, harryPotter));
         carService.create(skodaOctavia);
         carService.create(bmwX5);
         carService.removeDriverFromCar(bobBobenko, skodaOctavia);
