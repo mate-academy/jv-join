@@ -21,7 +21,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -44,7 +44,7 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id, model, manufacturer_id, m.name, m.country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -66,7 +66,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT c.id, model, manufacturer_id, m.name, m.country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "WHERE c.is_deleted = FALSE;";
+                + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -84,7 +84,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
-                + "WHERE id = ? AND is_deleted = FALSE;";
+                + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -101,7 +101,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE car SET is_delete = true WHERE id = ?;";
+        String query = "UPDATE car SET is_delete = true WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -134,7 +134,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDriversIntoCar(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
@@ -149,7 +149,7 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long id) {
         String query = "SELECT d.* FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
+                + "WHERE cd.car_id = ? AND d.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -165,7 +165,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void deleteCarsDriversRelationsForCar(Long id) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
