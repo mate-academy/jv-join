@@ -14,23 +14,23 @@ public class Main {
     public static void main(String[] args) {
         Manufacturer manufacturer = new Manufacturer(3L,"Audi","German");
         List<Driver> drivers = new ArrayList<>();
-        Car car = new Car("audi",manufacturer,drivers);
+        Car carAudi = new Car("audi",manufacturer,drivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(car);
+        carService.create(carAudi);
 
-        Car car1 = carService.get(3L);
-        System.out.println(car1);
+        Car carVolkswagen = carService.get(carAudi.getId());
+        System.out.println(carVolkswagen);
 
-        car1.setModel(" Volkswagen");
-        carService.update(car1);
-        System.out.println(carService.get(car1.getId()));
+        carVolkswagen.setModel(" Volkswagen");
+        carService.update(carVolkswagen);
+        System.out.println(carService.get(carVolkswagen.getId()));
 
         System.out.println(carService.delete(2L));
 
         Driver driver = new Driver();
         driver.setName("Yulia");
-        carService.addDriverToCar(driver, car);
+        carService.addDriverToCar(driver, carAudi);
         List<Car> allByDriver = carService.getAllByDriver(2L);
         System.out.println(allByDriver);
         carService.getAll().forEach(System.out::println);

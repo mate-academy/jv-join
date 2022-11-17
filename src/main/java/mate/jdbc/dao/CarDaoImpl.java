@@ -58,6 +58,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
+    @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT cars.id, model, manufacturers.id, name, country "
                 + "FROM cars JOIN cars_drivers "
@@ -145,23 +146,31 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseCars(ResultSet resultSet) throws SQLException {
+    private Driver parseCars(ResultSet resultSet) {
         Driver driver = new Driver();
-        driver.setId(resultSet.getObject("id", Long.class));
-        driver.setLicenseNumber(resultSet.getString("license_number"));
-        driver.setName(resultSet.getString("name"));
-        return driver;
+        try {
+            driver.setId(resultSet.getObject("id", Long.class));
+            driver.setLicenseNumber(resultSet.getString("license_number"));
+            driver.setName(resultSet.getString("name"));
+            return driver;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't parse drivers from resul set", e);
+        }
     }
 
-    private Car getCar(ResultSet resultSet) throws SQLException {
+    private Car getCar(ResultSet resultSet) {
         Car car = new Car();
-        car.setId(resultSet.getObject(1, Long.class));
-        car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
-        manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
-        car.setManufacturer(manufacturer);
-        return car;
+        try {
+            car.setId(resultSet.getObject(1, Long.class));
+            car.setModel(resultSet.getString("model"));
+            Manufacturer manufacturer = new Manufacturer();
+            manufacturer.setName(resultSet.getString("name"));
+            manufacturer.setCountry(resultSet.getString("country"));
+            manufacturer.setId(resultSet.getObject("manufacturers.id", Long.class));
+            car.setManufacturer(manufacturer);
+            return car;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t get car by result set ",e);
+        }
     }
 }
