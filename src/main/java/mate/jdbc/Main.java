@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -30,11 +31,16 @@ public class Main {
         driverService.create(stanislawDriver);
         driverService.create(angelaDriver);
 
+        List<Driver> driversBmw = new ArrayList<>();
+        driversBmw.add(iraDriver);
+        driversBmw.add(angelaDriver);
+        List<Driver> driversLamborghini = new ArrayList<>();
+        driversLamborghini.add(denisDriver);
+        driversLamborghini.add(stanislawDriver);
+
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car bmwM5Car = new Car("M5", bmwManufacturer,
-                List.of(iraDriver, angelaDriver));
-        Car lamborghiniSvjCar = new Car("SVJ", lamborghiniManufacturer,
-                List.of(denisDriver, stanislawDriver));
+        Car bmwM5Car = new Car("M5", bmwManufacturer, driversBmw);
+        Car lamborghiniSvjCar = new Car("SVJ", lamborghiniManufacturer, driversLamborghini);
         carService.create(bmwM5Car);
         carService.create(lamborghiniSvjCar);
 
@@ -45,12 +51,12 @@ public class Main {
         }
         System.out.println("------Updated BMW M5 car------");
         carService.removeDriverFromCar(iraDriver, bmwM5Car);
-        carService.addDriverToCar(denisDriver, bmwM5Car);
+        carService.addDriverToCar(stanislawDriver, bmwM5Car);
         System.out.println(carService.get(bmwM5Car.getId()));
 
-        System.out.println("------All cars with Denis driver------");
-        List<Car> carsByDenisDriver = carService.getAllByDriver(denisDriver.getId());
-        for (Car car: carsByDenisDriver) {
+        System.out.println("------All cars with Stanislaw driver------");
+        List<Car> carsByStanislawDriver = carService.getAllByDriver(stanislawDriver.getId());
+        for (Car car: carsByStanislawDriver) {
             System.out.println(car);
         }
     }
