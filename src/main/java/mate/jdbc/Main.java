@@ -17,7 +17,6 @@ public class Main {
                 .getInstance(ManufacturerService.class);
         Manufacturer manufacturerDaewoo = new Manufacturer("Daewoo", "South Korea");
         Manufacturer manufacturerNissan = new Manufacturer("Nissan", "Japan");
-        System.out.println(List.of(manufacturerDaewoo, manufacturerNissan));
         manufacturerService.create(manufacturerDaewoo);
         manufacturerService.create(manufacturerNissan);
 
