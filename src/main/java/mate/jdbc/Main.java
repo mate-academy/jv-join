@@ -44,21 +44,24 @@ public class Main {
 
         System.out.println("Car dao and service testing:");
         System.out.println("Currently in db");
-        System.out.println(carService.getAll());
+        carService.getAll().forEach(System.out::println);
 
         vwJetta.setModel("Passat");
         carService.update(vwJetta);
-        Car updated = carService.get(2L);
+        Car updated = carService.get(vwJetta.getId());
         System.out.println("Updated car with Passat model " + updated);
 
         carService.addDriverToCar(driver1, porsche911);
-        System.out.println("Car with added driver " + carService.get(1L));
+        System.out.println("Car with added driver " + carService.get(porsche911.getId()));
+
+        System.out.println("All info about porsche car by id "
+                + carService.getAllByDriver(porsche911.getId()));
 
         carService.removeDriverFromCar(driver2, vwJetta);
-        System.out.println("Car without driver2 " + carService.get(2L));
+        System.out.println("Car without driver2 " + carService.get(vwJetta.getId()));
 
-        carService.delete(2L);
+        carService.delete(vwJetta.getId());
         System.out.println("DB after all changes");
-        System.out.println(carService.getAll());
+        carService.getAll().forEach(System.out::println);
     }
 }
