@@ -100,7 +100,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String query = "UPDATE cars SET is_deleted = FALSE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -131,17 +131,22 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
-        Long carId = resultSet.getObject("id", Long.class);
-        String carModel = resultSet.getString("model");
-        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
-        String manufacturerName = resultSet.getString("name");
-        String manufacturerCountry = resultSet.getString("country");
-        Manufacturer carManufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
-        carManufacturer.setId(manufacturerId);
-        Car car = new Car(carModel, carManufacturer);
-        car.setId(carId);
-        return car;
+    private Car parseCarWithManufacturerFromResultSet(ResultSet resultSet) {
+        Long carId = null;
+        try {
+            carId = resultSet.getObject("id", Long.class);
+            String carModel = resultSet.getString("model");
+            Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+            String manufacturerName = resultSet.getString("name");
+            String manufacturerCountry = resultSet.getString("country");
+            Manufacturer carManufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
+            carManufacturer.setId(manufacturerId);
+            Car car = new Car(carModel, carManufacturer);
+            car.setId(carId);
+            return car;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't parse car with manufacturer from ResultSet", e);
+        }
     }
 
     private List<Driver> getDriversForCar(Long carId) {
