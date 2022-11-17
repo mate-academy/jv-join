@@ -183,7 +183,7 @@ public class CarDaoImpl implements CarDao {
         String name = resultSet.getString("name");
         String country = resultSet.getString("country");
         Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
-        return new Car(id, model, manufacturer, null);
+        return new Car(id, model, manufacturer, new ArrayList<>());
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
