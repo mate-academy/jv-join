@@ -18,7 +18,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
-        addDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                          connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -33,6 +32,8 @@ public class CarDaoImpl implements CarDao {
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot create the car " + car, e);
+        } finally {
+            addDrivers(car);
         }
     }
 
@@ -76,7 +77,6 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET manufacturer_id = ?, model = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        addDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getManufacturer().getId());
@@ -86,6 +86,8 @@ public class CarDaoImpl implements CarDao {
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Cannot update the car: " + car, e);
+        } finally {
+            addDrivers(car);
         }
     }
 
