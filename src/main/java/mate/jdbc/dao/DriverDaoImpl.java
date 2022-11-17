@@ -30,8 +30,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return driver;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
-                    + driver + ". ", e);
+            throw new DataProcessingException("Couldn't create " + driver + ". ", e);
         }
     }
 
@@ -101,10 +100,14 @@ public class DriverDaoImpl implements DriverDao {
         }
     }
 
-    private Driver getDriver(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
-        String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("license_number");
-        return new Driver(id, name, licenseNumber);
+    private Driver getDriver(ResultSet resultSet) {
+        try {
+            Long id = resultSet.getObject("id", Long.class);
+            String name = resultSet.getString("name");
+            String licenseNumber = resultSet.getString("license_number");
+            return new Driver(id, name, licenseNumber);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't parse from resultSet ", e);
+        }
     }
 }
