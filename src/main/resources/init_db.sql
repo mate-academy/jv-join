@@ -31,4 +31,3 @@ CREATE TABLE `cars_drivers` (`car_id` BIGINT(11) NOT NULL,
                              `driver_id` BIGINT(11) NOT NULL,
                               FOREIGN KEY (`car_id`) REFERENCES `cars`(`id`),
                               FOREIGN KEY (`driver_id`) REFERENCES `drivers`(`id`))
-

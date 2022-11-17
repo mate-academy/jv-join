@@ -15,13 +15,13 @@ public class Main {
         Manufacturer manufacturer = new Manufacturer(1L,"Mercedes", "Germany");
         List<Driver> drivers = new ArrayList<>();
         Car car = new Car();
-        car.setId(1L);
         car.setModel("model");
         car.setManufacturer(manufacturer);
         car.setDrivers(drivers);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(car);
-        Car car2 = carService.get(2L);
+        car = carService.create(car);
+        Car createdCar = carService.create(car);
+        Car car2 = carService.get(createdCar.getId());
         car.setModel("qwerty");
         carService.update(car);
         Driver driver = new Driver(1L, "Mark","xxxx");
