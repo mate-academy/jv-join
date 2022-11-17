@@ -17,7 +17,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
+        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                          connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -59,7 +59,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT * FROM cars "
                 + "INNER JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE;";
+                + "WHERE cars.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -164,7 +164,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void addDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         removePreviousDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query);) {
