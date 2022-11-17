@@ -66,20 +66,20 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c "
                 + "JOIN manufacturers mn ON c.manufacturer_id = mn.id "
                 + "WHERE c.is_deleted = FALSE;";
-        List<Car> allCars = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                allCars.add(getCar(resultSet));
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars from DB", e);
         }
-        for (Car car : allCars) {
+        for (Car car : cars) {
             car.setDrivers(getDriversForCar(car));
         }
-        return allCars;
+        return cars;
     }
 
     @Override
@@ -119,21 +119,21 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN manufacturers mn ON c.manufacturer_id = mn.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
-        List<Car> allCars = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                allCars.add(getCar(resultSet));
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars by riverId " + driverId, e);
         }
-        for (Car car : allCars) {
+        for (Car car : cars) {
             car.setDrivers(getDriversForCar(car));
         }
-        return allCars;
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
