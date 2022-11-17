@@ -29,7 +29,7 @@ public class Main {
         manufacturerService.create(koenigseggManufacturer);
         manufacturerService.create(bugattiManufacturer);
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car koenigsegg = new Car("Agera RS ", koenigseggManufacturer, List.of(michael, frank));
+        Car koenigsegg = new Car("Agera RS", koenigseggManufacturer, List.of(michael, frank));
         Car bugatti = new Car("Veyron", bugattiManufacturer, List.of(rob, bob));
         carService.create(koenigsegg);
         carService.create(bugatti);
