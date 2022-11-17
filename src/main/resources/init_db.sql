@@ -19,6 +19,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
 	                         `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
                              `model` VARCHAR(255) NOT NULL,
@@ -31,6 +32,7 @@ CREATE TABLE `cars` (
                                          ON DELETE NO ACTION
                                          ON UPDATE NO ACTION);
 
+DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE cars_drivers (
                             `car_id` BIGINT NOT NULL,
                             `driver_id` BIGINT NOT NULL,

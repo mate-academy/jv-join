@@ -16,7 +16,6 @@ public class Main {
                 injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService)
                 injector.getInstance(DriverService.class);
-
         Manufacturer manufacturerToyota = new Manufacturer(null, "Toyota", "Japan");
         manufacturerService.create(manufacturerToyota);
 
