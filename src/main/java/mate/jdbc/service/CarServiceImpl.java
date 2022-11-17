@@ -50,7 +50,7 @@ public class CarServiceImpl implements CarService {
         List<Driver> drivers = new ArrayList<>(car.getDrivers());
         drivers.add(driver);
         car.setDrivers(drivers);
-        carDao.update(car);
+        update(car);
     }
 
     @Override
@@ -58,6 +58,6 @@ public class CarServiceImpl implements CarService {
         List<Driver> drivers = new ArrayList<>(car.getDrivers());
         drivers.remove(driver);
         car.setDrivers(drivers);
-        carDao.update(car);
+        update(car);
     }
 }

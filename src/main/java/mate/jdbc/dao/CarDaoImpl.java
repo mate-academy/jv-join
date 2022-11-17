@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -118,28 +117,26 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT car_id FROM cars_drivers WHERE driver_id = ?";
-        List<Long> carIds = new ArrayList<>();
+        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, name, country "
+                + "FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd "
+                + "ON cd.car_id = c.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
-        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Long carId = resultSet.getObject("car_id", Long.class);
-                carIds.add(carId);
+                cars.add(parseCarWithDriversFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get cars from DB by driver id "
                     + driverId, e);
         }
-        for (Long id : carIds) {
-            car = get(id).orElseThrow(() -> new NoSuchElementException("There is no car "
-                    + "with id = " + id));
-            if (car != null) {
-                cars.add(car);
-            }
+        if (!cars.isEmpty()) {
+            cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
         }
         return cars;
     }
