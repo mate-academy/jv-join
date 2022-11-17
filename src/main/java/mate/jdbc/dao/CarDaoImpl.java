@@ -18,12 +18,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
-        String queryDrivers = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+        addDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
-                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                PreparedStatement statementDrivers =
-                         connection.prepareStatement(queryDrivers)) {
+                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setLong(1, car.getManufacturer().getId());
             statement.setString(2, car.getModel());
             statement.executeUpdate();
@@ -31,11 +29,6 @@ public class CarDaoImpl implements CarDao {
             if (generatedKeys.next()) {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
-            }
-            statementDrivers.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                statementDrivers.setLong(2, driver.getId());
-                statementDrivers.executeUpdate();
             }
             return car;
         } catch (SQLException e) {
@@ -168,19 +161,29 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addDrivers(Car car) throws SQLException {
+    private void addDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        String queryRemove = "UPDATE cars_drivers SET is_deleted = TRUE WHERE car_id = ?";
+        removePreviousDrivers(car);
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query);
-                PreparedStatement removeStatement = connection.prepareStatement(queryRemove)) {
-            removeStatement.setLong(1, car.getId());
-            removeStatement.executeUpdate();
+                PreparedStatement statement = connection.prepareStatement(query);) {
             statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
                 statement.executeUpdate();
             }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Cannot add drivers to car: " + car, e);
+        }
+    }
+
+    private void removePreviousDrivers(Car car) {
+        String queryRemove = "UPDATE cars_drivers SET is_deleted = TRUE WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(queryRemove)) {
+            statement.setLong(1, car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Cannot remove previous drivers from car: " + car, e);
         }
     }
 }
