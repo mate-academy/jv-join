@@ -12,9 +12,9 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        Manufacturer manufacturer = new Manufacturer(3L,"Audi","German");
+        Manufacturer manufacturer = new Manufacturer("Audi", "German");
         List<Driver> drivers = new ArrayList<>();
-        Car carAudi = new Car("audi",manufacturer,drivers);
+        Car carAudi = new Car("audi", manufacturer,drivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(carAudi);
@@ -26,7 +26,7 @@ public class Main {
         carService.update(carVolkswagen);
         System.out.println(carService.get(carVolkswagen.getId()));
 
-        System.out.println(carService.delete(2L));
+        System.out.println(carService.delete(carVolkswagen.getId()));
 
         Driver driver = new Driver();
         driver.setName("Yulia");
