@@ -1,11 +1,10 @@
 package mate.jdbc.util;
 
-import mate.jdbc.exception.DataProcessingException;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import mate.jdbc.exception.DataProcessingException;
 
 public class ConnectionUtil {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/taxi_service";
