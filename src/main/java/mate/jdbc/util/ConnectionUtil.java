@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import mate.jdbc.exception.DataProcessingException;
 
 public class ConnectionUtil {
     private static final String URL = "jdbc:mysql://127.0.0.1:3306/taxi_service";
@@ -27,7 +26,7 @@ public class ConnectionUtil {
         try {
             return DriverManager.getConnection(URL, dbProperties);
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't create connection to DB ", e);
+            throw new RuntimeException("Can't create connection to DB ", e);
         }
     }
 }
