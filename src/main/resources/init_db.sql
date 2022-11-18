@@ -35,9 +35,9 @@ CREATE TABLE `cars` (
 CREATE TABLE `cars_drivers` (
                                 `car_id` BIGINT(11) NOT NULL,
                                 `driver_id` BIGINT(11) NOT NULL,
-                                CONSTRAINT `cars_dirvers_car_fk`
+                                CONSTRAINT `cars_drivers_car_fk`
                                     FOREIGN KEY (`car_id`)
                                         REFERENCES `cars`(`id`),
-                                CONSTRAINT `cars_dirvers_driver_fk`
+                                CONSTRAINT `cars_drivers_driver_fk`
                                     FOREIGN KEY (`driver_id`)
                                         REFERENCES `drivers` (`id`));

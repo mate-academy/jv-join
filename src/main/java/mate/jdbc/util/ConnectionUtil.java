@@ -1,5 +1,7 @@
 package mate.jdbc.util;
 
+import mate.jdbc.exception.DataProcessingException;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -19,10 +21,14 @@ public class ConnectionUtil {
         }
     }
 
-    public static Connection getConnection() throws SQLException {
+    public static Connection getConnection() {
         Properties dbProperties = new Properties();
         dbProperties.setProperty("user", USERNAME);
         dbProperties.setProperty("password", PASSWORD);
-        return DriverManager.getConnection(URL, dbProperties);
+        try {
+            return DriverManager.getConnection(URL, dbProperties);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't create connection to DB ", e);
+        }
     }
 }
