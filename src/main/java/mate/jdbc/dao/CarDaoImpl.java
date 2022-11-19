@@ -100,7 +100,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t update car: " + car, e);
         }
         removeDriverFromCar(car.getId());
-        addCarDriver(car);
+        addDriverToCar(car);
         return car;
     }
 
@@ -193,7 +193,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addCarDriver(Car car) {
+    private void addDriverToCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
