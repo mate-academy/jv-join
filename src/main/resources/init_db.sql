@@ -23,7 +23,7 @@ CREATE TABLE `cars` (
                         `id` BIGINT NOT NULL AUTO_INCREMENT,
                         `model` VARCHAR(255) NOT NULL,
                         `is_deleted` TINYINT NOT NULL DEFAULT 0,
-                        `manufacturer_id` carsINT NOT NULL,
+                        `manufacturer_id` INT NOT NULL,
                         PRIMARY KEY (`id`),
                         KEY `cars_manufacturers_fk` (`manufacturer_id`),
                         CONSTRAINT `cars_manufacturers_fk`

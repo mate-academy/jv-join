@@ -11,8 +11,7 @@ public class Manufacturer {
     }
 
     public Manufacturer(String name, String country) {
-        this.name = name;
-        this.country = country;
+        this(null, name, country);
     }
 
     public Manufacturer(Long id, String name, String country) {
