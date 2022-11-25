@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -29,15 +30,15 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            addDriverToCar(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t create a car:" + car, e);
         }
+        addDriverToCar(car);
+        return car;
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT cars.id AS car_id, manufacturer_id, "
                 + "manufacturers.name AS manufacturer_name, "
                 + "manufacturers.country AS manufacturer_country, model "
@@ -59,7 +60,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriverForCar(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
