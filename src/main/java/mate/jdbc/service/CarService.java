@@ -1,6 +1,5 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
