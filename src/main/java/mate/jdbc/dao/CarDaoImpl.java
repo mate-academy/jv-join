@@ -154,13 +154,13 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            List<Long> carsIds = new ArrayList<>();
+            List<Long> carIds = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Long carId = resultSet.getObject("car_id", Long.class);
-                carsIds.add(carId);
+                carIds.add(carId);
             }
-            return carsIds;
+            return carIds;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars of driver with id " + id, e);
         }
