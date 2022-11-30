@@ -164,7 +164,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars of driver with id " + id, e);
         }
-
     }
 
     private List<Driver> getDriversByCarId(Long id) {
