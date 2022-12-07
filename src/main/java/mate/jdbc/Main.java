@@ -41,7 +41,7 @@ public class Main {
         driverService.create(new Driver("Kolya", "6243121"));
         driverService.create(new Driver("Vasil", "4643121"));
         driverService.create(new Driver("Petro", "5645433"));
-        driverService.create(new Driver("Bogdan Chudilo", "6243121"));
+        driverService.create(new Driver("Bogdan", "6243121"));
         List<Driver> drivers = driverService.getAll();
         drivers.forEach(System.out::println);
         driverService.delete(2L);
