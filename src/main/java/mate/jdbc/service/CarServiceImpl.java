@@ -1,6 +1,7 @@
 package mate.jdbc.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -29,7 +30,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
@@ -39,16 +40,21 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        List<Car> carList = carDao.getAll();
+        return carList.stream()
+                .filter(a -> a.getId() == driverId)
+                .collect(Collectors.toList());
     }
 }

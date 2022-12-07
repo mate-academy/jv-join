@@ -85,8 +85,8 @@ public class CarDaoImpl implements CarDao {
                 + "INNER JOIN manufacturers M "
                 + "ON C.manufacturer_id = M.id "
                 + "WHERE C.is_deleted = false";
-        try(Connection connection = ConnectionUtil.getConnection();
-        PreparedStatement getAllStatement = connection.prepareStatement(query)) {
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             ResultSet result = getAllStatement.executeQuery();
             List<Car> carList = new ArrayList<>();
             while (result.next()) {
@@ -106,15 +106,29 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE cars";
-        return null;
+        String queryDelete = "DELETE FROM cars_drivers WHERE car_id = ?";
+        String queryInsert = "INSERT cars_drivers (driver_id, car_id) VALUES(?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement deleteStatement = connection.prepareStatement(queryDelete);
+                PreparedStatement insertStatement = connection.prepareStatement(queryInsert)) {
+            deleteStatement.setLong(1, car.getId());
+            deleteStatement.executeUpdate();
+            insertStatement.setLong(2, car.getId());
+            for (int i = 0; i < car.getDrivers().size(); i++) {
+                insertStatement.setLong(1, car.getDrivers().get(i).getId());
+                insertStatement.executeUpdate();
+            }
+            return car;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update car " + car, e);
+        }
     }
 
     @Override
     public boolean delete(Long id) {
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-        PreparedStatement deleteStatement = connection.prepareStatement(query)) {
+                PreparedStatement deleteStatement = connection.prepareStatement(query)) {
             deleteStatement.setLong(1, id);
             int x = deleteStatement.executeUpdate();
             return x > 0;
@@ -122,4 +136,6 @@ public class CarDaoImpl implements CarDao {
             throw new RuntimeException(e);
         }
     }
+
+
 }
