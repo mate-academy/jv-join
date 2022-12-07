@@ -76,7 +76,8 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return Objects.equals(id, car.id) && Objects.equals(model, car.model)
+        return Objects.equals(id, car.id)
+                && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
                 && Objects.equals(drivers, car.drivers);
     }
@@ -90,10 +91,12 @@ public class Car {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder("Car{" + "id=");
         stringBuilder.append(id).append(", model='").append(model)
-                     .append(", manufacturer=").append(manufacturer)
-                     .append(", drivers=");
-        for (Driver driver: drivers) {
-            stringBuilder.append("\n").append(driver);
+                     .append(", manufacturer=").append(manufacturer);
+        if (drivers != null) {
+            stringBuilder.append(", drivers=");
+            for (Driver driver : drivers) {
+                stringBuilder.append("\n").append(driver);
+            }
         }
         return stringBuilder.toString();
     }

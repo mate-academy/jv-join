@@ -63,5 +63,9 @@ public class Main {
         carService.create(new Car("Quachkai", manufacturerService.get(2L)));
         Car car = carService.get(4L);
         System.out.println(car);
+        List<Car> carList = carService.getAll();
+        for (Car c: carList) {
+            System.out.println(c);
+        }
     }
 }

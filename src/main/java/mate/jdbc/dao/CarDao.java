@@ -13,5 +13,5 @@ public interface CarDao {
 
     Car update(Car car);
 
-    Car delete(Long id);
+    boolean delete(Long id);
 }
