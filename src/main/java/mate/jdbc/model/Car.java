@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class Car {
-    private long id;
+    private Long id;
     private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
@@ -12,8 +12,15 @@ public class Car {
     public Car() {
     }
 
-    public Car(String model) {
+    public Car(String model, Manufacturer manufacturer) {
         this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
+    public Car(long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
     }
 
     public Car(long id, String model, Manufacturer manufacturer, List<Driver> drivers) {

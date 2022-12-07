@@ -14,7 +14,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        return null;
+        return carDao.create(car);
     }
 
     @Override

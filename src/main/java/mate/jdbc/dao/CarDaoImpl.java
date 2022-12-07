@@ -16,24 +16,39 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO taxi_service.cars(model, manufacturer_id) VALUES(?, ?)";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement =
                         connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             createStatement.setString(1, car.getModel());
             createStatement.setLong(2, car.getManufacturer().getId());
-            ResultSet result = createStatement.executeQuery();
+            createStatement.executeUpdate();
+            ResultSet result = createStatement.getGeneratedKeys();
             if (result.next()) {
-                car.setId(result.getObject("id", Long.class));
+                car.setId(result.getObject(1, Long.class));
             }
             return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create" + car + ". ", e);
+            throw new DataProcessingException("Couldn't create " + car + ". ", e);
         }
     }
 
     @Override
     public Optional<Car> get(Long id) {
+        String query = "SELECT * FROM cars WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getStatement = connection.prepareStatement(query)) {
+            getStatement.setLong(1, id);
+            ResultSet result = getStatement.executeQuery();
+            Optional<Car> optionalCar;
+            if (result.next()) {
+//                optionalCar = Optional.of(new Car(result.getObject("id", Long.class),
+//                                                  result.getString("model"),
+//                                                  result.getObject("manufacturer_id")));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get car for id: " + id + ". ", e);
+        }
         return Optional.empty();
     }
 
