@@ -32,7 +32,7 @@ public class CarDaoImpl implements CarDao {
             }
             return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create " + car + ". ", e);
+            throw new DataProcessingException("Couldn't create car " + car + ". ", e);
         }
     }
 
@@ -100,7 +100,7 @@ public class CarDaoImpl implements CarDao {
             }
             return carList;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get list of cars", e);
+            throw new DataProcessingException("Couldn't get list of cars" + ". ", e);
         }
     }
 
@@ -120,7 +120,7 @@ public class CarDaoImpl implements CarDao {
             }
             return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update car " + car, e);
+            throw new DataProcessingException("Couldn't update car " + car + ". ", e);
         }
     }
 
@@ -133,7 +133,7 @@ public class CarDaoImpl implements CarDao {
             int x = deleteStatement.executeUpdate();
             return x > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete car by id" + id, e);
+            throw new DataProcessingException("Couldn't delete car by id" + id + ". ", e);
         }
     }
 
@@ -145,7 +145,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement fillStatement = connection.prepareStatement(query)) {
             fillStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't fill cars_drivers table ", e);
+            throw new RuntimeException("Couldn't fill cars_drivers table. ", e);
         }
     }
 }
