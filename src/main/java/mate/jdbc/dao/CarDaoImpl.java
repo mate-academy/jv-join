@@ -54,22 +54,14 @@ public class CarDaoImpl implements CarDao {
             Optional<Car> optionalCar = Optional.empty();
             List<Driver> driversList = new ArrayList<>();
             if (result.next()) {
-                Manufacturer manufacturer =
-                        new Manufacturer(result.getObject("M.id", Long.class),
-                                         result.getString("M.name"),
-                                         result.getString("M.country"));
-                driversList.add(new Driver(result.getObject("D.id", Long.class),
-                                           result.getString("D.name"),
-                                           result.getString("D.license_number")));
+                Manufacturer manufacturer = getInstanceManufacture(result);
+                driversList.add(getInstanceDriver(result));
                 optionalCar =
                         Optional.of(new Car(result.getObject("C.id", Long.class),
                                             result.getString("C.model"),
                                             manufacturer, driversList));
                 while (result.next()) {
-                    optionalCar.get().getDrivers()
-                            .add(new Driver(result.getObject("D.id", Long.class),
-                                            result.getString("D.name"),
-                                            result.getString("D.license_number")));
+                    optionalCar.get().getDrivers().add(getInstanceDriver(result));
                 }
             }
             return optionalCar;
@@ -90,10 +82,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet result = getAllStatement.executeQuery();
             List<Car> carList = new ArrayList<>();
             while (result.next()) {
-                Manufacturer manufacturer =
-                        new Manufacturer(result.getObject("M.id", Long.class),
-                                         result.getString("M.name"),
-                                         result.getString("M.country"));
+                Manufacturer manufacturer = getInstanceManufacture(result);
                 carList.add(new Car(result.getObject("C.id", Long.class),
                                     result.getString("C.model"),
                                     manufacturer));
@@ -147,5 +136,18 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't fill cars_drivers table. ", e);
         }
+    }
+
+    private Manufacturer getInstanceManufacture(ResultSet result) throws SQLException {
+        return new Manufacturer(result.getObject("M.id", Long.class),
+                                result.getString("M.name"),
+                                result.getString("M.country"));
+
+    }
+
+    private Driver getInstanceDriver(ResultSet result) throws SQLException {
+        return new Driver(result.getObject("D.id", Long.class),
+                          result.getString("D.name"),
+                          result.getString("D.license_number"));
     }
 }
