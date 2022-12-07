@@ -5,11 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
 @Dao
@@ -35,21 +38,44 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT * FROM cars WHERE id = ?";
+        String query = "SELECT C.id, C.model, "
+                + "M.id, M.name, M.country, "
+                + "D.id, D.name, D.license_number "
+                + "FROM cars C "
+                + "INNER JOIN manufacturers M ON C.manufacturer_id = M.id "
+                + "INNER JOIN cars_drivers CD ON C.id = CD.car_id "
+                + "INNER JOIN drivers D ON CD.driver_id = D.id "
+                + "WHERE C.is_deleted = FALSE AND M.is_deleted = FALSE "
+                + "AND D.is_deleted = FALSE AND C.id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement = connection.prepareStatement(query)) {
             getStatement.setLong(1, id);
             ResultSet result = getStatement.executeQuery();
-            Optional<Car> optionalCar;
+            Optional<Car> optionalCar = Optional.empty();
+            List<Driver> driversList = new ArrayList<>();
             if (result.next()) {
-//                optionalCar = Optional.of(new Car(result.getObject("id", Long.class),
-//                                                  result.getString("model"),
-//                                                  result.getObject("manufacturer_id")));
+                Manufacturer manufacturer =
+                        new Manufacturer(result.getObject("M.id", Long.class),
+                                         result.getString("M.name"),
+                                         result.getString("M.country"));
+                driversList.add(new Driver(result.getObject("D.id", Long.class),
+                                           result.getString("D.name"),
+                                           result.getString("D.license_number")));
+                optionalCar =
+                        Optional.of(new Car(result.getObject("C.id", Long.class),
+                                            result.getString("C.model"),
+                                            manufacturer, driversList));
+                while (result.next()) {
+                    optionalCar.get().getDrivers()
+                            .add(new Driver(result.getObject("D.id", Long.class),
+                                            result.getString("D.name"),
+                                            result.getString("D.license_number")));
+                }
             }
+            return optionalCar;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car for id: " + id + ". ", e);
         }
-        return Optional.empty();
     }
 
     @Override

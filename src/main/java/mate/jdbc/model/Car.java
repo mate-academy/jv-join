@@ -12,18 +12,23 @@ public class Car {
     public Car() {
     }
 
+    public Car(Long id, String model) {
+        this.id = id;
+        this.model = model;
+    }
+
     public Car(String model, Manufacturer manufacturer) {
         this.model = model;
         this.manufacturer = manufacturer;
     }
 
-    public Car(long id, String model, Manufacturer manufacturer) {
+    public Car(Long id, String model, Manufacturer manufacturer) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
     }
 
-    public Car(long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
+    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
@@ -71,7 +76,7 @@ public class Car {
             return false;
         }
         Car car = (Car) o;
-        return id == car.id && Objects.equals(model, car.model)
+        return Objects.equals(id, car.id) && Objects.equals(model, car.model)
                 && Objects.equals(manufacturer, car.manufacturer)
                 && Objects.equals(drivers, car.drivers);
     }
@@ -83,8 +88,13 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car{" + "id=" + id + ", model='" + model + '\''
-                + ", manufacturer=" + manufacturer
-                + ", drivers=" + drivers + '}';
+        StringBuilder stringBuilder = new StringBuilder("Car{" + "id=");
+        stringBuilder.append(id).append(", model='").append(model)
+                     .append(", manufacturer=").append(manufacturer)
+                     .append(", drivers=");
+        for (Driver driver: drivers) {
+            stringBuilder.append("\n").append(driver);
+        }
+        return stringBuilder.toString();
     }
 }
