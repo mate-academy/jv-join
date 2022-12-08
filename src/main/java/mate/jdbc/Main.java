@@ -7,7 +7,6 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.CarServiceImpl;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
@@ -67,7 +66,6 @@ public class Main {
         for (Car car: carList) {
             System.out.println(car);
         }
-        ((CarServiceImpl) carService).putDriversInCar();
         Car car = carService.get(3L);
         Driver driver = driverService.get(4L);
         System.out.println(car);
