@@ -42,9 +42,9 @@ public class CarDaoImpl implements CarDao {
                 + "M.id, M.name, M.country, "
                 + "D.id, D.name, D.license_number "
                 + "FROM cars C "
-                + "INNER JOIN manufacturers M ON C.manufacturer_id = M.id "
-                + "INNER JOIN cars_drivers CD ON C.id = CD.car_id "
-                + "INNER JOIN drivers D ON CD.driver_id = D.id "
+                + "INNER JOIN manufacturers m ON C.manufacturer_id = M.id "
+                + "INNER JOIN cars_drivers cd ON C.id = CD.car_id "
+                + "INNER JOIN drivers d ON CD.driver_id = D.id "
                 + "WHERE C.is_deleted = FALSE AND M.is_deleted = FALSE "
                 + "AND D.is_deleted = FALSE AND C.id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
