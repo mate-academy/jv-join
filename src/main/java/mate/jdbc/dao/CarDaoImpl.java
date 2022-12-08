@@ -148,12 +148,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     public void fillCarsDriversTable() {
-    String query = "INSERT INTO cars_drivers (driver_id, car_id) "
+        String query = "INSERT INTO cars_drivers (driver_id, car_id) "
                     + "VALUES (2, 1), (2, 2), (3, 3), (3, 4), (4, 5),"
                     + " (4, 1), (5, 2), (5, 3), (6, 4), (6, 5)";
-            try (Connection connection = ConnectionUtil.getConnection();
+        try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement fillStatement = connection.prepareStatement(query)) {
-                fillStatement.executeUpdate();
+            fillStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't fill cars_drivers table. ", e);
         }

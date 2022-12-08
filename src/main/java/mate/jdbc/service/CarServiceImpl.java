@@ -61,6 +61,7 @@ public class CarServiceImpl implements CarService {
                 .filter(a -> a.getId() == driverId)
                 .collect(Collectors.toList());
     }
+
     //I need it for test
     public void putDriversInCar() {
         ((CarDaoImpl) carDao).fillCarsDriversTable();
