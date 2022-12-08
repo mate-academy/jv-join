@@ -38,15 +38,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT C.id, C.model, "
-                + "M.id, M.name, M.country, "
-                + "D.id, D.name, D.license_number "
-                + "FROM cars C "
-                + "INNER JOIN manufacturers m ON C.manufacturer_id = M.id "
-                + "INNER JOIN cars_drivers cd ON C.id = CD.car_id "
-                + "INNER JOIN drivers d ON CD.driver_id = D.id "
-                + "WHERE C.is_deleted = FALSE AND M.is_deleted = FALSE "
-                + "AND D.is_deleted = FALSE AND C.id = ?;";
+        String query = "SELECT c.id, c.model, "
+                + "m.id, m.name, m.country, "
+                + "d.id, d.name, d.license_number "
+                + "FROM cars c "
+                + "INNER JOIN manufacturers m ON C.manufacturer_id = m.id "
+                + "INNER JOIN cars_drivers cd ON C.id = cd.car_id "
+                + "INNER JOIN drivers d ON cd.driver_id = d.id "
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = FALSE "
+                + "AND d.is_deleted = FALSE AND c.id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement = connection.prepareStatement(query)) {
             getStatement.setLong(1, id);
@@ -57,8 +57,8 @@ public class CarDaoImpl implements CarDao {
                 Manufacturer manufacturer = getInstanceManufacture(result);
                 driversList.add(getInstanceDriver(result));
                 optionalCar =
-                        Optional.of(new Car(result.getObject("C.id", Long.class),
-                                            result.getString("C.model"),
+                        Optional.of(new Car(result.getObject("c.id", Long.class),
+                                            result.getString("c.model"),
                                             manufacturer, driversList));
                 while (result.next()) {
                     optionalCar.get().getDrivers().add(getInstanceDriver(result));
@@ -72,19 +72,19 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT C.id, C.model, M.id, M.name, M.country "
-                + "FROM cars C "
-                + "INNER JOIN manufacturers M "
-                + "ON C.manufacturer_id = M.id "
-                + "WHERE C.is_deleted = false";
+        String query = "SELECT c.id, c.model, m.id, m.name, m.country "
+                + "FROM cars c "
+                + "INNER JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = false";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             ResultSet result = getAllStatement.executeQuery();
             List<Car> carList = new ArrayList<>();
             while (result.next()) {
                 Manufacturer manufacturer = getInstanceManufacture(result);
-                carList.add(new Car(result.getObject("C.id", Long.class),
-                                    result.getString("C.model"),
+                carList.add(new Car(result.getObject("c.id", Long.class),
+                                    result.getString("c.model"),
                                     manufacturer));
             }
             return carList;
@@ -139,15 +139,15 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Manufacturer getInstanceManufacture(ResultSet result) throws SQLException {
-        return new Manufacturer(result.getObject("M.id", Long.class),
-                                result.getString("M.name"),
-                                result.getString("M.country"));
+        return new Manufacturer(result.getObject("m.id", Long.class),
+                                result.getString("m.name"),
+                                result.getString("m.country"));
 
     }
 
     private Driver getInstanceDriver(ResultSet result) throws SQLException {
-        return new Driver(result.getObject("D.id", Long.class),
-                          result.getString("D.name"),
-                          result.getString("D.license_number"));
+        return new Driver(result.getObject("d.id", Long.class),
+                          result.getString("d.name"),
+                          result.getString("d.license_number"));
     }
 }
