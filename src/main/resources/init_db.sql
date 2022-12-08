@@ -33,6 +33,7 @@ CREATE TABLE cars (
 CREATE TABLE cars_drivers (
 	`driver_id` BIGINT,
     `car_id` BIGINT,
+    PRIMARY KEY (`driver_id`, `car_id`),
     CONSTRAINT `cars_drivers_to_drivers_fk`
     FOREIGN KEY (`driver_id`) REFERENCES taxi_service_db.drivers(`id`),
     CONSTRAINT `cars_drivers_to_cars_fk`
