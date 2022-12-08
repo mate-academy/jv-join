@@ -76,7 +76,7 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c "
                 + "INNER JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE c.is_deleted = false";
+                + "WHERE c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             ResultSet result = getAllStatement.executeQuery();
@@ -126,18 +126,6 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    public void fillCarsDriversTable() {
-        String query = "INSERT INTO cars_drivers (driver_id, car_id) "
-                + "VALUES (2, 1), (2, 2), (3, 3), (3, 4), (4, 5),"
-                + " (4, 1), (5, 2), (5, 3), (6, 4), (6, 5)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement fillStatement = connection.prepareStatement(query)) {
-            fillStatement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Couldn't fill cars_drivers table. ", e);
-        }
-    }
-
     private Manufacturer getInstanceManufacture(ResultSet result) throws SQLException {
         return new Manufacturer(result.getObject("m.id", Long.class),
                                 result.getString("m.name"),
@@ -150,4 +138,17 @@ public class CarDaoImpl implements CarDao {
                           result.getString("d.name"),
                           result.getString("d.license_number"));
     }
+
+//for test
+//    public void fillCarsDriversTable() {
+//        String query = "INSERT INTO cars_drivers (driver_id, car_id) "
+//                + "VALUES (2, 1), (2, 2), (3, 3), (3, 4), (4, 5),"
+//                + " (4, 1), (5, 2), (5, 3), (6, 4), (6, 5)";
+//        try (Connection connection = ConnectionUtil.getConnection();
+//             PreparedStatement fillStatement = connection.prepareStatement(query)) {
+//            fillStatement.executeUpdate();
+//        } catch (SQLException e) {
+//            throw new RuntimeException("Couldn't fill cars_drivers table. ", e);
+//        }
+//    }
 }

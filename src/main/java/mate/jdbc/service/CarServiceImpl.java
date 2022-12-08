@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDaoImpl;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -62,7 +61,8 @@ public class CarServiceImpl implements CarService {
                 .collect(Collectors.toList());
     }
 
-    public void putDriversInCar() {
-        ((CarDaoImpl) carDao).fillCarsDriversTable();
-    }
+    //I need it for test
+//    public void putDriversInCar() {
+//        ((CarDaoImpl) carDao).fillCarsDriversTable();
+//    }
 }
