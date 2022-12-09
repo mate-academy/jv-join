@@ -97,14 +97,14 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String queryDelete = "DELETE FROM cars_drivers WHERE car_id = ?";
         String queryInsert = "INSERT cars_drivers (driver_id, car_id) VALUES(?, ?)";
-        String queryUpdateManufacturer =
+        String queryUpdateCars =
                 "UPDATE cars SET model = ?, manufacturer_id = ? WHERE id = ? "
                 + "AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(queryDelete);
                 PreparedStatement insertStatement = connection.prepareStatement(queryInsert);
-                PreparedStatement updateManufacturerStatement =
-                        connection.prepareStatement(queryUpdateManufacturer)) {
+                PreparedStatement updateCarsStatement =
+                        connection.prepareStatement(queryUpdateCars)) {
             deleteStatement.setLong(1, car.getId());
             deleteStatement.executeUpdate();
             insertStatement.setLong(2, car.getId());
@@ -112,10 +112,10 @@ public class CarDaoImpl implements CarDao {
                 insertStatement.setLong(1, car.getDrivers().get(i).getId());
                 insertStatement.executeUpdate();
             }
-            updateManufacturerStatement.setString(1, car.getModel());
-            updateManufacturerStatement.setLong(2, car.getManufacturer().getId());
-            updateManufacturerStatement.setLong(3, car.getId());
-            updateManufacturerStatement.executeUpdate();
+            updateCarsStatement.setString(1, car.getModel());
+            updateCarsStatement.setLong(2, car.getManufacturer().getId());
+            updateCarsStatement.setLong(3, car.getId());
+            updateCarsStatement.executeUpdate();
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update car " + car + ". ", e);
