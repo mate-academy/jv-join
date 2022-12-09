@@ -98,7 +98,8 @@ public class CarDaoImpl implements CarDao {
         String queryDelete = "DELETE FROM cars_drivers WHERE car_id = ?";
         String queryInsert = "INSERT cars_drivers (driver_id, car_id) VALUES(?, ?)";
         String queryUpdateManufacturer =
-                "UPDATE manufacturers SET name = ?, country = ? WHERE id = ?";
+                "UPDATE cars SET model = ?, manufacturer_id = ? WHERE id = ? "
+                + "AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(queryDelete);
                 PreparedStatement insertStatement = connection.prepareStatement(queryInsert);
@@ -111,9 +112,9 @@ public class CarDaoImpl implements CarDao {
                 insertStatement.setLong(1, car.getDrivers().get(i).getId());
                 insertStatement.executeUpdate();
             }
-            updateManufacturerStatement.setString(1, car.getManufacturer().getName());
-            updateManufacturerStatement.setString(2, car.getManufacturer().getCountry());
-            updateManufacturerStatement.setLong(3, car.getManufacturer().getId());
+            updateManufacturerStatement.setString(1, car.getModel());
+            updateManufacturerStatement.setLong(2, car.getManufacturer().getId());
+            updateManufacturerStatement.setLong(3, car.getId());
             updateManufacturerStatement.executeUpdate();
             return car;
         } catch (SQLException e) {
