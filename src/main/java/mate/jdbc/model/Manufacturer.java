@@ -7,6 +7,14 @@ public class Manufacturer {
     private String name;
     private String country;
 
+    public Manufacturer() {
+    }
+
+    public Manufacturer(String name, String country) {
+        this.name = name;
+        this.country = country;
+    }
+
     public Manufacturer(Long id, String name, String country) {
         this.id = id;
         this.name = name;
@@ -45,10 +53,10 @@ public class Manufacturer {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Manufacturer that = (Manufacturer) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(country, that.country);
+        Manufacturer manufacturer = (Manufacturer) o;
+        return Objects.equals(id, manufacturer.id)
+                && Objects.equals(name, manufacturer.name)
+                && Objects.equals(country, manufacturer.country);
     }
 
     @Override
