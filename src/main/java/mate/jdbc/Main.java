@@ -25,11 +25,11 @@ public class Main {
         System.out.println(carService.getAll());
         mustang.setModel("Horse_Super");
         carService.update(mustang);
-        Driver aliceDriver = new Driver(9L, "Jonas", "7890K");
-        carService.addDriverToCar(aliceDriver, mustang);
+        Driver bobDriver = new Driver(9L, "Bob", "7890K");
+        carService.addDriverToCar(bobDriver, mustang);
         System.out.println(carService.get(mustang.getId()));
-        System.out.println(carService.getAllByDriver(aliceDriver.getId()));
-        carService.removeDriverFromCar(aliceDriver, mustang);
+        System.out.println(carService.getAllByDriver(bobDriver.getId()));
+        carService.removeDriverFromCar(bobDriver, mustang);
         System.out.println(carService.get(mustang.getId()));
         carService.delete(mustang.getId());
 

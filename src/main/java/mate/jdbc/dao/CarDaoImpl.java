@@ -113,9 +113,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getCarsForDriverRequest = "SELECT car_id, model, manufacturer_id, name, country "
-                + "FROM cars AS c" + "    INNER JOIN cars_drivers cd ON c.id = cd.car_id"
-                + "    INNER JOIN manufacturers m ON c.manufacturer_id  = m.id"
-                + "    WHERE c.is_deleted = FALSE AND driver_id = ?";
+                + "FROM cars AS c"
+                + "INNER JOIN cars_drivers cd ON c.id = cd.car_id"
+                + "INNER JOIN manufacturers m ON c.manufacturer_id = m.id"
+                + "WHERE c.is_deleted = FALSE AND driver_id = ?";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement =
@@ -160,9 +161,6 @@ public class CarDaoImpl implements CarDao {
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
                 Driver driver = parseDriversFromResultSet(resultSet);
-                if (drivers.contains(driver)) {
-                    continue;
-                }
                 drivers.add(driver);
             }
             return drivers;
