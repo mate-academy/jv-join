@@ -57,6 +57,5 @@ public class Main {
         carService.delete(savedCar.getId());
 
         carService.getAll().forEach(System.out::println);
-
     }
 }

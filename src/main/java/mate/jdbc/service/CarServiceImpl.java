@@ -42,9 +42,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         List<Driver> drivers = car.getDrivers();
-        boolean driverNotPresent = drivers.stream()
-                .noneMatch(d -> d.getId().equals(driver.getId()));
-        if (driverNotPresent) {
+        if (!drivers.contains(driver)) {
             drivers.add(driver);
             carDao.update(car);
         }
@@ -53,13 +51,10 @@ public class CarServiceImpl implements CarService {
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         List<Driver> drivers = car.getDrivers();
-        Driver driverFromList = drivers.stream()
-                .filter(d -> d.getId().equals(driver.getId()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Couldn't find driver "
-                        + driver + " in list of car " + car));
-        drivers.remove(driverFromList);
-        carDao.update(car);
+        if (drivers.contains(driver)) {
+            drivers.remove(driver);
+            carDao.update(car);
+        }
     }
 
     @Override
