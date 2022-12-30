@@ -1,8 +1,6 @@
 package mate.jdbc.service;
 
 import java.util.List;
-
-import mate.jdbc.lib.Service;
 import mate.jdbc.model.Driver;
 
 public interface DriverService {

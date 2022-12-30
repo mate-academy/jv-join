@@ -3,9 +3,9 @@ package mate.jdbc;
 import mate.jdbc.lib.Injector;
 
 public class Main {
-        private static Injector injector = Injector.getInstance("mate.jdbc");
-    public static void main(String[] args) {
+    private static Injector injector = Injector.getInstance("mate.jdbc");
 
+    public static void main(String[] args) {
 
     }
 }
