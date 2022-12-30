@@ -2,9 +2,12 @@ package mate.jdbc.dao;
 
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 
+@Dao
 public class CarDaoImpl implements CarDao {
+
     @Override
     public Car create(Car car) {
         return null;
