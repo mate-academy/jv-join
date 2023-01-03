@@ -25,7 +25,7 @@ public class Main {
         Driver driverBob = new Driver("Bob", "BXP123456");
         Driver driverAlice = new Driver("Alice", "BXP654321");
         Driver driverBill = new Driver("Bill", "BXP122211");
-        final Driver driverJohn = new Driver("John", "BXP000001");
+        Driver driverJohn = new Driver("John", "BXP000001");
         driverService.create(driverBob);
         driverService.create(driverAlice);
         driverService.create(driverBill);
@@ -48,21 +48,14 @@ public class Main {
 
         carService.create(carAudi);
         carService.create(carBmw);
-        System.out.println("Cars after creating: " + carService.getAll());
-
         carAudi.setModel("RS6");
         carService.update(carAudi);
-        System.out.println("Cars after changing Audi model: " + carService.getAll());
-
         audiDrivers.add(driverBill);
         carAudi.setDrivers(audiDrivers);
         carService.update(carAudi);
-        System.out.println("Cars after changing drivers: " + carService.getAll());
-
         carService.delete(carBmw.getId());
         carService.removeDriverFromCar(driverAlice, carAudi);
         carService.addDriverToCar(driverJohn, carAudi);
-        System.out.println("Cars after adding and remove drivers: " + carService.getAll());
 
         System.out.println("Bob's cars: " + carService.getAllByDriver(driverBob.getId()));
     }
