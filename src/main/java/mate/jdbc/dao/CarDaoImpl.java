@@ -96,16 +96,20 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String updateQuery = "UPDATE cars SET model= ?"
+                + "manufacturer_id = ?"
                 + " WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.setString(1, car.getModel());
-            statement.setLong(2, car.getId());
+            statement.setLong(2,car.getManufacturer().getId());
+            statement.setLong(3, car.getId());
             statement.executeUpdate();
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car " + car, e);
         }
+        deleteDriversFromCar(car);
+        addDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -184,4 +188,31 @@ public class CarDaoImpl implements CarDao {
         car.setManufacturer(manufacturer);
         return car;
     }
+
+    private void deleteDriversFromCar(Car car) {
+        String deleteQuery = "DELETE FROM taxi_service.cars_drivers WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            statement.setLong(1,car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete driver from car " + car,e);
+        }
+    }
+
+    private void addDriversToCar(Car car) {
+        String insertQuery = "INSERT INTO  `taxi_service`"
+                + ".`cars_drivers`(car_id,driver_id) VALUES(?,?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+            statement.setLong(1,car.getId());
+            for (Driver driver : car.getDrivers()) {
+                statement.setLong(2,driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete driver from car " + car,e);
+        }
+    }
+
 }
