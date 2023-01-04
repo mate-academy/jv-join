@@ -25,7 +25,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
                            query, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, "model");
+            statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
@@ -35,6 +35,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car " + car, e);
         }
+        addDriversToCar(car);
         return car;
     }
 
