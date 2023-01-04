@@ -154,17 +154,20 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Driver driver = new Driver(
-                        resultSet.getObject("id", Long.class),
-                        resultSet.getString("name"),
-                        resultSet.getString("license_number")
-                );
-                drivers.add(driver);
+                drivers.add(getDriver(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get drivers for car with id " + carId,e);
         }
         return drivers;
+    }
+
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
+        return new Driver(
+                resultSet.getObject("id", Long.class),
+                resultSet.getString("name"),
+                resultSet.getString("license_number")
+        );
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
