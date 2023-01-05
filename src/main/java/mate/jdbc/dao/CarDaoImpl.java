@@ -40,21 +40,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDrivers(Car car) {
-        String insertDriversQuery = "INSERT INTO `cars_drivers` (car_id, driver_id) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement addDriverToCarStatement
-                        = connection.prepareStatement(insertDriversQuery)) {
-            addDriverToCarStatement.setLong(1, car.getId());
-            for (Driver driver : car.getDriverList()) {
-                addDriverToCarStatement.setLong(2, driver.getId());
-                addDriverToCarStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Can`t insert drivers to car: " + car, e);
-        }
-    }
-
     @Override
     public Optional<Car> get(Long id) {
         String getQuery = "SELECT c.id AS car_id, model, name, country, "
@@ -120,19 +105,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void deleteRelations(Car car) {
-        String deleteRelationsQuery = "DELETE FROM `cars_drivers` WHERE car_id = ?;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement
-                        = connection.prepareStatement(deleteRelationsQuery)) {
-            statement.setLong(1, car.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete "
-                    + car + " in cars_driversDB.", e);
-        }
-    }
-
     @Override
     public boolean delete(Long id) {
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
@@ -151,7 +123,7 @@ public class CarDaoImpl implements CarDao {
                 + " manufacturers.name, manufacturers.country "
                 + "FROM cars JOIN cars_drivers JOIN manufacturers "
                 + "ON cars_drivers.car_id = cars.id AND cars.manufacturer_id = manufacturers.id "
-                + "WHERE driver_id = ?;";
+                + "WHERE driver_id = ? AND cars.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsByDriverStatement
@@ -204,5 +176,33 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriversQuery = "INSERT INTO `cars_drivers` (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement addDriverToCarStatement
+                     = connection.prepareStatement(insertDriversQuery)) {
+            addDriverToCarStatement.setLong(1, car.getId());
+            for (Driver driver : car.getDriverList()) {
+                addDriverToCarStatement.setLong(2, driver.getId());
+                addDriverToCarStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Can`t insert drivers to car: " + car, e);
+        }
+    }
+
+    private void deleteRelations(Car car) {
+        String deleteRelationsQuery = "DELETE FROM `cars_drivers` WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement
+                     = connection.prepareStatement(deleteRelationsQuery)) {
+            statement.setLong(1, car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete "
+                    + car + " in cars_driversDB.", e);
+        }
     }
 }
