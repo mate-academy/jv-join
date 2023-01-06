@@ -120,11 +120,11 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT cars.id as car_id, model, manufacturer_id, "
-                + "manufacturers.name as manufacturer_name, "
-                + "manufacturers.country as manufacturer_country FROM cars "
-                + "JOIN manufacturers ON manufacturer_id = manufacturers.id "
-                + "JOIN cars_drivers ON cars.id = cars_drivers.car_id "
-                + "WHERE cars.is_deleted = FALSE AND cars_drivers.driver_id = ?";
+                + "m.name as manufacturer_name, "
+                + "m.country as manufacturer_country FROM cars "
+                + "JOIN manufacturers m ON manufacturer_id = m.id "
+                + "JOIN cars_drivers cd ON cars.id = cd.car_id "
+                + "WHERE cars.is_deleted = FALSE AND cd.driver_id = ?";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarsByDriverIdStatement = connection.prepareStatement(query)) {
