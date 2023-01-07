@@ -98,7 +98,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        deleteLinkCarsDrivers(car.getId());
+        deleteDriversByCarId(car.getId());
         createDriversInCar(car);
         return car;
     }
@@ -109,7 +109,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            deleteLinkCarsDrivers(id);
+            deleteDriversByCarId(id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
@@ -189,15 +189,15 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteLinkCarsDrivers(Long idCar) {
+    private void deleteDriversByCarId(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, idCar);
+            statement.setLong(1, carId);
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete link car "
-                    + idCar + " with drivers", e);
+            throw new DataProcessingException("Couldn't delete drivers of car with id: "
+                    + carId, e);
         }
     }
 }
