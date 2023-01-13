@@ -1,5 +1,7 @@
 package mate.jdbc.service;
 
+import java.util.List;
+
 public interface FileReaderService {
-    String readCreateTableQueryFromFile(String fileName);
+    List<String> readCreateTableQueryFromFile(String fileName);
 }

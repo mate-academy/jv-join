@@ -100,10 +100,12 @@ public class CarDaoImpl implements CarDao {
             statement.setString(2, car.getModel());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update a car " + car, e);
         }
+        removeDriversFromCar(car);
+        addDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -119,22 +121,29 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    //TO DO
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT *";
+        String query = "SELECT cars.id "
+                + "FROM cars "
+                + "JOIN cars_drivers "
+                + "ON cars.id = cars_drivers.car_id "
+                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = FALSE;";
+        List<Long> carsId = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                cars.add(parseCarFromResultSet(resultSet));
+                carsId.add(resultSet.getObject("id", Long.class));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars "
                     + "for driver id = " + driverId + ".", e);
         }
+        List<Car> cars = new ArrayList<>();
+        for (Long carId : carsId) {
+            get(carId).ifPresent(cars::add);
+        }
+        return cars;
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
@@ -165,11 +174,22 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    private void removeDriversFromCar(Car car) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete drivers from car " + car + ".", e);
+        }
+    }
+
     private List<Driver> getDriversForCar(Long carId) {
         String query = "SELECT drivers.id, drivers.name, drivers.license_number "
                 + "FROM drivers "
                 + "JOIN cars_drivers "
-                + "ON driver_id = cars_drivers.driver_id "
+                + "ON drivers.id = cars_drivers.driver_id "
                 + "WHERE cars_drivers.car_id = ? AND drivers.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
