@@ -100,11 +100,11 @@ public class CarDaoImpl implements CarDao {
             statement.setString(2, car.getModel());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
+            removeDriversFromCar(car);
+            addDriversToCar(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update a car " + car, e);
         }
-        removeDriversFromCar(car);
-        addDriversToCar(car);
         return car;
     }
 
@@ -168,6 +168,8 @@ public class CarDaoImpl implements CarDao {
                     statement.setLong(2, driver.getId());
                     statement.executeUpdate();
                 }
+            } else {
+                car.setDrivers(new ArrayList<>());
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't add drivers to car " + car + ".", e);
