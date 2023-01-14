@@ -1,7 +1,7 @@
 package mate.jdbc;
 
-import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Injector;
+import mate.jdbc.service.CarService;
 
 public class Main {
 
@@ -31,12 +31,14 @@ public class Main {
         Car car2 = new Car(null, "Scala", manufacturer2, List.of(driver3, driver4));
         Car car3 = new Car(null, "Accent", manufacturer3, List.of(driver1, driver4));
         */
-        CarDao carDao = (CarDao) injector.getInstance(CarDao.class);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
         /*
         carDao.create(car1);
         carDao.create(car2);
         carDao.create(car3);
          */
-        System.out.println(carDao.get(3L));
+        System.out.println(carService.get(3L));
+        System.out.println(carService.get(2L));
+        System.out.println(carService.get(1L));
     }
 }
