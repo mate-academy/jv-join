@@ -1,19 +1,14 @@
 package mate.jdbc;
 
-import java.util.List;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Injector;
-import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
-import mate.jdbc.service.DriverService;
-import mate.jdbc.service.ManufacturerService;
 
 public class Main {
 
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
+        /*
         Manufacturer manufacturer1 = new Manufacturer(null, "Renault", "France");
         Manufacturer manufacturer2 = new Manufacturer(null, "Skoda", "Czech Republic");
         Manufacturer manufacturer3 = new Manufacturer(null, "Hyundai", "South Korea");
@@ -35,9 +30,13 @@ public class Main {
         Car car1 = new Car(null, "Logan", manufacturer1, List.of(driver1, driver2));
         Car car2 = new Car(null, "Scala", manufacturer2, List.of(driver3, driver4));
         Car car3 = new Car(null, "Accent", manufacturer3, List.of(driver1, driver4));
+        */
         CarDao carDao = (CarDao) injector.getInstance(CarDao.class);
+        /*
         carDao.create(car1);
         carDao.create(car2);
         carDao.create(car3);
+         */
+        System.out.println(carDao.get(3L));
     }
 }
