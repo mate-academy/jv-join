@@ -161,11 +161,36 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete car by id " + id, e);
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String query = "SELECT * FROM cars INNER JOIN manufacturers "
+                + "ON cars.manufacturer_id = manufacturers.id "
+                + "INNER JOIN cars_drivers ON cars.id = cars_drivers.car_id "
+                + "WHERE cars_drivers.driver_id = ?";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarWithManufacturer(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get cars by driver id " + driverId, e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDrivers(car));
+        }
+        return cars;
     }
 }

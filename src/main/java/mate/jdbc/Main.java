@@ -23,10 +23,10 @@ public class Main {
         manufacturerService.create(manufacturer3);
         manufacturerService.create(manufacturer1);
         manufacturerService.create(manufacturer2);
-        Driver driver1 = new Driver(null, "Johnny Jonson","3094410022");
-        Driver driver2 = new Driver(null, "Johnny Depp","3094410019");
-        Driver driver3 = new Driver(null, "Peter Griffin","3094410020");
-        Driver driver4 = new Driver(null, "Sarah Connor","3094410023");
+        Driver driver1 = new Driver(null, "Johnny Jonson","3094410030");
+        Driver driver2 = new Driver(null, "Johnny Depp","3094410031");
+        Driver driver3 = new Driver(null, "Peter Griffin","3094410032");
+        Driver driver4 = new Driver(null, "Sarah Connor","3094410033");
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
         driverService.create(driver1);
@@ -42,7 +42,8 @@ public class Main {
         carService.create(car3);
         //System.out.println(carService.get(1L));
         System.out.println(carService.getAll());
-        carService.update(car3);
+        carService.delete(1L);
+        //carService.update(car3);
         System.out.println(carService.getAll());
     }
 }
