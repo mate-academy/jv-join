@@ -36,9 +36,10 @@ public class Main {
         carDao.create(car1);
         carDao.create(car2);
         carDao.create(car3);
-         */
         System.out.println(carService.get(3L));
         System.out.println(carService.get(2L));
         System.out.println(carService.get(1L));
+        */
+        System.out.println(carService.getAll());
     }
 }
