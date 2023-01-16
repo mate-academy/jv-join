@@ -155,7 +155,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete drivers of car " + car, e);
+            throw new DataProcessingException("Can't delete drivers from car " + car, e);
         }
     }
 
