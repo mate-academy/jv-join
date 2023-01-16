@@ -52,10 +52,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT cars.id, cars.model, cars.manufacturer_id, "
-                + "manufacturers.name, manufacturers.country FROM cars "
-                + "INNER JOIN manufacturers ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.id = ? AND cars.is_deleted = FALSE";
+        String query = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country"
+                + " FROM cars AS c INNER JOIN manufacturers AS m"
+                + " ON c.manufacturer_id = m.id"
+                + " WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -89,9 +89,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDrivers(Car car) {
-        String query = "SELECT * FROM drivers INNER JOIN cars_drivers "
-                + "ON cars_drivers.driver_id = drivers.id "
-                + "WHERE cars_drivers.car_id = ?";
+        String query = "SELECT * FROM drivers AS d INNER JOIN cars_drivers AS c_d"
+                + " ON c_d.driver_id = d.id "
+                + "WHERE c_d.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             List<Driver> drivers = new ArrayList<>();
@@ -111,9 +111,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT * FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE";
+        String query = "SELECT * FROM cars AS c INNER JOIN manufacturers AS m"
+                + " ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -173,10 +173,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "INNER JOIN cars_drivers ON cars.id = cars_drivers.car_id "
-                + "WHERE cars_drivers.driver_id = ?";
+        String query = "SELECT * FROM cars AS c INNER JOIN manufacturers AS m"
+                + " ON c.manufacturer_id = m.id"
+                + " INNER JOIN cars_drivers AS c_d ON c.id = c_d.car_id"
+                + " WHERE c_d.driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
