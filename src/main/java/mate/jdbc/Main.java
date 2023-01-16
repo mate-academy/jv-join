@@ -15,36 +15,39 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Manufacturer manufacturer1 = new Manufacturer(null, "Renault", "France");
-        Manufacturer manufacturer2 = new Manufacturer(null, "Skoda", "Czech Republic");
-        Manufacturer manufacturer3 = new Manufacturer(null, "Hyundai", "South Korea");
+        Manufacturer manufacturerFirst = new Manufacturer(null, "Renault", "France");
+        Manufacturer manufacturerSecond = new Manufacturer(null, "Skoda", "Czech Republic");
+        Manufacturer manufacturerThird = new Manufacturer(null, "Hyundai", "South Korea");
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        manufacturerService.create(manufacturer1);
-        manufacturerService.create(manufacturer2);
-        manufacturerService.create(manufacturer3);
-        Driver driver1 = new Driver(null, "Johnny Cash","3094410076");
-        Driver driver2 = new Driver(null, "Johnny Depp","3094410077");
-        Driver driver3 = new Driver(null, "Peter Griffin","3094410032");
-        Driver driver4 = new Driver(null, "Sarah Connor","3094410033");
+        manufacturerService.create(manufacturerFirst);
+        manufacturerService.create(manufacturerSecond);
+        manufacturerService.create(manufacturerThird);
+        Driver driverFirst = new Driver(null, "Johnny Cash","3094410076");
+        Driver driverSecond = new Driver(null, "Johnny Depp","3094410077");
+        Driver driverThird = new Driver(null, "Peter Griffin","3094410032");
+        Driver driverFourth = new Driver(null, "Sarah Connor","3094410033");
         DriverService driverService
                 = (DriverService) injector.getInstance(DriverService.class);
-        driverService.create(driver1);
-        driverService.create(driver2);
-        driverService.create(driver3);
-        driverService.create(driver4);
-        Car car1 = new Car(null, "Logan", manufacturer1, List.of(driver1));
-        Car car2 = new Car(null, "Scala", manufacturer2, List.of(driver3, driver4));
-        Car car3 = new Car(null, "Accent", manufacturer3, List.of(driver1, driver4));
+        driverService.create(driverFirst);
+        driverService.create(driverSecond);
+        driverService.create(driverThird);
+        driverService.create(driverFourth);
+        Car carFirst = new Car(null,
+                "Logan", manufacturerFirst, List.of(driverFirst));
+        Car carSecond = new Car(null,
+                "Scala", manufacturerSecond, List.of(driverThird, driverFourth));
+        Car carThird = new Car(null,
+                "Accent", manufacturerThird, List.of(driverFirst, driverFourth));
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        carService.create(car1);
-        carService.create(car2);
-        carService.create(car3);
+        carService.create(carFirst);
+        carService.create(carSecond);
+        carService.create(carThird);
         System.out.println(carService.get(2L));
         System.out.println(carService.getAllByDriver(1L));
-        carService.addDriverToCar(driver2, car1);
+        carService.addDriverToCar(driverSecond, carFirst);
         System.out.println(carService.getAll());
-        carService.removeDriverFromCar(driver2, car1);
+        carService.removeDriverFromCar(driverSecond, carFirst);
         System.out.println(carService.getAll());
         carService.delete(1L);
     }
