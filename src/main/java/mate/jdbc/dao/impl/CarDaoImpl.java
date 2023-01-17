@@ -123,7 +123,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON cd.car_id = c.id "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE driver_id = ? AND cd.is_deleted = FALSE";
+                + "WHERE driver_id = ? AND cd.is_deleted = FALSE AND c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement statement = connection.prepareStatement(query)) {
@@ -135,6 +135,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id: " + driverId, e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversByCarId(car.getId())));
         return cars;
     }
 
