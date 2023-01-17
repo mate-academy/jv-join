@@ -14,7 +14,7 @@
 
 - Test your solution in the `main` method.
 - Don't forget about a table's and columns' namings.
-- These methods should be only on the service layer: 
+- These methods should be only on the service layer:
 ```
     - void addDriverToCar(Driver driver, Car car);
     - void removeDriverFromCar(Driver driver, Car car);
@@ -25,4 +25,3 @@ __Before submitting solution make sure you checked it first with__ [checklist](h
 ![diagram](taxi_models_diagram.jpeg)
 
 ![diagram](join-db-diagram.png)
-
