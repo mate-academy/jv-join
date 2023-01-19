@@ -121,8 +121,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id AS car_id, model,"
-                + " m.id AS manufacturer_id, name, country "
+        String query = "SELECT c.id AS car_id, model, "
+                + "m.id AS manufacturer_id, name, country "
                 + "FROM cars_drivers cdr "
                 + "JOIN cars c "
                 + "ON cdr.car_id = c.id "
@@ -184,7 +184,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             if (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(getDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -192,7 +192,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
         return new Driver(
                 resultSet.getObject("id", Long.class),
                 resultSet.getString("name"),
@@ -212,7 +212,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(getDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
