@@ -52,8 +52,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> drivers = new ArrayList<>(car.getDrivers());
-        drivers.remove(driver);
+        List<Driver> drivers = car.getDrivers();
+        for (int i = 0; i < drivers.size(); i++) {
+            if (drivers.get(i).equals(driver)) {
+                drivers.remove(i);
+            }
+        }
         car.setDrivers(drivers);
         carDao.update(car);
     }

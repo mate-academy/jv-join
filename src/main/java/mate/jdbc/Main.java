@@ -55,6 +55,5 @@ public class Main {
         System.out.println(carService.update(carTwo));
         carService.removeDriverFromCar(olaf, carTwo);
         System.out.println(carService.update(carTwo));
-        System.out.println(carService.getAll());
     }
 }

@@ -20,11 +20,11 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String carGetQuery = "INSERT INTO cars (model, manufacturer_id) "
+        String query = "INSERT INTO cars (model, manufacturer_id) "
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement((carGetQuery),
+                        = connection.prepareStatement((query),
                         Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setString(1, car.getModel());
             preparedStatement.setLong(2, car.getManufacturer().getId());
@@ -42,7 +42,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String carGetQuery = "SELECT c.id as car_id, model, c.is_deleted, "
+        String query = "SELECT c.id as car_id, model, c.is_deleted, "
                 + "m.id as manufacturer_id, name, country "
                 + "FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
@@ -50,7 +50,7 @@ public class CarDaoImpl implements CarDao {
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(carGetQuery)) {
+                        = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -67,7 +67,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllQuery = "SELECT c.id AS car_id, model, "
+        String query = "SELECT c.id AS car_id, model, "
                 + "m.id AS manufacturer_id, name, country "
                 + "FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
@@ -75,7 +75,7 @@ public class CarDaoImpl implements CarDao {
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(getAllQuery)) {
+                        = connection.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
@@ -147,11 +147,11 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDrivers(Car car) {
-        String insertDriversQuery = "INSERT INTO cars_drivers(car_id, driver_id)"
+        String query = "INSERT INTO cars_drivers(car_id, driver_id) "
                 + "VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(insertDriversQuery)) {
+                        = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 preparedStatement.setLong(2, driver.getId());
@@ -174,12 +174,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getAllDriversForCar(Long carId) {
-        String getAllDriversForCarRequest = "SELECT id, name, license_number "
+        String query = "SELECT id, name, license_number "
                 + "FROM drivers a JOIN cars_drivers b ON a.id = b.driver_id "
                 + "WHERE b.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement
-                        = connection.prepareStatement(getAllDriversForCarRequest)) {
+                        = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, carId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
