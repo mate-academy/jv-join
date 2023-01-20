@@ -12,7 +12,6 @@ public class Main {
     private static final long HONDA_MANUFACTURER_ID = 16L;
     private static final long BRIO_DRIVER_ID = 5L;
     private static final long SECOND_BRIO_DRIVER_ID = 6L;
-    private static final long OPEL_ASTRA_ID = 3L;
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
@@ -33,7 +32,7 @@ public class Main {
                 .get(SECOND_BRIO_DRIVER_ID), carService.get(brio.getId()));
         System.out.println(carService.update(brio));
         System.out.println(carService.getAll());
-        System.out.println(carService.get(OPEL_ASTRA_ID));
+        System.out.println(carService.get(brio.getId()));
         carService.removeDriverFromCar(driverService
                 .get(SECOND_BRIO_DRIVER_ID), carService.get(brio.getId()));
         System.out.println(carService.delete(brio.getId()));
