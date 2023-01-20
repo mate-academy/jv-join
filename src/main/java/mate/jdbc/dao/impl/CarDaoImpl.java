@@ -162,6 +162,22 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    private void deleteDrivers(Car car) {
+        String query = "INSERT INTO cars_drivers(car_id, driver_id) "
+                + "VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement preparedStatement
+                     = connection.prepareStatement(query)) {
+            preparedStatement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                preparedStatement.setLong(2, driver.getId());
+                preparedStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert drivers to car " + car, e);
+        }
+    }
+
     private Car getCar(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("car_id", Long.class);
         String model = resultSet.getString("model");
