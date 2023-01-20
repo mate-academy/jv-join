@@ -206,7 +206,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void updateCarDevicesRecordsInCarsDevicesDB(Car car) {
+    private void addDriversToCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         if (car.getDrivers().size() == 0) {
             return;
