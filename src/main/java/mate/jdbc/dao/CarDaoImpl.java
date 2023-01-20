@@ -160,10 +160,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
+        Manufacturer manufacturer = parseManufacturer(resultSet);
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -180,16 +177,29 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                Driver driver = new Driver();
-                driver.setId(resultSet.getObject("id", Long.class));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
+                Driver driver = parseDriver(resultSet);
                 drivers.add(driver);
             }
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get drivers by car id " + id, e);
         }
+    }
+
+    private Driver parseDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
+        return driver;
+    }
+
+    private Manufacturer parseManufacturer(ResultSet resultSet) throws SQLException {
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setName(resultSet.getString("name"));
+        manufacturer.setCountry(resultSet.getString("country"));
+        return manufacturer;
     }
 
     private void deleteDriversFromCar(Car car) {
