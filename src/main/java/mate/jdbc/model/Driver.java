@@ -51,8 +51,7 @@ public class Driver {
             return false;
         }
         Driver driver = (Driver) o;
-        return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
+        return Objects.equals(name, driver.name)
                 && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 

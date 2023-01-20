@@ -1,5 +1,6 @@
 package mate.jdbc.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.DriverDao;
@@ -15,6 +16,14 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver create(Driver driver) {
+        List<Driver> drivers = driverDao.getAll();
+        for (Driver driver1 : drivers) {
+            if (driver1.equals(driver)){
+                Long id = driver1.getId();
+                driver.setId(id);
+                return driver;
+            }
+        }
         return driverDao.create(driver);
     }
 
