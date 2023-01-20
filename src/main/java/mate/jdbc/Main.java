@@ -24,22 +24,22 @@ public class Main {
         car.setDrivers(drivers);
         System.out.println(carService.create(car));
 
-        List<Driver> drivers1 = List.of(driver.get(1L));
-        final Car car1 = new Car();
-        car1.setId(8L);
-        car1.setModel("Focus1");
-        car1.setManufacturer(manufacturer.get(3L));
-        car1.setDrivers(drivers);
-        System.out.println(carService.update(car1));
+        List<Driver> driversUpdated = List.of(driver.get(1L));
+        final Car updatedCar = new Car();
+        updatedCar.setId(8L);
+        updatedCar.setModel("Focus1");
+        updatedCar.setManufacturer(manufacturer.get(3L));
+        updatedCar.setDrivers(driversUpdated);
+        System.out.println(carService.update(updatedCar));
 
         System.out.println(carService.get(8L));
-        Car car2 = carService.get(8L);
+        Car carWithUpdatedDrivers = carService.get(8L);
 
-        Driver driver1 = driver.get(1L);
-        carService.addDriverToCar(driver1, car2);
+        Driver driverNew = driver.get(1L);
+        carService.addDriverToCar(driverNew, carWithUpdatedDrivers);
         System.out.println(carService.get(8L));
-        car2 = carService.get(8L);
-        carService.removeDriverFromCar(driver1, car2);
+        carWithUpdatedDrivers = carService.get(8L);
+        carService.removeDriverFromCar(driverNew, carWithUpdatedDrivers);
         System.out.println(carService.get(8L));
 
         carService.getAll().forEach(System.out::println);
