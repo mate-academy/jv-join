@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -15,21 +16,23 @@ public class Main {
     public static void main(String[] args) {
         CarService carService
                 = (CarService) injector.getInstance(CarService.class);
-        DriverService driverService
-                = (DriverService) injector.getInstance(DriverService.class);
-        ManufacturerService manufacturerService
-                = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         System.out.println("Removing cars from db ...");
         carService.getAll().forEach(car -> carService.delete(car.getId()));
         System.out.println("Creating drivers if they dont exist yet ...");
         Driver olaf = new Driver("Olaf", "*GER*");
         Driver gans = new Driver("Gans", "*KELLEN*");
-        List<Driver> driversFromGermany = List.of(olaf, gans);
+        List<Driver> driversFromGermany = new ArrayList<>();
+        driversFromGermany.add(olaf);
+        driversFromGermany.add(gans);
+        DriverService driverService
+                = (DriverService) injector.getInstance(DriverService.class);
         driversFromGermany.forEach(driverService::create);
         System.out.println("Printing all drivers in db ...");
         driverService.getAll().forEach(driver -> System.out.println());
         System.out.println("Creating new manufacturers ...");
         Manufacturer manufacturerNato = new Manufacturer("NATO", "Germany");
+        ManufacturerService manufacturerService
+                = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         manufacturerService.create(manufacturerNato);
         System.out.println("Creating car ...");
         Car carOne = carService.create(new Car(

@@ -11,6 +11,8 @@ public interface CarService {
 
     List<Car> getAll();
 
+    List<Car> getAllByDriver(Long driverId);
+
     Car update(Car car);
 
     boolean delete(Long id);
@@ -18,6 +20,4 @@ public interface CarService {
     void addDriverToCar(Driver driver, Car car);
 
     void removeDriverFromCar(Driver driver, Car car);
-
-    List<Car> getAllByDriver(Long driverId);
 }
