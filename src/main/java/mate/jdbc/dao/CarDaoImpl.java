@@ -13,7 +13,6 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
-
 @Dao
 public class CarDaoImpl implements CarDao {
 
@@ -42,7 +41,7 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id as car_id, model, manufacturer_id, manufacturers.name "
                 + "AS manufacturers_name, manufacturers.country AS manufacturers_country"
-                + " FROM cars c JOIN  manufacturers ON manufacturer_id = manufacturers.id "
+                + " FROM cars c JOIN  manufacturers m ON manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -170,7 +169,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(getDrivers(resultSet));
+                drivers.add(getDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -204,7 +203,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private Driver getDrivers(ResultSet resultSet) throws SQLException {
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
