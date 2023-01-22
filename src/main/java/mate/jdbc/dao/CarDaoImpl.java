@@ -145,6 +145,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get cars by driverId "
                     + driverId, throwables);
         }
+        for (Car automobile : cars) {
+            automobile.setDrivers(getDriversForCar(automobile.getId()));
+        }
         logger.info("The all data about cars by driver id " + driverId
                 + " was successful fetched from DB");
         return cars;
@@ -190,7 +193,7 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private void insertDrivers(Car car) {
+    public void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -213,6 +216,18 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwables) {
             throw new DataProcessingException("Couldn't delete relations "
                     + "from cars_drivers by car " + car, throwables);
+        }
+    }
+
+    public void updateDriversForCar(String query, Driver driver, Car car) {
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            statement.setLong(2, driver.getId());
+            statement.executeUpdate();
+        } catch (SQLException throwables) {
+            throw new DataProcessingException("Couldn't update driver " + driver
+                    + " for car " + car, throwables);
         }
     }
 }
