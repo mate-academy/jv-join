@@ -41,18 +41,23 @@ public class Main {
         //Car
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car car = new Car();
-        car.setModel("I3");
+        car.setModel("X7");
         List<Driver> drivers = List.of(john, bob, jack);
         car.setDrivers(drivers);
         car.setManufacturer(bmw);
         //Operations with car
         Car carWithID = carService.create(car);
         carWithID.setManufacturer(opel);
+        carWithID.setModel("Astra");
         Car opelCar = carService.update(carWithID);
         carWithID = carService.get(carWithID.getId());
         if (!opelCar.equals(carWithID)) {
             System.out.println("Cars are not equals: " + opelCar + carWithID);
         }
+        List<Car> cars = carService.getAll();
+        System.out.println(cars);
+        List<Car> carsByDriver = carService.getAllByDriver(bob.getId());
+        System.out.println(carsByDriver);
         carService.removeDriverFromCar(john, carWithID);
         Car carWithoutJohn = carService.get(carWithID.getId());
         System.out.println(carWithoutJohn);

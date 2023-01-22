@@ -47,12 +47,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        car.getDrivers().remove(driver);
+        if (car.getDrivers().remove(driver)) {
+            throw new RuntimeException("Couldn't delete driver " + driver + ", from car " + car);
+        }
         carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }
