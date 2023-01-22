@@ -43,17 +43,18 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        logger.info("Method addDriverToCar was called with car " + car + " and driver " + driver);
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
-        carDao.updateDriversForCar(query, driver, car);
+        List<Driver> drivers = car.getDrivers();
+        drivers.add(driver);
+        car.setDrivers(drivers);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        logger.info("Method removeDriverFromCar was called with car "
-                + car + " and driver " + driver);
-        String query = "DELETE FROM cars_drivers WHERE car_id = ? AND driver_id = ?;";
-        carDao.updateDriversForCar(query, driver, car);
+        List<Driver> drivers = car.getDrivers();
+        drivers.remove(driver);
+        car.setDrivers(drivers);
+        carDao.update(car);
     }
 
     @Override

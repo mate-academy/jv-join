@@ -63,7 +63,7 @@ public class Main {
 
         Car carAddDriver = carService.get(2L);
         Driver driver = driverService.get(1L);
-        carService.addDriverToCar(driver, carAddDriver);
+        carService.removeDriverFromCar(driver, carAddDriver);
 
         Car carRemoveDriver = carService.get(2L);
         Driver driverRemoveDriver = driverService.get(1L);
