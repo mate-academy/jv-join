@@ -21,7 +21,7 @@ import mate.jdbc.util.ConnectionUtil;
 @Dao
 public class CarDaoImpl implements CarDao {
     @Inject
-    ManufacturerService manufacturerService;
+    private ManufacturerService manufacturerService;
 
     @Override
     public Car create(Car car) {
@@ -138,7 +138,8 @@ public class CarDaoImpl implements CarDao {
                 carList.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all cars with driver id " + driverId, e);
+            throw new DataProcessingException("Couldn't get all "
+                    + "cars with driver id " + driverId, e);
         }
         for (Car car: carList) {
             car.setDrivers(getDriversForCar(car.getId()));
@@ -150,7 +151,8 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = manufacturerService.get(resultSet.getObject("manufacturer_id", Long.class));
+        Manufacturer manufacturer = manufacturerService.get(resultSet
+                .getObject("manufacturer_id", Long.class));
         car.setManufacturer(manufacturer);
         return car;
     }
