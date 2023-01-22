@@ -56,7 +56,7 @@ public class Main {
         System.out.println(carService.get(cars.get(1).getId()));
         carService.delete(cars.stream().findFirst().get().getId());
         carService.getAll().forEach(System.out::println);
-        List<Car> allByDriver = carService.getAllByDriver(2L);
+        List<Car> allByDriver = carService.getAllByDriver(cars.get(1).getId());
         allByDriver.forEach(System.out::println);
     }
 }
