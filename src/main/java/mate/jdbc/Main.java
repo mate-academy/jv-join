@@ -59,7 +59,7 @@ public class Main {
         System.out.println("Deleting data from db car - " + carOne.getModel());
         System.out.println(carService.delete(carOne.getId()));
         System.out.println("Printing all cars by driver id ");
-        System.out.println(carService.getAllByDriver(1L));
+        System.out.println(carService.getAllByDriver(lii.getId()));
         System.out.println("Creating new driver if it doesnt exist in db");
         Driver zaluzhniy = new Driver("Zaluzhniy", "*UKR*");
         System.out.println(driverService.create(zaluzhniy));

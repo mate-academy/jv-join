@@ -16,9 +16,9 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public Driver create(Driver driver) {
         List<Driver> drivers = driverDao.getAll();
-        for (Driver driver1 : drivers) {
-            if (driver1.equals(driver)) {
-                Long id = driver1.getId();
+        for (Driver each : drivers) {
+            if (each.equals(driver)) {
+                Long id = each.getId();
                 driver.setId(id);
                 return driver;
             }
