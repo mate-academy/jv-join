@@ -11,18 +11,13 @@ import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
-import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    @Inject
-    private ManufacturerService manufacturerService;
-
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
@@ -126,9 +121,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getCarsByDriverQuery = "SELECT id, model, manufacturer_id "
+        String getCarsByDriverQuery = "SELECT c.id AS car_id, model, manufacturer_id, "
+                + "name AS manufacturer_name, country AS manufacturer_country "
                 + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
-                + "WHERE cd.driver_id = ? AND is_deleted = FALSE;";
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE AND m.is_deleted = FALSE;";
         List<Car> carList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getCarsByDriverQuery)) {
@@ -151,8 +148,10 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = manufacturerService.get(resultSet
-                .getObject("manufacturer_id", Long.class));
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
+        manufacturer.setName(resultSet.getString("manufacturer_name"));
+        manufacturer.setCountry(resultSet.getString("manufacturer_country"));
         car.setManufacturer(manufacturer);
         return car;
     }
