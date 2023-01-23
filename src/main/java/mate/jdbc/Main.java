@@ -16,22 +16,20 @@ public class Main {
 
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        List<Driver> drivers = new ArrayList<>();
-        drivers.add(new Driver("Kim", "TYGW34GH12Q"));
-        drivers.add(new Driver("Choli", "HK3H662SDF2"));
-        drivers.add(new Driver("Chonsuk", "QEF124GS8H7"));
-        drivers.add(new Driver("Chongkuk", "FYI45GW359GD"));
+        List<Driver> drivers = List.of(new Driver("Kim", "TYGW34GH12Q"),
+                new Driver("Choli", "HK3H662SDF2"),
+                new Driver("Chonsuk", "QEF124GS8H7"),
+                new Driver("Chongkuk", "FYI45GW359GD"));
         for (Driver driver: drivers) {
             driverService.create(driver);
         }
         /* <-----------------------------------------> */
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        List<Manufacturer> manufacturers = new ArrayList<>();
-        manufacturers.add(new Manufacturer("Bob", "France"));
-        manufacturers.add(new Manufacturer("Bobby", "British"));
-        manufacturers.add(new Manufacturer("Bober", "Italy"));
-        manufacturers.add(new Manufacturer("Bobrik", "Poland"));
+        List<Manufacturer> manufacturers = List.of(new Manufacturer("Bob", "France"),
+                new Manufacturer("Bobby", "British"),
+                new Manufacturer("Bober", "Italy"),
+                new Manufacturer("Bobrik", "Poland"));
         for (Manufacturer manufacturer: manufacturers) {
             manufacturerService.create(manufacturer);
         }
