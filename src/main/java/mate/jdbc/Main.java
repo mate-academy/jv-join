@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -14,19 +13,14 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-
-        DriverService driverService = (DriverService)
-                injector.getInstance(DriverService.class);
         Driver driverOne = new Driver("Shinyo Nakano", "NO467386");
-        driverService.create(driverOne);
         Driver driverTwo = new Driver("Tetsuya Harada", "SK867442");
         Driver driverThree = new Driver("Valentino Rossi", "KV573988");
+        DriverService driverService = (DriverService)
+                injector.getInstance(DriverService.class);
         driverService.create(driverOne);
         driverService.create(driverTwo);
         driverService.create(driverThree);
-        List<Driver> drivers = new ArrayList<>();
-        drivers.add(driverTwo);
-        drivers.add(driverOne);
 
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
@@ -40,6 +34,7 @@ public class Main {
         Car carOne = new Car();
         carOne.setModel("DeLorean DMC-12, 1981");
         carOne.setManufacturer(manufacturerOne);
+        List<Driver> drivers = List.of(driverOne, driverTwo);
         carOne.setDrivers(drivers);
         Car carTwo = new Car();
         carTwo.setModel("Nissan Leopard, 1981");

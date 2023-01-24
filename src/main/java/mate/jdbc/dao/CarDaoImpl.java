@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars from taxiServiseDB.", e);
         }
         cars.forEach(car -> car.setDrivers(getDriversByCar(car.getId())));
         return cars;
@@ -126,7 +126,7 @@ public class CarDaoImpl implements CarDao {
                 + "ON cars.id = cars_drivers.car_id "
                 + "JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = FALSE";
+                + "WHERE cars_drivers.driver_id = ? AND is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -136,7 +136,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get list cars for car with id " + driverId, e);
+            throw new DataProcessingException("Can't get list cars on this driverId "
+                    + driverId, e);
         }
         cars.forEach(car -> car.setDrivers(getDriversByCar(car.getId())));
         return cars;
@@ -185,8 +186,8 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
+                statement.setLong(1, car.getId());
                 statement.setLong(2, driver.getId());
                 statement.executeUpdate();
             }
