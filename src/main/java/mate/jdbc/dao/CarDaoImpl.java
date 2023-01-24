@@ -158,7 +158,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<mate.jdbc.model.Driver> getDriversForCar(Long carId) {
+    private List<Driver> getDriversForCar(Long carId) {
         String getAllDriversForCarQuery = "SELECT id, name, license_number "
                 + "FROM drivers d JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id WHERE cd.driver_id = ?";
@@ -169,7 +169,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(getDriver(resultSet));
+                drivers.add(getDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -181,7 +181,7 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUE (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1,car.getId());
+            statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
                 statement.executeUpdate();
@@ -203,7 +203,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private Driver getDriver(ResultSet resultSet) throws SQLException {
+    private Driver getDriverFromResultSet(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
