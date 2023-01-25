@@ -1,32 +1,28 @@
 package mate.jdbc.util;
 
+import com.mysql.cj.jdbc.Driver;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class ConnectionUtil {
-    private static final String URL = "YOUR DATABASE URL";
-    private static final String USERNAME = "YOUR USERNAME";
-    private static final String PASSWORD = "YOUR PASSWORD";
-    private static final String JDBC_DRIVER = "YOUR DRIVER";
+    private static final String URL = "jdbc:mysql://localhost:3306/taxi_service";
+    private static final String USERNAME = "root";
+    private static final String PASSWORD = "parol1408";
 
     static {
         try {
-            Class.forName(JDBC_DRIVER);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Can't find SQL Driver", e);
+            DriverManager.registerDriver(new Driver());
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't register JDBC driver for MySQL.", e);
         }
     }
 
     public static Connection getConnection() {
-        Properties dbProperties = new Properties();
-        dbProperties.setProperty("user", USERNAME);
-        dbProperties.setProperty("password", PASSWORD);
         try {
-            return DriverManager.getConnection(URL, dbProperties);
+            return DriverManager.getConnection(URL, USERNAME, PASSWORD);
         } catch (SQLException e) {
-            throw new RuntimeException("Can't create connection to DB ", e);
+            throw new RuntimeException("Can't create connection to DB.", e);
         }
     }
 }
