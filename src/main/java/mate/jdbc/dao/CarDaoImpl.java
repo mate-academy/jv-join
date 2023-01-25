@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -18,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?);";
+        String query = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection
                         .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -29,11 +31,11 @@ public class CarDaoImpl implements CarDao {
             if (generatedKeys.next()) {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
+                insertDrivers(car);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert car into DB " + car, e);
+            throw new DataProcessingException("Can't insert car into DB " + car, e);
         }
-        insertDrivers(car);
         return car;
     }
 
@@ -178,7 +180,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUE (?, ?)";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
