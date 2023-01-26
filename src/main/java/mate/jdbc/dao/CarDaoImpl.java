@@ -106,8 +106,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.setLong(1, carID);
-            int i = statement.executeUpdate();
-            return i != 0;
+            return statement.executeUpdate() != 0;
         } catch (SQLException e) {
             throw new RuntimeException("Cant update info from db", e);
         }
