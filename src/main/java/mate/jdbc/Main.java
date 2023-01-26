@@ -63,13 +63,13 @@ public class Main {
         manufacturerService.getAll().forEach(System.out::println);
 
         List<Car> carsList = List.of(
-                new Car("Supra", manufacturersList.get(0), driversList.get(0)),
-                new Car("Enclave", manufacturersList.get(1), driversList.get(1)),
-                new Car("DBS 770 Ultimate", manufacturersList.get(2), driversList.get(2)),
-                new Car("Model S", manufacturersList.get(3), driversList.get(0)),
-                new Car("718 Spyder", manufacturersList.get(4), driversList.get(1)),
-                new Car("Ghibli", manufacturersList.get(6), driversList.get(2)),
-                new Car("Leon", manufacturersList.get(7), driversList.get(0))
+                new Car("Supra", manufacturersList.get(0)),
+                new Car("Enclave", manufacturersList.get(1)),
+                new Car("DBS 770 Ultimate", manufacturersList.get(2)),
+                new Car("Model S", manufacturersList.get(3)),
+                new Car("718 Spyder", manufacturersList.get(4)),
+                new Car("Ghibli", manufacturersList.get(6)),
+                new Car("Leon", manufacturersList.get(7))
         );
         carsList.forEach(car -> {
             carService.create(car);
@@ -81,8 +81,6 @@ public class Main {
         carsList.get(0).setDrivers(List.of(driversList.get(0)));
         carService.addDriverToCar(driversList.get(1),carsList.get(1));
         carService.update(carsList.get(0));
-        driversList.forEach(driver -> carService.addDriverToCar(driver, carsList.get(2)));
-        carService.update(carsList.get(2));
         carService.getAll().forEach(System.out::println);
         carService.getAllByDriver(driversList.get(1).getId()).forEach(System.out::println);
         carService.removeDriverFromCar(driversList.get(0), carsList.get(2));
