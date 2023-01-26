@@ -1,19 +1,19 @@
 package mate.jdbc.service;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.CarDaoImpl;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-    CarDao carDao = new CarDaoImpl();
+    private CarDao carDao;
+
     @Override
     public Car create(Car car) {
         return carDao.create(car);
@@ -21,7 +21,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow();
+        return carDao.get(id).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
