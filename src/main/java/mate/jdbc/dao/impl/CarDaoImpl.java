@@ -72,8 +72,7 @@ public class CarDaoImpl implements CarDao {
                              PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get list of all cars", e);
@@ -89,6 +88,8 @@ public class CarDaoImpl implements CarDao {
         String query = "UPDATE cars "
                 + "SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = false;";
+        removeDriversFromCar(car);
+        addDriversToCar(car);
         try (Connection connection = ConnectionUtil.getConnection();
                              PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -99,8 +100,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException(
                     String.format("Couldn't update car: %s in cars DB.", car), e);
         }
-        removeDriversFromCar(car);
-        addDriversToCar(car);
         return car;
     }
 
@@ -119,7 +118,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT c.id, model, name, country, manufacturer_id "
-                + "FROM cars c JOIN cars_drivers cd "
+                + "FROM cars c "
+                + "JOIN cars_drivers cd "
                 + "ON c.id = cd.car_id "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -130,8 +130,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                carList.add(car);
+                carList.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException(
