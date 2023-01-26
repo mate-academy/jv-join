@@ -30,7 +30,7 @@ public class CarDaoImpl implements CarDao {
             if (generatedKeys.next()) {
                 Long id = generatedKeys.getObject(1, Long.class);
                 car.setId(id);
-                insertDrivers(car);
+                addDriverToCar(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert car into DB " + car, e);
@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find car in DB " + car,e);
+            throw new RuntimeException("Can't find car in DB " + car, e);
         }
         if (car != null) {
             car.setDrivers(getDriversForCar(id));
@@ -175,20 +175,6 @@ public class CarDaoImpl implements CarDao {
             return drivers;
         } catch (SQLException e) {
             throw new RuntimeException("Can't find driver for car in DB ",e);
-        }
-    }
-
-    private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to car " + car, e);
         }
     }
 
