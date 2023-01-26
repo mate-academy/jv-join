@@ -22,9 +22,9 @@ public class Main {
 
         Manufacturer toyota = new Manufacturer("TOYOTA", "JAPAN");
         Manufacturer volvo = new Manufacturer("VOLVO", "SWEDEN");
-        Driver driverBob = new Driver("Bob", "8499");
-        Driver driverAlice = new Driver("Alice", "3493");
-        Driver driverSteve = new Driver("Steve", "ULTIMATE_ULTRA_MEGA_77777");
+        Driver driverBob = new Driver("Bob", "8410");
+        Driver driverAlice = new Driver("Alice", "3494");
+        Driver driverSteve = new Driver("Steve", "ULTIMATE_ULTRA_MEGA_777777");
         Car prius = new Car("Prius", toyota, List.of(driverBob, driverSteve));
         Car xc90 = new Car("XC90", volvo, List.of(driverAlice));
 
