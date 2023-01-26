@@ -95,8 +95,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update info from db", e);
         }
-        removeDriverFromCar(car);
-        addDriverToCar(car);
+        deleteDriver(car);
+        addDriver(car);
         return car;
     }
 
@@ -114,7 +114,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void addDriverToCar(Car car) {
+    public void addDriver(Car car) {
         String addDriverRequest = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(addDriverRequest)) {
@@ -129,7 +129,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public void removeDriverFromCar(Car car) {
+    public void deleteDriver(Car car) {
         String removeRequest = "DELETE FROM cars_drivers  "
                 + "WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();

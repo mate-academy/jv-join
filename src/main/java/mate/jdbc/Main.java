@@ -54,6 +54,6 @@ public class Main {
 
         carService.removeDriverFromCar(car,driverPavlo);
         carService.addDriverToCar(car,driverPavlo);
-
+        carService.getAllByDriver(driverOlexiy.getId()).forEach(System.out::println);
     }
 }
