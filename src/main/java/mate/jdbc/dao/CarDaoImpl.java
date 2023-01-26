@@ -88,7 +88,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
-                + "WHERE id = ? AND is_deleted = FALSE";
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -118,7 +118,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> carList = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         String query = "SELECT cars.id, cars.model AS model, manufacturers.id, "
                 + "manufacturers.country, manufacturers.name "
                 + "FROM cars "
@@ -127,16 +127,16 @@ public class CarDaoImpl implements CarDao {
                 + "INNER JOIN manufacturers "
                 + "ON manufacturers.id = cars.manufacturer_id "
                 + "WHERE driver_id = ? "
-                + "AND cars.is_deleted = FALSE AND manufacturers.is_deleted = FALSE";
+                + "AND cars.is_deleted = FALSE AND manufacturers.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carList.add(parseCarFromResultSet(resultSet));
+                cars.add(parseCarFromResultSet(resultSet));
             }
-            carList.forEach(a -> a.setDrivers(getDriversForCar(a.getId())));
-            return carList;
+            cars.forEach(a -> a.setDrivers(getDriversForCar(a.getId())));
+            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars by driverId: "
                     + driverId, e);
@@ -172,7 +172,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void removeDriverFromCar(Long carId) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, carId);
@@ -184,7 +184,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
