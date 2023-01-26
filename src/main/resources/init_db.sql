@@ -34,6 +34,10 @@ DROP TABLE IF EXISTS`cars_drivers`;
 CREATE TABLE `cars_drivers` (
                                   `car_id` BIGINT NOT NULL,
                                   `driver_id` BIGINT NOT NULL,
-                                  CONSTRAINT `cars_drivers_cars` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+                                  `is_deleted` TINYINT NOT NULL DEFAULT '0'
+                                  KEY `cars_drivers_cars_fk` (car_id)
+                                  CONSTRAINT `cars_drivers_cars` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`)
+                                  ON DELETE NO ACTION ON UPDATE NO ACTION,
                                   CONSTRAINT `cars_drivers_drivers` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+                                  ON DELETE NO ACTION ON UPDATE NO ACTION
                                   ) ENGINE=InnoDb DEFAULT CHARSET=utf8mb4;

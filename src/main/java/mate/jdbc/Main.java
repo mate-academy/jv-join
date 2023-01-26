@@ -72,6 +72,7 @@ public class Main {
                 new Car("Leon", manufacturersList.get(7))
         );
         carsList.forEach(car -> {
+            car.setDrivers(driversList);
             carService.create(car);
             System.out.println(car);
         });
@@ -79,7 +80,6 @@ public class Main {
         System.out.println(carService
                 .get(carsList.get(1).getId()));
         carsList.get(0).setDrivers(List.of(driversList.get(0)));
-        carService.addDriverToCar(driversList.get(1),carsList.get(1));
         carService.update(carsList.get(0));
         carService.getAll().forEach(System.out::println);
         carService.getAllByDriver(driversList.get(1).getId()).forEach(System.out::println);
