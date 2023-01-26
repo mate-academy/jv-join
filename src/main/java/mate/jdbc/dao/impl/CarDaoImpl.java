@@ -43,7 +43,7 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id, model, manufacturer_id, name, country "
                 + "FROM cars c JOIN manufacturers m ON manufacturer_id = m.id "
-                + "WHERE c.id = ? AND c.is_deleted = false";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -86,8 +86,6 @@ public class CarDaoImpl implements CarDao {
     public Car update(Car car) {
         String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
-        removeDriversFromCar(car.getId());
-        addDriversToCar(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
@@ -97,6 +95,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car of " + car, e);
         }
+        removeDriversFromCar(car.getId());
+        addDriversToCar(car);
         return car;
     }
 
