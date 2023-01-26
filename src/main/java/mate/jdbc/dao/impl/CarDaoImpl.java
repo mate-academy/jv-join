@@ -35,7 +35,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
-        insertToCarsDriversTable(car);
+        insertDriversToCar(car);
         return car;
     }
 
@@ -92,7 +92,7 @@ public class CarDaoImpl implements CarDao {
                     + car + " in carsDB.", e);
         }
         deleteFromCarsDriversTable(car);
-        insertToCarsDriversTable(car);
+        insertDriversToCar(car);
         return car;
     }
 
@@ -131,7 +131,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private void insertToCarsDriversTable(Car car) {
+    private void insertDriversToCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {

@@ -20,7 +20,6 @@ public class Main {
         Manufacturer uber = new Manufacturer("Uber", "USA");
         manufacturerService.create(optiTaxi);
         manufacturerService.create(uber);
-
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
         Driver yura = new Driver("Yura", "123456");
@@ -32,7 +31,6 @@ public class Main {
         optiTaxiDrivers.add(yura);
         List<Driver> uberDrivers = new ArrayList<>();
         uberDrivers.add(otto);
-
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car zaz = new Car("Daewoo Lanos", optiTaxi, optiTaxiDrivers);
         Car mercedes = new Car("Mercedes Benz", uber, uberDrivers);
