@@ -95,8 +95,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            deleteRelationFromCarsDrivers(car.getId());
-            addNewRelationsToCarsDrivers(car);
+            removeDriverFromCar(car.getId());
+            addDriversToCar(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car in driver DB, car: " + car, e);
         }
@@ -157,7 +157,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void addNewRelationsToCarsDrivers(Car car) {
+    private void addDriversToCar(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -171,7 +171,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteRelationFromCarsDrivers(Long carId) {
+    private void removeDriverFromCar(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -209,7 +209,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> driverList = new ArrayList<>();
             while (resultSet.next()) {
-                driverList.add(parseDriverFromResultSet(resultSet));
+                driverList.add(getCar(resultSet));
             }
             return driverList;
         } catch (SQLException e) {
@@ -217,7 +217,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver getCar(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id", Long.class));
         driver.setName(resultSet.getString("name"));
