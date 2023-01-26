@@ -90,6 +90,8 @@ public class CarDaoImpl implements CarDao {
         String query = "UPDATE cars "
                 + "SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
+        removeDriversFromCar(car.getId());
+        addDriversToCar(car);
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
@@ -146,10 +148,10 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
+        Manufacturer manufacturer = new Manufacturer(
+                resultSet.getObject("manufacturer_id", Long.class),
+                resultSet.getString("name"),
+                resultSet.getString("country"));
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -165,6 +167,17 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't add driver to car " + car, e);
+        }
+    }
+
+    private void removeDriversFromCar(Long id) {
+        String query = "UPDATE cars_drivers SET is_deleted = true WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete driver from car with id " + id, e);
         }
     }
 

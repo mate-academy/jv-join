@@ -64,6 +64,7 @@ public class Main {
                 new Driver("Harry", "England"),
                 new Driver("Oleg", "USA")
         );
+        driversToUpdate.forEach(driverService::create);
         carToUpdate.setDrivers(driversToUpdate);
         System.out.println(carService.update(carToUpdate));
 
