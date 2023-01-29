@@ -42,11 +42,10 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id AS car_id, model" +
-                "m.id AS manufacturer_id, name, country" +
-                "FROM cars c" +
-                "JOIN manufacturers m ON c.manufacturer_id = m.id" +
-                "WHERE c.is_deleted = FALSE AND c.id = ?";
+        String query = "SELECT c.id, model, name, country, manufacturer_id "
+                + "FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? AND c.is_deleted = false;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
@@ -90,10 +89,10 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
+            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
         }
-        return null;
     }
 
     @Override
