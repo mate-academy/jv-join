@@ -3,11 +3,12 @@ package mate.jdbc.service;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
+import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-
 import java.util.List;
 
+@Service
 public class CarServiceImpl implements CarService{
     @Inject
     CarDao carDao;

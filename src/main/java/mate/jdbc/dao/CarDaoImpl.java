@@ -1,6 +1,7 @@
 package mate.jdbc.dao;
 
 import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Dao
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
