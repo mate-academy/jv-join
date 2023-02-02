@@ -37,17 +37,12 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car + "." + e);
         }
-        if (car.getDrivers() != null) {
-            setDriversByCar(car);
-        } else {
-            car.setDrivers(new ArrayList<>());
-        }
+        setDriversByCar(car);
         return car;
     }
 
     @Override
     public Optional<Car> get(Long id) {
-
         String getCarQuestion = "SELECT c.id, c.model, c.manufacturer_id,"
                 + " m.name AS manufacturer, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
@@ -65,11 +60,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id:" + id + ".", e);
         }
-        if (car != null) {
-            car.setDrivers(getAllDriversForCar(id));
-            return Optional.of(car);
-        }
-        return Optional.empty();
+        car.setDrivers(getAllDriversForCar(id));
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -110,10 +102,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update " + car + ".", e);
         }
-        if (car.getDrivers() != null) {
-            deleteDriversByCar(car);
-            setDriversByCar(car);
-        }
+        deleteDriversByCar(car);
+        setDriversByCar(car);
         return car;
     }
 

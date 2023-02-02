@@ -15,11 +15,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        if (car != null) {
-            return carDao.create(car);
-        } else {
-            throw new RuntimeException("Car couldn't be null");
-        }
+        return carDao.create(car);
     }
 
     @Override
@@ -35,11 +31,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car update(Car car) {
-        if (car != null) {
-            return carDao.update(car);
-        } else {
-            throw new RuntimeException("Car couldn't be null");
-        }
+        return carDao.update(car);
     }
 
     @Override
@@ -49,25 +41,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car == null) {
-            throw new RuntimeException("Car couldn't be null");
-        }
-        if (driver != null) {
-            car.getDrivers().add(driver);
-            carDao.update(car);
-        } else {
-            throw new RuntimeException("Driver couldn't be null");
-        }
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (driver != null) {
-            car.getDrivers().remove(driver);
-            carDao.update(car);
-        } else {
-            throw new RuntimeException("Driver couldn't be null");
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
