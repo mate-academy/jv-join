@@ -43,7 +43,7 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT c.id, model, name, country, manufacturer_id "
                 + "FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
-                + "WHERE c.id = ? AND c.is_deleted = false;";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Can't get car with id: " + id, e);
         }
         return Optional.ofNullable(car);
     }
@@ -143,7 +143,7 @@ public class CarDaoImpl implements CarDao {
                 manufacturer);
     }
 
-    private List<Driver> getDriversByCarId(Long id) {
+    private List<Driver> getDriversByCarId(Long carId) {
         String query = "SELECT id, name, license_number FROM drivers d "
                 + "JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id "
@@ -152,7 +152,7 @@ public class CarDaoImpl implements CarDao {
                 + "AND cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
+            statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
@@ -160,7 +160,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Cant get driver by car id, id: " + id, e);
+            throw new DataProcessingException("Cant get driver by car id, id: " + carId, e);
         }
     }
 

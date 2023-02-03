@@ -22,8 +22,8 @@ public class Main {
         manufacturerService.create(chryslerGroup);
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
-        Driver schumacher = new Driver("Schumacher", "ln012345671");
-        Driver hamilton = new Driver("Hamilton", "ln012345672");
+        Driver schumacher = new Driver("Schumacher", "ln10123456781");
+        Driver hamilton = new Driver("Hamilton", "ln10123456782");
         driverService.create(schumacher);
         driverService.create(hamilton);
         List<Driver> firstTeam = new ArrayList<>();
