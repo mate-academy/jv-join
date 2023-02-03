@@ -19,8 +19,8 @@ public class DriverDaoImpl implements DriverDao {
     public Driver create(Driver driver) {
         String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement = connection.prepareStatement(query,
+                         Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenseNumber());
             statement.executeUpdate();
@@ -30,8 +30,8 @@ public class DriverDaoImpl implements DriverDao {
             }
             return driver;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create "
-                    + driver + ". ", e);
+            throw new DataProcessingException("Can't create driver: "
+                    + driver, e);
         }
     }
 
@@ -50,7 +50,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return Optional.ofNullable(driver);
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get driver by id " + id, e);
+            throw new DataProcessingException("Can't get driver by id " + id, e);
         }
     }
 
@@ -66,7 +66,7 @@ public class DriverDaoImpl implements DriverDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+            throw new DataProcessingException("Can't get a list of drivers from driversDB.", e);
         }
     }
 
@@ -84,8 +84,8 @@ public class DriverDaoImpl implements DriverDao {
             statement.executeUpdate();
             return driver;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update "
-                    + driver + " in driversDB.", e);
+            throw new DataProcessingException("Can't update driver: "
+                    + driver, e);
         }
     }
 
@@ -97,7 +97,7 @@ public class DriverDaoImpl implements DriverDao {
             statement.setLong(1, id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete driver with id " + id, e);
+            throw new DataProcessingException("Can't delete driver with id " + id, e);
         }
     }
 
