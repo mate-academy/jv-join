@@ -171,7 +171,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void addDriverToCar(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) Values(?, ?);";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             for (Driver driver : car.getDrivers()) {
