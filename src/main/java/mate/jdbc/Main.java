@@ -50,6 +50,5 @@ public class Main {
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(modelX);
         List<Car> carList = carService.getAll();
-        System.out.println(carList);
     }
 }

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -25,7 +26,7 @@ public class CarDaoImpl implements CarDao {
         logger.info("Method create was called with car " + car);
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
-                   PreparedStatement statement = connection.prepareStatement(query,
+                PreparedStatement statement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
@@ -43,7 +44,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         logger.info("Method get was called with id " + id);
         String query = "SELECT c.id AS car_id, model, manufacturer_id, name, country "
                 + "FROM cars AS c "
@@ -63,7 +64,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriversForCar(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -72,14 +73,14 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars AS c "
                 + "JOIN manufacturers AS m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = false;";
-        Car car = null;
+        Car carParse = null;
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                car = parseCarFromResultSet(resultSet);
-                cars.add(car);
+                carParse = parseCarFromResultSet(resultSet);
+                cars.add(carParse);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars from carsDB", e);

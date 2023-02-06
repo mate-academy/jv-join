@@ -8,7 +8,6 @@ public class Manufacturer {
     private String country;
 
     public Manufacturer() {
-
     }
 
     public Manufacturer(Long id, String name, String country) {
