@@ -28,13 +28,13 @@ public class Main {
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.forEach(manufacturerService::create);
         CarService carService = (CarService) injector.getInstance(CarService.class);
+        List<Car> cars = new ArrayList<>();
         Car carOne = new Car("lanos", firstManufacturer, List.of(driverFour, driverOne));
         Car carTwo = new Car("Rolls-Royce", secondManufacturer, List.of(driverThree, driverTwo));
-        List<Car> cars = new ArrayList<>();
         cars.forEach(carService::create);
-        carService.getAll().forEach(System.out::println);
         carService.removeDriverFromCar(driverFour, carOne);
         carService.removeDriverFromCar(driverTwo, carTwo);
+        carService.getAll().forEach(System.out::println);
         carService.addDriverToCar(driverTwo, carOne);
         carService.addDriverToCar(driverFour, carTwo);
         System.out.println(carService.get(carOne.getId()));
