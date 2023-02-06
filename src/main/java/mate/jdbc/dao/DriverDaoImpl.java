@@ -12,15 +12,20 @@ import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Driver;
 import mate.jdbc.util.ConnectionUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Dao
 public class DriverDaoImpl implements DriverDao {
+    private static final Logger logger = LogManager.getLogger(DriverDaoImpl.class);
+
     @Override
     public Driver create(Driver driver) {
+        logger.info("Method create was called with driver " + driver);
         String query = "INSERT INTO drivers (name, license_number) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(
+                        query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, driver.getName());
             statement.setString(2, driver.getLicenseNumber());
             statement.executeUpdate();
@@ -37,6 +42,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Optional<Driver> get(Long id) {
+        logger.info("Method get was called with id " + id);
         String query = "SELECT id, name, license_number "
                 + "FROM drivers "
                 + "WHERE id = ? AND is_deleted = FALSE";
@@ -64,6 +70,7 @@ public class DriverDaoImpl implements DriverDao {
             while (resultSet.next()) {
                 drivers.add(getDriver(resultSet));
             }
+            logger.info("The all data from DB was successful fetched");
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
@@ -72,6 +79,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Driver update(Driver driver) {
+        logger.info("Method update was called with driver: " + driver);
         String query = "UPDATE drivers "
                 + "SET name = ?, license_number = ? "
                 + "WHERE id = ? AND is_deleted = FALSE";
@@ -82,6 +90,7 @@ public class DriverDaoImpl implements DriverDao {
             statement.setString(2, driver.getLicenseNumber());
             statement.setLong(3, driver.getId());
             statement.executeUpdate();
+            logger.info("Update data of driver was successful");
             return driver;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
@@ -91,6 +100,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public boolean delete(Long id) {
+        logger.info("Method delete was called with id: " + id);
         String query = "UPDATE drivers SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
