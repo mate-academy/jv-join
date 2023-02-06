@@ -1,4 +1,4 @@
-package mate.jdbc.dao;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -190,7 +192,7 @@ public class CarDaoImpl implements CarDao {
     private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long driverId = resultSet.getObject("drivers.id", Long.class);
         String name = resultSet.getString("drivers.name");
-        String licenseNumber = resultSet.getString("drivers.licenseNumber");
+        String licenseNumber = resultSet.getString("drivers.license_number");
         return new Driver(driverId, name, licenseNumber);
     }
 }

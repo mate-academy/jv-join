@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -18,21 +19,19 @@ public class Main {
         Driver driverTwo = new Driver("Gogi", "222");
         Driver driverThree = new Driver("Koba", "555");
         Driver driverFour = new Driver("Ashan", "666");
-        driverService.create(driverOne);
-        driverService.create(driverTwo);
-        driverService.create(driverThree);
-        driverService.create(driverFour);
+        List<Driver> drivers = new ArrayList<>();
+        drivers.forEach(driverService::create);
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         Manufacturer firstManufacturer = new Manufacturer("Lanos", "Ukraine");
         Manufacturer secondManufacturer = new Manufacturer("Rolls-Royce", "England");
-        manufacturerService.create(firstManufacturer);
-        manufacturerService.create(secondManufacturer);
+        List<Manufacturer> manufacturers = new ArrayList<>();
+        manufacturers.forEach(manufacturerService::create);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car carOne = new Car("lanos", firstManufacturer, List.of(driverFour, driverOne));
         Car carTwo = new Car("Rolls-Royce", secondManufacturer, List.of(driverThree, driverTwo));
-        carService.create(carOne);
-        carService.create(carTwo);
+        List<Car> cars = new ArrayList<>();
+        cars.forEach(carService::create);
         carService.getAll().forEach(System.out::println);
         carService.removeDriverFromCar(driverFour, carOne);
         carService.removeDriverFromCar(driverTwo, carTwo);

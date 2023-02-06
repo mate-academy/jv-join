@@ -1,4 +1,4 @@
-package mate.jdbc.service;
+package mate.jdbc.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.service.CarService;
 
 @Service
 public class CarServiceImpl implements CarService {
