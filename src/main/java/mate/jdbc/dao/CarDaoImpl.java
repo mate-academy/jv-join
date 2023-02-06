@@ -146,8 +146,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get cars by driverId "
                     + driverId, e);
         }
-        for (Car automobile : cars) {
-            automobile.setDrivers(getDriversForCar(automobile.getId()));
+        for (Car secondCar : cars) {
+            secondCar.setDrivers(getDriversForCar(secondCar.getId()));
         }
         logger.info("The all data about cars by driver id " + driverId
                 + " was successful fetched from DB");
@@ -168,11 +168,11 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversForCar(Long carId) {
-        String getAllDriversRequest = "SELECT id, name, license_number "
+        String query = "SELECT id, name, license_number "
                 + "FROM drivers AS d JOIN cars_drivers AS cd ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ?;";
+                + "WHERE cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(getAllDriversRequest)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
