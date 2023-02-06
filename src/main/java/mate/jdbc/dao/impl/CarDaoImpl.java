@@ -74,7 +74,7 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            cars.forEach(a -> a.setDrivers(getDriversForCar(a.getId())));
+            cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
             return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB", e);
