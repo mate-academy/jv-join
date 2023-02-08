@@ -51,7 +51,7 @@ public class Main {
         driverService.getAll().forEach(System.out::println);
         System.out.println("List of created drivers\n");
 
-        Driver driverWhichWasGot = driverService.get(Long.valueOf(8));
+        Driver driverWhichWasGot = driverService.get(8L);
         System.out.println(driverWhichWasGot);
         System.out.println("Driver which was got by ID\n");
 
@@ -59,7 +59,7 @@ public class Main {
         System.out.println(driverService.update(driverWhichWasGot));
         System.out.println("Driver which was updated\n");
 
-        driverService.delete(Long.valueOf(9));
+        driverService.delete(9L);
 
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
