@@ -7,6 +7,10 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
+    public Driver(long id) {
+        this.id = id;
+    }
+
     public Driver(Long id, String name, String licenseNumber) {
         this.id = id;
         this.name = name;
