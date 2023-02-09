@@ -18,3 +18,14 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+
+CREATE TABLE `cars` (
+                                  `id` bigint NOT NULL AUTO_INCREMENT,
+                                  `name` varchar(255) DEFAULT NULL,
+                                  `manufactur_id` bigint NOT NULL,
+                                  `driver_id` bigint NOT NULL,
+                                  `is_deleted` tinyint DEFAULT '0',
+                                   PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+

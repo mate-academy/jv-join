@@ -1,0 +1,161 @@
+package mate.jdbc.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
+import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.util.ConnectionUtil;
+
+@Dao
+public class CarDaoImpl implements CarDao {
+
+    @Override
+    public Car create(Car car) {
+        String query = "INSERT INTO cars (name) VALUES (?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                  PreparedStatement statement = connection.prepareStatement(query,
+                               Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, car.getName());
+            statement.executeUpdate();
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if (resultSet.next()) {
+                car.setId(resultSet.getObject(1, Long.class));
+            }
+            return car;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't create "
+                    + car + ". ", e);
+        }
+    }
+
+    @Override
+    public Optional<Car> get(Long id) {
+        String query = "SELECT id, name "
+                + "FROM cars "
+                + "WHERE id = ? AND is_deleted = FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            Car car = null;
+            if (resultSet.next()) {
+                car = getCar(resultSet);
+            }
+            return Optional.ofNullable(car);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get driver by id " + id, e);
+        }
+    }
+
+    @Override
+    public List<Car> getAll() {
+        String query = "SELECT * FROM cars WHERE is_deleted = FALSE";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+        }
+    }
+
+    @Override
+    public Car update(Car car) {
+        String query = "UPDATE cars "
+                + "SET name = ? "
+                + "WHERE id = ? AND is_deleted = FALSE";
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement
+                        = connection.prepareStatement(query)) {
+            statement.setString(1, car.getName());
+            statement.setLong(2, car.getId());
+            statement.executeUpdate();
+            return car;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update "
+                    + car + " in carsDB.", e);
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete car with id " + id, e);
+        }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        String query = "SELECT cars.id AS car_id, "
+                + "cars.name AS car_name, "
+                + "drivers.name AS driver_name, "
+                + "drivers.id AS driver_ID, "
+                + "drivers.license_number AS license_number "
+                + "FROM car_drivers JOIN cars ON cars.id = car_drivers.car_id "
+                + "JOIN drivers ON car_drivers.driver_id = drivers.id "
+                + "WHERE car_drivers.driver_id = ?";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarWithDriversFromResultSet(resultSet));
+            }
+            return cars;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+        }
+    }
+
+    @Override
+    public boolean deleteRelation(Long driverId, Long carId) {
+        String query = "UPDATE car_drivers "
+                + "SET is_deleted = true WHERE driver_id = ? "
+                + "AND car_id = ? ";
+        try (Connection connection = ConnectionUtil.getConnection();
+                   PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            statement.setLong(2, carId);
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete reletion with car id "
+                    + carId + " and driver id " + driverId, e);
+        }
+    }
+
+    private Car getCar(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        return new Car(id, name);
+    }
+
+    private Car parseCarWithDriversFromResultSet(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("driver_id", Long.class);
+        String name = resultSet.getString("driver_name");
+        String licenseNumber = resultSet.getString("license_number");
+        Driver driver = new Driver(id, name, licenseNumber);
+        Car car = new Car();
+        car.setName(resultSet.getString("car_name"));
+        car.setId(resultSet.getObject("car_id", Long.class));
+        car.setDrivers(driver);
+        return car;
+    }
+}
