@@ -1,13 +1,11 @@
 package mate.jdbc.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Car {
     private Long id;
     private String name;
-    private String manufacturer;
+    private Manufacturer manufacturer;
     private List<Driver> drivers;
 
     public Car() {
@@ -38,38 +36,16 @@ public class Car {
         return drivers;
     }
 
-    public void setDrivers(Driver driver) {
-        drivers = new ArrayList<>();
-        drivers.add(driver);
+    public void setDrivers(List<Driver> drivers) {
         this.drivers = drivers;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
+    public Manufacturer getManufacturer() {
+        return this.manufacturer = manufacturer;
     }
 
-    public void setManufacturer(String manufacturer) {
+    public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Car that = (Car) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
     }
 
     @Override
