@@ -56,12 +56,11 @@ public class Main {
                 = (CarService) injector.getInstance(CarService.class);
         carService.create(car);
         carService.get(car.getId());
-        carService.delete(car.getId());
         carService.update(car);
         carService.getAll().forEach(System.out::println);
         carService.addDriverToCar(driverFirst, car);
-        carService.getAll().forEach(System.out::println);
+        carService.getAllByDriver(car.getId()).forEach(System.out::println);
         carService.removeDriverFromCar(driverFirst, car);
-        System.out.println(carService.getAllByDriver(driverFirst.getId()));
+        carService.getAllByDriver(car.getId()).forEach(System.out::println);
     }
 }
