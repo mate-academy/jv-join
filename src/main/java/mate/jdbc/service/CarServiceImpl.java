@@ -50,7 +50,6 @@ public class CarServiceImpl implements CarService {
         List<Driver> drivers = car.getDrivers();
         drivers.remove(driver);
         car.setDrivers(drivers);
-        carDao.deleteRelation(driver.getId(), car.getId());
         carDao.update(car);
     }
 
