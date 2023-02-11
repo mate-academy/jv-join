@@ -41,18 +41,21 @@ public class CarDaoImpl implements CarDao {
         String query = "SELECT id, name "
                 + "FROM cars "
                 + "WHERE id = ? AND is_deleted = FALSE";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                     PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get driver by id " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversByCar(id));
+        }
+        return car;
     }
 
     @Override
@@ -65,10 +68,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
+        for (Car c: cars) {
+            c.setDrivers(getDriversByCar(c.getId()));
+        }
+        return cars;
     }
 
     @Override
