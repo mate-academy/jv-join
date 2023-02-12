@@ -135,7 +135,6 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    @Override
     public void deleteRelation(Car car) {
         List<Driver> drivers = car.getDrivers();
         String query = "UPDATE car_drivers SET is_deleted = true WHERE car_id = ? ";
