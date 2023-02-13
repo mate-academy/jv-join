@@ -1,48 +1,70 @@
 package mate.jdbc.service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import mate.jdbc.dao.CarDao;
+import mate.jdbc.dao.CarDaoImpl;
+import mate.jdbc.lib.Inject;
+import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
-import java.util.List;
+@Service
+public class CarServiceImpl implements CarService {
+    @Inject
+    private CarDao carDao = new CarDaoImpl();
 
-public class CarServiceImpl implements CarService{
     @Override
     public Car create(Car car) {
-        return null;
+        return carDao.create(car);
     }
 
     @Override
     public Car get(Long id) {
-        return null;
+        return carDao.get(id).orElseThrow(RuntimeException::new);
     }
 
     @Override
     public List<Car> getAll() {
-        return null;
+        return carDao.getAll();
     }
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        return carDao.delete(id);
     }
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        List<Driver> drivers = car.getDrivers();
+        drivers.add(driver);
+        car.setDrivers(drivers);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
+        List<Driver> drivers = car.getDrivers();
+        drivers.remove(driver);
+        car.setDrivers(drivers);
+        carDao.update(car);
 
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAll().stream().filter((c) -> {
+            for (Driver driver : c.getDrivers()) {
+                if (driver.getId().equals(driverId)) {
+                    return true;
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
     }
 }
