@@ -64,9 +64,9 @@ public class Main {
         carDoblo.setManufacturer(manufacturer);
         carDoblo.setDrivers(secondList);
         carService.create(carDoblo);
-        carService.delete(1L);
 
         carDoblo.setModel("Punto");
         carService.update(carDoblo);
+        carService.getAllByDriver(75L).forEach(System.out::println);
     }
 }
