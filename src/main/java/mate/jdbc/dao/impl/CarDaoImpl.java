@@ -161,9 +161,11 @@ public class CarDaoImpl implements CarDao {
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
-        Manufacturer manufacturer
-                = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
-        return new Car(carId, model, manufacturer, null);
+        Manufacturer manufacturer = new Manufacturer(manufacturerName, manufacturerCountry);
+        manufacturer.setId(manufacturerId);
+        Car car = new Car(model, manufacturer, null);
+        car.setId(carId);
+        return car;
     }
 
     private List<Driver> getAllDriversByCarId(Long id) {
@@ -189,7 +191,9 @@ public class CarDaoImpl implements CarDao {
         Long id = resultSet.getObject("driver_id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
-        return new Driver(id, name, licenseNumber);
+        Driver driver = new Driver(name, licenseNumber);
+        driver.setId(id);
+        return driver;
     }
 
     private void updateCarRelations(Car car) {
