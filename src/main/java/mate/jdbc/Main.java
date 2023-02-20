@@ -18,13 +18,13 @@ public class Main {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
         //1. test carService.get();
-        //System.out.println(carService.get(2L));
+        System.out.println(carService.get(2L));
 
         //2. test carService.getAllByDriver()
-        //System.out.println(carService.getAllByDriver(2L));
+        System.out.println(carService.getAllByDriver(2L));
 
         //3. test carService.getAll()
-        //System.out.println(carService.getAll());
+        System.out.println(carService.getAll());
 
         //4. Test carService.create()
         //Car i3 = new Car();
