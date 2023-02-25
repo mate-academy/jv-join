@@ -33,7 +33,8 @@ public class Main {
         }
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car honda = new Car("Accord", manufacturer, drivers);
+        Car honda = new Car("Accord", manufacturer);
+        honda.setDrivers(drivers);
         carService.create(honda);
 
         System.out.println(carService.get(honda.getId()));
