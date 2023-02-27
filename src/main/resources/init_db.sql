@@ -18,3 +18,25 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+DROP TABLE IF EXISTS `cars`;
+CREATE TABLE cars (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    model VARCHAR(225) NOT NULL,
+    is_deleted TINYINT NOT NULL DEFAULT 0,
+	manufacturer_id BIGINT NULL,
+    PRIMARY KEY (id),
+	CONSTRAINT cars_manufacturers_fk
+			FOREIGN KEY (manufacturer_id)
+				REFERENCES taxi_db.manufacturers (id)
+);
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE cars_drivers (
+	car_id BIGINT NOT NULL,
+	driver_id BIGINT NOT NULL,
+	CONSTRAINT cars_to_car_fk
+			FOREIGN KEY (car_id)
+				REFERENCES taxi_db.cars (id),
+	CONSTRAINT drivers_to_driver_fk
+			FOREIGN KEY (driver_id)
+				REFERENCES taxi_db.drivers (id)
+	);
