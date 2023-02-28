@@ -9,6 +9,6 @@ public class Main {
 
     public static void main(String[] args) {
         CarServiceImpl carService = (CarServiceImpl) injector.getInstance(CarService.class);
-        System.out.println(carService.getAllByDriver(4L));
+        System.out.println(carService.get(6L));
     }
 }

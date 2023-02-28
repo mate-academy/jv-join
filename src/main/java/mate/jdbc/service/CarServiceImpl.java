@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id);
+        return carDao.get(id).isPresent() ? carDao.get(id).get() : null;
     }
 
     @Override
