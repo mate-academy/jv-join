@@ -7,6 +7,7 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
+import mate.jdbc.service.DriverService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
@@ -14,19 +15,24 @@ public class Main {
     public static void main(String[] args) {
         CarService carService = (CarService) injector
                 .getInstance(CarService.class);
+        DriverService driverService = (DriverService) injector
+                .getInstance(DriverService.class);
         Manufacturer bmwManufacturer = new Manufacturer(2L, "BMW", "GERMANY");
-        Driver driverPeter = new Driver(7L, "Peter", "1234567");
+        Driver driverPeter = new Driver("Peter", "1234567");
+        driverService.create(driverPeter);
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverPeter);
-        Car bmw525 = new Car(4L, bmwManufacturer, "525", drivers);
+        Car bmw525 = new Car(bmwManufacturer, "525", drivers);
         System.out.println("Create car with model=525, manufacturer=BMW, driver=Peter: "
                 + carService.create(bmw525));
 
         System.out.println("Get car bmw525: " + carService
                 .get(bmw525.getId()));;
         System.out.println("Get all cars: " + carService.getAll());;
-        Driver driverMark = new Driver(9L, "Mark", "1234567");
-        Driver driverBob = new Driver(10L, "Bob", "98765432");
+        Driver driverMark = new Driver("Mark", "1234567");
+        driverService.create(driverMark);
+        Driver driverBob = new Driver("Bob", "98765432");
+        driverService.create(driverBob);
         drivers.add(driverMark);
         drivers.add(driverBob);
         bmw525.setDriver(drivers);
