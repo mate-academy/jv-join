@@ -83,32 +83,43 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                drivers.add(new Driver(resultSet.getObject(1, Long.class),
-                        resultSet.getString(2),
-                        resultSet.getString(3))
-                );
+                drivers.add(parseDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get drivers list", e);
+            throw new DataProcessingException("Couldn't get drivers list by car id " + carId, e);
         }
+    }
+
+    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
+        return new Driver(resultSet.getObject(1, Long.class),
+                resultSet.getString(2),
+                resultSet.getString(3));
     }
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT * FROM cars WHERE is_deleted = FALSE";
+        String query = "SELECT c.id, c.model, m.id, m.name, m.country"
+                + " FROM cars c"
+                + " JOIN manufacturers m ON c.manufacturer_id = m.id"
+                + " WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 Long carId = resultSet.getObject("id", Long.class);
-                cars.add(get(carId).get());
+                car = parseCarFromResultSet(resultSet);
+                cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB.", e);
+            throw new DataProcessingException("Couldn't get a list of all cars from driversDB.", e);
         }
+        for (Car nextCar : cars) {
+            car.setDrivers(getListDriverByCarId(nextCar.getId()));
+        }
+        return cars;
     }
 
     @Override
