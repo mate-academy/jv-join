@@ -2,6 +2,8 @@ package mate.jdbc.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
+
 import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -14,14 +16,24 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public Driver create(Driver driver) {
-        return driverDao.create(driver);
+        Optional<Driver> driverByLicenseNumber = 
+                driverDao.getByLicenseNumber(driver.getLicenseNumber());
+        if (driverByLicenseNumber == null) {
+            return driverDao.create(driver);
+        } else {
+            /*
+             * I decided that the license number should be unique, so if we already have it,
+             * we should return the existing object
+             */
+            return driverByLicenseNumber.get();
+        }
     }
 
     @Override
     public Driver get(Long id) {
         return driverDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get driver "
-                        + "by id = " + id));
+                .orElseThrow(() -> 
+                new NoSuchElementException("Could not get driver by id = " + id));
     }
 
     @Override

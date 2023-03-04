@@ -8,6 +8,8 @@ public interface DriverDao {
     Driver create(Driver driver);
 
     Optional<Driver> get(Long id);
+    
+    Optional<Driver> getByLicenseNumber(String licenseNumber);
 
     List<Driver> getAll();
 
