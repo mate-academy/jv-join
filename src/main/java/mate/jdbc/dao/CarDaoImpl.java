@@ -67,11 +67,13 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllCarQuery = "SELECT cars.id AS car_id, model, mf.id AS manufacturer_id, mf.name AS manufacturer_name, mf.country AS manufacturer_country " +
-                "FROM cars " +
-                "INNER JOIN manufacturers mf " +
-                "ON cars.manufacturer_id = mf.id " +
-                "WHERE cars.is_deleted = FALSE;";
+        String getAllCarQuery = "SELECT cars.id AS car_id, model, "
+                + "mf.id AS manufacturer_id, mf.name AS manufacturer_name, "
+                + "mf.country AS manufacturer_country "
+                + "FROM cars "
+                + "INNER JOIN manufacturers mf "
+                + "ON cars.manufacturer_id = mf.id "
+                + "WHERE cars.is_deleted = FALSE;";
         List<Car> allCarsList = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarStatement
