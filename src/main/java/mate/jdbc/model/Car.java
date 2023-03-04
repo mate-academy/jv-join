@@ -44,7 +44,7 @@ public class Car {
     public String toString() {
         return "\nCar {id = " + id 
                 + ", model = " + model
-                + ",\n manufacturer = " + manufacturer
+                + ", manufacturer = " + manufacturer
                 + ",\n drivers = " + drivers + "}";
     }    
 }

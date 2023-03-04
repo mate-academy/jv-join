@@ -19,43 +19,38 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        // TODO Auto-generated method stub
-        return null;
+        return carDao.create(car);
     }
 
     @Override
     public List<Car> getAll() {
-        // TODO Auto-generated method stub
-        return null;
+        return carDao.getAll();
     }
 
     @Override
     public Car update(Car car) {
-        // TODO Auto-generated method stub
-        return null;
+        return carDao.update(car);
     }
 
     @Override
     public boolean delete(Long id) {
-        // TODO Auto-generated method stub
-        return false;
+        return carDao.delete(id);
     }
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        // TODO Auto-generated method stub
-        
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-        // TODO Auto-generated method stub
-        
+    public void removeDriverFromCar(Driver driver, Car car) { 
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        // TODO Auto-generated method stub
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }
