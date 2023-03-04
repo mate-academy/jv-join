@@ -1,8 +1,8 @@
 package mate.jdbc.service;
 
-import mate.jdbc.model.Driver;
 import java.util.List;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
 
 public interface CarService {
     Car create(Car car);
@@ -15,7 +15,6 @@ public interface CarService {
     
     boolean delete(Long id);
     
-    //Do not implement following methods in DAO layer, only in service layer. Use update method from DAO
     void addDriverToCar(Driver driver, Car car);
     
     void removeDriverFromCar(Driver driver, Car car);

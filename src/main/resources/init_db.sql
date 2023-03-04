@@ -63,3 +63,4 @@ INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (1, 4);
 INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (2, 5);
 INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (3, 2);
 INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (3, 3);
+INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (4, 2);
