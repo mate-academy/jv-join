@@ -14,7 +14,7 @@ public class DriverServiceImpl implements DriverService {
     private DriverDao driverDao;
 
     @Override
-    public Driver create(Driver driver) {
+    public Driver getOrCreate(Driver driver) {
         Optional<Driver> driverByLicenseNumber = 
                 driverDao.getByLicenseNumber(driver.getLicenseNumber());
         if (driverByLicenseNumber == null) {
