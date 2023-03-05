@@ -23,5 +23,6 @@ public class Main {
         carService.create(car);
         carService.update(car);
         carService.delete(car.getId());
+        System.out.println(carService.getAll());
     }
 }

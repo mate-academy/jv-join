@@ -32,9 +32,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
-            while (resultSet.next()) {
-                Long id = resultSet.getObject(1, Long.class);
-                car.setId(id);
+            if (resultSet.next()) {
+                car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -54,7 +53,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1,id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                car = getCar(resultSet);
+                car = parseCar(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Cant find car by id" + id,e);
@@ -67,15 +66,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String getAllRequest = "SELECT * FROM cars c "
-                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "WHERE c.is_deleted = FALSE";
+        String getAllRequest = "SELECT c.id, c.model, c.manufacturer_id, m.id,m.name,m.country "
+                + "FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllRequest)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCar(resultSet));
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("List is empty");
@@ -135,7 +134,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1,driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCar(resultSet));
+                cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Cant get car by driver with id" + driverId,e);
@@ -146,7 +145,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car getCar(ResultSet resultSet) throws SQLException {
+    private Car parseCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("id",Long.class));
         car.setModel(resultSet.getString("model"));
@@ -201,7 +200,7 @@ public class CarDaoImpl implements CarDao {
             List<Driver> drivers = new ArrayList<>();
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(parseDrivers(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -209,7 +208,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver parseDrivers(ResultSet resultSet) throws SQLException {
         Driver driver = new Driver();
         driver.setId(resultSet.getObject("id",Long.class));
         driver.setName(resultSet.getString("name"));
