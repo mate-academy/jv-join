@@ -17,14 +17,14 @@ public class Main {
                 .getInstance(CarService.class);
         final ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        final Driver driverTaxi = new Driver(13L, "Sami", "22222");
+        final Driver driverTaxi = new Driver(12L, "Taras", "123456");
         Car car = new Car();
         car.setId(3L);
         car.setModel("SLAVUTA");
         car.setManufacturer(manufacturerService.get(5L));
         List<Driver> list = new ArrayList<>();
         list.add(new Driver(12L, "Taras", "123456"));
-        car.setDriver(list);
+        car.setDrivers(list);
 
         Car carUp = new Car();
         List<Driver> listUp = new ArrayList<>();
@@ -32,7 +32,7 @@ public class Main {
         carUp.setId(3L);
         carUp.setModel("ZAZ");
         carUp.setManufacturer(new Manufacturer(2L, "AvtoZaz", "Ukraine"));
-        carUp.setDriver(listUp);
+        carUp.setDrivers(listUp);
 
         System.out.println(carService.create(car));
 
