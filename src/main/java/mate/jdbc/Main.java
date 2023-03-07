@@ -1,13 +1,12 @@
 package mate.jdbc;
 
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.CarDaoImpl;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.dao.ManufacturerDaoImpl;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Manufacturer;
-
-import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
