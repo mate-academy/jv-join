@@ -13,9 +13,9 @@ public class Main {
 
     public static void main(String[] args) {
         Car car = new Car();
-        Manufacturer manufacturer = new Manufacturer(77L,"Ferrari","Italy");
+        Manufacturer manufacturer = new Manufacturer("Ferrari", "Italy");
         List<Driver> drivers = new ArrayList<>();
-        Driver driver = new Driver(54L,"Vasyl","001");
+        Driver driver = new Driver("Vasyl", "001");
         drivers.add(driver);
         car.setManufacturer(manufacturer);
         car.setDrivers(drivers);
@@ -23,6 +23,6 @@ public class Main {
         carService.create(car);
         carService.update(car);
         carService.delete(car.getId());
-        System.out.println(carService.getAll());
+        carService.getAll();
     }
 }
