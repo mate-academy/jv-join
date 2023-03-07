@@ -92,15 +92,12 @@ public class CarDaoImpl implements CarDao {
             updateStatement.setLong(2, car.getManufacturer().getId());
             updateStatement.setLong(3, car.getId());
             updateStatement.executeUpdate();
-            if (updateStatement.executeUpdate() > 0) {
-                return car;
-            }
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t update car " + car, e);
         }
         deleteDriversFromCar(car.getId());
         insertDrivers(car);
-        throw new NoSuchElementException("car does`t exist in DB");
+        return car;
     }
 
     @Override
