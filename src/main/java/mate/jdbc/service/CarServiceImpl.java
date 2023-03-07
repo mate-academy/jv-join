@@ -49,7 +49,8 @@ public class CarServiceImpl implements CarService {
     public void addDriverToCar(Driver driver, Car car) {
         String insertQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement setDriverToCarStatement = connection.prepareStatement(insertQuery)) {
+                PreparedStatement setDriverToCarStatement =
+                        connection.prepareStatement(insertQuery)) {
             setDriverToCarStatement.setLong(1, car.getId());
             setDriverToCarStatement.setLong(2, driver.getId());
             setDriverToCarStatement.executeUpdate();
@@ -62,7 +63,8 @@ public class CarServiceImpl implements CarService {
     public void removeDriverFromCar(Driver driver, Car car) {
         String deleteQuery = "DELETE FROM cars_drivers WHERE car_id = ? and driver_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement setDriverToCarStatement = connection.prepareStatement(deleteQuery)) {
+                PreparedStatement setDriverToCarStatement =
+                        connection.prepareStatement(deleteQuery)) {
             setDriverToCarStatement.setLong(1, car.getId());
             setDriverToCarStatement.setLong(2, driver.getId());
             setDriverToCarStatement.executeUpdate();
@@ -89,7 +91,8 @@ public class CarServiceImpl implements CarService {
             }
             return cars;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't find cars in DB by driver driverId " + driverId, e);
+            throw new DataProcessingException("Can't find cars in DB by driver driverId "
+                    + driverId, e);
         }
     }
 
@@ -97,7 +100,8 @@ public class CarServiceImpl implements CarService {
         Long manufacturerId = resultSet.getLong("manufacturer_id");
         String manufacturerName = resultSet.getString("name");
         String manufacturerCountry = resultSet.getString("country");
-        Manufacturer manufacturer = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
+        Manufacturer manufacturer =
+                new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
         Long id = resultSet.getLong("id");
         String model = resultSet.getString("model");
         return new Car(id, model, manufacturer);
