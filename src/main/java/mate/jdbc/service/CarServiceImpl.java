@@ -9,7 +9,6 @@ import mate.jdbc.model.Driver;
 
 @Service
 public class CarServiceImpl implements CarService {
-
     @Inject
     private CarDao carDao;
 
