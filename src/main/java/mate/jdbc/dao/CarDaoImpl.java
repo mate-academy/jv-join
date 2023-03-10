@@ -125,7 +125,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement getAllCarsStatement = connection.prepareStatement(getRequest)) {
+                PreparedStatement getAllCarsStatement = connection.prepareStatement(getRequest)) {
             getAllCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
@@ -181,8 +181,8 @@ public class CarDaoImpl implements CarDao {
     private void insertDriverToDriverDB (List<Driver> drivers) {
         String query = "INSERT INTO drivers (id, name, license_number) VALUES(?, ?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query,
-                     Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(query,
+                        Statement.RETURN_GENERATED_KEYS)) {
             for (Driver driver : drivers) {
                 statement.setLong(1, driver.getId());
                 statement.setString(2, driver.getName());
@@ -198,8 +198,8 @@ public class CarDaoImpl implements CarDao {
             throws SQLException {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query,
-                     Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(query,
+                        Statement.RETURN_GENERATED_KEYS)) {
             for (Driver driver : drivers) {
                 statement.setLong(1, car.getId());
                 statement.setLong(2, driver.getId());
