@@ -178,7 +178,7 @@ public class CarDaoImpl implements CarDao {
         return new Car(id, model, manufacturer);
     }
 
-    private void insertDriverToDriverDB (List<Driver> drivers) {
+    private void insertDriverToDriverDB(List<Driver> drivers) {
         String query = "INSERT INTO drivers (id, name, license_number) VALUES(?, ?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query,
