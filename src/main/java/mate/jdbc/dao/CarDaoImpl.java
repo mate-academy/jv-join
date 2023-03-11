@@ -22,13 +22,13 @@ public class CarDaoImpl implements CarDao {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?)";
         List<Driver> drivers = car.getDrivers();
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
+                PreparedStatement creationStatement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, car.getModel());
-            statement.setLong(2, car.getManufacturer().getId());
-            statement.executeUpdate();
-            insertDriverToDriverDB(drivers);
-            ResultSet resultSet = statement.getGeneratedKeys();
+            creationStatement.setString(1, car.getModel());
+            creationStatement.setLong(2, car.getManufacturer().getId());
+            creationStatement.executeUpdate();
+            //insertDriverToDriverDB(drivers);
+            ResultSet resultSet = creationStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
@@ -49,9 +49,9 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
+                PreparedStatement getStatement = connection.prepareStatement(query)) {
+            getStatement.setLong(1, id);
+            ResultSet resultSet = getStatement.executeQuery();
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
@@ -158,31 +158,32 @@ public class CarDaoImpl implements CarDao {
 
     private Driver getDriver(ResultSet resultSet) {
         try {
-            Long id = resultSet.getLong("id");
             String name = resultSet.getString("name");
             String licenseNumber = resultSet.getString("license_number");
-            return new Driver(id, name, licenseNumber);
+            Driver driver = new Driver(name, licenseNumber);
+            driver.setId(resultSet.getLong("id"));
+            return driver;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get driver from DB", e);
         }
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Long manufacturerId = resultSet.getLong("manufacturer_id");
         String manufacturerName = resultSet.getString("name");
         String manufacturerCountry = resultSet.getString("country");
         Manufacturer manufacturer =
-                new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
+                new Manufacturer(manufacturerName, manufacturerCountry);
         Long id = resultSet.getLong("id");
         String model = resultSet.getString("model");
-        return new Car(id, model, manufacturer);
+        Car car = new Car(model, manufacturer);
+        car.setId(id);
+        return car;
     }
 
     private void insertDriverToDriverDB(List<Driver> drivers) {
         String query = "INSERT INTO drivers (id, name, license_number) VALUES(?, ?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             for (Driver driver : drivers) {
                 statement.setLong(1, driver.getId());
                 statement.setString(2, driver.getName());
