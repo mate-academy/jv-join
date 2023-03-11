@@ -16,15 +16,16 @@ public class Main {
         // test your code here
         Injector injector = Injector.getInstance("mate.jdbc");
         CarDao carDao = (CarDao) injector.getInstance(CarDao.class);
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        ManufacturerService manService = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        final CarService carService = (CarService) injector.getInstance(CarService.class);
+        ManufacturerService manService =
+                (ManufacturerService) injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         Manufacturer manufacturer = new Manufacturer("BMW", "Germany");
         Manufacturer manufacturer2 = new Manufacturer("Audi", "Germany");
         Manufacturer manToInsert = manService.create(manufacturer);
         Manufacturer manToInsert2 = manService.create(manufacturer2);
         Car bmw = new Car("M3", manToInsert);
-        Car audi = new Car("S4", manToInsert2);
+        final Car audi = new Car("S4", manToInsert2);
         Driver driver = new Driver("Dupinder", "123456");
         Driver driver2 = new Driver("Carolina", "12345344");
         Driver driverToInsert = driverService.create(driver);
