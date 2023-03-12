@@ -27,7 +27,6 @@ public class CarDaoImpl implements CarDao {
             creationStatement.setString(1, car.getModel());
             creationStatement.setLong(2, car.getManufacturer().getId());
             creationStatement.executeUpdate();
-            //insertDriverToDriverDB(drivers);
             ResultSet resultSet = creationStatement.getGeneratedKeys();
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
@@ -178,21 +177,6 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car(model, manufacturer);
         car.setId(id);
         return car;
-    }
-
-    private void insertDriverToDriverDB(List<Driver> drivers) {
-        String query = "INSERT INTO drivers (id, name, license_number) VALUES(?, ?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            for (Driver driver : drivers) {
-                statement.setLong(1, driver.getId());
-                statement.setString(2, driver.getName());
-                statement.setString(3, driver.getLicenseNumber());
-                statement.executeUpdate();
-            }
-        } catch (SQLException a) {
-            throw new DataProcessingException("can't insert driver to drivers table", a);
-        }
     }
 
     private void insertDriversToCarDriversDB(Car car, List<Driver> drivers)
