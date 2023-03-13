@@ -7,7 +7,8 @@ public class Manufacturer {
     private String name;
     private String country;
 
-    public Manufacturer(){}
+    public Manufacturer() {
+    }
 
     public Manufacturer(String name, String country) {
         this.name = name;
@@ -61,14 +62,5 @@ public class Manufacturer {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, country);
-    }
-
-    @Override
-    public String toString() {
-        return "Manufacturer{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", country='" + country + '\''
-                + '}';
     }
 }

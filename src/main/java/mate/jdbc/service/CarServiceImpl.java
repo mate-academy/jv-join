@@ -1,16 +1,15 @@
 package mate.jdbc.service;
 
-import mate.jdbc.dao.CarDao;;
+import java.util.List;
+import java.util.NoSuchElementException;
+import mate.jdbc.dao.CarDao;
 import mate.jdbc.dao.DriverDao;
-import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
-public class CarServiceImpl implements CarServic{
+public class CarServiceImpl implements CarServic {
     private CarDao carDao;
     private DriverDao driverDao;
 
@@ -56,11 +55,11 @@ public class CarServiceImpl implements CarServic{
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        for (Driver driver1 : car.getDriverList()){
-          if (driver.getId().equals(driver1.getId()) &&
-                  driver.getName().equals(driver1.getName()) ){
-              driverDao.delete(driver.getId());
-          }
+        for (Driver driver1 : car.getDriverList()) {
+            if (driver.getId().equals(driver1
+                    .getId()) && driver.getName().equals(driver1.getName())) {
+                driverDao.delete(driver.getId());
+            }
         }
     }
 
