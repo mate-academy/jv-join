@@ -1,23 +1,22 @@
 package mate.jdbc.model;
 
 import java.util.List;
-import java.util.Optional;
 
 public class Car {
     private Long id;
     private String model;
-    private Optional<Manufacturer> manufacturer;
+    private Manufacturer manufacturer;
     private List<Driver> driverList;
 
     public Car() {
     }
 
-    public Car(String model, Optional<Manufacturer> manufacturer) {
+    public Car(String model, Manufacturer manufacturer) {
         this.model = model;
         this.manufacturer = manufacturer;
     }
 
-    public Car(String model, Optional<Manufacturer> manufacturer, List<Driver> driverList) {
+    public Car(String model, Manufacturer manufacturer, List<Driver> driverList) {
         this.model = model;
         this.manufacturer = manufacturer;
         this.driverList = driverList;
@@ -39,11 +38,11 @@ public class Car {
         this.model = model;
     }
 
-    public Optional<Manufacturer> getManufacturer() {
+    public Manufacturer getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(Optional<Manufacturer> manufacturer) {
+    public void setManufacturer(Manufacturer manufacturer) {
         this.manufacturer = manufacturer;
     }
 
@@ -53,5 +52,18 @@ public class Car {
 
     public void setDriverList(List<Driver> driverList) {
         this.driverList = driverList;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{"
+                + "id=" + id
+                + ", model='"
+                + model + '\''
+                + ", manufacturer="
+                + manufacturer
+                + ", driverList="
+                + driverList
+                + '}';
     }
 }

@@ -47,20 +47,14 @@ public class CarServiceImpl implements CarServic {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        Driver driverAddCar = driverDao.create(driver);
-        List<Driver> driverList = List.of(driverAddCar);
-        car.setDriverList(driverList);
-        create(car);
+        car.getDriverList().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        for (Driver driver1 : car.getDriverList()) {
-            if (driver.getId().equals(driver1
-                    .getId()) && driver.getName().equals(driver1.getName())) {
-                driverDao.delete(driver.getId());
-            }
-        }
+        car.getDriverList().remove(driver);
+        carDao.update(car);
     }
 
     @Override
