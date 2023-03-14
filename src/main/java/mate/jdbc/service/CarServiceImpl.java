@@ -3,7 +3,6 @@ package mate.jdbc.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.dao.DriverDao;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -11,11 +10,9 @@ import mate.jdbc.model.Driver;
 @Service
 public class CarServiceImpl implements CarServic {
     private CarDao carDao;
-    private DriverDao driverDao;
 
-    public CarServiceImpl(CarDao carDao, DriverDao driverDao) {
+    public CarServiceImpl(CarDao carDao) {
         this.carDao = carDao;
-        this.driverDao = driverDao;
     }
 
     @Override
