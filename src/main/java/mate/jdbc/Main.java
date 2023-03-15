@@ -13,12 +13,18 @@ public class Main {
         CarServic createCar = new CarServiceImpl(new CarDaoImpl());
         createCar.create(car);
         CarServic addTwoCar = new CarServiceImpl(new CarDaoImpl());
-        addTwoCar.addDriverToCar(driver, addTwoCar.get(1L));
-        addTwoCar.addDriverToCar(driver, addTwoCar.get(2L));
+        Car car1 = addTwoCar.get(1L);
+        addTwoCar.addDriverToCar(driver, car1);
+        Car car2 = addTwoCar.get(2L);
+        addTwoCar.addDriverToCar(driver, car2);
         CarServic carPrint = new CarServiceImpl(new CarDaoImpl());
-        carPrint.getAll().forEach(System.out::println);
+        for (Car car3 : carPrint.getAll()) {
+            System.out.println(car3);
+        }
         CarServic carServic = new CarServiceImpl(new CarDaoImpl());
         carServic.delete(1L);
-        carPrint.getAll().forEach(System.out::println);
+        for (Car car3 : carPrint.getAll()) {
+            System.out.println(car3);
+        }
     }
 }
