@@ -129,7 +129,21 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, m.country "
+                + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
+                + "JOIN manufacturers m ON m.id = c.manufacturer_id WHERE cd.driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                    PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get cars for driver with id = " + driverId, e);
+        }
+        return cars;
     }
 
     private void insertDrivers(Car car) {
