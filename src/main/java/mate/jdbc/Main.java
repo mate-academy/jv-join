@@ -26,6 +26,7 @@ public class Main {
         Car fordFocus = new Car("Focus", ford, drivers);
         carService.create(fordFocus);
 
+        fordFocus.getDrivers().remove(3);
         fordFocus.setModel("Focus GT");
         carService.update(fordFocus);
 
