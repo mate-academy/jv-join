@@ -140,7 +140,7 @@ public class CarDaoImpl implements CarDao {
         return carList;
     }
 
-    Car parserCar(ResultSet resultSet) throws SQLException {
+    private Car parserCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("id_car", Long.class));
         car.setModel(resultSet.getString("model"));
@@ -162,13 +162,8 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setObject(1, idCar);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Driver> driverList = new ArrayList<>();
-            Driver driver = null;
             while (resultSet.next()) {
-                driver = new Driver();
-                driver.setId(resultSet.getObject("id", Long.class));
-                driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("license_number"));
-                driverList.add(driver);
+                driverList.add(parserDriver(resultSet));
             }
             return driverList;
         } catch (SQLException e) {
@@ -199,5 +194,13 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't delete drivers " + car.getDriverList(), e);
         }
+    }
+
+    private Driver parserDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getObject("id", Long.class));
+        driver.setName(resultSet.getString("name"));
+        driver.setLicenseNumber(resultSet.getString("license_number"));
+        return driver;
     }
 }
