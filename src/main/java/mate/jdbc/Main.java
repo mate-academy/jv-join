@@ -36,14 +36,14 @@ public class Main {
         bmw.setDrivers(drivers);
         audi.setDrivers(drivers);
         carService.create(bmw);
-        Car returnedCar = carService.get(4L);
+        Car returnedCar = carService.get(3L);
         System.out.println(returnedCar);
         System.out.println(carService.getAll());
-        audi.setId(4L);
+        audi.setId(2L);
         carService.update(audi);
         carService.addDriverToCar(driverToInsert2, audi);
         carService.removeDriverFromCar(driverToInsert, audi);
         System.out.println(carService.getAllByDriver(driverToInsert2.getId()));
-        carService.delete(4L);
+        carService.delete(3L);
     }
 }
