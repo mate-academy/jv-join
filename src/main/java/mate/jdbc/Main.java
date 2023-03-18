@@ -17,18 +17,18 @@ public class Main {
 
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        Manufacturer manufacturerUsa = new Manufacturer(null,"Ford", "USA");
-        Manufacturer manufacturerJapan = new Manufacturer(null,"Toyota", "Japan");
-        Manufacturer manufacturerSweden = new Manufacturer(null,"Volvo", "Sweden");
+        Manufacturer manufacturerUsa = new Manufacturer("Ford", "USA");
+        Manufacturer manufacturerJapan = new Manufacturer("Toyota", "Japan");
+        Manufacturer manufacturerSweden = new Manufacturer("Volvo", "Sweden");
         manufacturerService.create(manufacturerUsa);
         manufacturerService.create(manufacturerJapan);
         manufacturerService.create(manufacturerSweden);
 
         DriverService driverService =
                 (DriverService) injector.getInstance(DriverService.class);
-        Driver john = new Driver(null,"John","12345678");
-        Driver bob = new Driver(null,"Bob","23456789");
-        Driver alex = new Driver(null,"Alex","34567890");
+        Driver john = new Driver("John", "12345678");
+        Driver bob = new Driver("Bob", "23456789");
+        Driver alex = new Driver("Alex", "34567890");
         driverService.create(john);
         driverService.create(bob);
         driverService.create(alex);
@@ -39,9 +39,9 @@ public class Main {
         driverList.add(alex);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car focus = new Car(null,"Focus", manufacturerUsa,driverList);
-        Car s60 = new Car(null,"S60",manufacturerSweden,driverList);
-        Car corolla = new Car(null,"Corolla", manufacturerJapan, driverList);
+        Car focus = new Car("Focus", manufacturerUsa,driverList);
+        Car s60 = new Car("S60", manufacturerSweden,driverList);
+        Car corolla = new Car("Corolla", manufacturerJapan, driverList);
         carService.create(focus);
         carService.create(s60);
         carService.create(corolla);

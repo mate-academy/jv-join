@@ -122,8 +122,7 @@ public class CarDaoImpl implements CarDao {
     private void addDrivers(List<Driver> driverList, Long carId) {
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query,
-                         Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             for (Driver driver : driverList) {
                 statement.setLong(FIRST_INDEX, driver.getId());
                 statement.setLong(SECOND_INDEX, carId);
@@ -137,8 +136,7 @@ public class CarDaoImpl implements CarDao {
     private void removeDriverFromCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query,
-                         Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(FIRST_INDEX, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
