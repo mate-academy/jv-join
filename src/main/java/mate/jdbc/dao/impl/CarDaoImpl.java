@@ -35,6 +35,7 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(FIRST_INDEX, Long.class));
             }
+            addDrivers(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create a new car:" + car, e);
@@ -75,7 +76,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE cars SET model = ?, manufacturer_id = ?  WHERE id = ?";
+        String query = "UPDATE cars SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
@@ -84,7 +86,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(THIRD_INDEX, car.getId());
             statement.executeUpdate();
             removeDriverFromCar(car);
-            addDrivers(car.getDriverList(), car.getId());
+            addDrivers(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
@@ -119,17 +121,17 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addDrivers(List<Driver> driverList, Long carId) {
+    private void addDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
-            for (Driver driver : driverList) {
+            for (Driver driver : car.getDriverList()) {
                 statement.setLong(FIRST_INDEX, driver.getId());
-                statement.setLong(SECOND_INDEX, carId);
+                statement.setLong(SECOND_INDEX, driver.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't add drivers: " + carId, e);
+            throw new DataProcessingException("Can't add drivers to: " + car, e);
         }
     }
 
