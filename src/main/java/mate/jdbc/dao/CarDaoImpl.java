@@ -35,8 +35,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        insertAllDrivers(car);
         car.setDrivers(getDriversForCar(car.getId()));
-        insertDriversToCarDriversDB(car, drivers);
         return car;
     }
 
@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
         for (Car car : cars) {
-            insertDriversToCarDriversDB(car, getDriversForCar(car.getId()));
+            insertAllDrivers(car);
             car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
@@ -119,8 +119,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void updateRelations(Car car) {
-        String query = "UPDATE cars_drivers "
-                + "SET car_id = ?, driver_id = ?";
+        String query = "INSERT INTO cars_drivers "
+                + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -146,6 +146,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
+    @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getRequest = "SELECT c.id, c.manufacturer_id, c.model, m.name, m.country "
                 + "FROM cars c "
@@ -166,10 +167,29 @@ public class CarDaoImpl implements CarDao {
                     + driverId, e);
         }
         for (Car car : cars) {
-            List<Driver> drivers = getDriversForCar(car.getId());
-            car.setDrivers(drivers);
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
+    }
+
+    private void insertAllDrivers(Car car) {
+        Long carId = car.getId();
+        List<Driver> drivers = car.getDrivers();
+        if (drivers.size() == 0) {
+            return;
+        }
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement statement =
+                     connection.prepareStatement(query)) {
+            statement.setLong(1, carId);
+            for (Driver driver : drivers) {
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't insert drivers " + drivers, e);
+        }
     }
 
     private List<Driver> getDriversForCar(Long carId) {
@@ -208,20 +228,5 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car(model, manufacturer);
         car.setId(id);
         return car;
-    }
-
-    private void insertDriversToCarDriversDB(Car car, List<Driver> drivers) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
-            for (Driver driver : drivers) {
-                statement.setLong(1, car.getId());
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("cant insert nothing to cars_drivers table", e);
-        }
     }
 }
