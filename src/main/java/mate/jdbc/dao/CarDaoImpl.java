@@ -63,19 +63,17 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT * FROM cars WHERE is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
-        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                car = getCar(resultSet);
-                car.setDriverList(getDriversForCar(car.getId()));
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of car from driversDB.", e);
         }
+        cars.forEach(c -> c.setDriverList(getDriversForCar(c.getId())));
+        return cars;
     }
 
     @Override
@@ -84,21 +82,20 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE cd.driver_id = ?";
-        Car car = null;
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                car = getCar(resultSet);
-                car.setDriverList(getDriversForCar(car.getId()));
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
-            return cars;
+
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't cars by driver id " + driverId, e);
         }
+        cars.forEach(c -> c.setDriverList(getDriversForCar(c.getId())));
+        return cars;
     }
 
     @Override
