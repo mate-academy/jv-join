@@ -40,9 +40,7 @@ public class Main {
 
         // get all car
         List<Car> newAll = carService.getAll();
-        for (Car car: newAll) {
-            System.out.println(car);
-        }
+        newAll.stream().forEach(System.out::println);
 
         // add new driver to car
         Car car = carService.get(6L);
@@ -57,8 +55,7 @@ public class Main {
         //get all cars by driver
         System.out.println(System.lineSeparator());
         List<Car> allCars = carService.getAllByDriver(newdriver.getId());
-        for (Car cars: allCars) {
-            System.out.println(cars);
-        }
+        allCars.stream().forEach(System.out::println);
+
     }
 }
