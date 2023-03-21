@@ -20,7 +20,6 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?)";
-        List<Driver> drivers = car.getDrivers();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement creationStatement = connection.prepareStatement(query,
                         Statement.RETURN_GENERATED_KEYS)) {
@@ -36,7 +35,6 @@ public class CarDaoImpl implements CarDao {
                     + car + ". ", e);
         }
         insertAllDrivers(car);
-        car.setDrivers(getDriversForCar(car.getId()));
         return car;
     }
 

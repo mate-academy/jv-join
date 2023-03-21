@@ -13,7 +13,6 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     public static void main(String[] args) {
-        // test your code here
         Injector injector = Injector.getInstance("mate.jdbc");
         CarDao carDao = (CarDao) injector.getInstance(CarDao.class);
         final CarService carService = (CarService) injector.getInstance(CarService.class);
