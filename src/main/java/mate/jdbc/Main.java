@@ -15,11 +15,11 @@ public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        DriverServiceImpl driverService = (DriverServiceImpl)
+        DriverService driverService = (DriverService)
                 injector.getInstance(DriverService.class);
-        ManufacturerServiceImpl manufacturerService = (ManufacturerServiceImpl)
+        ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
-        CarServiceImpl carService = (CarServiceImpl)
+        CarService carService = (CarService)
                 injector.getInstance(CarService.class);
         // create new Car
         List<Driver> drivers = List.of(driverService.get(1L),
