@@ -5,11 +5,8 @@ import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.CarServiceImpl;
 import mate.jdbc.service.DriverService;
-import mate.jdbc.service.DriverServiceImpl;
 import mate.jdbc.service.ManufacturerService;
-import mate.jdbc.service.ManufacturerServiceImpl;
 
 public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
