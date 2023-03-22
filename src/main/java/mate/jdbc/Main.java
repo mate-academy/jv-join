@@ -12,11 +12,10 @@ import mate.jdbc.service.CarService;
 
 public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
+    private static CarService carService
+            = (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
-        CarService carService
-                = (CarService) injector.getInstance(CarService.class);
-
         // CarService create(Car car) test
         ManufacturerDao manufacturerDao = new ManufacturerDaoImpl();
         Car car = new Car("Cybertruck", manufacturerDao.get(2L).get());
