@@ -5,7 +5,6 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
-@Service
 public interface CarService {
     Car create(Car car);
 
