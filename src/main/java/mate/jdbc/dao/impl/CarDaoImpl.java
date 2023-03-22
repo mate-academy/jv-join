@@ -76,10 +76,9 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Car car = parseCarFromResultSet(resultSet);
-                car.setDrivers(getListOfDrivers(resultSet.getLong("id")));
-                cars.add(car);
+                cars.add(parseCarFromResultSet(resultSet));
             }
+            cars.forEach(c -> c.setDrivers(getListOfDrivers(c.getId())));
             return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars "
