@@ -18,3 +18,19 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+
+create table `cars`(
+                       `id` bigint not null auto_increment,
+                       `manufacturer_id` bigint not null,
+                       `model` varchar(255) not null,
+                       `is_deleted` tinyint not null default 0,
+                       primary key (`id`),
+                       constraint `manufacturer_cars_fk` foreign key (`manufacturer_id`) references `manufacturers` (`id`)
+);
+
+create table `cars_drivers`(
+                               `driver_id` bigint not null,
+                               `car_id` bigint not null,
+                               constraint `cars_drivers_driver_fk` foreign key (`driver_id`) references `drivers` (`id`),
+                               constraint `cars_drivers_car_fk` foreign key (`car_id`) references `cars` (`id`)
+);

@@ -1,4 +1,4 @@
-package mate.jdbc.dao;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.dao.DriverDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Driver;
@@ -37,7 +38,7 @@ public class DriverDaoImpl implements DriverDao {
 
     @Override
     public Optional<Driver> get(Long id) {
-        String query = "SELECT id, name, license_number "
+        String query = "SELECT id, name, licenseNumber "
                 + "FROM drivers "
                 + "WHERE id = ? AND is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -104,7 +105,7 @@ public class DriverDaoImpl implements DriverDao {
     private Driver getDriver(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
-        String licenseNumber = resultSet.getString("license_number");
+        String licenseNumber = resultSet.getString("licenseNumber");
         return new Driver(id, name, licenseNumber);
     }
 }
