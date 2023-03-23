@@ -52,10 +52,10 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("id", Long.class));
         car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
+        Manufacturer manufacturer = new Manufacturer(
+                resultSet.getObject("manufacturer_id", Long.class),
+                resultSet.getString("name"),
+                resultSet.getString("country"));
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -80,8 +80,17 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String updateRequest = "UPDATE model, manufacturer_id FROM "
-        return null;
+        String updateRequest = "UPDATE cars SET model = ?, manufacturer_id = ? WHERE id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement updateCarStatement = connection.prepareStatement(updateRequest)) {
+            updateCarStatement.setString(1, car.getModel());
+            updateCarStatement.setLong(2, car.getManufacturer().getId());
+            updateCarStatement.setLong(3, car.getId());
+            updateCarStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Couldn't update the car in the database " + car, e);
+        }
+        return car;
     }
 
     @Override
