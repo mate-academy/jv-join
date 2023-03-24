@@ -177,12 +177,11 @@ public class CarDaoImpl implements CarDao {
         return new Driver(
                 resultSet.getObject("id", Long.class),
                 resultSet.getString("name"),
-                resultSet.getString("license_number")
-        );
+                resultSet.getString("license_number"));
     }
 
     private void refreshDrivers(Car car) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionModule.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
@@ -208,7 +207,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void setDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionModule.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
