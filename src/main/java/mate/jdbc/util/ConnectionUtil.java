@@ -1,4 +1,4 @@
-package mate.jdbc.module;
+package mate.jdbc.util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 import mate.jdbc.exception.DataProcessingException;
 
-public class ConnectionModule {
+public class ConnectionUtil {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String USER_LOGIN = "user";
     private static final String USER_VALUE = "root";
