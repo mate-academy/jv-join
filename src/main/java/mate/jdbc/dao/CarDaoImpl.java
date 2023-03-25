@@ -55,8 +55,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
-        assert car != null;
-        car.setDrivers(getDriversForCar(id));
+        if (car != null) {
+            car.setDrivers(getDriversForCar(id));
+        }
         return Optional.ofNullable(car);
     }
 
@@ -91,11 +92,13 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
+        removeDriver(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -179,5 +182,16 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("license_number"));
         return driver;
+    }
+
+    private void removeDriver(Long carId) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, carId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't remove car's driver with car id = " + carId);
+        }
     }
 }
