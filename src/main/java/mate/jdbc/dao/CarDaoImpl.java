@@ -34,25 +34,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert car: " + car + " to db", e);
         }
-        insertDriver(car);
+        insertDrivers(car);
         return car;
-    }
-
-    private void insertDriver(Car car) {
-        String insertDriverRequest = "INSERT INTO cars_drivers(car_id, driver_id) VALUES (?, ?);";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement insertStatement = connection
-                        .prepareStatement(insertDriverRequest);) {
-            insertStatement.setLong(1, car.getId());
-            List<Driver> drivers = car.getDrivers();
-            for (Driver driver : drivers) {
-                Long idDriver = driver.getId();
-                insertStatement.setLong(2, idDriver);
-                insertStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't insert driver to car", e);
-        }
     }
 
     @Override
@@ -95,9 +78,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from db", e);
         }
         for (Car car : cars) {
-            if (cars != null) {
-                car.setDrivers(getDriversByCarId(car.getId()));
-            }
+            car.setDrivers(getDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -116,8 +97,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
         }
-        deleteRelations(car);
-        addRelations(car);
+        deleteCarFromDb(car);
+        insertCarsDriversRelations(car);
         return car;
     }
 
@@ -153,9 +134,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars by driver id: " + driverId, e);
         }
         for (Car car : cars) {
-            if (car != null) {
-                car.setDrivers(getDriversByCarId(car.getId()));
-            }
+            car.setDrivers(getDriversByCarId(car.getId()));
         }
         return cars;
     }
@@ -194,7 +173,7 @@ public class CarDaoImpl implements CarDao {
         return drivers;
     }
 
-    private void deleteRelations(Car car) {
+    private void deleteCarFromDb(Car car) {
         String deleteRequest = "DELETE FROM cars_drivers WHERE cars_drivers.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getDeleteStatement = connection
@@ -206,7 +185,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void addRelations(Car car) {
+    private void insertCarsDriversRelations(Car car) {
         String addRequest = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAddStatement = connection
@@ -218,6 +197,23 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't add relations for car: " + car, e);
+        }
+    }
+
+    private void insertDrivers(Car car) {
+        String insertDriverRequest = "INSERT INTO cars_drivers(car_id, driver_id) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement insertStatement = connection
+                        .prepareStatement(insertDriverRequest);) {
+            insertStatement.setLong(1, car.getId());
+            List<Driver> drivers = car.getDrivers();
+            for (Driver driver : drivers) {
+                Long idDriver = driver.getId();
+                insertStatement.setLong(2, idDriver);
+                insertStatement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't insert driver to car", e);
         }
     }
 }

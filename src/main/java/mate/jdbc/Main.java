@@ -16,29 +16,27 @@ public class Main {
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
 
-        Manufacturer manufacturer1 = new Manufacturer("Toyota", "Japan");
-        manufacturer1.setId(1L);
-        manufacturerService.create(manufacturer1);
+        Manufacturer nissan = new Manufacturer("Nissan", "Japan");
+        manufacturerService.create(nissan);
 
         DriverService driverService = (DriverService)
                 injector.getInstance(DriverService.class);
 
-        Driver driverAli = new Driver(1L, "Ali", "6677");
-        Driver driverBibi = new Driver(2L, "Bibi", "5454");
-        Driver driverCini = new Driver(3L,"Cini", "7777");
-        driverService.create(driverAli);
-        driverService.create(driverBibi);
-        driverService.create(driverCini);
+        Driver driverZhi = new Driver("Zhi", "9697");
+        Driver driverXhi = new Driver("Xhi", "9494");
+        Driver driverChi = new Driver("Chi", "9797");
+        driverService.create(driverZhi);
+        driverService.create(driverXhi);
+        driverService.create(driverChi);
 
         CarService carService = (CarService)
                 injector.getInstance(CarService.class);
-        Car car = new Car("Camry", manufacturer1, List.of(driverAli, driverBibi, driverCini));
-        car.setId(7L);
+        Car car = new Car("Silvia", nissan, List.of(driverZhi, driverXhi, driverChi));
         carService.create(car);
         System.out.println(carService.get(6L));
         carService.getAll().forEach(System.out::println);
         System.out.println(carService.delete(6L));
-        car.setModel("NEW CAMRY 3.5");
+        car.setModel("Maxima");
         carService.update(car);
         carService.getAll().forEach(System.out::println);
 
