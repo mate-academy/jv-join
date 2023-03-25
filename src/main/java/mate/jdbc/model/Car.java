@@ -1,5 +1,6 @@
 package mate.jdbc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,16 @@ public class Car {
     private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
+
+    public Car() {
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = new ArrayList<>();
+    }
 
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
