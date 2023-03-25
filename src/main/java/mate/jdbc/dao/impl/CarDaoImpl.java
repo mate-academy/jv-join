@@ -1,4 +1,4 @@
-package mate.jdbc.dao;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -115,7 +116,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
         }
-        deleteDriversFromCarsDrivers(id);
+        if (executeUpdate) {
+            deleteDriversFromCarsDrivers(id);
+        }
         return executeUpdate;
 
     }
@@ -123,9 +126,9 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String query = "SELECT DISTINCT c.id, c.model, mn.id, mn.name, mn.country "
-                + "FROM taxi_service_db.cars c "
-                + "JOIN taxi_service_db.cars_drivers cd ON cd.car_id = c.id "
-                + "JOIN taxi_service_db.manufacturers mn ON mn.id = c.manufacturer_id "
+                + "FROM cars c "
+                + "JOIN cars_drivers cd ON cd.car_id = c.id "
+                + "JOIN manufacturers mn ON mn.id = c.manufacturer_id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE AND cd.is_deleted = FALSE "
                 + "ORDER BY c.id ASC;";
         List<Car> cars = new ArrayList<>();
@@ -137,7 +140,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars from carsDB, "
+                    + "by driverId: " + driverId, e);
         }
         if (!cars.isEmpty()) {
             for (Car car: cars) {
@@ -161,8 +165,7 @@ public class CarDaoImpl implements CarDao {
     private void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             for (Driver driver: car.getDrivers()) {
                 statement.setLong(2, driver.getId());

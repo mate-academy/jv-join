@@ -8,14 +8,17 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
+import mate.jdbc.service.impl.CarServiceImpl;
+import mate.jdbc.service.impl.DriverServiceImpl;
+import mate.jdbc.service.impl.ManufacturerServiceImpl;
 
 public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        DriverService driverService = (DriverService)
+        DriverServiceImpl driverService = (DriverServiceImpl)
                 injector.getInstance(DriverService.class);
-        ManufacturerService manufacturerService = (ManufacturerService)
+        ManufacturerServiceImpl manufacturerService = (ManufacturerServiceImpl)
                 injector.getInstance(ManufacturerService.class);
         Driver firstDriver = driverService.create(new Driver("Pavlo", "1235789"));
         Driver secondDriver = driverService.create(new Driver("Ivan", "78675643"));
@@ -25,7 +28,7 @@ public class Main {
         Manufacturer manufacturer = manufacturerService.create(
                 new Manufacturer("SKODA", "Czech Republic"));
         Car newCar = new Car("m5", manufacturerService.get(manufacturer.getId()), drivers);
-        CarService carService = (CarService)
+        CarServiceImpl carService = (CarServiceImpl)
                 injector.getInstance(CarService.class);
 
         // create new Car
