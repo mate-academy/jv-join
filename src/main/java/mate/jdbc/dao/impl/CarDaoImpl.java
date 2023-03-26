@@ -21,7 +21,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     private static final String CREATE_CAR_QUERY = "INSERT INTO taxi_service.cars"
             + " (model, manufacturer_id) VALUES (?, ?)";
     private static final String GET_CAR_BY_ID_QUERY = "SELECT id, model,"
@@ -112,7 +111,6 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(SOFT_DELETE_CAR_QUERY)) {
             statement.setLong(1, id);
