@@ -32,7 +32,6 @@ public class Main {
     private static final String FIRST_CAR_MODEL = "FirstModel";
     private static final String SECOND_CAR_MODEL = "SecondModel";
     private static final String THIRD_CAR_MODEL = "ThirdModel";
-
     private static final Long DELETION_INDEX = 5L;
 
     static {
