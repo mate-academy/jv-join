@@ -18,3 +18,19 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+CREATE TABLE `cars` (
+                                  `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
+                                  `model` VARCHAR(225) NOT NULL,
+                                  `is_deleted` TINYINT NOT NULL DEFAULT 0,
+								  `manufacturer_id`  BIGINT(11) NOT NULL,
+                                  PRIMARY KEY (`id`),
+                                  constraint `cars_manufacturers_fk`
+                                  foreign key(manufacturer_id)
+                                  references `taxi_service`.`manufacturers`(id)
+                                  ON DELETE NO ACTION
+                                  ON UPDATE NO ACTION);
+CREATE TABLE `cars_drivers`(
+          `driver_id` BIGINT NOT NULL,
+          `car_id` BIGINT NOT NULL,
+          CONSTRAINT `driver_id_fk` FOREIGN KEY (driver_id) REFERENCES `drivers` (id),
+             CONSTRAINT `driver_car_id_fk` FOREIGN KEY (car_id) REFERENCES `cars` (id));
