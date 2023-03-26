@@ -22,10 +22,10 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement createCar =
                      connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            createCar.executeUpdate();
 
-            createCar.setString(1,"model");
+            createCar.setString(1,car.getModel());
             createCar.setLong(2, car.getManufacturer().getId());
+            createCar.executeUpdate();
             ResultSet generatedKeys = createCar.getGeneratedKeys();
             if (generatedKeys.next()) {
                 Long id = generatedKeys.getObject(1, Long.class);
@@ -35,12 +35,27 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
+        insertDrivers(car);
+        return car;
+    }
+
+    private void insertDrivers(Car car) {
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement addDriver = connection.prepareStatement(query)) {
+            addDriver.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                addDriver.setLong(2, driver.getId());
+                addDriver.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name " +
+        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, m.country " +
                 "FROM cars c " +
                 "JOIN manufacturers m " +
                 "ON c.manufacturer_id = m.id " +
@@ -91,7 +106,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         car.setManufacturer(manufacturer);
-        car.setId(resultSet.getObject("id", Long.class));
+        car.setId(resultSet.getObject("car_id", Long.class));
         return car;
     }
 
