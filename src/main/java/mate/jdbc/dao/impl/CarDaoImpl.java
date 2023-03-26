@@ -133,7 +133,10 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Car car = get(resultSet.getLong("car_id")).get();
+                Long carId = resultSet.getLong("car_id");
+                Car car = get(carId)
+                        .orElseThrow(() -> new DataProcessingException("Couldn't find car"
+                                + " with such id: " + carId));
                 cars.add(car);
             }
             return cars;
@@ -193,7 +196,8 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getLong("car_id"));
         car.setModel(resultSet.getString("model"));
-        car.setManufacturer(manufacturerDao.get(resultSet.getLong("manufacturer_id")).get());
+        car.setManufacturer(manufacturerDao.get(resultSet.getLong("manufacturer_id"))
+                .orElseThrow(() -> new DataProcessingException("Couldn't parse the car")));
         return car;
     }
 }
