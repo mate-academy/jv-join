@@ -36,8 +36,8 @@ public class Main {
         List<Manufacturer> manufacturers = testManufacturerService();
         List<Driver> drivers = testDriverService();
         testCarService(manufacturers, drivers);
-        // USE THIS ONLY FOR TEST
-        clearAll();
+        // UNCOMMENT METHOD BELOW WITH CAUTION
+        //clearAll();
     }
 
     private static void testCarService(List<Manufacturer> manufacturers, List<Driver> drivers) {

@@ -16,11 +16,17 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
+        if (car == null) {
+            throw new DataProcessingException("Can't create car from null");
+        }
         return carDao.create(car);
     }
 
     @Override
     public Car get(Long id) {
+        if (id == null) {
+            throw new DataProcessingException("Can't get car from null");
+        }
         return carDao.get(id);
     }
 
@@ -31,6 +37,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
+        if (driverId == null) {
+            throw new DataProcessingException("Can't get cars for driver null");
+        }
         return carDao.getAllByDriver(driverId);
     }
 
@@ -44,6 +53,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public boolean delete(Long id) {
+        if (id == null) {
+            throw new DataProcessingException("Can't delete car null");
+        }
         return carDao.delete(id);
     }
 
