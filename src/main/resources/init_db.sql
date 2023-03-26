@@ -20,10 +20,10 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
 CREATE TABLE `cars` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `model` varchar(225) DEFAULT NULL,
-  `is_deleted` tinyint DEFAULT '0',
-  `manufacturer_id` bigint DEFAULT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `model` VARCHAR(225) DEFAULT NULL,
+  `is_deleted` TINYINT DEFAULT '0',
+  `manufacturer_id` BIGINT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `manufacturer_id_idx` (`manufacturer_id`),
   CONSTRAINT `manufacturer_id` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`));

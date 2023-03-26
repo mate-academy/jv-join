@@ -53,7 +53,7 @@ public class CarDaoImpl implements CarDao {
                 + " name, country, model"
                 + " FROM cars c"
                 + " JOIN manufacturers m ON m.id = c.manufacturer_id "
-                + "WHERE c.id = ? AND c.is_deleted = FALSE; ";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
                 + " name, country, model"
                 + " FROM cars c"
                 + " JOIN manufacturers m ON m.id = c.manufacturer_id "
-                + "WHERE c.is_deleted = FALSE; ";
+                + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -105,7 +105,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update this car - " + car, e);
+            throw new DataProcessingException("Can't update this car: " + car, e);
         }
         deleteDrivers(car);
         insertDrivers(car);
@@ -126,7 +126,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT car_id FROM cars_drivers WHERE driver_id = ?";
+        String query = "SELECT car_id FROM cars_drivers WHERE driver_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, driverId);
@@ -170,7 +170,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void setDriversList(Car car) {
-        String query = "SELECT driver_id FROM cars_drivers WHERE car_id = ?";
+        String query = "SELECT driver_id FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, car.getId());
