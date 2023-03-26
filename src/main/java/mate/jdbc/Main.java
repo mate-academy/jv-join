@@ -61,8 +61,8 @@ public class Main {
 
         System.out.println("update car");
         System.out.println(carService.update(new Car(INDEX_1,NEW_MODEL,
-                manufacturerService.get(2L))));
-        System.out.println(carService.get(1L));
+                manufacturerService.get(INDEX_2))));
+        System.out.println(carService.get(INDEX_1));
 
         System.out.println("delete car");
         carService.delete(INDEX_1);
