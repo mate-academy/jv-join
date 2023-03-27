@@ -1,0 +1,48 @@
+// ManufacturerService methods test
+        Manufacturer bmw = new Manufacturer();
+        bmw.setName("BMW");
+        bmw.setCountry("Germany");
+        Manufacturer chevrolet = new Manufacturer();
+        chevrolet.setName("Fiat");
+        chevrolet.setCountry("Italia");
+        System.out.println(manufacturerService.create(bmw));
+        System.out.println(manufacturerService.create(chevrolet));
+        Manufacturer forDelete = new Manufacturer();
+        chevrolet.setName("Unknown");
+        chevrolet.setCountry("Unknown");
+        manufacturerService.create(forDelete);
+
+        chevrolet.setName("Chevrolet");
+        chevrolet.setCountry("USA");
+        System.out.println(manufacturerService.update(chevrolet));
+
+        manufacturerService.delete(forDelete.getId());
+        System.out.println(manufacturerService.getAll());
+
+        // DriverService methods test
+        Driver mike = new Driver();
+        mike.setName("Mike");
+        mike.setLicenseNumber("92837465");
+        driverService.create(mike);
+
+        Driver marcus = new Driver();
+        marcus.setName("Mario");
+        marcus.setLicenseNumber("12321290");
+        driverService.create(marcus);
+
+        Driver alex = new Driver();
+        alex.setName("Alex");
+        alex.setLicenseNumber("32323243");
+        driverService.create(alex);
+
+        List<Driver> drivers = driverService.getAll();
+        drivers.forEach(System.out::println);
+
+        System.out.println(driverService.get(mike.getId()));
+
+        mike.setName("Marcus");
+        mike.setLicenseNumber("11111111");
+        System.out.println(driverService.update(mike));
+
+        driverService.delete(mike.getId());
+        System.out.println(driverService.getAll());
