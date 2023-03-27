@@ -9,6 +9,8 @@ public interface ManufacturerDao {
 
     Optional<Manufacturer> get(Long id);
 
+    Optional<Manufacturer> get(String name);
+
     List<Manufacturer> getAll();
 
     Manufacturer update(Manufacturer manufacturer);

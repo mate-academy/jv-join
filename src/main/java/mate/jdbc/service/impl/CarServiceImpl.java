@@ -15,7 +15,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car create(Car car) {
-        return carDao.create(car);
+        String query = "SELECT * FROM cars";
+        return new Car(null, null);
     }
 
     @Override
