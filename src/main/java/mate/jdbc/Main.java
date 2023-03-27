@@ -23,5 +23,7 @@ public class Main {
         bmw.setManufacturer(bmwManufacturer);
 //        carService.create(bmw);
         System.out.println(carService.get(4L));
+        System.out.println(carService.getAll());
+        System.out.println(carService.getAllByDriver(5L));
     }
 }

@@ -59,7 +59,7 @@ public class CarDaoImpl implements CarDao {
                 "FROM cars c " +
                 "JOIN manufacturers m " +
                 "ON c.manufacturer_id = m.id " +
-                "WHERE c.id = ?;";
+                "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
              PreparedStatement getCar = connection.prepareStatement(query)) {
@@ -80,7 +80,22 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        return null;
+        List<Car> allCars = new ArrayList<>();
+        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, m.country " +
+                "FROM cars c " +
+                "JOIN manufacturers m " +
+                "ON c.manufacturer_id = m.id " +
+                "WHERE c.is_deleted = FALSE;";
+        try (Connection connection = ConnectionUtil.getConnection();
+        PreparedStatement getAllCars = connection.prepareStatement(query)) {
+            ResultSet resultSet = getAllCars.executeQuery();
+            while (resultSet.next()) {
+                allCars.add(parseCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return allCars;
     }
 
     @Override
@@ -90,12 +105,37 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        return false;
+        String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+        PreparedStatement deleteCar = connection.prepareStatement(query)) {
+            deleteCar.setLong(1, id);
+            return deleteCar.executeUpdate() != 0;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        List<Car> allCars = new ArrayList<>();
+        String query = "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, m.country " +
+                "FROM cars c " +
+                "JOIN manufacturers m " +
+                "ON c.manufacturer_id = m.id " +
+                "JOIN cars_drivers cd " +
+                "ON c.id = cd.car_id " +
+                "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
+        try (Connection connection = ConnectionUtil.getConnection();
+             PreparedStatement getAllCars = connection.prepareStatement(query)) {
+            getAllCars.setLong(1, driverId);
+            ResultSet resultSet = getAllCars.executeQuery();
+            while (resultSet.next()) {
+                allCars.add(parseCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return allCars;
     }
 
     private Car parseCar(ResultSet resultSet) throws SQLException {
