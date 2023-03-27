@@ -1,11 +1,13 @@
-package mate.jdbc.service;
+package mate.jdbc.service.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import mate.jdbc.dao.ManufacturerDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.ManufacturerService;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
@@ -14,14 +16,16 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
+        Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.create(manufacturer);
     }
 
     @Override
     public Manufacturer get(Long id) {
+        Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get manufacturer "
-                        + "by id = " + id));
+                .orElseThrow(() -> new NoSuchElementException("Can't get manufacturer by id: "
+                        + id));
     }
 
     @Override
@@ -31,11 +35,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public Manufacturer update(Manufacturer manufacturer) {
+        Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.update(manufacturer);
     }
 
     @Override
     public boolean delete(Long id) {
+        Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.delete(id);
     }
 }
