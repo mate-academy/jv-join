@@ -20,8 +20,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Can't find data "
-                + "DataBase by id: " + id));
+        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Can't find car "
+                + "from DataBase by id: " + id));
     }
 
     @Override
