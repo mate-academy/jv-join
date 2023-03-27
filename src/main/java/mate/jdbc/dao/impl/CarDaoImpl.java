@@ -41,8 +41,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         String request = "SELECT c.id, model, manufacturer_id, m.name, m.country"
-                + " FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
-                + " WHERE c.is_deleted = FALSE AND c.id = ? AND c.is_deleted = FALSE;";
+                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id"
+                + "WHERE c.is_deleted = FALSE AND c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement getCarStatement = connection.prepareStatement(request)) {
@@ -63,7 +63,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String request = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country"
-                + " FROM cars c JOIN manufacturers m "
+                + "FROM cars c JOIN manufacturers m"
                 + "ON m.id = c.manufacturer_id WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -75,17 +75,15 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
         }
-        if (!cars.isEmpty()) {
             for (Car car : cars) {
                 car.setDrivers(getDriversForCar(car.getId()));
             }
-        }
         return cars;
     }
 
     @Override
     public Car update(Car car) {
-        String request = "UPDATE cars SET model = ?, manufacturer_id = ? "
+        String request = "UPDATE cars SET model = ?, manufacturer_id = ?"
                 + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateStatement
@@ -116,8 +114,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String request = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country "
-                + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
+        String request = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country"
+                + "FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id"
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id WHERE cd.driver_id = ?;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -130,11 +128,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a cars, by driverId: " + driverId, e);
         }
-        if (!cars.isEmpty()) {
             for (Car car: cars) {
                 car.setDrivers(getDriversForCar(car.getId()));
             }
-        }
         return cars;
     }
 
@@ -159,7 +155,7 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long id) {
         String query = "SELECT d.id, d.name, d.license_number FROM drivers d"
-                + " JOIN cars_drivers cd ON d.id = cd.driver_id "
+                + "JOIN cars_drivers cd ON d.id = cd.driver_id"
                 + "WHERE cd.car_id = ? AND cd.is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
