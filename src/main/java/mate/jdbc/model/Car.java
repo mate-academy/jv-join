@@ -5,7 +5,7 @@ import java.util.List;
 public class Car {
     private Long id;
     private final String model;
-    private final Manufacturer manufacturer;
+    private Manufacturer manufacturer;
     private List<Driver> drivers;
 
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
@@ -34,6 +34,8 @@ public class Car {
     public Manufacturer getManufacturer() {
         return manufacturer;
     }
+
+    public void setManufacturer(Manufacturer manufacturer) {this.manufacturer = manufacturer;}
 
     public List<Driver> getDrivers() {
         return drivers;

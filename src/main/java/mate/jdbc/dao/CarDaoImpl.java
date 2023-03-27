@@ -30,7 +30,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                car.setId(resultSet.getObject(1, Long.class));
+                getCar(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create car. " + car, e);

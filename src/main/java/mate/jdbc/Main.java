@@ -48,13 +48,13 @@ public class Main {
         //log cars
         System.out.println(ANSI_GREEN + "First car: " + ANSI_RESET
                 + System.lineSeparator()
-                + carService.get(createdCar1.getId()).toString());
+                + carService.get(createdCar1.getId()));
         System.out.println(ANSI_GREEN + "Second car: " + ANSI_RESET
                 + System.lineSeparator()
-                + carService.get(createdCar2.getId()).toString());
+                + carService.get(createdCar2.getId()));
         System.out.println(ANSI_GREEN + "Third car: " + ANSI_RESET
                 + System.lineSeparator()
-                + carService.get(createdCar3.getId()).toString());
+                + carService.get(createdCar3.getId()));
         //update cars
         Long carToUpdate = carService.get(createdCar2.getId()).getId();
         Car updatedCar1 = new Car(carToUpdate,
@@ -71,7 +71,7 @@ public class Main {
         //log cars of second driver
         System.out.println(ANSI_GREEN + "Maria's cars: " + ANSI_RESET
                 + System.lineSeparator()
-                + carService.getAllByDriver(createdDriver2.getId()).toString());
+                + carService.getAllByDriver(createdDriver2.getId()));
         //out result
         System.out.println(ANSI_GREEN + "All cars in DB: " + ANSI_RESET);
         carService.getAll().forEach(System.out::println);
