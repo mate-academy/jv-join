@@ -16,23 +16,27 @@ public class Main {
     private static final DriverService driverService
             = (DriverService) injector.getInstance(DriverService.class);
 
+    private static final Long MANUFACTURER_ID = 58L;
+    private static final Long DRIVER_IVAN_ID = 7L;
+    private static final Long DRIVER_ALICE_ID = 6L;
+
     public static void main(String[] args) {
         Car car1 = new Car();
         car1.setModel("model_1");
-        car1.setManufacturer(manufacturerService.get(58L));
+        car1.setManufacturer(manufacturerService.get(MANUFACTURER_ID));
         carService.create(car1);
 
         Car car2 = new Car();
         car2.setModel("model_2");
-        car2.setManufacturer(manufacturerService.get(58L));
+        car2.setManufacturer(manufacturerService.get(MANUFACTURER_ID));
         carService.create(car2);
         System.out.println("get car1 by id");
         System.out.println(carService.get(car1.getId()));
         System.out.println("get all cars");
         carService.getAll().forEach(System.out::println);
 
-        Driver driverIvan = driverService.get(7L);
-        Driver driverAlice = driverService.get(6L);
+        Driver driverIvan = driverService.get(DRIVER_IVAN_ID);
+        Driver driverAlice = driverService.get(DRIVER_ALICE_ID);
         carService.addDriverToCar(driverIvan, car1);
         carService.addDriverToCar(driverAlice, car1);
         System.out.println("get the car after add driver");
