@@ -21,7 +21,6 @@ public class CarDaoImpl implements CarDao {
     private static final int PARAMETER_INDEX_1 = 1;
     private static final int PARAMETER_INDEX_2 = 2;
     private static final int PARAMETER_INDEX_3 = 3;
-    private static final int COLUMN_INDEX_1 = 1;
     private static final String ID_COLUMN = "id";
     private static final String NAME_COLUMN = "name";
     private static final String LICENSE_NUMBER_COLUMN = "license_number";
@@ -39,7 +38,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                car.setId(resultSet.getObject(COLUMN_INDEX_1, Long.class));
+                car.setId(resultSet.getObject(PARAMETER_INDEX_1, Long.class));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
@@ -106,7 +105,7 @@ public class CarDaoImpl implements CarDao {
                 allCars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get cars by id " + driverId, e);
+            throw new DataProcessingException("Can't get cars by driver id " + driverId, e);
         }
         allCars.forEach(c -> c.setDrivers(getDriversById(c.getId())));
         return allCars;
@@ -152,7 +151,7 @@ public class CarDaoImpl implements CarDao {
             deleteStatement.setLong(PARAMETER_INDEX_1, carId);
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete relation by carId " + carId, e);
+            throw new DataProcessingException("Can't delete driver from car with id " + carId, e);
         }
     }
 
@@ -170,7 +169,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get driver by id " + carId, e);
+            throw new DataProcessingException("Can't get driver by car id " + carId, e);
         }
     }
 
