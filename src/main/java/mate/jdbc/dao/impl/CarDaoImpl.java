@@ -36,7 +36,11 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't execute statement "
                     + "to create car " + car, e);
         }
-        insertCarAndDriver(car);
+        if (car.getDrivers() != null) {
+            insertCarAndDriver(car);
+        } else {
+            car.setDrivers(new ArrayList<>());
+        }
         return car;
     }
 
