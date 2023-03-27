@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -41,9 +42,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("The id cannot be null. " + id, new SQLException());
-        }
+        Objects.requireNonNull(id, "The id cannot be null. " + id);
         String query = "SELECT cars.id, model, "
                 + "manufacturers.id AS manufacturer_id, name, country "
                 + "FROM cars "
@@ -102,15 +101,14 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update a driver "
                     + car, e);
         }
-        updateDriversForCar(car);
+        deleteDriversFromCar(car);
+        insertDrivers(car);
         return car;
     }
 
     @Override
     public boolean delete(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("The id cannot be null. " + id, new SQLException());
-        }
+        Objects.requireNonNull(id, "The id cannot be null. " + id);
         String query = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
@@ -124,10 +122,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        if (driverId == null) {
-            throw new DataProcessingException("The id cannot be null. "
-                    + driverId, new SQLException());
-        }
+        Objects.requireNonNull(driverId, "The id cannot be null. " + driverId);
         String query = "SELECT * FROM cars WHERE driver_id = ? "
                 + "AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
@@ -160,7 +155,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void updateDriversForCar(Car car) {
+    private void deleteDriversFromCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -170,7 +165,6 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't delete relations a car with drivers. "
                     + car.getId(), e);
         }
-        insertDrivers(car);
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {

@@ -3,7 +3,7 @@ package mate.jdbc.model;
 import java.util.List;
 
 public class Car {
-    private long id;
+    private Long id;
     private String model;
     private Manufacturer manufacturer;
     private List<Driver> drivers;
@@ -12,6 +12,13 @@ public class Car {
     }
 
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
         this.drivers = drivers;
