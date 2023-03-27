@@ -6,17 +6,22 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
+import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.service.impl.CarServiceImpl;
 import mate.jdbc.service.impl.DriverServiceImpl;
+import mate.jdbc.service.impl.ManufacturerServiceImpl;
 
 public class Main {
-    private static Injector injector = Injector.getInstance("mate.jdbc");
-    private static DriverService driverService =
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
+    private static final DriverService driverService =
             (DriverServiceImpl) injector.getInstance(DriverService.class);
+    private static final ManufacturerService manufacturerService =
+            (ManufacturerServiceImpl) injector.getInstance(ManufacturerService.class);
     private static CarService carService = (CarServiceImpl) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
-        Car car = new Car("RenoA2",new Manufacturer(3L,"reno", "France"));
+        Manufacturer manufacturer = manufacturerService.get(3L);
+        Car car = new Car("RenoA2",manufacturer);
         System.out.println(carService.create(car));
         carService.getAll().stream()
                 .forEach(System.out::println);
