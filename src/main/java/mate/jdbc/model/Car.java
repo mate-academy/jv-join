@@ -35,7 +35,9 @@ public class Car {
         return manufacturer;
     }
 
-    public void setManufacturer(Manufacturer manufacturer) {this.manufacturer = manufacturer;}
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
+    }
 
     public List<Driver> getDrivers() {
         return drivers;
