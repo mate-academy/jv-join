@@ -21,7 +21,8 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException(""));
+                .orElseThrow(() ->
+                        new NoSuchElementException("Can't get car with that id: " + id));
     }
 
     @Override
@@ -31,7 +32,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car update(Car car) {
-        return null;
+        return carDao.update(car);
     }
 
     @Override
