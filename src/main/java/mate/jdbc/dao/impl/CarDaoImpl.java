@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -39,10 +40,10 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT * FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.id = ? AND c.is_deleted = FALSE;";
-        Car car = new Car();
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
@@ -53,8 +54,11 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
+        if (car == null) {
+            return Optional.empty();
+        }
         car.setDrivers(getDriversForCar(id));
-        return car;
+        return Optional.of(car);
     }
 
     @Override
@@ -90,7 +94,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't form a list of cars for driver id "
                     + driverId, e);
         }
-        return carIds.stream().map(id -> get(id)).collect(Collectors.toList());
+        return carIds.stream().map(id -> get(id).get()).collect(Collectors.toList());
     }
 
     @Override

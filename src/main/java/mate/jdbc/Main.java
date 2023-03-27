@@ -25,6 +25,7 @@ public class Main {
     private static final int FIRST_DRIVER = 1;
     private static final int FIRST_MANUFACTURER = 0;
     private static final int SECOND_MANUFACTURER = 1;
+    private static final String SEP = System.lineSeparator();
     private static final ManufacturerService manufacturerService =
             (ManufacturerService) injector.getInstance(ManufacturerService.class);
     private static final DriverService driverService =
@@ -41,7 +42,7 @@ public class Main {
     }
 
     private static void testCarService(List<Manufacturer> manufacturers, List<Driver> drivers) {
-        System.out.println("\nCAR TEST SERVICE \n");
+        System.out.println(SEP + "CAR TEST SERVICE" + SEP);
         Car amarok = carService.create(
                 new Car("Amarok",
                         manufacturers.get(FIRST_MANUFACTURER),
@@ -62,7 +63,7 @@ public class Main {
     }
 
     private static List<Driver> testDriverService() {
-        System.out.println("\nDRIVER TEST SERVICE \n");
+        System.out.println(SEP + "DRIVER TEST SERVICE" + SEP);
         List<Driver> drivers = new ArrayList<>();
         Driver bob = driverService.create(
                 new Driver("Bob", "NY12345678"));
@@ -86,7 +87,7 @@ public class Main {
     }
 
     private static List<Manufacturer> testManufacturerService() {
-        System.out.println("\nMANUFACTURER TEST SERVICE \n");
+        System.out.println(SEP + "MANUFACTURER TEST SERVICE" + SEP);
         List<Manufacturer> manufacturers = new ArrayList<>();
         Manufacturer volkswagen = manufacturerService.create(
                 new Manufacturer("Volkswagen", "Germany"));

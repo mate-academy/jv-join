@@ -1,6 +1,8 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Objects;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
@@ -8,6 +10,7 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
+import org.jetbrains.annotations.NotNull;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -15,19 +18,16 @@ public class CarServiceImpl implements CarService {
     private CarDao carDao;
 
     @Override
-    public Car create(Car car) {
-        if (car == null) {
-            throw new DataProcessingException("Can't create car from null");
-        }
+    public Car create(@NotNull Car car) {
+        Objects.requireNonNull(car, "car must not be null");
         return carDao.create(car);
     }
 
     @Override
-    public Car get(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("Can't get car from null");
-        }
-        return carDao.get(id);
+    public Car get(@NotNull Long id) {
+        Objects.requireNonNull(id, "id must not be null");
+        return carDao.get(id).orElseThrow(() ->
+                new NoSuchElementException("There is no car with id" + id));
     }
 
     @Override
@@ -36,37 +36,26 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllByDriver(Long driverId) {
-        if (driverId == null) {
-            throw new DataProcessingException("Can't get cars for driver null");
-        }
+    public List<Car> getAllByDriver(@NotNull Long driverId) {
         return carDao.getAllByDriver(driverId);
     }
 
     @Override
-    public Car update(Car car) {
-        if (car == null) {
-            throw new DataProcessingException("Can't update info when car is null");
-        }
+    public Car update(@NotNull Car car) {
+        Objects.requireNonNull(car, "car must not be null");
         return carDao.update(car);
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("Can't delete car null");
-        }
+    public boolean delete(@NotNull Long id) {
+        Objects.requireNonNull(id, "id must not be null");
         return carDao.delete(id);
     }
 
     @Override
-    public void addDriverToCar(Driver driver, Car car) {
-        if (driver == null) {
-            throw new DataProcessingException("Can't add driver with null value to the car " + car);
-        }
-        if (car == null) {
-            throw new DataProcessingException("Can't add driver to the car " + car);
-        }
+    public void addDriverToCar(@NotNull Driver driver, @NotNull Car car) {
+        Objects.requireNonNull(car, "car must not be null");
+        Objects.requireNonNull(driver, "driver must not be null");
         List<Driver> carDrivers = car.getDrivers();
         if (carDrivers.contains(driver)) {
             throw new DataProcessingException("Driver " + driver
@@ -77,13 +66,9 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-        if (driver == null) {
-            throw new DataProcessingException("Can't remove driver with null value, car = " + car);
-        }
-        if (car == null) {
-            throw new DataProcessingException("Can't remove driver from the car " + car);
-        }
+    public void removeDriverFromCar(@NotNull Driver driver, @NotNull Car car) {
+        Objects.requireNonNull(car, "car must not be null");
+        Objects.requireNonNull(driver, "driver must not be null");
         List<Driver> carDrivers = car.getDrivers();
         if (!carDrivers.contains(driver)) {
             throw new DataProcessingException("Driver " + driver

@@ -2,12 +2,13 @@ package mate.jdbc.service.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import mate.jdbc.dao.ManufacturerDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.ManufacturerService;
+import org.jetbrains.annotations.NotNull;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
@@ -15,18 +16,14 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     private ManufacturerDao manufacturerDao;
 
     @Override
-    public Manufacturer create(Manufacturer manufacturer) {
-        if (manufacturer == null) {
-            throw new DataProcessingException("Can't create manufacturer from null");
-        }
+    public Manufacturer create(@NotNull Manufacturer manufacturer) {
+        Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.create(manufacturer);
     }
 
     @Override
-    public Manufacturer get(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("Can't get manufacturer from null");
-        }
+    public Manufacturer get(@NotNull Long id) {
+        Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.get(id)
                 .orElseThrow(() -> new NoSuchElementException("Can't get manufacturer by id: "
                         + id));
@@ -38,18 +35,14 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     }
 
     @Override
-    public Manufacturer update(Manufacturer manufacturer) {
-        if (manufacturer == null) {
-            throw new DataProcessingException("Can't update manufacturer from null");
-        }
+    public Manufacturer update(@NotNull Manufacturer manufacturer) {
+        Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.update(manufacturer);
     }
 
     @Override
-    public boolean delete(Long id) {
-        if (id == null) {
-            throw new DataProcessingException("Can't delete manufacturer null");
-        }
+    public boolean delete(@NotNull Long id) {
+        Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.delete(id);
     }
 }
