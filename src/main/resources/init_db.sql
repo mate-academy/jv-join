@@ -43,6 +43,3 @@ CREATE TABLE `taxi_service_db`.`cars_drivers` (
     REFERENCES `taxi_service_db`.`cars` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
-
-
-
