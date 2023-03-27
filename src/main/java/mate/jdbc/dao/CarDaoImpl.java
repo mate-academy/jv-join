@@ -90,11 +90,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars "
                     + "from cars table. ", e);
         }
-        for (Car car : cars) {
-            if (car != null) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
-        }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
     }
 
@@ -182,8 +178,7 @@ public class CarDaoImpl implements CarDao {
                 + " VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
-                        = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                        = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
@@ -199,8 +194,7 @@ public class CarDaoImpl implements CarDao {
                 + " WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
-                        = connection.prepareStatement(query,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                        = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {

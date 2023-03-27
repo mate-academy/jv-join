@@ -56,7 +56,7 @@ public class Main {
                 + System.lineSeparator()
                 + carService.get(createdCar3.getId()));
         //update cars
-        Long carToUpdate = carService.get(createdCar2.getId()).getId();
+        Long carToUpdate = carService.get(createdCar1.getId()).getId();
         Car updatedCar1 = new Car(carToUpdate,
                 "Supra",
                 carService.get(carToUpdate).getManufacturer(),
