@@ -155,7 +155,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDrivers(Car car) {
-        if (car.getDrivers() != null) {
+        if (car.getDrivers() != null && !car.getDrivers().isEmpty()) {
             String query = "INSERT INTO cars_drivers (car_id, driver_id) "
                     + "VALUES (?, ?);";
             try (Connection connection = ConnectionUtil.getConnection();
