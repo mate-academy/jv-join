@@ -22,7 +22,7 @@ public class Main {
                         new Driver(2L, "Bob", "654321")));
         Car carCreate = carService.create(car);
         System.out.println("Create cars: " + carCreate);
-        Car carGet = carService.get(3L);
+        Car carGet = carService.get(carCreate.getId());
         System.out.println("Get car: " + carGet);
         System.out.println("Get all cars:");
         List<Car> allCars = carService.getAll();

@@ -41,12 +41,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(COLUMN_INDEX_1, Long.class));
             }
-            recordDrivers(car);
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        recordDrivers(car);
+        return car;
     }
 
     @Override
@@ -63,13 +63,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car = getCarFromResultSet(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(getDriverById(id));
-            }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversById(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new RuntimeException("Can't get all cars from DB", e);
         }
-        allCars.forEach(c -> c.setDrivers(getDriverById(c.getId())));
+        allCars.forEach(c -> c.setDrivers(getDriversById(c.getId())));
         return allCars;
     }
 
@@ -108,7 +108,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by id " + driverId, e);
         }
-        allCars.forEach(c -> c.setDrivers(getDriverById(c.getId())));
+        allCars.forEach(c -> c.setDrivers(getDriversById(c.getId())));
         return allCars;
     }
 
@@ -156,7 +156,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getDriverById(Long carId) {
+    private List<Driver> getDriversById(Long carId) {
         String driverQuery = "SELECT id, name, license_number "
                 + "FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id WHERE cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
