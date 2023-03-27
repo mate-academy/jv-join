@@ -1,6 +1,6 @@
 package mate.jdbc;
 
-import java.util.List;
+import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -32,13 +32,16 @@ public class Main {
         //creating cars
         Car carToCreate1 = new Car("Corolla",
                 createdManufacturer,
-                List.of(createdDriver1, createdDriver2));
+                new ArrayList<>());
+        carToCreate1.getDrivers().add(createdDriver1);
+        carToCreate1.getDrivers().add(createdDriver2);
         Car carToCreate2 = new Car("Camry",
                 createdManufacturer,
-                List.of(createdDriver2));
+                new ArrayList<>());
+        carToCreate2.getDrivers().add(createdDriver1);
         Car carToCreate3 = new Car("Land Cruiser",
                 createdManufacturer,
-                List.of());
+                new ArrayList<>());
         Car createdCar1 = carService.create(carToCreate1);
         Car createdCar2 = carService.create(carToCreate2);
         Car createdCar3 = carService.create(carToCreate3);
@@ -53,7 +56,7 @@ public class Main {
                 + System.lineSeparator()
                 + carService.get(createdCar3.getId()).toString());
         //update cars
-        Long carToUpdate = 1L;
+        Long carToUpdate = carService.get(createdCar2.getId()).getId();
         Car updatedCar1 = new Car(carToUpdate,
                 "Supra",
                 carService.get(carToUpdate).getManufacturer(),
