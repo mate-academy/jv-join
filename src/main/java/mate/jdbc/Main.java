@@ -36,12 +36,12 @@ public class Main {
 
     private static void addDriverToCarThenRemovedThisDriverFromCar(Driver driver, Car car) {
         System.out.println("\naddDriverToCarThenRemovedDriverFromCar");
-        System.out.println(">>> car before adding driver " + driver);
+        System.out.println(">>> car before driver added " + driver);
         System.out.println(carService.get(car.getId()));
         carService.addDriverToCar(driver,car);
-        System.out.println("\n>>> car after added driver " + driver);
+        System.out.println("\n>>> car after driver added " + driver);
         System.out.println(carService.get(car.getId()));
-        System.out.println("\n>>> car after removing driver " + driver);
+        System.out.println("\n>>> car after driver removed " + driver);
         carService.removeDriverFromCar(driver,car);
         System.out.println(carService.get(car.getId()));
     }

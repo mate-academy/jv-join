@@ -19,7 +19,7 @@ CREATE TABLE `drivers` (
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
 
-
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `model` varchar(255) DEFAULT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `cars` (
   CONSTRAINT `fk_cars_manufacturers1` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
 
-
+DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
   `car_id` bigint NOT NULL,
   `driver_id` bigint NOT NULL,
