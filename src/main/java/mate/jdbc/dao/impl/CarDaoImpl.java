@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -101,7 +100,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car " + car, e);
         }
-        refreshDrivers(car);
+        deleteDriversFromCar(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -120,28 +120,26 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT id"
-                       + " FROM cars c"
-                       + " JOIN cars_drivers cd"
-                       + " ON c.id = cd.driver_id"
-                       + " WHERE cd.car_id = ? AND c.is_deleted = FALSE;";
-        List<Long> carIndexes = new ArrayList<>();
+        String query = "SELECT c.model, c.manufacturer_id, m.name, m.country "
+                        + "FROM cars c "
+                        + "JOIN cars_drivers cd ON cd.id = c.id "
+                        + "JOIN manufacturers m ON c.manufacturer_id = m.id"
+                        + "WHERE cd.driver_id;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carIndexes.add(resultSet.getObject("id", Long.class));
+                cars.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from DB by driver id: "
                                               + driverId, e);
         }
-        return carIndexes.stream()
-                .map(i -> get(i).orElseThrow(() ->
-                        new DataProcessingException("Can't get car from DB by id: " + i)))
-                .collect(Collectors.toList());
+        cars.forEach(x -> getDriversForCar(x.getId()));
+        return cars;
     }
 
     private Car parseCarWithManufacturer(ResultSet resultSet) throws SQLException {
@@ -185,7 +183,7 @@ public class CarDaoImpl implements CarDao {
         );
     }
 
-    private void refreshDrivers(Car car) {
+    private void deleteDriversFromCar(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -196,7 +194,6 @@ public class CarDaoImpl implements CarDao {
                     "Can't delete drivers from DB by car id: " + car.getId(), e
             );
         }
-        insertDrivers(car);
     }
 
     private void insertDrivers(Car car) {
