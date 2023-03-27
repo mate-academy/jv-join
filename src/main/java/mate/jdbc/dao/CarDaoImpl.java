@@ -68,8 +68,8 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query);
-                ResultSet resultSet = statement.executeQuery()) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
