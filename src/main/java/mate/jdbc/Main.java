@@ -10,7 +10,7 @@ import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
 public class Main {
-    private static Injector injector = Injector.getInstance("mate.jdbc");
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
     static final DriverService driverService
             = (DriverService) injector.getInstance(DriverService.class);
     static final ManufacturerService manufacturerService
@@ -69,7 +69,7 @@ public class Main {
         carService.delete(ford.getId());
         System.out.println("Delete car ford by id");
 
-        System.out.println(carService.get(zaz.getId()));
-        System.out.println("Get car zaz by id");
+        System.out.println(carService.get(jaguar.getId()));
+        System.out.println("Get car jaguar by id");
     }
 }
