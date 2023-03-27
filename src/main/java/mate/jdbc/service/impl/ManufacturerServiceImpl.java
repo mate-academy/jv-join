@@ -8,7 +8,6 @@ import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.ManufacturerService;
-import org.jetbrains.annotations.NotNull;
 
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
@@ -16,13 +15,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     private ManufacturerDao manufacturerDao;
 
     @Override
-    public Manufacturer create(@NotNull Manufacturer manufacturer) {
+    public Manufacturer create(Manufacturer manufacturer) {
         Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.create(manufacturer);
     }
 
     @Override
-    public Manufacturer get(@NotNull Long id) {
+    public Manufacturer get(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.get(id)
                 .orElseThrow(() -> new NoSuchElementException("Can't get manufacturer by id: "
@@ -35,13 +34,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     }
 
     @Override
-    public Manufacturer update(@NotNull Manufacturer manufacturer) {
+    public Manufacturer update(Manufacturer manufacturer) {
         Objects.requireNonNull(manufacturer, "manufacturer must not be null");
         return manufacturerDao.update(manufacturer);
     }
 
     @Override
-    public boolean delete(@NotNull Long id) {
+    public boolean delete(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return manufacturerDao.delete(id);
     }

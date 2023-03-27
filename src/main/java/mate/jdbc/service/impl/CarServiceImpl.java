@@ -10,7 +10,6 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
-import org.jetbrains.annotations.NotNull;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -18,13 +17,13 @@ public class CarServiceImpl implements CarService {
     private CarDao carDao;
 
     @Override
-    public Car create(@NotNull Car car) {
+    public Car create(Car car) {
         Objects.requireNonNull(car, "car must not be null");
         return carDao.create(car);
     }
 
     @Override
-    public Car get(@NotNull Long id) {
+    public Car get(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return carDao.get(id).orElseThrow(() ->
                 new NoSuchElementException("There is no car with id" + id));
@@ -36,24 +35,24 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllByDriver(@NotNull Long driverId) {
+    public List<Car> getAllByDriver(Long driverId) {
         return carDao.getAllByDriver(driverId);
     }
 
     @Override
-    public Car update(@NotNull Car car) {
+    public Car update(Car car) {
         Objects.requireNonNull(car, "car must not be null");
         return carDao.update(car);
     }
 
     @Override
-    public boolean delete(@NotNull Long id) {
+    public boolean delete(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return carDao.delete(id);
     }
 
     @Override
-    public void addDriverToCar(@NotNull Driver driver, @NotNull Car car) {
+    public void addDriverToCar(Driver driver, Car car) {
         Objects.requireNonNull(car, "car must not be null");
         Objects.requireNonNull(driver, "driver must not be null");
         List<Driver> carDrivers = car.getDrivers();
@@ -66,7 +65,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public void removeDriverFromCar(@NotNull Driver driver, @NotNull Car car) {
+    public void removeDriverFromCar(Driver driver, Car car) {
         Objects.requireNonNull(car, "car must not be null");
         Objects.requireNonNull(driver, "driver must not be null");
         List<Driver> carDrivers = car.getDrivers();

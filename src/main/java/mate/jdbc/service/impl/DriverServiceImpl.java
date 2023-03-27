@@ -8,7 +8,6 @@ import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.DriverService;
-import org.jetbrains.annotations.NotNull;
 
 @Service
 public class DriverServiceImpl implements DriverService {
@@ -16,13 +15,13 @@ public class DriverServiceImpl implements DriverService {
     private DriverDao driverDao;
 
     @Override
-    public Driver create(@NotNull Driver driver) {
+    public Driver create(Driver driver) {
         Objects.requireNonNull(driver, "driver must not be null");
         return driverDao.create(driver);
     }
 
     @Override
-    public Driver get(@NotNull Long id) {
+    public Driver get(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return driverDao.get(id)
                 .orElseThrow(() -> new NoSuchElementException("Can't get driver by id: " + id));
@@ -34,13 +33,13 @@ public class DriverServiceImpl implements DriverService {
     }
 
     @Override
-    public Driver update(@NotNull Driver driver) {
+    public Driver update(Driver driver) {
         Objects.requireNonNull(driver, "driver must not be null");
         return driverDao.update(driver);
     }
 
     @Override
-    public boolean delete(@NotNull Long id) {
+    public boolean delete(Long id) {
         Objects.requireNonNull(id, "id must not be null");
         return driverDao.delete(id);
     }
