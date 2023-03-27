@@ -1,7 +1,10 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
+import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.ManufacturerService;
@@ -19,16 +22,35 @@ public class Main {
         bmwManufacturer.setName("bmwManufacturer");
         manufacturerService.create(bmwManufacturer);
 
+        Driver driver = new Driver();
+        driver.setName("Alice");
+        driver.setLicenseNumber("123456");
+        driver.setId(5L);
+
+        List<Driver> drivers = new ArrayList<>();
+
         Car bmw = new Car();
         bmw.setModel("bmw");
         bmw.setManufacturer(bmwManufacturer);
+        bmw.setDrivers(drivers);
+        // CAR_SERVICE ADD DRIVER
+        carService.addDriverToCar(driver, bmw);
+        System.out.println(bmw);
+        // CAR_SERVICE CREATE
         carService.create(bmw);
-        System.out.println(carService.get(4L));
-        Car newBmw = carService.get(4L);
-        newBmw.setModel("X5");
-        System.out.println(carService.update(newBmw));
-        System.out.println(newBmw);
+        // CAR_SERVICE REMOVE DRIVER
+        carService.removeDriverFromCar(driver, bmw);
+        System.out.println(bmw);
+        // CAR_SERVICE GET
+        System.out.println(carService.get(bmw.getId()));
+        // CAR_SERVICE GET_ALL
         System.out.println(carService.getAll());
-        System.out.println(carService.getAllByDriver(5L));
+        // CAR_SERVICE UPDATE
+        bmw.setModel("X5");
+        System.out.println(carService.update(bmw));
+        // CAR_SERVICE GET_ALL_BY_DRIVER
+        System.out.println(carService.getAllByDriver(bmw.getId()));
+        // CAR_SERVICE DELETE
+        System.out.println(carService.delete(bmw.getId()));
     }
 }
