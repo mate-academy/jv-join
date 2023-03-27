@@ -20,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
+        String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement =
                          connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -94,7 +94,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Car update(Car car) {
         String updateCarQuery = "UPDATE cars SET manufacturer_id = ?, model = ? "
-                + "WHERE id = ? AND is_deleted = FALSE";
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement updateCarStatement =
                          connection.prepareStatement(updateCarQuery)) {
@@ -112,7 +112,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String deleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String deleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement deleteCarStatement
                          = connection.prepareStatement(deleteQuery)) {
@@ -193,7 +193,7 @@ public class CarDaoImpl implements CarDao {
 
     private void insertDriverToCar(Car car) {
         String insertDriverToCarQuery =
-                "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+                "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement insertDriverToCarStatement
                          = connection.prepareStatement(insertDriverToCarQuery)) {
@@ -208,7 +208,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void removeDriverFromCar(Long carId) {
-        String removeDriverFromCarQuery = "DELETE FROM cars_drivers WHERE car_id = ?";
+        String removeDriverFromCarQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection(); PreparedStatement
                 removeDriverFromCarStatement
                 = connection.prepareStatement(removeDriverFromCarQuery)) {
