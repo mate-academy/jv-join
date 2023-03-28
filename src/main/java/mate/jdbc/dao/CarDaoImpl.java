@@ -17,6 +17,15 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
+    private static final String CAR_ID_COLUMN = "id";
+    private static final String CAR_MODEL_COLUMN = "model";
+    private static final String CAR_MANUFACTURER_ID_COLUMN = "manufacturer_id";
+    private static final String MANUFACTURER_NAME_COLUMN = "name";
+    private static final String MANUFACTURER_COUNTRY_COLUMN = "country";
+    private static final String DRIVER_ID_COLUMN = "id";
+    private static final String DRIVER_NAME_COLUMN = "name";
+    private static final String DRIVER_LICENSE_NUMBER_COLUMN = "license_number";
+
     @Override
     public Car create(Car car) {
         String createCarRequest = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
@@ -164,12 +173,12 @@ public class CarDaoImpl implements CarDao {
 
     private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setId(resultSet.getObject("id", Long.class));
-        car.setModel(resultSet.getString("model"));
+        car.setId(resultSet.getObject(CAR_ID_COLUMN, Long.class));
+        car.setModel(resultSet.getString(CAR_MODEL_COLUMN));
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
+        manufacturer.setId(resultSet.getObject(CAR_MANUFACTURER_ID_COLUMN, Long.class));
+        manufacturer.setName(resultSet.getString(MANUFACTURER_NAME_COLUMN));
+        manufacturer.setCountry(resultSet.getString(MANUFACTURER_COUNTRY_COLUMN));
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -195,9 +204,9 @@ public class CarDaoImpl implements CarDao {
 
     private Driver getDriverFromResultSet(ResultSet resultSet) throws SQLException {
         return new Driver(
-                resultSet.getObject("id", Long.class),
-                resultSet.getString("name"),
-                resultSet.getString("license_number")
+                resultSet.getObject(DRIVER_ID_COLUMN, Long.class),
+                resultSet.getString(DRIVER_NAME_COLUMN),
+                resultSet.getString(DRIVER_LICENSE_NUMBER_COLUMN)
         );
     }
 
