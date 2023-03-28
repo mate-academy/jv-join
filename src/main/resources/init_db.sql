@@ -28,7 +28,7 @@ DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars`
 (
     `id`              BIGINT(11) NOT NULL AUTO_INCREMENT,
-    `model`            VARCHAR(225) NOT NULL,
+    `model`           VARCHAR(225) NOT NULL,
     `is_deleted`      TINYINT      NOT NULL DEFAULT 0,
     `manufacturer_id` BIGINT(11) NULL,
     PRIMARY KEY (`id`),
@@ -40,10 +40,11 @@ CREATE TABLE `cars`
 );
 
 DROP TABLE IF EXISTS `cars_drivers`;
-CREATE TABLE `cars_drivers` (
-                                `car_id` BIGINT NOT NULL,
-                                `driver_id` BIGINT NOT NULL,
+CREATE TABLE `cars_drivers`
+(
+    `car_id`    BIGINT NOT NULL,
+    `driver_id` BIGINT NOT NULL,
 
-                                CONSTRAINT `cars_drivers_car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
-                                CONSTRAINT `cars_drivers_driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+    CONSTRAINT `cars_drivers_car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+    CONSTRAINT `cars_drivers_driver_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
 );
