@@ -135,7 +135,8 @@ public class CarDaoImpl implements CarDao {
         }
         List<Car> cars = new ArrayList<>();
         for (Long id : carIds) {
-            cars.add(get(id).orElseThrow(() -> new NoSuchElementException("can't get car with such id: " + id)));
+            cars.add(get(id).orElseThrow(() ->
+                    new NoSuchElementException("can't get car with such id: " + id)));
         }
         return cars;
     }
