@@ -190,8 +190,8 @@ public class CarDaoImpl implements CarDao {
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
                 statement.addBatch();
-                statement.executeBatch();
             }
+            statement.executeBatch();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't add driver to car " + car, e);
         }
