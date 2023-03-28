@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -43,7 +42,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT c.*, m.* "
                     + "FROM cars c "
                     + "JOIN manufacturers m "
@@ -55,17 +54,16 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                car = Optional.of(parseCar(resultSet)).orElseThrow(() ->
-                        new NoSuchElementException("Can't get car by ID: " + id));
+                return Optional.of(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car from DB by ID: "
                     + id, e);
         }
         if (car != null) {
-            car.setDrivers(getCarDrivers(id));
+            car.setDrivers(getDriversByCar(id));
         }
-        return car;
+        return Optional.empty();
     }
 
     @Override
@@ -86,7 +84,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
         for (Car car : cars) {
-            car.setDrivers(getCarDrivers(car.getId()));
+            car.setDrivers(getDriversByCar(car.getId()));
         }
         return cars;
     }
@@ -145,7 +143,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get all cars by driver id:" + driverId, e);
         }
         for (Car car : cars) {
-            car.setDrivers(getCarDrivers(car.getId()));
+            car.setDrivers(getDriversByCar(car.getId()));
         }
         return cars;
     }
@@ -179,7 +177,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private List<Driver> getCarDrivers(Long id) {
+    private List<Driver> getDriversByCar(Long id) {
         String query = "SELECT * "
                     + "FROM drivers d "
                     + "JOIN cars_drivers cd "
