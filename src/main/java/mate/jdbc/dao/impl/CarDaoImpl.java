@@ -1,4 +1,4 @@
-package mate.jdbc.dao;
+package mate.jdbc.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -134,11 +135,14 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars with driver id "
             + driverId, e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     private void insertDrivers(Car car) {
@@ -146,9 +150,11 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
+            if (!car.getDrivers().isEmpty()) {
+                for (Driver driver : car.getDrivers()) {
+                    statement.setLong(2, driver.getId());
+                    statement.executeUpdate();
+                }
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't insert drivers to car " + car, e);
