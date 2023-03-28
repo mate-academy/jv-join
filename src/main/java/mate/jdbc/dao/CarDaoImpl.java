@@ -67,9 +67,8 @@ public class CarDaoImpl implements CarDao {
         }
         if (car != null) {
             car.setDrivers(getDriversForCar(id));
-            return Optional.of(car);
         }
-        return Optional.empty();
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -98,10 +97,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAllByDriver(Long driverId) {
         String getAllByDriverRequest = "SELECT c.id, "
-                + "c.model AS model, "
-                + "m.id AS manufacturer_id, "
-                + "m.name AS name, "
-                + "m.country AS country "
+                + "c.model, m.id AS manufacturer_id, "
+                + "m.name, m.country "
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
