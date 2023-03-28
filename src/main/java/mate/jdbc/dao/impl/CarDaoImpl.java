@@ -107,7 +107,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
-        String deleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?";
+        String deleteQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(deleteQuery)) {
             deleteStatement.setLong(1, id);
@@ -160,7 +160,7 @@ public class CarDaoImpl implements CarDao {
 
     private void deleteDriversFromCar(Car car) {
         Long carId = car.getId();
-        String deleteDriversQuery = "DELETE FROM cars_drivers WHERE car_id = ?";
+        String deleteDriversQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(deleteDriversQuery)) {
             statement.setLong(1, carId);

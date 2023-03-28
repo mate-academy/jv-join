@@ -117,7 +117,7 @@ public class Main {
 
     private static void clearTable() {
         String[] queries = {
-                "DELETE FROM cars_drivers",
+                "DELETE FROM cars_drivers;",
                 "DELETE FROM cars;",
                 "ALTER TABLE cars AUTO_INCREMENT = 1;",
                 "DELETE FROM drivers;",
