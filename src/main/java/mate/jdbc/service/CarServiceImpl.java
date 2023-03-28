@@ -47,8 +47,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        car.getDrivers().remove(driver);
-        carDao.update(car);
+        if (car.getDrivers() != null) {
+            car.getDrivers().remove(driver);
+            carDao.update(car);
+        } else {
+            throw new DataProcessingException("This car " + car
+                    + " doesn't have such driver " + driver);
+        }
     }
 
     @Override
