@@ -138,7 +138,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void deleteRelations(Car car) {
-        String query = "DELETE FROM taxi_db.cars_drivers WHERE car_id = ?;";
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
