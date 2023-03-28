@@ -37,7 +37,7 @@ public class CarDaoImpl implements CarDao {
                     + "to create car " + car, e);
         }
         if (car.getDrivers() != null) {
-            insertCarAndDriver(car);
+            insertDriversForCar(car);
         } else {
             car.setDrivers(new ArrayList<>());
         }
@@ -64,7 +64,7 @@ public class CarDaoImpl implements CarDao {
                     + "to get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDriversForCar(id));
+            car.setDrivers(getAllByCar(id));
         }
         return Optional.ofNullable(car);
     }
@@ -88,7 +88,7 @@ public class CarDaoImpl implements CarDao {
                     + "to get all cars", e);
         }
         for (Car car : cars) {
-            car.setDrivers(getDriversForCar(car.getId()));
+            car.setDrivers(getAllByCar(car.getId()));
         }
         return cars;
     }
@@ -110,8 +110,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't execute statement"
                     + " to update car with id " + car.getId(), e);
         }
-        deleteCarAndDriver(car);
-        insertCarAndDriver(car);
+        deleteDriversOfCar(car);
+        insertDriversForCar(car);
         return car;
     }
 
@@ -129,7 +129,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getCarsForDriver(Long driverId) {
+    public List<Car> getAllByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
         String getQuery = "SELECT c.id, c.model, m.id AS manufacturer_id, m.name, m.country"
                 + " FROM cars c"
@@ -149,13 +149,13 @@ public class CarDaoImpl implements CarDao {
                     + "to get cars for driver by driver id " + driverId, e);
         }
         for (Car car : cars) {
-            car.setDrivers(getDriversForCar(car.getId()));
+            car.setDrivers(getAllByCar(car.getId()));
         }
         return cars;
     }
 
     @Override
-    public List<Driver> getDriversForCar(Long carId) {
+    public List<Driver> getAllByCar(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String getQuery = "SELECT d.id, d.name, d.licence_number"
                 + " FROM drivers d"
@@ -176,7 +176,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertCarAndDriver(Car car) {
+    private void insertDriversForCar(Car car) {
         String createQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertCarAndDriverStatement =
@@ -192,7 +192,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteCarAndDriver(Car car) {
+    private void deleteDriversOfCar(Car car) {
         String createQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteCarAndDriverStatement =

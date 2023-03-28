@@ -42,21 +42,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Driver> getDriversForCar(Long carId) {
-        return carDao.getDriversForCar(carId);
+    public List<Driver> getAllByCar(Long carId) {
+        return carDao.getAllByCar(carId);
     }
 
     @Override
-    public List<Car> getCarsForDriver(Long driverId) {
-        return carDao.getCarsForDriver(driverId);
+    public List<Car> getAllByDriver(Long driverId) {
+        return carDao.getAllByDriver(driverId);
     }
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         if (car.getDrivers()
                 .stream()
-                .filter(d -> d.getId().equals(driver.getId()))
-                .toArray().length > 0) {
+                .anyMatch(d -> d.getId().equals(driver.getId()))) {
             throw new DataProcessingException("Car already has driver with this driverId - "
                     + driver.getId() + ", " + car);
         }
@@ -68,12 +67,9 @@ public class CarServiceImpl implements CarService {
     public void removeDriverFromCar(Driver driver, Car car) {
         if (car.getDrivers()
                 .stream()
-                .filter(d -> d.getId().equals(driver.getId()))
-                .toArray().length == 0) {
-            throw new DataProcessingException("There is no such driver with driverId - "
-                    + driver.getId() + " in the car " + car);
+                .anyMatch(d -> d.getId().equals(driver.getId()))) {
+            car.getDrivers().remove(driver);
+            carDao.update(car);
         }
-        car.getDrivers().remove(driver);
-        carDao.update(car);
     }
 }

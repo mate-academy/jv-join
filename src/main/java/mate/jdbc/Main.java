@@ -73,9 +73,9 @@ public class Main {
         carService.addDriverToCar(john, tesla);
         carService.removeDriverFromCar(tommy, tesla);
 
-        carService.getCarsForDriver(tommy.getId()).forEach(System.out::println);
+        carService.getAllByDriver(tommy.getId()).forEach(System.out::println);
         carService.getAll()
-                .forEach(car -> System.out.println(carService.getDriversForCar(car.getId())));
+                .forEach(car -> System.out.println(carService.getAllByCar(car.getId())));
 
         carService.getAll().forEach(car -> carService.delete(car.getId()));
     }
