@@ -200,7 +200,8 @@ public class CarDaoImpl implements CarDao {
     private void deleteRelationship(Long carId) {
         String deleteRelationshipQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(deleteRelationshipQuery)) {
+                PreparedStatement statement = connection
+                        .prepareStatement(deleteRelationshipQuery)) {
             statement.setLong(1, carId);
             statement.executeUpdate();
         } catch (SQLException e) {
