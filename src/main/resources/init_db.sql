@@ -26,8 +26,8 @@ CREATE TABLE `cars` (
                                 CONSTRAINT `cars_manufacturers_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`));
 DROP TABLE IF EXISTS `car_drivers`
 CREATE TABLE `car_drivers` (
-                                `car_id` bigint NOT NULL,
-                                `driver_id` bigint NOT NULL,
+                                `car_id` BIGINT NOT NULL,
+                                `driver_id` BIGINT NOT NULL,
                                 KEY `car_drivers_cars_fk_idx` (`car_id`),
                                 KEY `car_drivers_drivers_fk_idx` (`driver_id`),
                                 CONSTRAINT `car_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
