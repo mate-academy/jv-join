@@ -47,7 +47,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers() != null) {
+        if (car.getDrivers() == null) {
             throw new DataProcessingException("This car " + car
                     + " doesn't have such driver " + driver);
         }
