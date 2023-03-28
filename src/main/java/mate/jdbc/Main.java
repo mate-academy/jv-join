@@ -58,8 +58,8 @@ public class Main {
         carService.update(hyundai);
         carService.removeDriverFromCar(driverViktoria, bmw);
         carService.addDriverToCar(driverViktoria,hyundai);
-        carService.delete(4L);
+        carService.delete(peugeot.getId());
         carService.getAll().forEach(System.out::println);
-        carService.getAllByDriver(3L).forEach(System.out::println);
+        carService.getAllByDriver(hyundai.getId()).forEach(System.out::println);
     }
 }
