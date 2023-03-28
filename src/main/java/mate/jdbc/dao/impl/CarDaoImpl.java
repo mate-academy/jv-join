@@ -67,22 +67,17 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String query =
-                "SELECT c.id as car_id, c.model as model, m.id as idm,"
-                + " m.name as name, m.country as country FROM cars c"
-                + " JOIN manufacturers m"
-                + " ON c.manufacturer_id=m.id"
-                + " WHERE c.is_deleted = FALSE;";
+                "SELECT d.id  FROM drivers d WHERE d.is_deleted = FALSE;";
         List<Car> carsModels = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carsModels.add(parseCarWithManufacturer(resultSet));
+                carsModels.addAll(getAllByDriver(resultSet.getObject("id", Long.class)));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
-        carsModels.stream().forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return carsModels;
     }
 
@@ -137,7 +132,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars from DB by driver id: "
                     + driverId, e);
         }
-        carsModels.stream().forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        carsModels.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return carsModels;
     }
 
