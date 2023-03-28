@@ -11,17 +11,17 @@ import mate.jdbc.service.CarService;
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-    CarDao carDao;
+    private CarDao carDao;
 
     @Override
     public Car create(Car car) {
-        String query = "SELECT * FROM cars";
-        return new Car(null, null);
+        return carDao.create(car);
     }
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new RuntimeException("Can't find car with such an id: " + id));
+        return carDao.get(id).orElseThrow(() ->
+                    new RuntimeException("Can't find car with such an id: " + id));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Driver driver) {
-        return null;
+        return carDao.getAllByDriver(driver.getId());
     }
 
     @Override
@@ -46,11 +46,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriver(Driver driver, Car car) {
-
+        car.getDrivers().add(driver);
+        carDao.update(car);
     }
 
     @Override
     public void removeDriver(Driver driver, Car car) {
-
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 }
