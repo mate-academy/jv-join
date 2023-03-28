@@ -23,29 +23,23 @@ public class Main {
     private static final DriverService driverService
             = (DriverService) injector.getInstance(DriverService.class);
 
-    private static final Manufacturer fordManufacturer = new Manufacturer("Ford", "USA");
-    private static final Manufacturer audiManufacturer = new Manufacturer("Audi", "Germany");
-    private static final Manufacturer teslaManufacturer = new Manufacturer("Tesla", "USA");
-
-    private static final Driver carl = new Driver("Carl", "KGN62178MJI0");
-    private static final Driver tommy = new Driver("Tommy", "JKG64573LOP1");
-    private static final Driver john = new Driver("John", "RET43508MHI3");
-    private static final Driver mike = new Driver("Mike", "DFB63211MNI6");
-
-    private static final Car ford = new Car("Fusion", fordManufacturer, new ArrayList<>());
-    private static final Car audi = new Car("A4", audiManufacturer, new ArrayList<>());
-    private static final Car tesla = new Car("ModelY", teslaManufacturer, new ArrayList<>());
-
     public static void main(String[] args) {
         // test your code here
         clearAll();
         // Manufacturers
+        Manufacturer fordManufacturer = new Manufacturer("Ford", "USA");
+        Manufacturer audiManufacturer = new Manufacturer("Audi", "Germany");
+        Manufacturer teslaManufacturer = new Manufacturer("Tesla", "USA");
         manufacturerService.create(fordManufacturer);
         manufacturerService.create(audiManufacturer);
         manufacturerService.create(teslaManufacturer);
         //manufacturerService.getAll().forEach(car -> manufacturerService.delete(car.getId()));
 
         // Drivers
+        Driver carl = new Driver("Carl", "KGN62178MJI0");
+        Driver tommy = new Driver("Tommy", "JKG64573LOP1");
+        Driver john = new Driver("John", "RET43508MHI3");
+        Driver mike = new Driver("Mike", "DFB63211MNI6");
         driverService.create(carl);
         driverService.create(tommy);
         driverService.create(john);
@@ -53,11 +47,14 @@ public class Main {
         //driverService.getAll().forEach(car -> driverService.delete(car.getId()));
 
         // Cars --------
+        Car ford = new Car("Fusion", fordManufacturer, new ArrayList<>());
         carService.create(ford);
         ford.getDrivers().add(carl);
+        Car audi = new Car("A4", audiManufacturer, new ArrayList<>());
         carService.create(audi);
         audi.getDrivers().add(mike);
         audi.getDrivers().add(john);
+        Car tesla = new Car("ModelY", teslaManufacturer, new ArrayList<>());
         carService.create(tesla);
         carService.getAll().forEach(System.out::println);
         carService.delete(ford.getId());
