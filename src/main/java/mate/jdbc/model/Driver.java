@@ -13,6 +13,14 @@ public class Driver {
         this.licenseNumber = licenseNumber;
     }
 
+    public Driver() {
+    }
+
+    public Driver(String name, String licenseNumber) {
+        this.name = name;
+        this.licenseNumber = licenseNumber;
+    }
+
     public Long getId() {
         return id;
     }
