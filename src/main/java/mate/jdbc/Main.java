@@ -3,6 +3,8 @@ package mate.jdbc;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -24,6 +26,21 @@ public class Main {
             = (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
     public static void main(String[] args) {
+        Manufacturer firstManufacturer = new Manufacturer();
+        Manufacturer secondManufacturer = new Manufacturer();
+        firstManufacturer.setName("Fifa");
+        firstManufacturer.setCountry("Georgia");
+        secondManufacturer.setCountry("Spain");
+        secondManufacturer.setName("Alonso");
+        manufacturerService.create(firstManufacturer);
+        manufacturerService.create(secondManufacturer);
+
+        Driver firstDriver = new Driver();
+        firstDriver.setName("Alex");
+        firstDriver.setLicenseNumber("12942581");
+        Driver secondDriver = new Driver();
+        secondDriver.setName("Fara");
+        secondDriver.setLicenseNumber("91284120");
         Car car = new Car();
         car.setModel("Tesla");
         car.setManufacturer(manufacturerService.get(FIRST_MANUFACTURER_ID));

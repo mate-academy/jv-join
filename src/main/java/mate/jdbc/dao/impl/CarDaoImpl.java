@@ -64,7 +64,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriversForCar(id));
         }
-        return Optional.of(car);
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -86,11 +86,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
-        String query = "UPDATE cars "
+        String updateQuery = "UPDATE cars "
                 + "SET model = ?, manufacturer_id = ? "
                 + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(updateQuery)) {
             statement.setString(1, car.getModel());
             statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
@@ -135,7 +135,6 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(convertToCar(resultSet));
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't find cars by driver id " + driverId, e);
         }
