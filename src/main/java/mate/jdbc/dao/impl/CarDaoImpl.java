@@ -20,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 @Dao
 public class CarDaoImpl implements CarDao {
     @Inject
-    private static ManufacturerService manufacturerService;
+    private ManufacturerService manufacturerService;
 
     @Override
     public Car create(Car car) {
@@ -107,13 +107,10 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             deleteDrivers(car.getId());
             insertDrivers(car);
-            if (statement.executeUpdate() > 0) {
-                return car;
-            }
+            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
         }
-        return null;
     }
 
     @Override
@@ -122,7 +119,6 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            deleteDrivers(id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car by id: " + id, e);
@@ -140,7 +136,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private static void deleteDrivers(Long id) throws SQLException {
+    private void deleteDrivers(Long id) throws SQLException {
         String query = "DELETE FROM car_drivers WHERE car_id = ?;";
         Connection connection = ConnectionUtil.getConnection();
         PreparedStatement statement = connection.prepareStatement(query);
@@ -148,7 +144,7 @@ public class CarDaoImpl implements CarDao {
         statement.executeUpdate();
     }
 
-    private static List<Driver> getDriversByCar(long carId) throws SQLException {
+    private List<Driver> getDriversByCar(long carId) throws SQLException {
         String query = "select * FROM drivers d"
                 + " JOIN car_drivers cd ON d.id = cd.driver_id"
                 + " WHERE car_id = ? AND is_deleted = FALSE;";
@@ -163,13 +159,13 @@ public class CarDaoImpl implements CarDao {
         return drivers;
     }
 
-    private static Driver getDriver(ResultSet resultSet) throws SQLException {
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
         return new Driver(resultSet.getObject("id", Long.class),
                     resultSet.getString(2),
                     resultSet.getString(3));
     }
 
-    private static Car getCar(ResultSet resultSet) throws SQLException {
+    private Car getCar(ResultSet resultSet) throws SQLException {
         long id = resultSet.getObject("id", Long.class);
         return new Car(resultSet.getObject("id", Long.class),
                 resultSet.getString("model"),
