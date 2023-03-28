@@ -69,20 +69,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String query = "SELECT * FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE";
-        List<Car> car = new ArrayList<>();
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                car.add(parseCar(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can`t get all cars from data base!", e);
-        }
-        for (Car cars : car) {
-            cars.setDrivers(getDriversForCar(cars.getId()));
-        }
-        return car;
+        return getHandler(query, -5L);
     }
 
     @Override
@@ -121,21 +108,7 @@ public class CarDaoImpl implements CarDao {
                 + "m.name, m.country FROM cars c JOIN cars_drivers cd "
                 + "ON cd.car_id = c.id JOIN manufacturers m ON m.id = c.manufacturer_id "
                 + "WHERE cd.driver_id = ?;";
-        List<Car> car = new ArrayList<>();
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(PARAMETER_OF_FIRST_INDEX, driverId);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                car.add(parseCar(resultSet));
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can`t get cars by driver ID: " + driverId, e);
-        }
-        for (Car cars : car) {
-            cars.setDrivers(getDriversForCar(cars.getId()));
-        }
-        return car;
+        return getHandler(query, driverId);
     }
 
     private void insertDrivers(Car car) {
@@ -195,5 +168,28 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t get drivers by car ID " + car.getId(), e);
         }
+    }
+
+    private List<Car> getHandler(String query, Long id) {
+        List<Car> car = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                 PreparedStatement statement = connection.prepareStatement(query)) {
+            if (id > 0) {
+                statement.setLong(PARAMETER_OF_FIRST_INDEX, id);
+            }
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                car.add(parseCar(resultSet));
+            }
+        } catch (SQLException e) {
+            if (id > 0) {
+                throw new DataProcessingException("Can`t get cars by driver ID: " + id, e);
+            }
+            throw new DataProcessingException("Can`t get all cars from data base!", e);
+        }
+        for (Car cars : car) {
+            cars.setDrivers(getDriversForCar(cars.getId()));
+        }
+        return car;
     }
 }
