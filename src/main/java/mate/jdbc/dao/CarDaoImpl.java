@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -134,7 +135,7 @@ public class CarDaoImpl implements CarDao {
         }
         List<Car> cars = new ArrayList<>();
         for (Long id : carIds) {
-            cars.add(get(id).get());
+            cars.add(get(id).orElseThrow(() -> new NoSuchElementException("can't get car with such id: " + id)));
         }
         return cars;
     }
