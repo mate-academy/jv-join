@@ -54,7 +54,7 @@ public class CarDaoImpl implements CarDao {
             getCarStatement.setLong(1, id);
             ResultSet resultSet = getCarStatement.executeQuery();
             if (resultSet.next()) {
-                car = getCar(resultSet);
+                car = parseCar(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by ID " + id, e);
@@ -80,7 +80,7 @@ public class CarDaoImpl implements CarDao {
                          = connection.prepareStatement(getAllCarQuery)) {
             ResultSet resultSet = getAllCarStatement.executeQuery();
             while (resultSet.next()) {
-                allCarsList.add(getCar(resultSet));
+                allCarsList.add(parseCar(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all car list from DB", e);
@@ -147,7 +147,7 @@ public class CarDaoImpl implements CarDao {
         return cars;
     }
 
-    private Car getCar(ResultSet resultSet) throws SQLException {
+    private Car parseCar(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer();

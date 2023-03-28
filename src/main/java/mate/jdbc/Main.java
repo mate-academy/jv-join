@@ -71,14 +71,12 @@ public class Main {
 
         // CarService methods test
         Car car = new Car();
-        car.setModel("X6");
+        car.setModel("X4");
         car.setManufacturer(bmw);
         car.setDrivers(new ArrayList<>());
         car.getDrivers().add(mike);
         car.getDrivers().add(marcus);
         carService.create(car);
-
-        car.setModel("X6");
 
         Car secondCar = new Car();
         secondCar.setModel("Camaro");
@@ -96,5 +94,11 @@ public class Main {
 
         carService.addDriverToCar(marcus, secondCar);
         System.out.println(carService.get(secondCar.getId()));
+
+        car.setModel("X6");
+        System.out.println(carService.update(car));
+
+        carService.delete(car.getId());
+        System.out.println(carService.getAll());
     }
 }
