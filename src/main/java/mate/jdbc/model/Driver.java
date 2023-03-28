@@ -5,12 +5,20 @@ import java.util.Objects;
 public class Driver {
     private Long id;
     private String name;
-    private String licenseNumber;
+    private String licenceNumber;
 
-    public Driver(Long id, String name, String licenseNumber) {
+    public Driver() {
+    }
+
+    public Driver(Long id, String name, String licenceNumber) {
         this.id = id;
         this.name = name;
-        this.licenseNumber = licenseNumber;
+        this.licenceNumber = licenceNumber;
+    }
+
+    public Driver(String name, String licenceNumber) {
+        this.name = name;
+        this.licenceNumber = licenceNumber;
     }
 
     public Long getId() {
@@ -29,31 +37,31 @@ public class Driver {
         this.name = name;
     }
 
-    public String getLicenseNumber() {
-        return licenseNumber;
+    public String getLicenceNumber() {
+        return licenceNumber;
     }
 
-    public void setLicenseNumber(String licenseNumber) {
-        this.licenseNumber = licenseNumber;
+    public void setLicenceNumber(String licenceNumber) {
+        this.licenceNumber = licenceNumber;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
-        Driver driver = (Driver) o;
+        Driver driver = (Driver) object;
         return Objects.equals(id, driver.id)
                 && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber);
+                && Objects.equals(licenceNumber, driver.licenceNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, licenseNumber);
+        return Objects.hash(id, name, licenceNumber);
     }
 
     @Override
@@ -61,7 +69,6 @@ public class Driver {
         return "Driver{"
                 + "id=" + id
                 + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                + ", licenceNumber='" + licenceNumber + '\'' + '}';
     }
 }
