@@ -1,10 +1,8 @@
 package mate.jdbc.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -43,27 +41,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        final List<Driver> drivers;
-        if (car.getDrivers() == null) {
-            drivers = new ArrayList<>();
-        } else {
-            drivers = car.getDrivers();
-        }
-        drivers.add(driver);
-        car.setDrivers(drivers);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        final List<Driver> drivers;
-        if (car.getDrivers() != null) {
-            drivers = car.getDrivers();
-            drivers.remove(driver);
-            car.setDrivers(drivers);
-        } else {
-            throw new DataProcessingException("Driver is not present in car's list");
-        }
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
