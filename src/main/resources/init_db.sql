@@ -21,10 +21,10 @@ CREATE TABLE `drivers` (
 
 DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
-                                  `id` bigint NOT NULL AUTO_INCREMENT,
-                                  `manufacturer_id` bigint DEFAULT NULL,
-                                  `model` varchar(255) DEFAULT NULL,
-                                  `is_deleted` tinyint NOT NULL DEFAULT '0',
+                                  `id` BIGINT NOT NULL AUTO_INCREMENT,
+                                  `manufacturer_id` BIGINT DEFAULT NULL,
+                                  `model` VARCHAR(255) DEFAULT NULL,
+                                  `is_deleted` TINYINT NOT NULL DEFAULT '0',
                                   PRIMARY KEY (`id`),
                                   KEY `cars_manufacturer_fk` (`manufacturer_id`),
                                   CONSTRAINT `cars_manufacturer_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)

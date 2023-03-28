@@ -62,7 +62,7 @@ public class Main {
         System.out.println(secondCar + System.lineSeparator());
 
         List<Driver> thirdCarDrivers = List.of(bob, alice);
-        Car thirdCar = new Car("Lamboghini", manufacturer, thirdCarDrivers);
+        Car thirdCar = new Car("Lamborghini", manufacturer, thirdCarDrivers);
         carService.create(thirdCar);
         carService.getAllByDriver(bob.getId()).forEach(System.out::println);
     }
