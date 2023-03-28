@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -19,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String sql = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
+        String sql = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql,
                         Statement.RETURN_GENERATED_KEYS)) {
@@ -38,7 +39,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String sql = "SELECT c.id AS car_id, c.model AS car_model, m.id AS manufacturer_id, "
                 + "m.name AS manufacturer_name, m.country AS manufacturer_country, "
                 + "c.is_deleted AS car_is_deleted FROM cars c "
@@ -58,7 +59,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriversByCarId(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Can't update car + " + car, e);
+            throw new DataProcessingException("Can't update car + " + car, e);
         }
         deleteDriversFromCar(car);
         updateDrivers(car);
@@ -107,7 +108,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             return statement.executeUpdate() != 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete car by id " + id, e);
+            throw new DataProcessingException("Can't delete car by id " + id, e);
         }
     }
 
@@ -124,13 +125,12 @@ public class CarDaoImpl implements CarDao {
                 carsId.add(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't get all cars by driver id " + driverId, e);
+            throw new DataProcessingException("Can't get all cars by driver id " + driverId, e);
         }
         List<Car> cars = new ArrayList<>();
         for (Long id : carsId) {
-            Car car = get(id);
-            if (car != null) {
-                cars.add(get(id));
+            if (get(id).isPresent()) {
+                cars.add(get(id).get());
             }
         }
         return cars;
@@ -161,7 +161,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Can't get drivers by car id " + id, e);
         }
     }
 
@@ -183,7 +183,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to the car " + car, e);
+            throw new DataProcessingException("Can't insert drivers to the car " + car, e);
         }
     }
 
@@ -198,7 +198,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to the car " + car, e);
+            throw new DataProcessingException("Can't insert drivers to the car " + car, e);
         }
     }
 
@@ -209,7 +209,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete drivers from car + " + car, e);
+            throw new DataProcessingException("Can't delete drivers from car + " + car, e);
         }
     }
 }
