@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -11,13 +10,15 @@ import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
 public class Main {
-    private  static Injector injector = Injector.getInstance("mate.jdbc");
-    public static void main(String[] args) {
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        ManufacturerService manufacturerService =
-                (ManufacturerService) injector.getInstance(ManufacturerService.class);
+    private static final Injector injector = Injector.getInstance("mate.jdbc");
+    private static final CarService carService =
+            (CarService) injector.getInstance(CarService.class);
+    private static final DriverService driverService =
+            (DriverService) injector.getInstance(DriverService.class);
+    private static final ManufacturerService manufacturerService =
+            (ManufacturerService) injector.getInstance(ManufacturerService.class);
 
+    public static void main(String[] args) {
         Manufacturer peugeotManufacturer = new Manufacturer("Peugeot", "France");
         manufacturerService.create(peugeotManufacturer);
         manufacturerService.getAll().forEach(System.out::println);
@@ -60,6 +61,6 @@ public class Main {
         driverService.delete(forDeleter.getId());
         driverService.delete(forUpdater.getId());
         carService.getAll().forEach(System.out::println);
-        System.out.println("must be 4 empty lines before");
+        System.out.println("must be empty line between this and 'cars deleted'");
     }
 }
