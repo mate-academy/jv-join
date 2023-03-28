@@ -1,6 +1,7 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -20,7 +21,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id);
+        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Could not get car "
+                + "with id" + id));
     }
 
     @Override
