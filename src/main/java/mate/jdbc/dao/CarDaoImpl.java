@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -139,10 +138,11 @@ public class CarDaoImpl implements CarDao {
 
     private void insertDrivers(Car car) {
         if (car.getDrivers().isEmpty()) {
-            String insertDriverQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
+            String insertDriverQuery = "INSERT INTO cars_drivers (car_id, driver_id) "
+                    + "VALUES (?, ?);";
             try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement insertDriverStatement =
-                         connection.prepareStatement(insertDriverQuery)) {
+                    PreparedStatement insertDriverStatement =
+                            connection.prepareStatement(insertDriverQuery)) {
                 insertDriverStatement.setLong(1, car.getId());
                 for (Driver driver : car.getDrivers()) {
                     insertDriverStatement.setLong(2, driver.getId());
