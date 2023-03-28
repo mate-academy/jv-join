@@ -7,6 +7,9 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
+    public Driver() {
+    }
+
     public Driver(Long id, String name, String licenseNumber) {
         this.id = id;
         this.name = name;
@@ -45,10 +48,10 @@ public class Driver {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Driver driver = (Driver) o;
-        return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber);
+        Driver that = (Driver) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(licenseNumber, that.licenseNumber);
     }
 
     @Override
