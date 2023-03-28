@@ -193,7 +193,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(PARAMETER_OF_FIRST_INDEX, car.getId());
         } catch (SQLException e) {
-            throw  new DataProcessingException("Can`t get drivers by car ID " + car.getId(), e);
+            throw new DataProcessingException("Can`t get drivers by car ID " + car.getId(), e);
         }
     }
 }
