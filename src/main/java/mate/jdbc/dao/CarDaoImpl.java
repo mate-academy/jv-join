@@ -15,8 +15,6 @@ import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
-import javax.xml.catalog.Catalog;
-
 @Dao
 public class CarDaoImpl implements CarDao {
     private static final String CAR_ID_COLUMN = "id";
