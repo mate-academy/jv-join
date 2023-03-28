@@ -15,8 +15,6 @@ import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.util.ConnectionUtil;
 
 public class Main {
-    private static final Long CARL_DRIVER_ID = 1L;
-    private static final Long AUDI_ID = 2L;
     private static final Injector injector = Injector.getInstance("mate.jdbc");
     private static final CarService carService
             = (CarService) injector.getInstance(CarService.class);
