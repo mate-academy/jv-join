@@ -54,14 +54,13 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return Optional.of(parseCar(resultSet));
+                car = parseCar(resultSet);
+                car.setDrivers(getDriversByCar(id));
+                return Optional.of(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car from DB by ID: "
                     + id, e);
-        }
-        if (car != null) {
-            car.setDrivers(getDriversByCar(id));
         }
         return Optional.empty();
     }
