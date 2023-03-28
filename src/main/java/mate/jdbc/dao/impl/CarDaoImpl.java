@@ -77,13 +77,12 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCarWithManufacturer(resultSet);
-                List<Driver> drivers = getDriversForCar(car.getId());
-                car.setDrivers(drivers);
+                carsModels.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars from DB", e);
         }
+        carsModels.stream().forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return carsModels;
     }
 
@@ -132,26 +131,23 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = parseCarWithManufacturer(resultSet);
-                List<Driver> drivers = getDriversForCar(car.getId());
-                car.setDrivers(drivers);
-                carsModels.add(car);
+                carsModels.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from DB by driver id: "
                     + driverId, e);
         }
+        carsModels.stream().forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return carsModels;
     }
 
     private Car parseCarWithManufacturer(ResultSet resultSet) throws SQLException {
-        Car car = new Car(resultSet.getObject("car_id", Long.class),
+        return new Car(resultSet.getObject("car_id", Long.class),
                 resultSet.getString("model"),
                 new Manufacturer(
                         resultSet.getObject("manufacturer_id", Long.class),
                         resultSet.getString("name"),
                         resultSet.getString("country")));
-        return car;
     }
 
     private List<Driver> getDriversForCar(Long carId) {

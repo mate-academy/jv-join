@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import mate.jdbc.exception.DataProcessingException;
 
 public class ConnectionUtil {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -19,7 +18,7 @@ public class ConnectionUtil {
         try {
             Class.forName(DRIVER);
         } catch (ClassNotFoundException e) {
-            throw new DataProcessingException("Can't load jdbc driver", e);
+            throw new RuntimeException("Can't load jdbc driver", e);
         }
     }
 
@@ -30,7 +29,7 @@ public class ConnectionUtil {
         try {
             return DriverManager.getConnection(CONNECTION_URL, properties);
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't connect to the database", e);
+            throw new RuntimeException("Can't connect to the database", e);
         }
     }
 }
