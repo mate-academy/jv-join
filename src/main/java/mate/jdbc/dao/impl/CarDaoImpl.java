@@ -41,6 +41,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
+        Car car = null;
         String query = "SELECT c.id, c.manufacturer_id, c.model, m.name, m.country"
                 + " FROM cars c"
                 + " JOIN manufacturers m ON c.manufacturer_id = m.id"
@@ -49,14 +50,16 @@ public class CarDaoImpl implements CarDao {
                     PreparedStatement selectStatement = connection.prepareStatement(query)) {
             selectStatement.setLong(1, id);
             ResultSet resultSet = selectStatement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = getCarFromResultSet(resultSet);
             }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getAllDriversByCar(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -129,6 +132,9 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars of driver by id " + driverId, e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getAllDriversByCar(car.getId()));
+        }
         return cars;
     }
 
@@ -140,9 +146,7 @@ public class CarDaoImpl implements CarDao {
         String manufacturerCountry = resultSet.getString(5);
         Manufacturer manufacturer =
                 new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
-        Car car = new Car(carId, model, manufacturer);
-        car.setDrivers(getAllDriversByCar(carId));
-        return car;
+        return new Car(carId, model, manufacturer);
     }
 
     private List<Driver> getAllDriversByCar(Long carId) {
