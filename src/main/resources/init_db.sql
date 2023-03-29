@@ -18,7 +18,7 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
-ROP TABLE IF EXISTS `cars`;
+DROP TABLE IF EXISTS `cars`;
 CREATE TABLE `cars` (
                             `id` BIGINT(11) NOT NULL AUTO_INCREMENT,
                             `model` VARCHAR(225) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `cars` (
 
 DROP TABLE IF EXISTS `cars_drivers`;
 CREATE TABLE `cars_drivers` (
-                            `car_id` BIGINT NOT NULL,
-                            `driver_id` BIGINT NOT NULL,
+                            `car_id` BIGINT(11) NOT NULL,
+                            `driver_id` BIGINT(11) NOT NULL,
                             FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
                             FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`));
