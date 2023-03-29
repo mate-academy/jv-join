@@ -45,12 +45,17 @@ public class CarDaoImpl implements CarDao {
                 + "m.id AS manufacturer_id, m.name AS manufacturer_name, "
                 + "m.country AS manufacturer_country "
                 + "FROM car c JOIN manufacturers m on m.id = c.manufacturer_id "
-                + "WHERE id = ? AND is_deleted = FALSE;";
+                + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            Car car = null;
             preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                car = getCarWithManufacturerFromResultSet(resultSet);
+            }
             return Optional
-                    .of(getCarWithManufacturerFromResultSet(preparedStatement.executeQuery()));
+                    .ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get field from car table with id: " + id, e);
         }
@@ -71,13 +76,13 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all data from car table", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car));
+        }
+        return cars;
     }
 
     @Override
@@ -86,15 +91,11 @@ public class CarDaoImpl implements CarDao {
                 + "WHERE is_deleted = FALSE AND id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement preparedStatement
-                         = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+                         = connection.prepareStatement(query)) {
             preparedStatement.setString(1, car.getModel());
             preparedStatement.setLong(2, car.getManufacturer().getId());
             preparedStatement.setLong(3, car.getId());
             preparedStatement.executeUpdate();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                car.setId(generatedKeys.getObject(1, Long.class));
-            }
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car table with car: " + car, e);
@@ -184,14 +185,14 @@ public class CarDaoImpl implements CarDao {
 
     private Car getCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
-        car.setId(resultSet.getObject(1, Long.class));
-        Long manufacturerId = resultSet.getLong("manufacturer_id");
         car.setModel(resultSet.getString("car_model"));
+        Long manufacturerId = resultSet.getLong("manufacturer_id");
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
         Manufacturer manufacturer
                 = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
         car.setManufacturer(manufacturer);
+        car.setId(resultSet.getObject(1, Long.class));
         return car;
     }
 }

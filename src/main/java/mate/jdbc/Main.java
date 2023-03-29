@@ -33,7 +33,9 @@ public class Main {
         Car car1 = new Car(1L, "Camry", manufacturer, drivers);
         Car car2 = new Car(2L, "M5", manufacturer1, drivers);
         carService.create(car1);
+        System.out.println("Created car1: " + carService.get(1L));
         carService.create(car2);
+        System.out.println("Created car2: " + carService.get(2L));
         System.out.println(carService.getAllByDriver(1L));
         car1.setModel("X5");
         carService.update(car1);
