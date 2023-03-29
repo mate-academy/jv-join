@@ -51,7 +51,7 @@ public class CarDaoImpl implements CarDao {
             Car car = null;
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()){
+            if (resultSet.next()) {
                 car = getCarWithManufacturerFromResultSet(resultSet);
             }
             return Optional
