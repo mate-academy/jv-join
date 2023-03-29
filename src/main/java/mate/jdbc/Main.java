@@ -10,23 +10,6 @@ import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
 public class Main {
-    private static final String BMW = "BMW";
-    private static final String TOYOTA = "Toyota";
-    private static final String VOLVO = "Volvo";
-    private static final String FORD = "Ford";
-    private static final String GERMANY = "Germany";
-    private static final String JAPAN = "Japan";
-    private static final String SWEDEN = "Sweden";
-    private static final String USA = "USA";
-
-    private static final String TARAS = "Taras";
-    private static final String PETRO = "Petro";
-    private static final String LICENSE_NUMBER_1 = "12121212";
-    private static final String LICENSE_NUMBER_2 = "13131313";
-    private static final String SEAT = "Seat";
-    private static final String NEW_MODEL = "Sport coupe";
-    private static final long INDEX_1 = 1L;
-    private static final long INDEX_2 = 2L;
     private static final Injector injector = Injector.getInstance("mate.jdbc");
     private static final CarService carService = (CarService)
             injector.getInstance(CarService.class);
@@ -36,48 +19,54 @@ public class Main {
             injector.getInstance(DriverService.class);
 
     public static void main(String[] args) {
+        Manufacturer bmwManufacturer = new Manufacturer("BMW", "Germany");
+        Manufacturer toyotaManufacturer = new Manufacturer("Toyota", "Japan");
+        Manufacturer volvoManufacturer = new Manufacturer("Volvo","Sweden");
+        Manufacturer fordManufacturer = new Manufacturer("Ford","USA");
         List<Manufacturer> manufacturerList =
-                List.of(new Manufacturer(BMW, GERMANY),
-                        new Manufacturer(TOYOTA, JAPAN),
-                        new Manufacturer(VOLVO, SWEDEN),
-                        new Manufacturer(FORD, USA));
+                List.of(bmwManufacturer, toyotaManufacturer, volvoManufacturer, fordManufacturer);
         for (Manufacturer manufacturer : manufacturerList) {
             System.out.println(manufacturerService.create(manufacturer));
         }
 
-        List<Driver> driversList =
-                List.of(new Driver(TARAS, LICENSE_NUMBER_1),
-                        new Driver(PETRO, LICENSE_NUMBER_2));
+        Driver taras = new Driver("Taras", "11111111");
+        Driver petro = new Driver("petro", "22222222");
+        Driver ivan = new Driver("ivan", "33333333");
+        List<Driver> driversList = List.of(taras, petro, ivan);
         for (Driver driver : driversList) {
             System.out.println(driverService.create(driver));
         }
 
-        System.out.println("Test creating new car");
-        Car car = new Car(SEAT, manufacturerService.get(INDEX_1));
-        car.setDrivers(List.of(driverService.get(INDEX_1)));
-        System.out.println(carService.create(car));
+        System.out.println("\nTest creating new car");
+        Car lexus = new Car("Lexus", toyotaManufacturer);
+        Car fiesta = new Car("Ford", fordManufacturer);
+        lexus.setDrivers(driversList);
+        System.out.println(carService.create(lexus));
+        System.out.println(carService.create(fiesta));
 
+        Long carId = lexus.getId();
         System.out.println("Test getting car from database");
-        System.out.println(carService.get(INDEX_2));
+        System.out.println(carService.get(carId));
 
         System.out.println("Test getting all cars from database");
         System.out.println(carService.getAll());
 
+        fiesta.setManufacturer(volvoManufacturer);
+        fiesta.setModel("restyle");
         System.out.println("Test updating car");
-        System.out.println(carService.update(new Car(INDEX_1, NEW_MODEL,
-                manufacturerService.get(INDEX_2))));
-        System.out.println(carService.get(INDEX_1));
+        System.out.println("return = " + carService.update(fiesta));
 
         System.out.println("Test deleting car");
-        carService.delete(INDEX_1);
+        carService.delete(carId);
         System.out.println(carService.getAll());
 
+        Long driverId = petro.getId();
         System.out.println("Test adding driver to car");
-        carService.addDriverToCar(driverService.get(INDEX_2), carService.get(INDEX_1));
-        System.out.println(carService.get(INDEX_1));
+        carService.addDriverToCar(driverService.get(driverId), carService.get(carId));
+        System.out.println(carService.get(carId));
 
         System.out.println("Test deleting driver from car");
-        carService.removeDriverFromCar(driverService.get(INDEX_2), carService.get(INDEX_1));
-        System.out.println(carService.get(INDEX_1));
+        carService.removeDriverFromCar(driverService.get(driverId), carService.get(carId));
+        System.out.println(carService.get(carId));
     }
 }
