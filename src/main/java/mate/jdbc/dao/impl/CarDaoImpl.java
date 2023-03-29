@@ -116,7 +116,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id, c.model, c.manufacturer_id, m.name, m.country "
+        String query = "SELECT c.id, c.model AS car_model, c.manufacturer_id,"
+                + " m.name AS manufacturer_name, "
+                + "m.country AS manufacturer_country "
                 + "FROM car c "
                 + "JOIN car_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
@@ -125,7 +127,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, driverId);
-            ResultSet resultSet = preparedStatement.getResultSet();
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
@@ -184,6 +186,7 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject(1, Long.class));
         Long manufacturerId = resultSet.getLong("manufacturer_id");
+        car.setModel(resultSet.getString("car_model"));
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
         Manufacturer manufacturer
