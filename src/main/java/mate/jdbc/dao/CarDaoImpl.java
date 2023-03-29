@@ -81,7 +81,12 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getAllCarsStatement =
                         connection.prepareStatement(getAllFromCarsTableQuery)) {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
-            return addAndSetDriversToCar(resultSet);
+            List<Car> cars = new ArrayList<>();
+            while (resultSet.next()) {
+                cars.add(getCarFromResultSet(resultSet));
+            }
+            cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars "
                     + "from cars table. ", e);
@@ -100,8 +105,13 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement getAllByDriverStatement =
                         connection.prepareStatement(getAllByDriverQuery)) {
             getAllByDriverStatement.setLong(1, driverId);
+            List<Car> cars = new ArrayList<>();
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
-            return addAndSetDriversToCar(resultSet);
+            while (resultSet.next()) {
+                cars.add(getCarFromResultSet(resultSet));
+            }
+            cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
+            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driverId " + driverId, e);
         }
@@ -147,11 +157,12 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertDriversToCarStatement =
                         connection.prepareStatement(insertDriversQuery)) {
-            insertDriversToCarStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
+                insertDriversToCarStatement.setLong(1, car.getId());
                 insertDriversToCarStatement.setLong(2, driver.getId());
-                insertDriversToCarStatement.executeUpdate();
+                insertDriversToCarStatement.addBatch();
             }
+            insertDriversToCarStatement.executeBatch();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't insert drivers to car " + car, e);
         }
@@ -207,14 +218,5 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't delete carId " + carId
                     + " from cars_drivers table", e);
         }
-    }
-
-    private List<Car> addAndSetDriversToCar(ResultSet resultSet) throws SQLException {
-        List<Car> cars = new ArrayList<>();
-        while (resultSet.next()) {
-            cars.add(getCarFromResultSet(resultSet));
-        }
-        cars.forEach(c -> c.setDrivers(getDriversForCar(c.getId())));
-        return cars;
     }
 }
