@@ -29,15 +29,15 @@ public class Main {
             System.out.println(manufacturerService.create(manufacturer));
         }
 
-        Driver taras = new Driver("Taras", "11111111");
-        Driver petro = new Driver("petro", "22222222");
-        Driver ivan = new Driver("ivan", "33333333");
+        Driver taras = new Driver("Taras", "7777777777");
+        Driver petro = new Driver("petro", "8888888888");
+        Driver ivan = new Driver("ivan", "9999999999");
         List<Driver> driversList = List.of(taras, petro, ivan);
         for (Driver driver : driversList) {
             System.out.println(driverService.create(driver));
         }
 
-        System.out.println("\nTest creating new car");
+        System.out.println("Test creating new car");
         Car lexus = new Car("Lexus", toyotaManufacturer);
         Car fiesta = new Car("Ford", fordManufacturer);
         lexus.setDrivers(driversList);
@@ -68,5 +68,8 @@ public class Main {
         System.out.println("Test deleting driver from car");
         carService.removeDriverFromCar(driverService.get(driverId), carService.get(carId));
         System.out.println(carService.get(carId));
+
+        System.out.println("Test getting cars by driver");
+        System.out.println(carService.getAllByDriver(driverId));
     }
 }
