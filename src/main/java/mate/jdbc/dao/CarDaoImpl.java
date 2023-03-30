@@ -43,21 +43,21 @@ public class CarDaoImpl implements CarDao {
                 + "m.id, m.name, m.country FROM cars c "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id WHERE c.id = ? "
                 + "AND c.is_deleted = FALSE;";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = getCar(resultSet);
             }
-            if (car != null) {
-                car.setDrivers(setDriversList(id));
-            }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t get car from database with id: " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(setDriversList(id));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -73,13 +73,14 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 listOfCars.add(getCar(resultSet));
             }
-            for (Car car : listOfCars) {
-                car.setDrivers(setDriversList(car.getId()));
-            }
-            return listOfCars;
+
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t get all cars from database", e);
         }
+        for (Car car : listOfCars) {
+            car.setDrivers(setDriversList(car.getId()));
+        }
+        return listOfCars;
     }
 
     @Override
