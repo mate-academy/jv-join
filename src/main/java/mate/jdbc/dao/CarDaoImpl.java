@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -160,9 +159,9 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long carId) {
         String query = "SELECT cd.driver_id, name, license_number "
-            + "FROM cars_drivers cd "
-            + "JOIN drivers d ON cd.driver_id = d.id "
-            + "WHERE cd.car_id = ?";
+                + "FROM cars_drivers cd "
+                + "JOIN drivers d ON cd.driver_id = d.id "
+                + "WHERE cd.car_id = ?";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
