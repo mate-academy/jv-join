@@ -209,21 +209,23 @@ public class CarDaoImpl implements CarDao {
                         .prepareStatement(getCarDriversQuery)) {
             getCarDriversStatement.setLong(1, carId);
             ResultSet resultSet = getCarDriversStatement.executeQuery();
-            Driver driver;
 
-            while (resultSet.next()) { // Should I create a separate method getDriver()?
-                //getDriver(resultSet);
-                driver = new Driver();
-                driver.setId(resultSet.getLong(3));
-                driver.setName(resultSet.getString(4));
-                driver.setLicenseNumber(resultSet.getString(5));
-                carDrivers.add(driver);
+            while (resultSet.next()) {
+                carDrivers.add(getDriver(resultSet));
             }
             return carDrivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car drivers list. Car id: "
                     + carId + ". ", e);
         }
+    }
+
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
+        Driver driver = new Driver();
+        driver.setId(resultSet.getLong(3));
+        driver.setName(resultSet.getString(4));
+        driver.setLicenseNumber(resultSet.getString(5));
+        return driver;
     }
 
     private void deleteDriversFromCar(Car car) {
