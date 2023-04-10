@@ -55,7 +55,7 @@ public class CarDaoImpl implements CarDao {
             throw new RuntimeException("Can't find car in DB by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getDriverById(id));
+            car.setDrivers(getDriverByCarId(id));
         }
         return Optional.ofNullable(car);
     }
@@ -78,7 +78,7 @@ public class CarDaoImpl implements CarDao {
         }
         for (Car car : cars) {
             if (car != null) {
-                car.setDrivers(getDriverById(car.getId()));
+                car.setDrivers(getDriverByCarId(car.getId()));
             }
         }
         return cars;
@@ -134,13 +134,13 @@ public class CarDaoImpl implements CarDao {
         }
         for (Car car : cars) {
             if (car != null) {
-                car.setDrivers(getDriverById(driverId));
+                car.setDrivers(getDriverByCarId(driverId));
             }
         }
         return cars;
     }
 
-    private List<Driver> getDriverById(Long id) {
+    private List<Driver> getDriverByCarId(Long carId) {
         List<Driver> drivers = new ArrayList<>();
         String queryDriverById = "SELECT id, name, license_number "
                 + "FROM drivers d "
@@ -148,14 +148,14 @@ public class CarDaoImpl implements CarDao {
                 + "ON d.id = cd.driver_id WHERE cd.car_id = ? AND d.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(queryDriverById)) {
-            statement.setLong(1, id);
+            statement.setLong(1, carId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 drivers.add(parseDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get driver by id " + id, e);
+            throw new DataProcessingException("Can't get driver by id " + carId, e);
         }
 
     }
