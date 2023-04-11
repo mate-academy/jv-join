@@ -21,11 +21,7 @@ public class Car {
     }
 
     public void removeDriver(Driver driver) {
-        for (Driver driverForDelete : drivers) {
-            if (driverForDelete.equals(driver)) {
-                drivers.remove(driver);
-            }
-        }
+        drivers.remove(driver);
     }
 
     public Long getId() {

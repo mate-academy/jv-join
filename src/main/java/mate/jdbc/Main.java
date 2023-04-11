@@ -20,12 +20,13 @@ public class Main {
             = (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
-        Driver driver = new Driver(53L, "Kopel", "12321");
-        Driver driverTwo = new Driver(19L, "Oleksii", "1905");
+        Driver driver = new Driver(null, "Kopel", "12321");
+        Driver driverTwo = new Driver(null, "Oleksii", "1905");
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driver);
         drivers.add(driverTwo);
-        Manufacturer manufacturer = new Manufacturer(2L, "POLI", "Ukraine");
+        Manufacturer manufacturer = new Manufacturer(null, "POLI", "Ukraine");
+        System.out.println(manufacturerService.create(manufacturer));
         Car car = new Car(2L, "QWE", manufacturer, drivers);
         System.out.println(carService.delete(1L));
         System.out.println(carService.update(car));
