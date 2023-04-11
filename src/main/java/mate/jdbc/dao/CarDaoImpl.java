@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
@@ -17,7 +18,7 @@ import mate.jdbc.util.ConnectionUtil;
 @Dao
 public class CarDaoImpl implements CarDao {
     @Override
-    public Car create(Car car) {
+    public Optional<Car> create(Car car) {
         String query = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(query,
@@ -34,11 +35,11 @@ public class CarDaoImpl implements CarDao {
                     + car + ". ", e);
         }
         insertLinksBetweenCarAndDriver(car);
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS id, m.id AS manufacturer_id, model, "
                 + " m.name AS name, m.country AS country "
                 + "FROM cars c JOIN manufacturers m "
@@ -59,7 +60,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getAllByCar(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -143,15 +144,12 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
-        car.setModel(resultSet.getString("model"));
         Manufacturer manufacturer = new Manufacturer(resultSet
                 .getObject("manufacturer_id", Long.class),
                 resultSet.getString("name"),
                 resultSet.getString("country"));
-        car.setManufacturer(manufacturer);
-        car.setId(resultSet.getObject("id", Long.class));
-        return car;
+        return new Car(resultSet.getObject("id", Long.class),
+                resultSet.getString("model"), manufacturer, null);
     }
 
     private List<Driver> getAllByCar(Long carId) {
