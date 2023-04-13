@@ -80,11 +80,4 @@ public class Car {
         return Objects.hash(id, model, manufacturer, drivers);
     }
 
-    public void addDriver(Driver driver) {
-        drivers.add(driver);
-    }
-
-    public void removeDriver(Driver driver) {
-        drivers.remove(driver);
-    }
 }
