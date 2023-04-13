@@ -71,7 +71,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement = connection.prepareStatement(query)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                  cars.add(parseCarWithManufacturerFromResultSet(resultSet));
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of all the cars in carsDB", e);
@@ -119,23 +119,19 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
 
-//        String query = "SELECT c.id as car_id, c.model, c.manufacturer_id, m.name, m.country FROM cars c "
-//                + "JOIN manufacturers m on c.manufacturer_id = m.id "
-//                + "JOIN cars_drivers cd on c.id = cd.car_id "
-//                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
-
         List<Long> carIds = new ArrayList<>();
         List<Car> cars = new ArrayList<>();
 
         try (Connection connection = ConnectionUtil.getConnection();
-        PreparedStatement statement = connection.prepareStatement(selectCarIds)) {
+                PreparedStatement statement = connection.prepareStatement(selectCarIds)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 carIds.add(resultSet.getObject("car_id", Long.class));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get all cars for driver with id = " + driverId, e);
+            throw new DataProcessingException("Couldn't get all cars "
+                    + "for driver with id = " + driverId, e);
         }
         if (!carIds.isEmpty()) {
             for (Long carId : carIds) {
@@ -163,10 +159,10 @@ public class CarDaoImpl implements CarDao {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
-        String manufacturerName = resultSet.getString("name");
-        String manufacturerCountry = resultSet.getString("country");
-        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
-        Manufacturer manufacturer = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
+        String manName = resultSet.getString("name");
+        String manCountry = resultSet.getString("country");
+        Long manId = resultSet.getObject("manufacturer_id", Long.class);
+        Manufacturer manufacturer = new Manufacturer(manId, manName, manCountry);
         car.setManufacturer(manufacturer);
         return car;
     }
@@ -182,7 +178,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = statement.executeQuery();
             List<Driver> drivers = new ArrayList<>();
             while (resultSet.next()) {
-                drivers.add(ParseDriversFromResultSet(resultSet));
+                drivers.add(parseDriversFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -190,7 +186,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver ParseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
         Long id = resultSet.getObject("id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
@@ -200,7 +196,7 @@ public class CarDaoImpl implements CarDao {
     private void deleteDrivers(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
