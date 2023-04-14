@@ -45,23 +45,17 @@ public class CarServiceImpl implements CarService {
         if (!car.getDrivers().contains(driver)) {
             car.getDrivers().add(driver);
             carDao.update(car);
-        } else {
-            System.out.println("Driver " + driver + " already connected to the car " + car);
         }
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers().contains(driver)) {
-            car.getDrivers().remove(driver);
-            carDao.update(car);
-        } else {
-            System.out.println("Driver " + driver + " does not connected to the car " + car);
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriverId(Long driverId) {
-        return carDao.getAllCarsByDriverId(driverId);
+        return carDao.getAllByDriverId(driverId);
     }
 }

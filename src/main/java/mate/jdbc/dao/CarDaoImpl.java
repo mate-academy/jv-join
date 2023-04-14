@@ -76,11 +76,10 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of all the cars in carsDB", e);
         }
-        if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
+
         return cars;
     }
 
@@ -114,29 +113,27 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllCarsByDriverId(Long driverId) {
-        String selectCarIds = "SELECT c.id as car_id FROM cars c "
-                + "JOIN cars_drivers cd ON c.id = cd.car_id "
+    public List<Car> getAllByDriverId(Long driverId) {
+        String query = "SELECT c.id as car_id, c.model, c.manufacturer_id, m.name, m.country "
+                + "FROM cars c JOIN manufacturers m on c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd on cd.car_id = c.id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE";
 
-        List<Long> carIds = new ArrayList<>();
         List<Car> cars = new ArrayList<>();
 
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(selectCarIds)) {
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                carIds.add(resultSet.getObject("car_id", Long.class));
+                cars.add(parseCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get all cars "
                     + "for driver with id = " + driverId, e);
         }
-        if (!carIds.isEmpty()) {
-            for (Long carId : carIds) {
-                cars.add(get(carId).get());
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
