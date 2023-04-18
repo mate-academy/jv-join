@@ -23,7 +23,6 @@ public class Main {
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car car = carService.get(9L);
-        carService.removeDriverFromCar(driverOne, car);
-        carService.getAll().forEach(System.out::println);
+        System.out.println(carService.get(6L));
     }
 }
