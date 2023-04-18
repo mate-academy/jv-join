@@ -1,9 +1,7 @@
 package mate.jdbc.dao;
 
-import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
-
 import java.util.List;
+import mate.jdbc.model.Car;
 
 public interface CarDao {
     Car create(Car car);
