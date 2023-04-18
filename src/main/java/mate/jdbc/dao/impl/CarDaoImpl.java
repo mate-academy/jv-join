@@ -3,9 +3,12 @@ package mate.jdbc.dao.impl;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
+import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.DriverService;
+import mate.jdbc.service.impl.DriverServiceImpl;
 import mate.jdbc.util.ConnectionUtil;
 
 import java.sql.*;
@@ -14,7 +17,7 @@ import java.util.List;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
+    private static Injector injector = Injector.getInstance("mate.jdbc");
     @Override
     public Car create(Car car) {
         String insertRequest = "INSERT INTO taxi_service.cars (model, manufacturers_id) VALUES (?, ?);";
@@ -196,6 +199,10 @@ public class CarDaoImpl implements CarDao {
                      connection.prepareStatement(insertDriversQuery)) {
             addDriverToCarStatement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
+                if (driver.getId() == null) { //add driver to DB if don't exist
+                    DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+                    driverService.create(driver);
+                }
                 addDriverToCarStatement.setLong(2, driver.getId());
                 addDriverToCarStatement.executeUpdate();
             }

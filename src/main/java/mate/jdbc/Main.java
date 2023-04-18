@@ -22,12 +22,18 @@ public class Main {
     private static Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
+
+        DriverDao driverDao = new DriverDaoImpl();
+
         Driver driverOne = new Driver();
-        driverOne.setLicenseNumber("2222");
+        driverOne.setId(11L);
+        driverOne.setLicenseNumber("334");
         driverOne.setName("One");
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        Car car = carService.get(1L);
-        carService.addDriverToCar(driverOne, car);
+        Car car = carService.get(9L);
+        carService.removeDriverFromCar(driverOne, car);
+        carService.getAll().forEach(System.out::println);
     }
 }
