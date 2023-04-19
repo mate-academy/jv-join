@@ -17,20 +17,15 @@ public class Main {
         ManufacturerService manufacturerService = (ManufacturerService)
                 injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Car bmvM5 = carService.get(1L);
-        //System.out.println(bmvM5);
-        //System.out.println(carService.getAll());
         Car audi = new Car();
         audi.setId(2L);
         audi.setModel("R8");
         audi.setManufacturer(manufacturerService.get(2L));
         audi.setDrivers(new ArrayList<>(Collections.singletonList(driverService.get(1L))));
-        //carService.create(audi);
         List<Car> allCar = carService.getAll();
         for (Car car: allCar) {
             System.out.println(car);
         }
-        //carService.update(audi);
         carService.addDriverToCar(driverService.get(3L), audi);
         carService.removeDriverFromCar(driverService.get(1L), audi);
         allCar = carService.getAll();
