@@ -122,7 +122,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1,driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                long carId = resultSet.getInt("car_id");
+                Long carId = resultSet.getLong("car_id");
                 for (Car car: cars) {
                     if (car.getId().equals(carId)) {
                         carsByDriver.add(car);
