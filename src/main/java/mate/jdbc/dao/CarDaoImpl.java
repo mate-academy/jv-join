@@ -65,7 +65,7 @@ public class CarDaoImpl implements CarDao {
             selectCarStatement.setLong(1, id);
             ResultSet resultSet = selectCarStatement.executeQuery();
             if (resultSet.next()) {
-                car = parseCarResultSet(resultSet);
+                car = parseCarFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't find car by id: " + id + " in DB.", e);
@@ -88,7 +88,7 @@ public class CarDaoImpl implements CarDao {
             getDriversStatement.setLong(1, carId);
             ResultSet resultSet = getDriversStatement.executeQuery();
             while (resultSet.next()) {
-                drivers.add(parseDriversFromResultSet(resultSet));
+                drivers.add(parseDriverFromResultSet(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
@@ -96,7 +96,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private Driver parseDriversFromResultSet(ResultSet resultSet) throws SQLException {
+    private Driver parseDriverFromResultSet(ResultSet resultSet) throws SQLException {
         Long driverId = resultSet.getObject("driver_id", Long.class);
         String name = resultSet.getString("name");
         String licenseNumber = resultSet.getString("license_number");
@@ -104,7 +104,7 @@ public class CarDaoImpl implements CarDao {
         return driver;
     }
 
-    private Car parseCarResultSet(ResultSet resultSet) throws SQLException {
+    private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
         Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
@@ -128,7 +128,7 @@ public class CarDaoImpl implements CarDao {
                         .prepareStatement(selectAllCarsRequest)) {
             ResultSet resultSet = selectAllCarsStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarResultSet(resultSet));
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't find any car from DB", e);
@@ -195,7 +195,7 @@ public class CarDaoImpl implements CarDao {
             getCarsStatement.setLong(1, driverId);
             ResultSet resultSet = getCarsStatement.executeQuery();
             while (resultSet.next()) {
-                cars.add(parseCarResultSet(resultSet));
+                cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't get any car by driver id: " + driverId, e);

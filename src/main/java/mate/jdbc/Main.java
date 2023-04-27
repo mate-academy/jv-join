@@ -20,8 +20,8 @@ public class Main {
             (DriverService) injector.getInstance(DriverService.class);
 
     public static void main(String[] args) {
-        setManufacturersToDB();
-        setDriversToDB();
+        addManufacturersToDB();
+        addDriversToDB();
 
         Car volvoXC90 = new Car();
         volvoXC90.setModel("XC90");
@@ -89,10 +89,10 @@ public class Main {
         System.out.println(updatedVolvo);
     }
 
-    private static void setManufacturersToDB() {
-        Manufacturer volvo = new Manufacturer(1L, "Volvo", "Germany");
-        Manufacturer renault = new Manufacturer(2L, "Renault", "France");
-        Manufacturer skoda = new Manufacturer(3L, "Skoda", "Czechia");
+    private static void addManufacturersToDB() {
+        Manufacturer volvo = new Manufacturer("Volvo", "Germany");
+        Manufacturer renault = new Manufacturer("Renault", "France");
+        Manufacturer skoda = new Manufacturer("Skoda", "Czechia");
         List<Manufacturer> manufacturers = new ArrayList<>();
         manufacturers.add(volvo);
         manufacturers.add(renault);
@@ -100,10 +100,10 @@ public class Main {
         manufacturers.forEach(manufacturerService::create);
     }
 
-    private static void setDriversToDB() {
-        Driver elisabet = new Driver(1L, "Elisabet", "021");
-        Driver amir = new Driver(2L, "Amir", "012");
-        Driver vincent = new Driver(3L, "Vincent", "013");
+    private static void addDriversToDB() {
+        Driver elisabet = new Driver("Elisabet", "021");
+        Driver amir = new Driver("Amir", "012");
+        Driver vincent = new Driver("Vincent", "013");
         List<Driver> drivers = new ArrayList<>();
         drivers.add(elisabet);
         drivers.add(amir);
