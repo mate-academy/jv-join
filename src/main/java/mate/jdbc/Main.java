@@ -32,32 +32,28 @@ public class Main {
         manufacturer.setName("AUDI");
 
         List<Driver> drivers = new ArrayList<>();
-        drivers.add(driver1);
-        drivers.add(driver2);
-        drivers.add(driver3);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
-        driverService.create(driver1);
-        driverService.create(driver2);
-        driverService.create(driver3);
+        drivers.add(driverService.get(29L));
 
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        manufacturerService.create(manufacturer);
+        //manufacturerService.create(manufacturer);
 
         Car car = new Car();
         car.setId(2L);
         car.setModel("R10");
-        car.setManufacturer(manufacturer);
+        car.setManufacturer(manufacturerService.get(15L));
         car.setDrivers(drivers);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
         carService.addDriverToCar(driverService.get(30L), car);
         carService.addDriverToCar(driverService.get(31L), car);
+        System.out.println(carService.get(2L));
         carService.removeDriverFromCar(driverService.get(31L), car);
 
-        System.out.println(driverService.get(2L));
+        System.out.println(carService.get(2L));
     }
 }
