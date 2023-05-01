@@ -6,33 +6,39 @@
 * Use `PreparedStatement` over `Statement`, even for a static query with no parameters in `getAll()` method. It's the best practice, and it's slightly faster.
 * Be careful and do not create nested connection problems. Nested connection problem is the situation, when you open DB connection inside another connection. **This often occurs when you try to get from DB drivers for some car**.
 * Remember about SQL style: use uppercase for SQL keywords in your queries.
-    ```sql     
-       Wrong:
+
+    - Wrong:
+    ```sql
         SELECT * from manufacturers WHERE is_deleted = false;                    
-             
-       Good:
+    ```
+    - Good:
+    ```sql
         SELECT * FROM manufacturers WHERE is_deleted = FALSE;
     ```  
 * Use aliases for table names in SQL queries with JOIN 
-    ```sql     
-       Wrong:
+
+    - Wrong:
+    ```sql
         SELECT cars.id AS car_id, manufacturers.id AS manufacturer_id
             FROM cars
             JOIN manufacturers ON cars.manufacturer_id = manufacturers.id
           WHERE...;                     
-             
-       Good:
+    ```
+    - Good:
+    ```sql
         SELECT c.id AS car_id, m.id AS manufacturer_id
           FROM cars c
             JOIN manufacturers m ON c.manufacturer_id = m.id
           WHERE...;
     ``` 
 * Use informative messages for exceptions.
-    ```
-        Wrong:
+
+    - Wrong:
+    ```java
             throw new DataProcessingException("Can't get manufacturer", e);
-            
-        Good:
+    ```
+    - Good:
+    ```java
             throw new DataProcessingException("Can't get manufacturer by id " + id, e);
             throw new DataProcessingException("Can't insert manufacturer " + manufacturer, e);
     ``` 
