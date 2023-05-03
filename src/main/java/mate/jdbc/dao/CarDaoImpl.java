@@ -97,7 +97,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of cars from carsDB.", e);
+            throw new DataProcessingException("Couldn't get a list of cars from carsDB "
+                    + "by driver id.", e);
         }
         setDriversForCars(cars);
         return cars;
@@ -146,7 +147,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1,car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't add driver to car" + car, e);
+            throw new DataProcessingException("Couldn't delete driver from car" + car, e);
         }
 
     }
