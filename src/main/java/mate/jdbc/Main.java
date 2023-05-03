@@ -27,7 +27,7 @@ public class Main {
         driverService.create(new Driver("driverD", "driverDD"));
         List<Driver> drivers = driverService.getAll();
         Car car = carService.create(new Car("car1", manufacturer, drivers));
-        System.out.println(carService.create(car));
+        System.out.println(car);
         System.out.println(carService.get(1L));
         System.out.println(carService.getAll());
         System.out.println(carService.getAllByDriver(1L));

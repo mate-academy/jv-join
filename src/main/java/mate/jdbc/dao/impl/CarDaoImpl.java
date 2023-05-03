@@ -20,7 +20,7 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
-        String query = "SELECT c.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
+        String query = "SELECT m.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
                 + "FROM CARS c JOIN manufacturers m on c.manufacturer_id = c.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE";
         Car car = null;
@@ -42,7 +42,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
+        String query = "SELECT m.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m on c.manufacturer_id = c.id "
                 + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
@@ -61,7 +61,7 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
+        String query = "SELECT m.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
                 + "FROM cars c JOIN manufacturers m on c.manufacturer_id = c.id "
                 + " JOIN cars_drivers cd on c.id = cd.car_id "
                 + "WHERE c.is_deleted = FALSE and cd.driver_id = ?";
@@ -192,7 +192,7 @@ public class CarDaoImpl implements CarDao {
         String country = resultSet.getString("country");
         manufacturer.setId(manufacturerId);
         manufacturer.setName(name);
-        manufacturer.setName(country);
+        manufacturer.setCountry(country);
         car.setManufacturer(manufacturer);
         return car;
     }
