@@ -31,7 +31,6 @@ public class Main {
         System.out.println("First car created: "
                 + System.lineSeparator() + car1);
 
-
         List<Driver> driversForSecondCar = new ArrayList<>();
         driversForSecondCar.add(allDrivers.get(0));
         driversForSecondCar.add(allDrivers.get(2));

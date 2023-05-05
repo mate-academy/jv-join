@@ -11,7 +11,7 @@ import mate.jdbc.model.Driver;
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
-    CarDao carDao;
+    private CarDao carDao;
 
     @Override
     public Car create(Car car) {
@@ -20,8 +20,8 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new NoSuchElementException
-                                ("Could not get car by id = " + id));
+        return carDao.get(id).orElseThrow(() ->
+                new NoSuchElementException("Could not get car by id = " + id));
     }
 
     @Override
