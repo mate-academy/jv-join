@@ -30,12 +30,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            addNewRelations(car.getDrivers(), car.getId());
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        addCarDriversRelations(car.getDrivers(), car.getId());
+        return car;
     }
 
     @Override
@@ -102,12 +102,12 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        deleteAllRelations(car.getId());
-        addNewRelations(car.getDrivers(), car.getId());
+        deleteCarDriversRelations(car.getId());
+        addCarDriversRelations(car.getDrivers(), car.getId());
         return car;
     }
 
-    private void addNewRelations(List<Driver> drivers, Long id) {
+    private void addCarDriversRelations(List<Driver> drivers, Long id) {
         String query = "INSERT INTO cars_drivers (driver_id, car_id) VALUES (?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
@@ -124,7 +124,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private boolean deleteAllRelations(Long id) {
+    private boolean deleteCarDriversRelations(Long id) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -148,7 +148,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public List<Car> getAllByDriver(Long driverId) {
+    public List<Car> getAllCarsByDriver(Long driverId) {
         List<Car> cars = new ArrayList<>();
         List<Long> carsId = new ArrayList<>();
         String getAllCarsByDriverQuery = "SELECT * FROM cars_drivers WHERE driver_id = ?";
