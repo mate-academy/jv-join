@@ -101,7 +101,7 @@ public class CarDaoImpl implements CarDao {
                     + "FROM cars_drivers cd "
                     + "INNER JOIN cars c ON cd.car_id = c.id "
                     + "INNER JOIN manufacturers m ON c.manufacturer_id = m.id "
-                    + "WHERE driver_id = 1 AND c.is_deleted = FALSE;";
+                    + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
         return getAllCarsUsingQuery(query);
     }
 
