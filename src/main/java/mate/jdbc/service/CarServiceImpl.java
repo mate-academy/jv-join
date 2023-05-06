@@ -20,7 +20,7 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Could not get driver "
+        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Could not get car "
                 + "by id = " + id));
     }
 

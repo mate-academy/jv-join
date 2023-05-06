@@ -44,23 +44,24 @@ public class Main {
         driverService.create(driverEva);
 
         Car toyotaCar = new Car("Corolla", manufacturerToyota, new ArrayList<>());
-        toyotaCar.getDrivers().add(driverMaxim);
-        toyotaCar.getDrivers().add(driverJon);
+        carService.create(toyotaCar);
+        carService.addDriverToCar(driverMaxim, toyotaCar);
+        carService.addDriverToCar(driverJon, toyotaCar);
+        carService.update(toyotaCar);
 
         Car fordCar = new Car("Focus", manufacturerFord, new ArrayList<>());
-        fordCar.getDrivers().add(driverBob);
-        fordCar.getDrivers().add(driverKarl);
+        carService.create(fordCar);
+        carService.addDriverToCar(driverBob, fordCar);
+        carService.addDriverToCar(driverKarl, fordCar);
+        carService.update(fordCar);
 
         Car bmwCar = new Car("X5", manufacturerBmw, new ArrayList<>());
-        bmwCar.getDrivers().add(driverMark);
-        bmwCar.getDrivers().add(driverBill);
-        bmwCar.getDrivers().add(driverEva);
-
-        carService.create(toyotaCar);
-        carService.create(fordCar);
         carService.create(bmwCar);
+        carService.addDriverToCar(driverMark, bmwCar);
+        carService.addDriverToCar(driverBill, bmwCar);
+        carService.addDriverToCar(driverEva, bmwCar);
+        carService.update(bmwCar);
 
-        carService.addDriverToCar(driverMaxim, fordCar);
         carService.removeDriverFromCar(driverEva, bmwCar);
 
         System.out.println(carService.getAll());

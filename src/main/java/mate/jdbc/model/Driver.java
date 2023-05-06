@@ -6,14 +6,6 @@ public class Driver {
     private Long id;
     private String name;
     private String licenseNumber;
-    private Car car;
-
-    public Driver(Long id, String name, String licenseNumber, Car car) {
-        this.id = id;
-        this.name = name;
-        this.licenseNumber = licenseNumber;
-        this.car = car;
-    }
 
     public Driver(Long id, String name, String licenseNumber) {
         this.id = id;
@@ -21,24 +13,9 @@ public class Driver {
         this.licenseNumber = licenseNumber;
     }
 
-    public Driver(String name, String licenseNumber, Car car) {
-        this.name = name;
-        this.licenseNumber = licenseNumber;
-        this.car = car;
-    }
-
     public Driver(String name, String licenseNumber) {
         this.name = name;
         this.licenseNumber = licenseNumber;
-    }
-
-    public Car getCar() {
-        return car;
-    }
-
-    public Driver setCar(Car car) {
-        this.car = car;
-        return this;
     }
 
     public Long getId() {
@@ -75,23 +52,20 @@ public class Driver {
         }
         Driver driver = (Driver) o;
         return Objects.equals(id, driver.id) && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber)
-                && Objects.equals(car, driver.car);
+                && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, licenseNumber, car);
+        return Objects.hash(id, name, licenseNumber);
     }
 
     @Override
     public String toString() {
         return "Driver{"
-                + "id=" + id
-                + ", name='"
-                + name + '\''
+                + "id="
+                + id + ", name='" + name + '\''
                 + ", licenseNumber='" + licenseNumber + '\''
-                + ", car=" + car
                 + '}';
     }
 }
