@@ -124,7 +124,7 @@ public class CarDaoImpl implements CarDao {
                     + "FROM cars_drivers cd "
                     + "INNER JOIN cars c ON cd.car_id = c.id "
                     + "INNER JOIN manufacturers m ON c.manufacturer_id = m.id "
-                    + "WHERE driver_id = ? AND cd.is_deleted = FALSE;";
+                    + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -150,14 +150,16 @@ public class CarDaoImpl implements CarDao {
         Manufacturer manufacturer = new Manufacturer(manufacturerId,
                                                     manufacturerName,
                                                     manufacturerCountry);
-        return new Car(carId, carModel, manufacturer, new ArrayList<>());
+        Car car = new Car(carModel, manufacturer, new ArrayList<>());
+        car.setId(carId);
+        return car;
     }
 
     private List<Driver> getDriversForCar(Car car) {
         String getDriversRequest = "SELECT d.id, d.name, d.license_number "
                                 + "FROM cars_drivers cd "
                                 + "INNER JOIN drivers d ON cd.driver_id = d.id "
-                                + "WHERE cd.car_id = ? AND cd.is_deleted = FALSE;";
+                                + "WHERE cd.car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(getDriversRequest)) {
@@ -187,8 +189,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void removeDriversFromCarByCarID(Long carId) {
-        String removeCarsDriversQuery = "UPDATE cars_drivers SET is_deleted = TRUE "
-                        + "WHERE car_id = ?;";
+        String removeCarsDriversQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(removeCarsDriversQuery)) {
