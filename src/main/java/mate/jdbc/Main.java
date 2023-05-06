@@ -25,22 +25,22 @@ public class Main {
         List<Manufacturer> allManufacturers = manufacturerService.getAll();
 
         List<Driver> driversForFirstCar = new ArrayList<>();
-        driversForFirstCar.add(allDrivers.get(0)); //bob
+        driversForFirstCar.add(allDrivers.get(0));
         Car car1 = carService.create(new Car("MRS1",
                 allManufacturers.get(0), driversForFirstCar));
         System.out.println("First car created: "
                 + System.lineSeparator() + car1);
 
         List<Driver> driversForSecondCar = new ArrayList<>();
-        driversForSecondCar.add(allDrivers.get(1)); //oleg
-        driversForSecondCar.add(allDrivers.get(2)); //john
+        driversForSecondCar.add(allDrivers.get(1));
+        driversForSecondCar.add(allDrivers.get(2));
         Car car2 = carService.create(new Car("BMW1",
                 allManufacturers.get(3), driversForSecondCar));
         System.out.println("Second car created: "
                 + System.lineSeparator() + car2);
 
         List<Driver> driversForThirdCar = new ArrayList<>();
-        driversForThirdCar.add(allDrivers.get(2)); //john
+        driversForThirdCar.add(allDrivers.get(2));
         Car car3 = carService.create(new Car("MTS1",
                 allManufacturers.get(1), driversForThirdCar));
         System.out.println("Third car created: "
