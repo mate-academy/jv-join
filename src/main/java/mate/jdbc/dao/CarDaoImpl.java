@@ -38,21 +38,6 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void insertDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            for (Driver driver : car.getDrivers()) {
-                statement.setLong(2, driver.getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert drivers for "
-                    + car + ". ", e);
-        }
-    }
-
     @Override
     public Optional<Car> get(Long id) {
         String query = "SELECT cars.id AS car_id, model AS car_model, manufacturer_id, "
@@ -72,7 +57,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
         if (car != null) {
-            car.setDrivers(getListDriversFromCar(id));
+            car.setDrivers(getListDriversByCarID(id));
         }
         return Optional.ofNullable(car);
     }
@@ -94,7 +79,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get all cars from db ", e);
         }
         for (Car car: cars) {
-            car.setDrivers(getListDriversFromCar(car.getId()));
+            car.setDrivers(getListDriversByCarID(car.getId()));
         }
         return cars;
     }
@@ -117,18 +102,6 @@ public class CarDaoImpl implements CarDao {
         deleteCarDrivers(car);
         insertDrivers(car);
         return car;
-    }
-
-    private void deleteCarDrivers(Car car) {
-        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement
-                           = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete drivers for "
-                    + car + " in carsDB.", e);
-        }
     }
 
     @Override
@@ -162,7 +135,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get list cars by id " + driverId, e);
         }
         for (Car car: cars) {
-            car.setDrivers(getListDriversFromCar(car.getId()));
+            car.setDrivers(getListDriversByCarID(car.getId()));
         }
         return cars;
     }
@@ -178,7 +151,7 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private List<Driver> getListDriversFromCar(Long carsId) {
+    private List<Driver> getListDriversByCarID(Long carsId) {
         String query = "SELECT drivers.id AS driver_id, name AS drivers_name, license_number "
                 + "FROM drivers d INNER JOIN cars_drivers cd ON d.id = cd.driver_id "
                 + "WHERE car_id = ? AND is_deleted = FALSE";
@@ -201,5 +174,32 @@ public class CarDaoImpl implements CarDao {
         String name = resultSet.getString("drivers_name");
         String licenseNumber = resultSet.getString("license_number");
         return new Driver(id, name, licenseNumber);
+    }
+
+    private void insertDrivers(Car car) {
+        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?)";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't insert drivers for "
+                    + car + ". ", e);
+        }
+    }
+
+    private void deleteCarDrivers(Car car) {
+        String query = "DELETE FROM cars_drivers WHERE car_id = ?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement
+                        = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete drivers for "
+                    + car + " in carsDB.", e);
+        }
     }
 }
