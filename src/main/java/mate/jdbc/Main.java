@@ -17,8 +17,8 @@ public class Main {
                 injector.getInstance(ManufacturerService.class);
         DriverService driverService = (DriverService)
                 injector.getInstance(DriverService.class);
-        Manufacturer manufacturerBYD = new Manufacturer(null, "BYD", "China");
-        manufacturerService.create(manufacturerBYD);
+        Manufacturer manufacturerByd = new Manufacturer(null, "BYD", "China");
+        manufacturerService.create(manufacturerByd);
         Driver firstDriver = new Driver(null, "FirstDriverName", "11111111111");
         Driver seconfDriver = new Driver(null, "SecondDriverName", "22222222222");
         Driver thirdDriver = new Driver(null,"ThirdDriverName","33333333333");
@@ -28,7 +28,7 @@ public class Main {
         System.out.println(driverService.getAll());
         Car car = new Car();
         car.setModel("Tang");
-        car.setManufacturer(manufacturerBYD);
+        car.setManufacturer(manufacturerByd);
         car.setDrivers(List.of(firstDriver, seconfDriver));
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.create(car);
