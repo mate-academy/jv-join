@@ -40,14 +40,13 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-
     @Override
     public Car get(Long id) {
         String selectRequest =
-                "SELECT c.id as car_id, model," +
-                        "m.id as manufacturer_id, m.name, m.country " +
-                        "FROM CARS c JOIN manufacturers m " +
-                        "ON c.manufacturer_id = m.id where c.id = ? and c.is_deleted = false;";
+                "SELECT c.id as car_id, model, m.id as manufacturer_id, m.name, m.country "
+                        + "FROM CARS c JOIN manufacturers m "
+                        + "ON c.manufacturer_id = m.id "
+                        + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getCarStatement =
@@ -66,14 +65,13 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    //----------------//
     @Override
     public List<Car> getAll() {
         Car car;
         List<Car> carList = new ArrayList<>();
         String selectGetAllRequest = "SELECT c.id as car_id, model, m.id as manufacturer_id,"
-                + " m.name, m.country FROM CARS c JOIN manufacturers m "
-                + "ON c.manufacturer_id = m.id and c.is_deleted = false;";
+                + " m.name, m.country FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllCarsStatement = connection.prepareStatement(
                         selectGetAllRequest, Statement.RETURN_GENERATED_KEYS)) {
@@ -88,11 +86,6 @@ public class CarDaoImpl implements CarDao {
             throw new RuntimeException(" is not good connection method getAll ", throwable);
         }
     }
-    //----------------//
-
-    // 1). update book fields
-    // 2). deleted all relation in books_authors table where bookId = book.getId()
-    // 3). add new relation to the books_authors table
 
     @Override
     public Car update(Car car) {
@@ -113,22 +106,52 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection in method update:" +
-                    " failed to remove drivers ", throwable);
+            throw new RuntimeException(" is not good connection in method update:"
+                    + " failed to remove drivers ", throwable);
         }
         insertDrivers(car);
         return car;
     }
 
-    //----------------//
     @Override
     public boolean delete(Long id) {
-        return false;
+        String deleteCarQuery = "UPDATE cars SET is_deleted = TRUE WHERE id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement softDeletedCarStatement = connection.prepareStatement(
+                        deleteCarQuery)) {
+            softDeletedCarStatement.setLong(1, id);
+            int numberOfDeletedRows = softDeletedCarStatement.executeUpdate();
+            return numberOfDeletedRows != 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't delete car with id: " + id, e);
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        Car car;
+        List<Car> carList = new ArrayList<>();
+
+        String getAllCarsFromDriverRequest = "SELECT c.id as car_id, model, m.id as "
+                + "manufacturer_id, m.name, m.country FROM cars c JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id and c.is_deleted = FALSE "
+                + "JOIN cars_drivers "
+                + "ON c.id = cars_drivers.car_id WHERE cars_drivers.driver_id = ?;";
+
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement getCarsStatement =
+                        connection.prepareStatement(getAllCarsFromDriverRequest)) {
+            getCarsStatement.setLong(1, driverId);
+            ResultSet resultSet = getCarsStatement.executeQuery();
+            while (resultSet.next()) {
+                car = parseCarWithManufacturerResultSet(resultSet);
+                car.setDrivers(getDriversFromCar(car.getId()));
+                carList.add(car);
+            }
+            return carList;
+        } catch (SQLException throwable) {
+            throw new RuntimeException(" is not good connection method getAllByDriver ", throwable);
+        }
     }
 
     private void insertDrivers(Car car) {
@@ -150,12 +173,11 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car parseCarWithManufacturerResultSet(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
         Manufacturer manufacturer = new Manufacturer();
-
         manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setCountry(resultSet.getString("country"));
         manufacturer.setName(resultSet.getString("name"));
+        Car car = new Car();
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("model"));
         car.setManufacturer(manufacturer);
@@ -173,7 +195,7 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDriversFromCar(Long carId) {
         String getAllDriversFromCarRequest = "SELECT id, name, licenseNumber "
                 + "FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
-                + "WHERE cd.car_id = ?; ";
+                + "WHERE cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversStatement =
                         connection.prepareStatement(getAllDriversFromCarRequest)) {
@@ -185,7 +207,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find authors in DB by book id " + carId, e);
+            throw new RuntimeException("Can't find drivers in DB by car carId " + carId, e);
         }
     }
 }

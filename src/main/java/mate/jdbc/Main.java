@@ -12,54 +12,32 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
+
+        Driver vitalic = new Driver(9L, "Vitalic", "01228");
+        Driver oles = new Driver(10L, "Oles", "01229");
+        List<Driver> listDriversPeugeot = new ArrayList<>();
+        listDriversPeugeot.add(vitalic);
+        listDriversPeugeot.add(oles);
+        Manufacturer peugeotGroup = new Manufacturer(6L, "peugeot group", "France");
+        Car peugeot = new Car();
+        peugeot.setId(15L);
+        peugeot.setModel("peugeot");
+        peugeot.setDrivers(listDriversPeugeot);
+        peugeot.setManufacturer(peugeotGroup);
+
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        //----create/
-//        Driver vitalic = new Driver(9L, "Vitalic", "01228");
-//        Driver oles = new Driver(10L, "Oles", "01229");
-//        List<Driver> listDriversPeugeot = new ArrayList<>();
-//        listDriversPeugeot.add(vitalic);
-//        listDriversPeugeot.add(oles);
-//        Manufacturer peugeotGroup = new Manufacturer(6L, "peugeot group", "France");
-//
-//        Car peugeot = new Car();
-//        peugeot.setModel("peugeot");
-//        peugeot.setDrivers(listDriversPeugeot);
-//        peugeot.setManufacturer(peugeotGroup);
-//        carService.create(peugeot);
-        //----create/
+        carService.create(peugeot);
 
-        //----get;
-//        Car car = carService.get(15L);
-//        System.out.println(car);
-        //----get;
+        carService.update(peugeot);
 
-        //----getAll;
-//        System.out.println(carService.getAll());
-        //----getAll;
+        carService.delete(1L);
 
+        Car car = carService.get(15L);
+        System.out.println(car);
 
+        System.out.println(carService.getAll());
 
-        //-----TEST!!!
-        Driver Bob001 = new Driver(881L, "Bob001", "00001");
-        Driver Bob002 = new Driver(882L, "Bob002", "00002");
-        List<Driver> listDriversTestCar = new ArrayList<>();
-        listDriversTestCar.add(Bob001);
-        listDriversTestCar.add(Bob002);
-        Manufacturer manufacturerTest = new Manufacturer(999L, "manufacturerTest", "countryTest");
-
-        Car carTest = new Car();
-        carTest.setId(18L);
-        carTest.setModel("modelCarTest");
-        carTest.setDrivers(listDriversTestCar);
-        carTest.setManufacturer(manufacturerTest);
-        carService.update(carTest);
-
-//        carService.create(carTest);
-        //-----TEST!!!
-
-
-
-
+        System.out.println(carService.getAllByDriver(1L));
     }
 }
