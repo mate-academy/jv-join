@@ -16,7 +16,7 @@ public class Injector {
     private final Map<Class<?>, Object> instanceOfClasses = new HashMap<>();
     private final List<Class<?>> classes = new ArrayList<>();
 
-    private Injector(String mainPackageName) {
+    public Injector(String mainPackageName) {
         try {
             classes.addAll(getClasses(mainPackageName));
         } catch (IOException | ClassNotFoundException e) {
