@@ -27,17 +27,17 @@ public class Main {
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-//        carService.create(peugeot);
-//
-//        carService.update(peugeot);
-//
-//        carService.delete(1L);
-//
-//        Car car = carService.get(15L);
-//        System.out.println(car);
+        carService.create(peugeot);
+
+        carService.update(peugeot);
+
+        carService.delete(1L);
+
+        Car car = carService.get(15L);
+        System.out.println(car);
 
         System.out.println(carService.getAll());
 
-//        System.out.println(carService.getAllByDriver(1L));
+        System.out.println(carService.getAllByDriver(1L));
     }
 }
