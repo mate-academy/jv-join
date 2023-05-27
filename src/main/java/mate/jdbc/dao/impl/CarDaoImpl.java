@@ -24,7 +24,6 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createCarStatement = connection.prepareStatement(insertRequest,
                         Statement.RETURN_GENERATED_KEYS)) {
-
             createCarStatement.setString(1, car.getModel());
             createCarStatement.setLong(2, car.getManufacturer().getId());
             createCarStatement.executeUpdate();
@@ -69,6 +68,7 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         Car car;
         List<Car> carList = new ArrayList<>();
+
         String selectGetAllRequest = "SELECT c.id as car_id, model, m.id as manufacturer_id,"
                 + " m.name, m.country FROM cars c JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id AND c.is_deleted = FALSE;";
@@ -78,8 +78,10 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
                 car = parseCarWithManufacturerResultSet(resultSet);
-                car.setDrivers(getDriversFromCar(car.getId()));
                 carList.add(car);
+            }
+            for (Car valueCar : carList) {
+                valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
             }
             return carList;
         } catch (SQLException throwable) {
@@ -99,16 +101,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException throwable) {
             throw new RuntimeException(" is not good connection in method update ", throwable);
         }
-
-        String queryDeleted = "DELETE FROM cars_drivers WHERE car_id = ?;";
-        try (Connection connect = ConnectionUtil.getConnection();
-                PreparedStatement preparedStatement = connect.prepareStatement(queryDeleted)) {
-            preparedStatement.setLong(1, car.getId());
-            preparedStatement.executeUpdate();
-        } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection in method update:"
-                    + " failed to remove drivers ", throwable);
-        }
+        deleteCarsDrivers(car);
         insertDrivers(car);
         return car;
     }
@@ -159,9 +152,7 @@ public class CarDaoImpl implements CarDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement addDriversToCarStatement = connection.prepareStatement(
                         insertDriversQuery)) {
-
             addDriversToCarStatement.setLong(1, car.getId());
-
             for (Driver driver : car.getDrivers()) {
                 addDriversToCarStatement.setLong(2, driver.getId());
                 addDriversToCarStatement.executeUpdate();
@@ -190,6 +181,18 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("licenseNumber"));
         return driver;
+    }
+
+    private void deleteCarsDrivers(Car car) {
+        String queryDeleted = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connect = ConnectionUtil.getConnection();
+                PreparedStatement preparedStatement = connect.prepareStatement(queryDeleted)) {
+            preparedStatement.setLong(1, car.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException throwable) {
+            throw new RuntimeException(" is not good connection in method update:"
+                    + " failed to remove drivers ", throwable);
+        }
     }
 
     private List<Driver> getDriversFromCar(Long carId) {
