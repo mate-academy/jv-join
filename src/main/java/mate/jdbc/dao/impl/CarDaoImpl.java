@@ -80,13 +80,13 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarWithManufacturerResultSet(resultSet);
                 carList.add(car);
             }
-            for (Car valueCar : carList) {
-                valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
-            }
-            return carList;
         } catch (SQLException throwable) {
             throw new RuntimeException(" is not good connection method getAll ", throwable);
         }
+        for (Car valueCar : carList) {
+            valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
+        }
+        return carList;
     }
 
     @Override
