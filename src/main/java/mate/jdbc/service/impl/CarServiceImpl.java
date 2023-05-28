@@ -3,7 +3,6 @@ package mate.jdbc.service.impl;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -46,10 +45,6 @@ public class CarServiceImpl implements CarService {
         if (!car.getDrivers().contains(driver)) {
             car.getDrivers().add(driver);
             carDao.update(car);
-        } else {
-            throw new DataProcessingException("Couldn't add. "
-                    + "This car: " + car.getModel() + " id: " + car.getId()
-                    + " already contains driver: " + driver.getName() + " id: " + driver.getId());
         }
     }
 
@@ -58,11 +53,6 @@ public class CarServiceImpl implements CarService {
         if (car.getDrivers().contains(driver)) {
             car.getDrivers().remove(driver);
             carDao.update(car);
-        } else {
-            throw new DataProcessingException("Couldn't remove."
-                    + "This car: " + car.getModel() + " id: "
-                    + car.getId()
-                    + " doesn't contain driver: " + driver.getName() + " id: " + driver.getId());
         }
     }
 
