@@ -3,6 +3,7 @@ package mate.jdbc.service.impl;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -13,6 +14,7 @@ import mate.jdbc.service.CarService;
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
+
     @Override
     public Car create(Car car) {
         return carDao.create(car);
@@ -21,7 +23,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public Car get(Long id) {
         return carDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get car by id = " + id));
+                .orElseThrow(() -> new NoSuchElementException("Couldn't get car by id = " + id));
     }
 
     @Override
@@ -41,16 +43,31 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-
+        if (!car.getDrivers().contains(driver)) {
+            car.getDrivers().add(driver);
+            carDao.update(car);
+        } else {
+            throw new DataProcessingException("Couldn't add. "
+                    + "This car: " + car.getModel() + " id: " + car.getId()
+                    + " already contains driver: " + driver.getName() + " id: " + driver.getId());
+        }
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-
+        if (car.getDrivers().contains(driver)) {
+            car.getDrivers().remove(driver);
+            carDao.update(car);
+        } else {
+            throw new DataProcessingException("Couldn't remove."
+                    + "This car: " + car.getModel() + " id: "
+                    + car.getId()
+                    + " doesn't contain driver: " + driver.getName() + " id: " + driver.getId());
+        }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        return carDao.getAllByDriver(driverId);
     }
 }
