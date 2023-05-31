@@ -31,12 +31,13 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            insertDrivers(car);
-            return car;
+
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -154,8 +155,8 @@ public class CarDaoImpl implements CarDao {
         String insertRequest = "INSERT INTO cars_drivers (driver_id, car_id)"
                 + "VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(insertRequest,
-                        Statement.RETURN_GENERATED_KEYS)) {
+                 PreparedStatement statement
+                         = connection.prepareStatement(insertRequest)) {
             statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
                 statement.setLong(2, driver.getId());
@@ -197,21 +198,6 @@ public class CarDaoImpl implements CarDao {
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get drivers by car id. " + id, e);
-        }
-    }
-
-    private void updateDrivers(Car car) {
-        String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
-        deleteDriversFromCarsById(car.getId());
-        try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement = connection.prepareStatement(query)) {
-            for (Driver driver : car.getDrivers()) {
-                statement.setLong(1, car.getId());
-                statement.setLong(2, driver.getId());
-            }
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new RuntimeException("Couldn't update driver", e);
         }
     }
 
