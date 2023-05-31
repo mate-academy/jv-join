@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -40,7 +41,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS car_id, c.model AS car_model, "
                 + "m.id AS manufacturer_id, m.name AS manufacturer_name, "
                 + "m.country AS manufacturer_country "
@@ -62,7 +63,7 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getAllDriversByCarId(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
