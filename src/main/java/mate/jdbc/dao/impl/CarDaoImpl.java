@@ -165,7 +165,7 @@ public class CarDaoImpl implements CarDao {
         long id = resultSet.getLong("car_id");
         String model = resultSet.getString("car_model");
         Manufacturer manufacturer = getManufacture(resultSet);
-        return new Car(id, model, manufacturer, null);
+        return new Car(id, model, manufacturer);
     }
 
     private Driver getDriver(ResultSet resultSet) throws SQLException {
