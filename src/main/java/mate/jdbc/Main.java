@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -21,14 +22,16 @@ public class Main {
         Driver roman =
                 driverService.create(new Driver(null, "roman", "mn321"));
         // Creat
-        Car tonale = carService.create(new Car(null, "tonale", alfaRomeoManufacturer));
+        Car tonale = carService.create(new Car(null, "tonale",
+                alfaRomeoManufacturer, new ArrayList<>()));
         carService.getAll().forEach(System.out::println);
         System.out.println();
         // Add Driver to Car
         carService.addDriverToCar(roman, tonale);
         carService.getAll().forEach(System.out::println);
         System.out.println();
-        Car stelvio = carService.create(new Car(null, "stelvio", alfaRomeoManufacturer));
+        Car stelvio = carService.create(new Car(null, "stelvio",
+                alfaRomeoManufacturer, new ArrayList<>()));
         carService.getAll().forEach(System.out::println);
         System.out.println();
         carService.addDriverToCar(roman, stelvio);
@@ -49,6 +52,7 @@ public class Main {
         System.out.println();
         // Delete
         carService.delete(stelvio.getId());
+        carService.delete(tonale.getId());
         carService.getAll().forEach(System.out::println);
     }
 }

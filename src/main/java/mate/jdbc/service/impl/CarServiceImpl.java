@@ -1,9 +1,7 @@
 package mate.jdbc.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
@@ -51,26 +49,15 @@ public class CarServiceImpl implements CarService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         List<Driver> drivers = car.getDrivers();
-        if (drivers == null) {
-            car.setDrivers(List.of(driver));
-            carDao.update(car);
-            return;
+        if (!drivers.contains(driver)) {
+            drivers.add(driver);
         }
-        for (Driver d : drivers) {
-            if (Objects.equals(d.getId(), driver.getId())) {
-                throw new RuntimeException("Driver already exist in the car. "
-                        + "Driver id: " + driver.getId() + " Car id: " + car.getId());
-            }
-        }
-        drivers.add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        List<Driver> drivers = new ArrayList<>(car.getDrivers());
-        drivers.remove(driver);
-        car.setDrivers(drivers);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 }

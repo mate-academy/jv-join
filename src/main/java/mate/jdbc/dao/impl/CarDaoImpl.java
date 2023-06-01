@@ -83,9 +83,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars from cars DB.", e);
         }
         for (Car car : cars) {
-            if (car != null) {
-                car.setDrivers(getDriversForCar(car.getId()));
-            }
+            car.setDrivers(getDriversForCar(car.getId()));
         }
         return cars;
     }
@@ -101,7 +99,7 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Can't update car in DB " + car,e);
+            throw new DataProcessingException("Can't update car in DB " + car,e);
         }
         deleteDrivers(car.getId());
         if (car.getDrivers() != null) {
@@ -121,33 +119,35 @@ public class CarDaoImpl implements CarDao {
             int numberOfDeletedRows = softDeleteCarStatement.executeUpdate();
             return numberOfDeletedRows != 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete car with id: " + carId, e);
+            throw new DataProcessingException("Can't delete car with id: " + carId, e);
         }
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Long> carsId = new ArrayList<>();
-        String getAllByDriverQuery = "SELECT * FROM cars_drivers WHERE driver_id = ?";
+        List<Car> cars = new ArrayList<>();
+        String getAllByDriverQuery = "SELECT c.id, c.model, m.id AS manufacturer_id, "
+                + "m.name AS manufacturer, m.country AS country "
+                + "FROM cars c "
+                + "JOIN cars_drivers cd on c.id = cd.car_id "
+                + "JOIN manufacturers m on m.id = c.manufacturer_id WHERE driver_id = ? "
+                + "AND c.is_deleted = FALSE";
         try (Connection connection = ConnectionUtil.getConnection();
                         PreparedStatement getAllByDriverStatement =
                         connection.prepareStatement(getAllByDriverQuery)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                carsId.add(resultSet.getObject("car_id", Long.class));
+                cars.add(getCarFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars Id from "
                     + "cars_drivers DB by driver Id: " + driverId, e);
         }
-        List<Car> listOfCars = new ArrayList<>();
-        for (Long id : carsId) {
-            if (id != null) {
-                listOfCars.add(get(id).get());
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversForCar(car.getId()));
         }
-        return listOfCars;
+        return cars;
     }
 
     private Car getCarFromResultSet(ResultSet resultSet) throws SQLException {
@@ -155,7 +155,7 @@ public class CarDaoImpl implements CarDao {
                 resultSet.getString("model"),
                 new Manufacturer(resultSet.getObject("manufacturer_id", Long.class),
                         resultSet.getString("manufacturer"),
-                        resultSet.getString("country")));
+                        resultSet.getString("country")), new ArrayList<>());
         return car;
     }
 
