@@ -127,7 +127,7 @@ public class CarDaoImpl implements CarDao {
             deleteStatement.setLong(1, car.getId());
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update car " + car, e);
+            throw new DataProcessingException("Can't delete drivers from car " + car, e);
         }
     }
 
@@ -141,6 +141,32 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car with id = " + id, e);
         }
+    }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        String request = "SELECT * FROM cars_drivers cd "
+                + "JOIN cars c "
+                + "ON c.id = cd.car_id "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
+        ArrayList<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(request)) {
+            statement.setObject(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(parseCarFromResultSet(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't get cars with driver id = "
+                    + driverId, e);
+        }
+        for (Car car: cars) {
+            car.setDrivers(getAllDriversForCar(car.getId()));
+        }
+        return cars;
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
@@ -172,7 +198,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't get list of drives by car id = " + carId, e);
+            throw new DataProcessingException("Can't get drives from car with id = " + carId, e);
         }
     }
 

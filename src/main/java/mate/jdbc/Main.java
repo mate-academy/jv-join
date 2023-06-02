@@ -1,5 +1,6 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -14,21 +15,26 @@ public class Main {
 
     public static void main(String[] args) {
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        Driver sam = driverService.create(new Driver(null, "Sam", "555"));
-        Driver bob = driverService.create(new Driver(null, "Bob", "666"));
-        Driver mark = driverService.create(new Driver(null, "Mark", "444"));
-
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
+        CarService carService = (CarService) injector.getInstance(CarService.class);
+
+        System.out.println("Created two cars: x5 and s500");
+        List<Driver> s500Drivers = new ArrayList<>();
+        Driver mark = driverService.create(new Driver(null, "Mark", "444"));
+        s500Drivers.add(mark);
         Manufacturer mrcManufacturer =
                 manufacturerService.create(new Manufacturer(null, "Mercedes Benz", "Germany"));
+        Car s500 = carService.create(new Car(null, "s500", mrcManufacturer, s500Drivers));
+
+        List<Driver> x5Drivers = new ArrayList<>();
+        Driver sam = driverService.create(new Driver(null, "Sam", "555"));
+        x5Drivers.add(sam);
+        Driver bob = driverService.create(new Driver(null, "Bob", "666"));
+        x5Drivers.add(bob);
         Manufacturer bmwManufacturer =
                 manufacturerService.create(new Manufacturer(null, "BMW", "Germany"));
-
-        CarService carService = (CarService) injector.getInstance(CarService.class);
-        System.out.println("Created two cars: x5 and s500");
-        Car s500 = carService.create(new Car(null, "s500", mrcManufacturer, List.of(mark)));
-        Car x5 = carService.create(new Car(null, "X5", bmwManufacturer, List.of(sam, bob)));
+        Car x5 = carService.create(new Car(null, "X5", bmwManufacturer, x5Drivers));
 
         System.out.println("Get car by id = " + s500.getId());
         System.out.println(carService.get(x5.getId()));
