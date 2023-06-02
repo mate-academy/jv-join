@@ -61,25 +61,6 @@ public class Car {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Car car = (Car) o;
-        return id == car.id && model.equals(car.model)
-                && manufacturer.equals(car.manufacturer)
-                && drivers.equals(car.drivers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model, manufacturer, drivers);
-    }
-
-    @Override
     public String toString() {
         return "Car{"
                 + "id=" + id
