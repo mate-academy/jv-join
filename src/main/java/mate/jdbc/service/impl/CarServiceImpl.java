@@ -3,7 +3,6 @@ package mate.jdbc.service.impl;
 import java.util.List;
 import java.util.NoSuchElementException;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
@@ -43,9 +42,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers().contains(driver)) {
-            throw new DataProcessingException("Driver already exist in DB");
-        }
         car.getDrivers().add(driver);
         update(car);
     }

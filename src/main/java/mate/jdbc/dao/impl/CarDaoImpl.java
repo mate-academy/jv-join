@@ -163,9 +163,8 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert driver to data base", e);
+            throw new RuntimeException("Can't insert driver to data base. Car: " + car, e);
         }
-
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {

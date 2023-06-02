@@ -11,32 +11,32 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
+    private static final ManufacturerService manufacturerService
+            = (ManufacturerService) injector.getInstance(ManufacturerService.class);
+    private static final DriverService driverService
+            = (DriverService) injector.getInstance(DriverService.class);
+    private static final CarService carService
+            = (CarService) injector.getInstance(CarService.class);
+    private static final Manufacturer manufacturer = new Manufacturer("BMW", "USA");
+    private static Car car = new Car();
 
     public static void main(String[] args) {
-        ManufacturerService manufacturerService = (ManufacturerService)
-                injector.getInstance(ManufacturerService.class);
-        DriverService driverService = (DriverService)
-                injector.getInstance(DriverService.class);
-        Manufacturer manufacturer = new Manufacturer("BMW", "USA");
         manufacturerService.create(manufacturer);
         Driver firstDriver = new Driver("Alex", "123");
         Driver seconfDriver = new Driver("Pavel", "456");
         driverService.create(firstDriver);
         driverService.create(seconfDriver);
         System.out.println(driverService.getAll());
-
-        Car car = new Car();
         car.setModel("Mercedes");
         car.setManufacturer(manufacturer);
         car.setDrivers(List.of(firstDriver, seconfDriver));
-        CarService carService = (CarService) injector.getInstance(CarService.class);
         car.setModel("Skoda");
-        car = carService.get(1L);
+        car = carService.get(car.getId());
         carService.addDriverToCar(firstDriver,car);
         carService.removeDriverFromCar(seconfDriver, car);
         carService.getAll().forEach(System.out::println);
-        carService.getAllByDriver(1L).forEach(System.out::println);
-        carService.delete(1L);
+        carService.getAllByDriver(firstDriver.getId()).forEach(System.out::println);
+        carService.delete(car.getId());
         carService.getAll().forEach(System.out::println);
     }
 }

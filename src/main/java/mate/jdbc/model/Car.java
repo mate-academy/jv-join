@@ -10,7 +10,6 @@ public class Car {
     private List<Driver> drivers;
 
     public Car() {
-
     }
 
     public Long getId() {
