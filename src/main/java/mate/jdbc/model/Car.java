@@ -1,7 +1,6 @@
 package mate.jdbc.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Car {
     private long id;

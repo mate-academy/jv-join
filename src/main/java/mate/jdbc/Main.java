@@ -16,7 +16,8 @@ public class Main {
             = (DriverService) injector.getInstance(DriverService.class);
     private static final ManufacturerService manufacturerService
             = (ManufacturerService) injector.getInstance(ManufacturerService.class);
-    private static final CarService carService = (CarService) injector.getInstance(CarService.class);
+    private static final CarService carService
+            = (CarService) injector.getInstance(CarService.class);
     
     public static void main(String[] args) {
         // test your code here
@@ -25,7 +26,6 @@ public class Main {
         final Driver aliceDriver = driverService.create(new Driver("Alice", "456"));
         System.out.println(System.lineSeparator() + "All information from drivers table: ");
         driverService.getAll().forEach(System.out::println);
-
 
         final Manufacturer audiManufacturer
                 = manufacturerService.create(new Manufacturer("Audi", "Germany"));
@@ -39,7 +39,6 @@ public class Main {
         drivers.add(aliceDriver);
         Car audiA8 = new Car("Audi A8", audiManufacturer, drivers);
         Car bmwX5 = new Car("BMW X5", bmvManufacturer, new ArrayList<>());
-
 
         System.out.println(System.lineSeparator()
                 + "All information from cars table after created cars: ");
