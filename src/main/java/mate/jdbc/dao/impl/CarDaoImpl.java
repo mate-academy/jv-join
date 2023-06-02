@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
@@ -31,7 +32,6 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
@@ -168,11 +168,9 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
         Manufacturer manufacturer = getManufacturer(resultSet);
+        Car car = new Car(resultSet.getString("model"), manufacturer, Collections.emptyList());
         car.setId(resultSet.getLong("car_id"));
-        car.setModel(resultSet.getString("model"));
-        car.setManufacturer(manufacturer);
         return car;
     }
 

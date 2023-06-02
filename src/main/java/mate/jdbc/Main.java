@@ -18,7 +18,6 @@ public class Main {
     private static final CarService carService
             = (CarService) injector.getInstance(CarService.class);
     private static final Manufacturer manufacturer = new Manufacturer("BMW", "USA");
-    private static Car car = new Car();
 
     public static void main(String[] args) {
         manufacturerService.create(manufacturer);
@@ -27,9 +26,7 @@ public class Main {
         driverService.create(firstDriver);
         driverService.create(seconfDriver);
         System.out.println(driverService.getAll());
-        car.setModel("Mercedes");
-        car.setManufacturer(manufacturer);
-        car.setDrivers(List.of(firstDriver, seconfDriver));
+        Car car = new Car("Mercedes", manufacturer, List.of(firstDriver, seconfDriver));
         car.setModel("Skoda");
         car = carService.get(car.getId());
         carService.addDriverToCar(firstDriver,car);
