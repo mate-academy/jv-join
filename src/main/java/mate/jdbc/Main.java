@@ -14,28 +14,38 @@ public class Main {
     private static final Injector INJECTOR = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        CarService carService = (CarService) INJECTOR.getInstance(CarService.class);
         DriverService driverService = (DriverService) INJECTOR.getInstance(DriverService.class);
+
+        Driver petro = new Driver("Petro", "4131");
+        Driver ivan = new Driver("Ivan", "3122");
+        Driver createdPetro = driverService.create(petro);
+        Driver createdIvan = driverService.create(ivan);
+        Driver newPetro = driverService.get(createdPetro.getId());
+        Driver newIvan = driverService.get(createdIvan.getId());
+        System.out.println("Petro: " + newPetro);
+        System.out.println("Ivan: " + newIvan);
+        List<Driver> puntoDrivers = new ArrayList<>();
+        puntoDrivers.add(createdIvan);
+        puntoDrivers.add(createdPetro);
         ManufacturerService manufacturerService
                 = (ManufacturerService) INJECTOR.getInstance((ManufacturerService.class));
-        Driver petro = driverService.get(1L);
-        Driver ivan = driverService.get(2L);
-        List<Driver> puntoDrivers = new ArrayList<>();
-        puntoDrivers.add(petro);
-        puntoDrivers.add(ivan);
-        Manufacturer fiat = manufacturerService.get(1L);
-        Car punto = new Car("Punto",fiat, puntoDrivers);
+        Manufacturer fiat = new Manufacturer("Fiat", "Italy");
+        Manufacturer createdFiat = manufacturerService.create(fiat);
+        Manufacturer newFiat = manufacturerService.get(createdFiat.getId());
+        CarService carService = (CarService) INJECTOR.getInstance(CarService.class);
+        Car punto = new Car("Punto",newFiat, puntoDrivers);
         carService.create(punto);
         System.out.println(carService.get(punto.getId()));
         punto.setModel("Punto Grande");
         carService.update(punto);
         printAllCars(carService);
-        Driver semen = driverService.get(3L);
-        carService.addDriverToCar(semen, punto);
+        Driver semen = new Driver("Semen", "1324");
+        Driver createdSemen = driverService.create(semen);
+        carService.addDriverToCar(createdSemen, punto);
         printAllCars(carService);
         carService.removeDriverFromCar(petro, punto);
         printAllCars(carService);
-        System.out.println(carService.getAllByDriver(ivan.getId()));
+        System.out.println(carService.getAllByDriver(newIvan.getId()));
         carService.delete(punto.getId());
         printAllCars(carService);
     }

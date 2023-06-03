@@ -103,7 +103,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in DB.", e);
         }
-        deleteRelationsFromCarsDriversTable(car.getId());
+        removeDriversFromCar(car.getId());
         insertDrivers(car);
         return car;
     }
@@ -122,8 +122,14 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT car_id FROM cars_drivers "
-                + "WHERE driver_id = ?;";
+        String getAllByDriverRequest = "SELECT c.id AS car_id, c.model, c.manufacturer_id, "
+                + "m.id AS manufacturer_id, m.name, m.country "
+                + "FROM cars c "
+                + "JOIN cars_drivers cd "
+                + "ON c.id = cd.car_id "
+                + "JOIN manufacturers m "
+                + "on c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement
                         = connection.prepareStatement(getAllByDriverRequest)) {
@@ -131,12 +137,8 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Long id = resultSet.getObject("car_id", Long.class);
-                Optional<Car> carOptional = get(id);
-                if (carOptional.isPresent()) {
-                    cars.add(carOptional.get());
-                    ;
-                }
+                Car car = getCar(resultSet);
+                cars.add(car);
             }
             return cars;
         } catch (SQLException e) {
@@ -144,7 +146,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteRelationsFromCarsDriversTable(Long carId) {
+    private void removeDriversFromCar(Long carId) {
         String deleteRelationRequest = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteRelationsStatement
