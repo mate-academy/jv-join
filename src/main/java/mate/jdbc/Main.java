@@ -29,15 +29,18 @@ public class Main {
 
         carService.create(peugeot);
 
-        carService.update(peugeot);
-
-        carService.delete(1L);
+        carService.addDriverToCar(vitalic, peugeot);
+        carService.removeDriverFromCar(vitalic, peugeot);
 
         Car car = carService.get(15L);
         System.out.println(car);
 
-        System.out.println(carService.getAll());
-
         System.out.println(carService.getAllByDriver(1L));
+
+        carService.delete(1L);
+
+        carService.update(peugeot);
+
+        System.out.println(carService.getAll());
     }
 }

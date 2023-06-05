@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -33,7 +34,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert from to DB", e);
+            throw new DataProcessingException("Can't insert from to DB " + car, e);
         }
         insertDrivers(car);
         return car;
@@ -56,7 +57,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarWithManufacturerResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find car in DB by id " + id, e);
+            throw new DataProcessingException("Can't find car in DB by id " + id, e);
         }
         if (car != null) {
             car.setDrivers(getDriversFromCar(id));
@@ -81,7 +82,7 @@ public class CarDaoImpl implements CarDao {
                 carList.add(car);
             }
         } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection method getAll ", throwable);
+            throw new DataProcessingException("Can`t get all cars from DB", throwable);
         }
         for (Car valueCar : carList) {
             valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
@@ -99,7 +100,8 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(3, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection in method update ", throwable);
+            throw new DataProcessingException(" is not good connection in method update ",
+                    throwable);
         }
         deleteCarsDrivers(car);
         insertDrivers(car);
@@ -116,7 +118,7 @@ public class CarDaoImpl implements CarDao {
             int numberOfDeletedRows = softDeletedCarStatement.executeUpdate();
             return numberOfDeletedRows != 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't delete car with id: " + id, e);
+            throw new DataProcessingException("Can't delete car with id: " + id, e);
         }
     }
 
@@ -138,12 +140,15 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getCarsStatement.executeQuery();
             while (resultSet.next()) {
                 car = parseCarWithManufacturerResultSet(resultSet);
-                car.setDrivers(getDriversFromCar(car.getId()));
                 carList.add(car);
+            }
+            for (Car valueCar : carList) {
+                valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
             }
             return carList;
         } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection method getAllByDriver ", throwable);
+            throw new DataProcessingException(" is not good connection method"
+                    + " getAllByDriver ", throwable);
         }
     }
 
@@ -159,7 +164,7 @@ public class CarDaoImpl implements CarDao {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException("Can't insert drivers to car: " + car, e);
+            throw new DataProcessingException("Can't insert drivers to car: " + car, e);
         }
     }
 
@@ -190,7 +195,7 @@ public class CarDaoImpl implements CarDao {
             preparedStatement.setLong(1, car.getId());
             preparedStatement.executeUpdate();
         } catch (SQLException throwable) {
-            throw new RuntimeException(" is not good connection in method update:"
+            throw new DataProcessingException(" is not good connection in method update:"
                     + " failed to remove drivers ", throwable);
         }
     }
@@ -210,7 +215,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException("Can't find drivers in DB by car carId " + carId, e);
+            throw new DataProcessingException("Can't find drivers in DB by car carId " + carId, e);
         }
     }
 }
