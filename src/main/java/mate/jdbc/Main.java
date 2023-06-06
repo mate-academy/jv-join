@@ -55,21 +55,21 @@ public class Main {
             String name,
             String licenseNumber,
             DriverService driverService) {
-        Driver anton = new Driver();
-        anton.setName(name);
-        anton.setLicenseNumber(licenseNumber);
-        driverService.create(anton);
-        return anton;
+        Driver driver = new Driver();
+        driver.setName(name);
+        driver.setLicenseNumber(licenseNumber);
+        driverService.create(driver);
+        return driver;
     }
 
     private static Manufacturer getManufacturer(
             String name,
             String country,
             ManufacturerService manufacturerService) {
-        Manufacturer bmw = new Manufacturer();
-        bmw.setName(name);
-        bmw.setCountry(country);
-        manufacturerService.create(bmw);
-        return bmw;
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName(name);
+        manufacturer.setCountry(country);
+        manufacturerService.create(manufacturer);
+        return manufacturer;
     }
 }
