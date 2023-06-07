@@ -42,12 +42,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String getRequest = "SELECT cars.id, cars.model, manufacturers.name, "
-                + "manufacturers.country, cars.manufacturer_id "
-                + "FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.id = ? AND cars.is_deleted = FALSE "
-                + "AND manufacturers.is_deleted = FALSE;";
+        String getRequest = "SELECT c.id, c.model, m.name, "
+                + "m.country, c.manufacturer_id "
+                + "FROM cars c INNER JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.id = ? AND c.is_deleted = FALSE "
+                + "AND m.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
@@ -68,11 +68,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String gatAllCarsRequest = "SELECT cars.id, cars.model, manufacturers.name, "
-                + "manufacturers.country, manufacturers.id as manufacturer_id "
-                + "FROM cars INNER JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars.is_deleted = FALSE AND manufacturers.is_deleted = FALSE;";
+        String gatAllCarsRequest = "SELECT c.id, c.model, m.name, "
+                + "m.country, m.id AS manufacturer_id "
+                + "FROM cars c INNER JOIN manufacturers AS m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE AND m.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(gatAllCarsRequest)) {
@@ -122,12 +122,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String getAllByDriverRequest = "SELECT * FROM cars_drivers "
-                + "JOIN cars "
-                + "ON cars.id = cars_drivers.car_id "
-                + "JOIN manufacturers "
-                + "ON cars.manufacturer_id = manufacturers.id "
-                + "WHERE cars_drivers.driver_id = ? AND cars.is_deleted = FALSE;";
+        String getAllByDriverRequest = "SELECT * FROM cars_drivers cd "
+                + "JOIN cars c "
+                + "ON c.id = cd.car_id "
+                + "JOIN manufacturers m "
+                + "ON c.manufacturer_id = m.id "
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         ArrayList<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllByDriverRequest)) {
@@ -184,9 +184,9 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getAllDriversForCar(Long carId) {
         String getAllDriversRequest = "SELECT id, name, license_number "
-                + "FROM drivers JOIN cars_drivers "
-                + "ON drivers.id = cars_drivers.driver_id "
-                + "WHERE cars_drivers.car_id = ?;";
+                + "FROM drivers d JOIN cars_drivers cd "
+                + "ON d.id = cd.driver_id "
+                + "WHERE cd.car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(getAllDriversRequest)) {
             statement.setLong(1, carId);
