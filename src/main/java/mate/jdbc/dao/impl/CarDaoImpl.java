@@ -19,6 +19,10 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
+        if (car.getDrivers() == null) {
+            List<Driver> listDrivers = new ArrayList<>();
+            car.setDrivers(listDrivers);
+        }
         String insertRequest =
                 "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
 
@@ -142,14 +146,14 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarWithManufacturerResultSet(resultSet);
                 carList.add(car);
             }
-            for (Car valueCar : carList) {
-                valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
-            }
-            return carList;
         } catch (SQLException throwable) {
             throw new DataProcessingException(" is not good connection method"
                     + " getAllByDriver ", throwable);
         }
+        for (Car valueCar : carList) {
+            valueCar.setDrivers(getDriversFromCar(valueCar.getId()));
+        }
+        return carList;
     }
 
     private void insertDrivers(Car car) {

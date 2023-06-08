@@ -1,7 +1,5 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
-import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -13,31 +11,36 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Driver vitalic = new Driver(9L, "Vitalic", "01228");
-        Driver oles = new Driver(10L, "Oles", "01229");
-        List<Driver> listDriversPeugeot = new ArrayList<>();
-        listDriversPeugeot.add(vitalic);
-        listDriversPeugeot.add(oles);
-        Manufacturer peugeotGroup = new Manufacturer(6L, "peugeot group", "France");
+        Manufacturer peugeotGroup = new Manufacturer(25L, "peugeot group", "France");
+
         Car peugeot = new Car();
-        peugeot.setId(15L);
         peugeot.setModel("peugeot");
-        peugeot.setDrivers(listDriversPeugeot);
         peugeot.setManufacturer(peugeotGroup);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        carService.create(peugeot);
+        peugeot = carService.create(peugeot); // create Car.
 
-        carService.addDriverToCar(vitalic, peugeot);
-        carService.removeDriverFromCar(vitalic, peugeot);
+        System.out.println(carService.get(peugeot.getId())); // print it
 
-        Car car = carService.get(15L);
-        System.out.println(car);
+        Driver vitalic = new Driver(220L, "Vitalic", "01228");
+        carService.addDriverToCar(vitalic, peugeot); // add 1 Drivers to it.
+        peugeot = carService.get(peugeot.getId());
+
+        Driver oles = new Driver(221L, "Oles", "01229");
+        carService.addDriverToCar(oles, peugeot); // add 2 Drivers to it.
+        peugeot = carService.get(peugeot.getId());
+
+        System.out.println(peugeot); // print it - you should see 2 drivers inside
+
+        carService.removeDriverFromCar(oles, peugeot); // delete one driver
+        peugeot = carService.get(peugeot.getId());
+
+        System.out.println(peugeot); //print it - you should see 1 driver inside
 
         System.out.println(carService.getAllByDriver(1L));
 
-        carService.delete(1L);
+        carService.delete(4L);
 
         carService.update(peugeot);
 
