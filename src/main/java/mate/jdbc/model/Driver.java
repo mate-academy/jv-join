@@ -7,10 +7,18 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
-    public Driver(Long id, String name, String licenseNumber) {
-        this.id = id;
+    public Driver(String name, String licenseNumber) {
         this.name = name;
         this.licenseNumber = licenseNumber;
+    }
+
+    public Driver(Long id, String name, String licenseNumber) {
+        this(name, licenseNumber);
+        this.id = id;
+        this.name = name;
+    }
+
+    public Driver() {
     }
 
     public Long getId() {
@@ -38,17 +46,17 @@ public class Driver {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals(Object driver) {
+        if (this == driver) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (driver == null || getClass() != driver.getClass()) {
             return false;
         }
-        Driver driver = (Driver) o;
-        return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber);
+        Driver that = (Driver) driver;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(licenseNumber, that.licenseNumber);
     }
 
     @Override
