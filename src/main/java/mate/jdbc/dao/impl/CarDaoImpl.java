@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -84,7 +83,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Couldn't get a list of cars "
+                    + "from cars table. ", e);
         }
         for (Car car: cars) {
             car.setDrivers(getAllDriversByCarId(car.getId()));
@@ -122,27 +122,6 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete driver with id " + id, e);
         }
-    }
-
-    @Override
-    public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers().contains(driver)) {
-            throw new DataProcessingException("Driver"
-                    + driver + "already exists in this car" + car);
-        }
-        car.getDrivers().add(driver);
-        update(car);
-    }
-
-    @Override
-    public void removeDriverFromCar(Driver driver, Car car) {
-        try {
-            car.getDrivers().remove(driver);
-        } catch (NoSuchElementException e) {
-            throw new DataProcessingException(
-                    "The car" + car + "doesn't have this driver" + driver);
-        }
-        update(car);
     }
 
     @Override
