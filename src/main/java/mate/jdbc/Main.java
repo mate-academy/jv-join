@@ -31,7 +31,7 @@ public class Main {
         driverService.create(secondDriver);
         driverService.getAll().forEach(System.out::println);
 
-        Car car = new Car("GLE2011", mersedes, List.of(firstDriver, secondDriver));
+        Car car = new Car("GLE2h011", mersedes, List.of(firstDriver, secondDriver));
         Car car2 = new Car("RX222", toyota, List.of(firstDriver));
         carService.create(car);
         carService.create(car2);
