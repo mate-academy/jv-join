@@ -19,17 +19,17 @@ public class Main {
             (ManufacturerService) INJECTOR.getInstance(ManufacturerService.class);
 
     public static void main(String[] args) {
-        Manufacturer toyota = getManufacturer("Toyota", "Japan");
-        Driver anton = getDriver("Anton", "1234");
-        Car car = getCar("Avensis", toyota, List.of(anton));
+        Manufacturer toyota = createManufacturer("Toyota", "Japan");
+        Driver anton = createDriver("Anton", "1234");
+        Car car = createCar("Avensis", toyota, List.of(anton));
         System.out.println("Create Avensis with Anton: \n"
                            + CAR_SERVICE.create(car));
         car.setModel("Camry");
         System.out.println("Update Avensis to Camry with Anton: \n"
                            + CAR_SERVICE.update(car));
-        Manufacturer bmw = getManufacturer("BMW", "Germany");
-        Driver tanya = getDriver("Tanya", "1423");
-        Car secondCar = getCar("E34", bmw, List.of(anton, tanya));
+        Manufacturer bmw = createManufacturer("BMW", "Germany");
+        Driver tanya = createDriver("Tanya", "1423");
+        Car secondCar = createCar("E34", bmw, List.of(anton, tanya));
         System.out.println("Create E34 with Anton and Tanya: \n"
                            + CAR_SERVICE.create(secondCar));
         System.out.println("Get Avensis with Anton: \n"
@@ -44,7 +44,7 @@ public class Main {
         System.out.println("Delete car E34 : \n" + CAR_SERVICE.delete(secondCar.getId()));
     }
 
-    private static Car getCar(String model, Manufacturer manufacturer, List<Driver> drivers) {
+    private static Car createCar(String model, Manufacturer manufacturer, List<Driver> drivers) {
         Car car = new Car();
         car.setModel(model);
         car.setManufacturer(manufacturer);
@@ -52,19 +52,19 @@ public class Main {
         return car;
     }
 
-    private static Driver getDriver(String name, String licenseNumber) {
+    private static Driver createDriver(String name, String licenseNumber) {
         Driver driver = new Driver();
         driver.setName(name);
         driver.setLicenseNumber(licenseNumber);
-        Main.DRIVER_SERVICE.create(driver);
+        DRIVER_SERVICE.create(driver);
         return driver;
     }
 
-    private static Manufacturer getManufacturer(String name, String country) {
+    private static Manufacturer createManufacturer(String name, String country) {
         Manufacturer manufacturer = new Manufacturer();
         manufacturer.setName(name);
         manufacturer.setCountry(country);
-        Main.MANUFACTURER_SERVICE.create(manufacturer);
+        MANUFACTURER_SERVICE.create(manufacturer);
         return manufacturer;
     }
 }
