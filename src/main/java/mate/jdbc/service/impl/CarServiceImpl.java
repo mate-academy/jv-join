@@ -43,8 +43,15 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        car.getDrivers().add(driver);
-        carDao.update(car);
+        try {
+            if (!car.getDrivers().contains(driver)) {
+                car.getDrivers().add(driver);
+                carDao.update(car);
+            }
+        } catch (DataProcessingException e) {
+            throw new DataProcessingException("Error occurred while "
+                    + "adding driver to car", e);
+        }
     }
 
     @Override

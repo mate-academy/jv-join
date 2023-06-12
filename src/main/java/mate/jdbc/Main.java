@@ -66,8 +66,8 @@ public class Main {
 
         System.out.println("\nUpdate drivers:");
         fordModel.setDrivers(List.of(valeriy));
-        carService.update(bmwModel);
-        System.out.println(carService.get(bmwModel.getId()));
+        carService.update(fordModel);
+        System.out.println(carService.get(fordModel.getId()));
 
         System.out.println("\nUpdate model: ");
         bmwModel.setModel("x10");

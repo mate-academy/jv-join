@@ -84,7 +84,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Couldn't get all cars", e);
         }
         cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
         return cars;
@@ -101,8 +101,9 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(1, car.getModel());
             updateCarStatement.setLong(2, car.getManufacturer().getId());
             updateCarStatement.setLong(3, car.getId());
+            updateCarStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Couldn't update cars table", e);
         }
         deleteDriversFromCar(car);
         insertDriversToCar(car);
