@@ -37,7 +37,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car, e);
         }
-        insertDriver(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -99,8 +99,8 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException(
                     "Couldn't update " + car + " in cars DB.", e);
         }
-        deleteDriver(car);
-        insertDriver(car);
+        deleteDrivers(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -137,7 +137,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void insertDriver(Car car) {
+    private void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES (?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -147,7 +147,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't insert driver by car: " + car, e);
+            throw new DataProcessingException("Couldn't insert drivers by car: " + car, e);
         }
     }
 
@@ -188,14 +188,14 @@ public class CarDaoImpl implements CarDao {
         return car;
     }
 
-    private void deleteDriver(Car car) {
+    private void deleteDrivers(Car car) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete driver by car: " + car, e);
+            throw new DataProcessingException("Couldn't delete drivers by car: " + car, e);
         }
     }
 }

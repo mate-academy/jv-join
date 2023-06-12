@@ -1,6 +1,5 @@
 package mate.jdbc;
 
-import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
@@ -14,52 +13,41 @@ public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
     public static void main(String[] args) {
-        Manufacturer manufacturerKia = new Manufacturer();
-        manufacturerKia.setName("Kia");
-        manufacturerKia.setCountry("South Korea");
-
-        Manufacturer manufacturerMercedes = new Manufacturer();
-        manufacturerMercedes.setName("Mercedes-Benz");
-        manufacturerMercedes.setCountry("Germany");
-
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        manufacturerService.create(manufacturerKia);
-        manufacturerService.create(manufacturerMercedes);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
 
-        List<Driver> driversForKia = new ArrayList<>();
-        driversForKia.add(driverService.get(1L));
-        driversForKia.add(driverService.get(2L));
+        Driver firstDriver = driverService.create(new Driver("Chris", "6743"));
+        Car firstCar = new Car();
+        firstCar.setModel("Kia");
+        Manufacturer manufacturerKia = manufacturerService.create(
+                new Manufacturer("Kia", "South Korea"));
+        firstCar.setManufacturer(manufacturerService.get(manufacturerKia.getId()));
+        firstCar.setDrivers(List.of(driverService.get(firstDriver.getId())));
 
-        List<Driver> driversForMercedes = new ArrayList<>();
-        driversForMercedes.add(driverService.get(3L));
-        driversForMercedes.add(driverService.get(4L));
-        driversForMercedes.add(driverService.get(5L));
-
-        Car car1 = new Car();
-        car1.setModel("Kia");
-        car1.setManufacturer(manufacturerService.get(10L));
-        car1.setDrivers(driversForKia);
-
-        Car car2 = new Car();
-        car2.setModel("Mercedes-Benz");
-        car2.setManufacturer(manufacturerService.get(11L));
-        car2.setDrivers(driversForMercedes);
+        Driver secondDriver = driverService.create(new Driver("Philip", "8246"));
+        Car secondCar = new Car();
+        secondCar.setModel("Mercedes-Benz");
+        Manufacturer manufacturerMercedes = manufacturerService.create(
+                new Manufacturer("Mercedes-Benz", "Germany"));
+        secondCar.setManufacturer(manufacturerService.get(manufacturerMercedes.getId()));
+        secondCar.setDrivers(List.of(driverService.get(secondDriver.getId())));
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
 
-        carService.create(car1);
-        carService.create(car2);
-        carService.addDriverToCar(driverService.get(5L), carService.get(4L));
-        carService.removeDriverFromCar(driverService.get(3L), carService.get(5L));
+        carService.create(firstCar);
+        carService.create(secondCar);
+        carService.addDriverToCar(driverService.get(firstDriver.getId()),
+                carService.get(firstCar.getId()));
+        carService.removeDriverFromCar(driverService.get(secondDriver.getId()),
+                carService.get(secondCar.getId()));
 
-        Car carFromDb = carService.get(6L);
+        Car carFromDb = carService.get(secondCar.getId());
         carFromDb.setModel("S400");
         System.out.println(carFromDb);
         carService.getAll().forEach(System.out::println);
-        carService.delete(3L);
+        carService.delete(secondCar.getId());
         carService.update(carFromDb);
     }
 }
