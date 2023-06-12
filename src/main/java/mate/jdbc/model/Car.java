@@ -1,7 +1,6 @@
 package mate.jdbc.model;
 
 import java.util.List;
-import java.util.Objects;
 
 public class Car {
     private Long id;
@@ -9,18 +8,16 @@ public class Car {
     private Manufacturer manufacturer;
     private List<Driver> drivers;
 
-    public Car() {
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
     }
 
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
         this.drivers = drivers;
-    }
-
-    private Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
-        this(model, manufacturer, drivers);
-        this.id = id;
     }
 
     public Long getId() {
@@ -53,26 +50,6 @@ public class Car {
 
     public void setDrivers(List<Driver> drivers) {
         this.drivers = drivers;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Car car = (Car) o;
-        return Objects.equals(id, car.id)
-                && Objects.equals(model, car.model)
-                && Objects.equals(manufacturer, car.manufacturer)
-                && Objects.equals(drivers, car.drivers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, model, manufacturer, drivers);
     }
 
     @Override

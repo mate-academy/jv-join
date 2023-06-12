@@ -179,22 +179,19 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Driver getDriverFromResultSet(ResultSet resultSet) throws SQLException {
-        Driver driver = new Driver();
-        driver.setId(resultSet.getObject("id", Long.class));
-        driver.setName(resultSet.getString("name"));
-        driver.setLicenseNumber(resultSet.getString("license_number"));
-        return driver;
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("license_number");
+        return new Driver(id, name, licenseNumber);
     }
 
     private Car getCarWithManufacturerFromResultSet(ResultSet resultSet) throws SQLException {
-        Car car = new Car();
-        car.setId(resultSet.getObject("car_id", Long.class));
-        car.setModel(resultSet.getString("model"));
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
-        manufacturer.setName(resultSet.getString("name"));
-        manufacturer.setCountry(resultSet.getString("country"));
-        car.setManufacturer(manufacturer);
-        return car;
+        Long carId = resultSet.getObject("car_id", Long.class);
+        String model = resultSet.getString("model");
+        Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+        String name = resultSet.getString("name");
+        String country = resultSet.getString("country");
+        Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
+        return new Car(carId, model, manufacturer);
     }
 }
