@@ -28,6 +28,7 @@ public class Main {
 
         List<Driver> drivers = new ArrayList<>();
         drivers.add(jon);
+        drivers.add(bob);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         Car sedan = new Car("Sedan", manufacturer,drivers);
@@ -39,6 +40,11 @@ public class Main {
 
         System.out.println(carService.update(new Car(sedan.getId(), "sportCar",
                 manufacturer,drivers)));
+
+        carService.addDriverToCar(bob,pickup);
+        carService.addDriverToCar(jon,pickup);
+
+        carService.removeDriverFromCar(jon,pickup);
 
         List<Car> all = carService.getAll();
         all.forEach(System.out::println);
