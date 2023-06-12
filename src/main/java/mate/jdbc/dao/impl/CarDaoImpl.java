@@ -43,8 +43,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
-        String selectQuery = "SELECT c.id as car_id, model, "
-                + "m.id as manufacturer_id, m.name, "
+        String selectQuery = "SELECT c.id AS car_id, model, "
+                + "m.id AS manufacturer_id, m.name, "
                 + "m.country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
@@ -67,8 +67,8 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT c.id as car_id, model, "
-                + "m.id as manufacturer_id, name, "
+        String query = "SELECT c.id AS car_id, model, "
+                + "m.id AS manufacturer_id, name, "
                 + "country FROM cars c "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE c.is_deleted = FALSE;";
@@ -102,7 +102,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update car: "
                     + car, e);
         }
-        return null;
+        deleteDrivers(car.getId());
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -152,6 +154,18 @@ public class CarDaoImpl implements CarDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Can't insert driver to cars_drivers table. Car: " + car, e);
+        }
+    }
+
+    private void deleteDrivers(Long carId) {
+        String deleteQuery = "DELETE FROM cars_drivers WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+            statement.setLong(1, carId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't delete relations from DB for car"
+                    + " and drivers with car id: " + carId, e);
         }
     }
 
