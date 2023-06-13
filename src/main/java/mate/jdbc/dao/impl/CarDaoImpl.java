@@ -8,7 +8,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -31,8 +30,7 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                Long id = resultSet.getObject(1, Long.class);
-                car.setId(id);
+                car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create " + car, e);
@@ -79,9 +77,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get a list of cars from cars DB.", e);
         }
-        return cars.stream()
-                .peek(car -> car.setDrivers(getDriversForCar(car.getId())))
-                .collect(Collectors.toList());
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        return cars;
     }
 
     @Override
@@ -121,19 +118,20 @@ public class CarDaoImpl implements CarDao {
                 + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "AND c.is_deleted = FALSE JOIN cars_drivers ON c.id = cars_drivers.car_id "
                 + "WHERE cars_drivers.driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(parseCar(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException(
                     "Couldn't find cars in DB by driver id: " + driverId, e);
         }
+        cars.forEach(car -> car.setDrivers(getDriversForCar(car.getId())));
+        return cars;
     }
 
     private void insertDrivers(Car car) {
