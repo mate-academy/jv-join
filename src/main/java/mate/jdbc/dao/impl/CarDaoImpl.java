@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -79,7 +80,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't get a list of cars "
                     + "from cars table.", e);
         }
-        return cars;
+        return cars.stream()
+                .peek(c -> c.setDrivers(getDriversFromCar(c.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -119,21 +122,23 @@ public class CarDaoImpl implements CarDao {
                 + "m.name, m.country FROM cars c JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                 + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement
                         = connection.prepareStatement(getAllByDriverQuery)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 Car car = getCar(resultSet);
-                car.setDrivers(getDriversFromCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
+
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get a list of cars by driver id: " + driverId, e);
         }
+        return cars.stream()
+                .peek(c -> c.setDrivers(getDriversFromCar(c.getId())))
+                .collect(Collectors.toList());
     }
 
     private void insertDrivers(Car car) {
