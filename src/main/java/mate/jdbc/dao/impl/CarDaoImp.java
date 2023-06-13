@@ -32,11 +32,12 @@ public class CarDaoImp implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
                     + car + ". ", e);
         }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -79,7 +80,7 @@ public class CarDaoImp implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get a list of drivers from driversDB: ", e);
+            throw new DataProcessingException("Couldn't get a list of cars from driversDB: ", e);
         }
         for (Car car : cars) {
             car.setDrivers(getDriversByCar(car.getId()));
@@ -149,7 +150,7 @@ public class CarDaoImp implements CarDao {
     private Car getCar(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = getManufacturer(resultSet);
         Car car = new Car(resultSet.getString("model"), manufacturer, Collections.emptyList());
-        car.setId(resultSet.getLong("car_id"));
+        car.setId(resultSet.getObject("car_id", Long.class));
         return car;
     }
 
