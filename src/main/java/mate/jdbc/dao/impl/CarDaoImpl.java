@@ -18,30 +18,14 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static final String INSERT_FORMAT_QUERY =
-            "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?);";
-    private static final String GET_QUERY =
-            "SELECT c.id AS car_id, mf.name, model,country, manufacturer_id "
-                    + "FROM cars c JOIN manufacturers mf "
-                    + "ON c.manufacturer_id = mf.id "
-                    + "WHERE c.id = ? AND c.is_deleted = FALSE;";
-    private static final String GET_ALL =
-            "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, country "
-                    + "FROM cars c "
-                    + "JOIN manufacturers m "
-                    + "ON c.manufacturer_id = m.id "
-                    + "AND c.is_deleted = FALSE;";
-    private static final String UPDATE_QUERY = "UPDATE cars "
-                    + "SET model = ?, manufacturer_id = ? "
-                    + "WHERE id = ? AND is_deleted = FALSE;";
-    private static final String DELETE_QUERY =
-            "UPDATE cars SET is_deleted = true WHERE id = ?;";
 
     @Override
     public Car create(Car car) {
+        String insertFormatQuery =
+                "INSERT INTO cars (model, manufacturer_id) VALUES(?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement =
-                        connection.prepareStatement(INSERT_FORMAT_QUERY,
+                        connection.prepareStatement(insertFormatQuery,
                         Statement.RETURN_GENERATED_KEYS)) {
             createStatement.setString(1, car.getModel());
             createStatement.setLong(2, car.getManufacturer().getId());
@@ -60,10 +44,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Optional<Car> get(Long id) {
+        String getQuery =
+                "SELECT c.id AS car_id, mf.name, model,country, manufacturer_id "
+                        + "FROM cars c JOIN manufacturers mf "
+                        + "ON c.manufacturer_id = mf.id "
+                        + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getByIdStatement =
-                        connection.prepareStatement(GET_QUERY)) {
+                        connection.prepareStatement(getQuery)) {
             getByIdStatement.setLong(1, id);
             ResultSet resultSet = getByIdStatement.executeQuery();
             if (resultSet.next()) {
@@ -80,9 +69,15 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
+        String getAll =
+                "SELECT c.id AS car_id, model, m.id AS manufacturer_id, m.name, country "
+                        + "FROM cars c "
+                        + "JOIN manufacturers m "
+                        + "ON c.manufacturer_id = m.id "
+                        + "AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(GET_ALL)) {
+                PreparedStatement statement = connection.prepareStatement(getAll)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
@@ -98,9 +93,12 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public Car update(Car car) {
+        String updateQuery = "UPDATE cars "
+                + "SET model = ?, manufacturer_id = ? "
+                + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement updateStatement =
-                        connection.prepareStatement(UPDATE_QUERY)) {
+                        connection.prepareStatement(updateQuery)) {
             updateStatement.setString(1, car.getModel());
             updateStatement.setLong(2, car.getManufacturer().getId());
             updateStatement.setLong(3, car.getId());
@@ -116,9 +114,11 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public boolean delete(Long id) {
+        String deleteQuery =
+                "UPDATE cars SET is_deleted = true WHERE id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement =
-                        connection.prepareStatement(DELETE_QUERY)) {
+                        connection.prepareStatement(deleteQuery)) {
             deleteStatement.setLong(1, id);
             return deleteStatement.executeUpdate() > 0;
         } catch (SQLException e) {
