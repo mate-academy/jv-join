@@ -22,23 +22,28 @@ public class Main {
         List<Driver> driverList = new ArrayList<>();
         driverList.add(vasil);
         driverList.add(oleksandr);
+
         ManufacturerService manufacturerService
                 = (ManufacturerService) injector.getInstance((ManufacturerService.class));
         Manufacturer audi = manufacturerService.create(new Manufacturer("Audi", "Germany"));
         Manufacturer audiFromDB = manufacturerService.get(audi.getId());
         CarService carService = (CarService) injector.getInstance(CarService.class);
+
         Car car = new Car("Sportback", audiFromDB, driverList);
         carService.create(car);
         System.out.println(carService.get(car.getId()));
         car.setModel("Q5 Sportback");
         carService.update(car);
-        carService.getAll().stream().forEach(System.out::println);
+        //carService.getAll().stream().forEach(System.out::println);
         Driver mykola = driverService.create(new Driver("Mykola", "11121"));
         carService.addDriverToCar(mykola, car);
-        carService.getAll().stream().forEach(System.out::println);
+        //carService.getAll().stream().forEach(System.out::println);
+
         carService.removeDriverFromCar(oleksandr, car);
-        carService.getAll().stream().forEach(System.out::println);
-        System.out.println("getAllByDriver: " + carService.getAllByDriver(vasil.getId()));
+        //carService.getAll().stream().forEach(System.out::println);
+        System.out.println(car.getDrivers());
+        System.out.println(mykola);
+        System.out.println("getAllByDriver: " + carService.getAllByDriver(mykola.getId()));
         carService.delete(car.getId());
         carService.getAll().stream().forEach(System.out::println);
     }
