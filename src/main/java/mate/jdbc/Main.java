@@ -38,7 +38,7 @@ public class Main {
         carService.getAll().stream().forEach(System.out::println);
         carService.removeDriverFromCar(oleksandr, car);
         carService.getAll().stream().forEach(System.out::println);
-        System.out.println(carService.getAllByDriver(vasil.getId()));
+        System.out.println("getAllByDriver: " + carService.getAllByDriver(vasil.getId()));
         carService.delete(car.getId());
         carService.getAll().stream().forEach(System.out::println);
     }
