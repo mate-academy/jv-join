@@ -30,11 +30,7 @@ public class Main {
         manufacturerService.getAll().forEach(System.out::println);
 
         Driver driverJohn = new Driver("John", "X5X6S1");
-        Driver driverMark = new Driver("Mark", "V9X7L1");
-        Driver driverSem = new Driver("Sem", "R4D7K6");
         Driver createdDriverJohn = driverService.create(driverJohn);
-        Driver createdDriverMark = driverService.create(driverMark);
-        Driver createdDriverSem = driverService.create(driverSem);
 
         Car createdCar = new Car("Tesla", createdOldManufacturer, List.of(createdDriverJohn));
         System.out.println("Created car: " + carService.create(createdCar));
@@ -43,6 +39,8 @@ public class Main {
 
         Manufacturer newTeslaManufacturer = new Manufacturer("Tesla, Inc.", "USA");
         Manufacturer createdNewManufacturer = manufacturerService.create(newTeslaManufacturer);
+        Driver driverMark = new Driver("Mark", "V9X7L1");
+        Driver createdDriverMark = driverService.create(driverMark);
         createdCar.setModel("New Tesla");
         createdCar.setManufacturer(createdNewManufacturer);
         createdCar.setDrivers(List.of(createdDriverMark));
@@ -55,6 +53,8 @@ public class Main {
         System.out.println("Car after adding a driver: " + carService.get(createdCar.getId()));
 
         System.out.println("Car before removing a driver: " + carService.get(createdCar.getId()));
+        Driver driverSem = new Driver("Sem", "R4D7K6");
+        Driver createdDriverSem = driverService.create(driverSem);
         Car carForRemove = carService.get(createdCar.getId());
         Driver removedDriver = driverService.get(createdDriverSem.getId());
         carService.removeDriverFromCar(removedDriver, carForRemove);
