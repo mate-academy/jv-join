@@ -47,19 +47,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers().contains(driver)) {
-            throw new RuntimeException("Driver: " + driver + "already bounded with car: " + car);
-        }
         car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers().remove(driver)) {
-            carDao.update(car);
-        } else {
-            throw new NoSuchElementException("Car does`t have drive: " + driver);
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 }
