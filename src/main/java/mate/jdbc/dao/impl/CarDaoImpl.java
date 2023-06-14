@@ -78,13 +78,15 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsStatement.executeQuery();
             while (resultSet.next()) {
                 car = parserCarWithManufacturerFromResultSet(resultSet);
-                car.setDrivers(getDriverForCar(car.getId()));
                 cars.add(car);
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Could not get all cars from DB." + e);
         }
+        for (Car currentCar : cars) {
+            currentCar.setDrivers(getDriverForCar(currentCar.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -98,11 +100,11 @@ public class CarDaoImpl implements CarDao {
             updateCarStatement.setString(2,car.getModel());
             updateCarStatement.setLong(3,car.getId());
             updateCarStatement.executeUpdate();
-            deleteDrivers(car);
-            insertDrivers(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Could not update car from DB. " + car,e);
         }
+        deleteDrivers(car);
+        insertDrivers(car);
         return car;
     }
 
@@ -135,11 +137,14 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllCarsByDriverStatement.executeQuery();
             while (resultSet.next()) {
                 car = parserCarWithManufacturerFromResultSet(resultSet);
-                car.setDrivers(getDriverForCar(car.getId()));
                 carsByDriver.add(car);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Could not get all cars by driver id " + driverId, e);
+        }
+
+        for (Car currentCar : carsByDriver) {
+            currentCar.setDrivers(getDriverForCar(car.getId()));
         }
         return carsByDriver;
     }
@@ -208,5 +213,14 @@ public class CarDaoImpl implements CarDao {
         driver.setName(resultSet.getString("name"));
         driver.setLicenseNumber(resultSet.getString("licenseNumber"));
         return driver;
+    }
+
+    private Car containsCarFromResultSet(ResultSet resultSet) throws java.sql.SQLException {
+        Car car = null;
+        while (resultSet.next()) {
+            car = parserCarWithManufacturerFromResultSet(resultSet);
+            car.setDrivers(getDriverForCar(car.getId()));
+        }
+        return car;
     }
 }
