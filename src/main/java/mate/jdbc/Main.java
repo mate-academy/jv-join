@@ -24,6 +24,7 @@ public class Main {
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         carService.getAll().forEach(System.out::println);
+        System.out.println(carService.get(1L));
 
         Manufacturer manufacturer = manufacturerService.get(8L);
         List<Driver> drivers = List.of(driverService.get(1L), driverService.get(3L));
