@@ -138,6 +138,9 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
+            for (Car car : cars) {
+                car.setDrivers(getDriversByCar(car.getId()));
+            }
             return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't find all cars by driver id: "

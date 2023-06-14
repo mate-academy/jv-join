@@ -20,18 +20,18 @@ public class Main {
                 = (ManufacturerService) injector.getInstance(ManufacturerService.class);
         System.out.println("Manufacturer Service testing:");
         Map<String, Manufacturer> manufacturersMap
-                = runExampleOfUsageManufacturerService(manufacturerService);
+                = runManufacturerService(manufacturerService);
 
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         System.out.println("\nDriver Service testing:");
-        Map<String, Driver> driversMap = runExampleOfUsageDriverService(driverService);
+        Map<String, Driver> driversMap = runDriverService(driverService);
 
         CarService carService = (CarService) injector.getInstance(CarService.class);
         System.out.println("\nCar Service testing:");
-        runExampleOfUsageCarService(carService, manufacturersMap, driversMap);
+        runCarService(carService, manufacturersMap, driversMap);
     }
 
-    private static Map<String, Manufacturer> runExampleOfUsageManufacturerService(
+    private static Map<String, Manufacturer> runManufacturerService(
             ManufacturerService manufacturerService) {
         System.out.println("Create:");
         Manufacturer opelManufacturer = new Manufacturer(null, "Opel", "Germany");
@@ -55,7 +55,7 @@ public class Main {
         return manufacturersMap;
     }
 
-    private static Map<String, Driver> runExampleOfUsageDriverService(DriverService driverService) {
+    private static Map<String, Driver> runDriverService(DriverService driverService) {
         System.out.println("Create:");
         Driver bobDriver = new Driver(null, "Bob", "12345");
         Driver aliceDriver = new Driver(null, "Alice", "56789");
@@ -78,9 +78,9 @@ public class Main {
         return driversMap;
     }
 
-    private static void runExampleOfUsageCarService(CarService carService,
-                                                    Map<String, Manufacturer> manufacturersMap,
-                                                    Map<String, Driver> driversMap) {
+    private static void runCarService(CarService carService,
+                                      Map<String, Manufacturer> manufacturersMap,
+                                      Map<String, Driver> driversMap) {
         System.out.println("Create:");
         Car opelCombo = new Car("Combo", manufacturersMap.get("Opel"));
         List<Driver> opelDriversList = new ArrayList<>();

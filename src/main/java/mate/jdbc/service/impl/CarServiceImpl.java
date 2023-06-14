@@ -42,21 +42,14 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        if (car.getDrivers().contains(driver)) {
-            throw new RuntimeException("Driver already exist: " + driver);
-        }
         car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        if (car.getDrivers().remove(driver)) {
-            carDao.update(car);
-        } else {
-            throw new RuntimeException("Driver " + driver + " isn't the driver of car "
-                    + car + ". Deletion is not possible)");
-        }
+        car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
