@@ -62,7 +62,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        String query = "SELECT id FROM cars WHERE is_deleted = FALSE";
+        String query = "SELECT c.id, c.model, c.manufacturer_id, c.is_deleted, m.country, m.name "
+                       + "FROM cars c JOIN manufacturers m "
+                       + "ON c.manufacturer_id = m.id WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
