@@ -137,8 +137,8 @@ public class CarDaoImpl implements CarDao {
                 + "on c.manufacturer_id = m.id "
                 + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement getAllByDriverStatement
-                     = connection.prepareStatement(getAllByDriverRequest)) {
+                PreparedStatement getAllByDriverStatement =
+                        connection.prepareStatement(getAllByDriverRequest)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             List<Car> cars = new ArrayList<>();

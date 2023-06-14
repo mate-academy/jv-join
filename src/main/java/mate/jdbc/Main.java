@@ -23,12 +23,8 @@ public class Main {
         Driver driverBob = driverService.create(new Driver("Bob", "124512"));
         Driver driverJohn = driverService.create(new Driver("John", "925031"));
 
-        manufacturerService.getAll().forEach(System.out::println);
-        driverService.getAll().forEach(System.out::println);
-
         Manufacturer skoda = manufacturerService.create(new Manufacturer("Skoda", "Czech"));
         Manufacturer fiat = manufacturerService.create(new Manufacturer("Fiat", "France"));
-
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverBob);
         drivers.add(driverJohn);
@@ -43,6 +39,9 @@ public class Main {
         carService.removeDriverFromCar(driverBob, firstCar);
         manufacturerService.update(skoda);
         manufacturerService.getAll().forEach(System.out::println);
+
+        manufacturerService.getAll().forEach(System.out::println);
+        driverService.getAll().forEach(System.out::println);
 
         List<Car> allByDriver = carService.getAllByDriver(driverBob.getId());
         carService.delete(firstCar.getId());
