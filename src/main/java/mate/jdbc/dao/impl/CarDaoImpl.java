@@ -142,7 +142,8 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't find all cars by driver id: " + driverId, e);
+            throw new DataProcessingException("Couldn't find all cars by driver id: "
+                    + driverId, e);
         }
     }
 
@@ -158,7 +159,7 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't create a relation "
+            throw new DataProcessingException("Couldn't create a relation "
                     + "between driver with id = " + driverId
                     + " and car in data base. Car: " + car, e);
         }
@@ -183,6 +184,13 @@ public class CarDaoImpl implements CarDao {
         return new Car(id, model, manufacturer);
     }
 
+    private Driver getDriver(ResultSet resultSet) throws SQLException {
+        Long id = resultSet.getObject("id", Long.class);
+        String name = resultSet.getString("name");
+        String licenceNumber = resultSet.getString("licence_number");
+        return new Driver(id, name, licenceNumber);
+    }
+
     private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
         return new Manufacturer(resultSet.getLong("manufacturer_id"),
                 resultSet.getString("name"), resultSet.getString("country"));
@@ -198,11 +206,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Driver driver = new Driver(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("license_number"));
-                drivers.add(driver);
+                drivers.add(getDriver(resultSet));
             }
             return drivers;
         } catch (SQLException e) {
