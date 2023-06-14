@@ -58,7 +58,6 @@ public class Car {
 
     @Override
     public String toString() {
-
         return "Car{"
                 + "id=" + id
                 + ", model='" + model + '\''
@@ -66,5 +65,4 @@ public class Car {
                 + ", drivers=" + drivers
                 + '}';
     }
-
 }
