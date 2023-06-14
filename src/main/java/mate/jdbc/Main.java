@@ -20,19 +20,14 @@ public class Main {
             (DriverService) injector.getInstance(DriverService.class);
 
     public static void main(String[] args) {
-        Driver driverBob;
-        Driver driverJohn;
-        driverBob = driverService.create(new Driver("Bob", "124512"));
-        driverJohn = driverService.create(new Driver("John", "925031"));
+        Driver driverBob = driverService.create(new Driver("Bob", "124512"));
+        Driver driverJohn = driverService.create(new Driver("John", "925031"));
 
         manufacturerService.getAll().forEach(System.out::println);
         driverService.getAll().forEach(System.out::println);
 
-        Manufacturer skoda;
-        Manufacturer fiat;
-        fiat = manufacturerService.create(new Manufacturer("Fiat", "France"));
-        skoda = manufacturerService.create(new Manufacturer("Skoda", "Czech"));
-        skoda.setName("WAG");
+        Manufacturer skoda = manufacturerService.create(new Manufacturer("Skoda", "Czech"));
+        Manufacturer fiat = manufacturerService.create(new Manufacturer("Fiat", "France"));
 
         List<Driver> drivers = new ArrayList<>();
         drivers.add(driverBob);

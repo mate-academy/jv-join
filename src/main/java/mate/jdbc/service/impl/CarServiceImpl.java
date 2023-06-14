@@ -55,7 +55,7 @@ public class CarServiceImpl implements CarService {
         if (car.getDrivers().remove(driver)) {
             carDao.update(car);
         } else {
-            throw new RuntimeException("No such driver: " + driver + " for car: " + car);
+            throw new NoSuchElementException("No such driver: " + driver + " for car: " + car);
         }
     }
 
