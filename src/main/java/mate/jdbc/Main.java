@@ -24,7 +24,8 @@ public class Main {
         System.out.println("get manufacturer with id = " + audiManufacturer.getId() + " --- "
                 + manufacturerService.get(audiManufacturer.getId()));
         System.out.println("get all manufacturers --- " + manufacturerService.getAll());
-        Manufacturer toyotaManufacturer = new Manufacturer(2L, "Toyota", "Japan");
+        Manufacturer toyotaManufacturer = new Manufacturer(
+                fiatManufacturer.getId(), "Toyota", "Japan");
         manufacturerService.update(toyotaManufacturer);
         System.out.println("get manufacturer after update --- "
                         + manufacturerService.get(toyotaManufacturer.getId()));
@@ -45,10 +46,10 @@ public class Main {
         System.out.println("All drivers: --- " + driverService.getAll());
         System.out.println("get driver by id = " + irynaDriver.getId() + " --- "
                 + driverService.get(irynaDriver.getId()));
-        Driver oleksandrDriver = new Driver(2L, "Oleksandr", "TTR 448125");
+        Driver oleksandrDriver = new Driver(mykolaDriver.getId(), "Oleksandr", "TTR 448125");
         driverService.update(oleksandrDriver);
         System.out.println("driver after update --- " + driverService.get(oleksandrDriver.getId()));
-        driverService.delete(4L);
+        driverService.delete(ihorDriver.getId());
         System.out.println("All drivers --- " + driverService.getAll());
         System.out.println(System.lineSeparator());
 
@@ -57,24 +58,24 @@ public class Main {
         CarsService carsService = (CarsService) injector.getInstance(CarsService.class);
         carsService.create(carAudiA8);
         System.out.println("get car with id = " + carAudiA8.getId() + " --- "
-                + carsService.get(1L));
+                + carsService.get(carAudiA8.getId()));
         Car carToyotaCamry = new Car("Camry", toyotaManufacturer,
                 List.of(oleksandrDriver, irynaDriver));
         carsService.create(carToyotaCamry);
         System.out.println("All cars --- " + carsService.getAll());
-        Car carAudiA6 = new Car(1L, "A6", audiManufacturer,
+        Car carAudiA6 = new Car(carAudiA8.getId(), "A6", audiManufacturer,
                 List.of(oleksandrDriver, irynaDriver));
         carsService.update(carAudiA6);
         System.out.println(carAudiA8 + " after update --- " + carsService.get(1L));
-        carsService.delete(2L);
+        carsService.delete(carToyotaCamry.getId());
         System.out.println("AFTER DELETION Toyota: " + carsService.getAll());
         Driver bohdanDriver = new Driver("Bohdan", "WDE 741558");
         driverService.create(bohdanDriver);
         carsService.addDriverToCar(bohdanDriver, carAudiA6);
         System.out.println("Check drivers after add " + bohdanDriver + " --- "
-                + carsService.get(1L));
+                + carsService.get(carAudiA6.getId()));
         carsService.removeDriverFromCar(bohdanDriver, carAudiA6);
         System.out.println("AFTER BOHDAN DRIVER DELETION :" + carsService.get(1L));
-        System.out.println(carsService.getAllByDriver(3L));
+        System.out.println(carsService.getAllByDriver(irynaDriver.getId()));
     }
 }

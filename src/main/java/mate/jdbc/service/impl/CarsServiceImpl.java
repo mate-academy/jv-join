@@ -42,22 +42,15 @@ public class CarsServiceImpl implements CarsService {
     @Override
     public void addDriverToCar(Driver driver, Car car) {
         Car carFromDb = get(car.getId());
-        if (!carFromDb.getDrivers().contains(driver)) {
-            carFromDb.getDrivers().add(driver);
-            update(carFromDb);
-        } else {
-            throw new RuntimeException(driver + "already in drivers list for " + car);
-        }
+        carFromDb.getDrivers().add(driver);
+        update(carFromDb);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         Car carFromDb = get(car.getId());
-        if (carFromDb.getDrivers().remove(driver)) {
-            update(carFromDb);
-        } else {
-            throw new RuntimeException(driver + " is not in the drivers list for " + car);
-        }
+        carFromDb.getDrivers().remove(driver);
+        update(carFromDb);
     }
 
     @Override

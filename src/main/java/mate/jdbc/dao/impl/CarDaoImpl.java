@@ -139,9 +139,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by driver id: " + driverId);
         }
-        if (!cars.isEmpty()) {
-            cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
-        }
+        cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
         return cars;
     }
 
@@ -195,7 +193,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement insertDriversStatement =
                         connection.prepareStatement(insertDriversQuery)) {
             insertDriversStatement.setLong(1, car.getId());
-            for (Driver driver: car.getDrivers()) {
+            for (Driver driver : car.getDrivers()) {
                 insertDriversStatement.setLong(2, driver.getId());
                 insertDriversStatement.executeUpdate();
             }
