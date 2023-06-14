@@ -50,8 +50,6 @@ public class CarServiceImpl implements CarService {
     public void removeDriverFromCar(Driver driver, Car car) {
         if (car.getDrivers().remove(driver)) {
             carDao.update(car);
-        } else {
-            throw new NoSuchElementException("Car: " + car + " doesn't have driver: " + driver);
         }
     }
 
