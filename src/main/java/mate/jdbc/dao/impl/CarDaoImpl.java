@@ -122,7 +122,9 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                cars.add(getCarWithManufacturer(resultSet));
+                Car car = getCarWithManufacturer(resultSet);
+                car.setDrivers(getDrivers(car.getId()));
+                cars.add(car);
             }
             return cars;
         } catch (SQLException e) {
