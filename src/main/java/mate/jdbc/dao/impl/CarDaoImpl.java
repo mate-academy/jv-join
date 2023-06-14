@@ -57,7 +57,7 @@ public class CarDaoImpl implements CarDao {
                 car = getCar(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Detailed error message with input info here", e);
         }
         if (car != null) {
             car.setDrivers(getAllDriversByCarId(id));
@@ -158,13 +158,13 @@ public class CarDaoImpl implements CarDao {
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Couldn't write to cars_drivers table "
+            throw new DataProcessingException("Couldn't write to cars_drivers table "
                     + car + ". ", e);
         }
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        long id = resultSet.getObject("car_id", Long.class);
+        Long id = resultSet.getObject("car_id", Long.class);
         String model = resultSet.getString("car_model");
         Manufacturer manufacturer = getManufacture(resultSet);
         return new Car(id, model, manufacturer);
