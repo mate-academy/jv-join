@@ -41,27 +41,29 @@ public class Main {
 
         System.out.println("Created car: " + carService.get(createdCar.getId()));
 
-        System.out.println("Created car was deleted: " + carService.delete(createdCar.getId()));
-
         Manufacturer newTeslaManufacturer = new Manufacturer("Tesla, Inc.", "USA");
         Manufacturer createdNewManufacturer = manufacturerService.create(newTeslaManufacturer);
-        Car updatedCar = new Car("New Tesla", createdNewManufacturer, List.of(createdDriverMark));
-        System.out.println("Updated car: " + carService.update(updatedCar));
+        createdCar.setModel("New Tesla");
+        createdCar.setManufacturer(createdNewManufacturer);
+        createdCar.setDrivers(List.of(createdDriverMark));
+        System.out.println("Updated car: " + carService.update(createdCar));
 
-        System.out.println("Car before adding a driver: " + carService.get(updatedCar.getId()));
-        Car carToAdd = carService.get(updatedCar.getId());
-        Driver addedDriver = driverService.get(createdDriverSem.getId());
+        System.out.println("Car before adding a driver: " + carService.get(createdCar.getId()));
+        Car carToAdd = carService.get(createdCar.getId());
+        Driver addedDriver = driverService.get(createdCar.getId());
         carService.addDriverToCar(addedDriver, carToAdd);
-        System.out.println("Car after adding a driver: " + carService.get(updatedCar.getId()));
+        System.out.println("Car after adding a driver: " + carService.get(createdCar.getId()));
 
-        System.out.println("Car before removing a driver: " + carService.get(updatedCar.getId()));
-        Car carForRemove = carService.get(createdDriverMark.getId());
-        Driver removedDriver = driverService.get(createdDriverMark.getId());
+        System.out.println("Car before removing a driver: " + carService.get(createdCar.getId()));
+        Car carForRemove = carService.get(createdCar.getId());
+        Driver removedDriver = driverService.get(createdDriverSem.getId());
         carService.removeDriverFromCar(removedDriver, carForRemove);
-        System.out.println("Car after removing a driver: " + carService.get(updatedCar.getId()));
+        System.out.println("Car after removing a driver: " + carService.get(createdCar.getId()));
 
         List<Car> allByDriver = carService.getAllByDriver(createdDriverJohn.getId());
         System.out.println("All about driver with id 4: " + allByDriver);
+
+        System.out.println("Created car was deleted: " + carService.delete(createdCar.getId()));
 
         carService.getAll().forEach(System.out::println);
     }
