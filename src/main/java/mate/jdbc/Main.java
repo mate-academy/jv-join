@@ -24,7 +24,6 @@ public class Main {
         CarService carService =
                 (CarService) injector.getInstance(CarService.class);
         carService.getAll().forEach(System.out::println);
-        System.out.println(carService.get(1L));
 
         Manufacturer manufacturer = manufacturerService.get(8L);
         List<Driver> drivers = List.of(driverService.get(1L), driverService.get(3L));
@@ -33,7 +32,7 @@ public class Main {
 
         System.out.println("Car with id 3: " + carService.get(3L));
 
-        System.out.println("Car with id 3 was deleted: " + carService.delete(3L));
+        System.out.println("Car with id 3 was deleted: " + carService.delete(4L));
 
         Car updatedCar = new Car();
         updatedCar.setId(1L);
@@ -56,7 +55,7 @@ public class Main {
         carService.removeDriverFromCar(removedDriver, carForRemove);
         System.out.println("Car after removing a driver: " + carService.get(3L));
 
-        List<Car> allByDriver = carService.getAllByDriver(1L);
+        List<Car> allByDriver = carService.getAllByDriver(3L);
         System.out.println("All about driver with id 4: " + allByDriver);
 
         carService.getAll().forEach(System.out::println);

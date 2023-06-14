@@ -99,7 +99,7 @@ public class CarDaoImpl implements CarDao {
             statement.setObject(2, car.getManufacturer().getId());
             statement.setObject(3, car.getId());
             statement.executeUpdate();
-            removeDriver(car);
+            removeDrivers(car);
             insertDrivers(car);
             return car;
         } catch (SQLException e) {
@@ -123,7 +123,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT c.id, c.model, m.id AS manufacturer_id, m.name, m.country "
+        String query = "SELECT c.id AS car_id, c.model AS car_model, "
+                + "m.id AS manufacturer_id, m.name AS manufacturer_name, "
+                + "m.country AS manufacturer_country "
                 + "FROM cars c "
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN drivers d ON d.id = cd.driver_id "
@@ -161,7 +163,7 @@ public class CarDaoImpl implements CarDao {
         return new Manufacturer(id, name, country);
     }
 
-    private static void removeDriver(Car car) throws SQLException {
+    private static void removeDrivers(Car car) throws SQLException {
         String queryDeleteCarsDrivers = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement =
