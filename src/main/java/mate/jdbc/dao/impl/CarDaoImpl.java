@@ -33,7 +33,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(id);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can`t create new car" + car, e);
+            throw new DataProcessingException("Can`t create new car" + car, e);
         }
         insertDrivers(car);
         return car;
@@ -56,7 +56,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarFromResultSet(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can`t get a car by id: " + id, e);
+            throw new DataProcessingException("Can`t get a car by id: " + id, e);
         }
         if (car != null) {
             car.setDrivers(getAllDriversByCar(id));
@@ -83,7 +83,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(car);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("can`t get list of cars from DB: " + cars, e);
+            throw new DataProcessingException("can`t get list of cars from DB: " + cars, e);
         }
         return cars;
     }
@@ -119,7 +119,7 @@ public class CarDaoImpl implements CarDao {
             deleteCarStatement.setLong(1, carId);
             return deleteCarStatement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException("Can`t delete car by id" + carId, e);
+            throw new DataProcessingException("Can`t delete car by id" + carId, e);
         }
     }
 
@@ -145,7 +145,7 @@ public class CarDaoImpl implements CarDao {
             }
             return cars;
         } catch (SQLException e) {
-            throw new RuntimeException(
+            throw new DataProcessingException(
                     "Can`t get cars for driver with id: " + driverId, e);
         }
     }
@@ -182,7 +182,7 @@ public class CarDaoImpl implements CarDao {
                 insertDriversStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Can`t insert driver for car: " + car, e);
+            throw new DataProcessingException("Can`t insert driver for car: " + car, e);
         }
     }
 
@@ -202,7 +202,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException(
+            throw new DataProcessingException(
                     "Can`t get drivers for car with id: " + carId, e);
         }
     }
