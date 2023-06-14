@@ -40,5 +40,3 @@ CREATE TABLE `cars_drivers` (
                                   CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`cars_id`) REFERENCES `cars` (`id`),
                                   CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`drivers_id`) REFERENCES `drivers` (`id`)
                                   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-
-
