@@ -18,6 +18,12 @@ public class Car {
         this.manufacturer = manufacturer;
     }
 
+    public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
+        this.model = model;
+        this.manufacturer = manufacturer;
+        this.drivers = drivers;
+    }
+
     public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.id = id;
         this.model = model;

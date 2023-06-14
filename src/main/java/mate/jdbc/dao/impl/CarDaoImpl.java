@@ -19,13 +19,13 @@ import mate.jdbc.util.ConnectionUtil;
 public class CarDaoImpl implements CarDao {
     @Override
     public Car create(Car car) {
-        String insertRequest = "INSERT INTO cars (manufacturer_id, model) VALUES (?, ?)";
+        String insertRequest = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(insertRequest,
                                 PreparedStatement.RETURN_GENERATED_KEYS)) {
-            statement.setLong(1, car.getManufacturer().getId());
-            statement.setString(2, car.getModel());
+            statement.setString(1, car.getModel());
+            statement.setLong(2, car.getManufacturer().getId());
             statement.executeUpdate();
             ResultSet generateKeys = statement.getGeneratedKeys();
             if (generateKeys.next()) {
@@ -114,8 +114,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement statement =
                         connection.prepareStatement(deleteCarQuery)) {
             statement.setLong(1, carId);
-            int numbersOfDeletedRows = statement.executeUpdate();
-            return numbersOfDeletedRows > 0;
+            return statement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't delete car with id: " + carId, e);
         }
@@ -137,12 +136,9 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                Manufacturer manufacturer = getManufacturer(resultSet);
-                car.setManufacturer(manufacturer);
-                car.setDrivers(getDrivers(car.getId()));
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
+            cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
             return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars by driver id: " + driverId, e);

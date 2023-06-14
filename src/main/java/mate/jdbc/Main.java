@@ -25,37 +25,42 @@ public class Main {
                 (CarService) injector.getInstance(CarService.class);
         carService.getAll().forEach(System.out::println);
 
-        Manufacturer manufacturer = manufacturerService.get(8L);
-        List<Driver> drivers = List.of(driverService.get(1L), driverService.get(3L));
-        Car createdCar = new Car(1L, "Tesla", manufacturer, drivers);
+        Manufacturer oldTeslaManufacturer = new Manufacturer("Tesla Motors", "USA");
+        Manufacturer createdOldManufacturer = manufacturerService.create(oldTeslaManufacturer);
+        manufacturerService.getAll().forEach(System.out::println);
+
+        Driver driverJohn = new Driver("John", "X5X6S1");
+        Driver driverMark = new Driver("Mark", "V9X7L1");
+        Driver driverSem = new Driver("Sem", "R4D7K6");
+        Driver createdDriverJohn = driverService.create(driverJohn);
+        Driver createdDriverMark = driverService.create(driverMark);
+        Driver createdDriverSem = driverService.create(driverSem);
+
+        Car createdCar = new Car("Tesla", createdOldManufacturer, List.of(createdDriverJohn));
         System.out.println("Created car: " + carService.create(createdCar));
 
-        System.out.println("Car with id 3: " + carService.get(3L));
+        System.out.println("Created car: " + carService.get(createdCar.getId()));
 
-        System.out.println("Car with id 3 was deleted: " + carService.delete(4L));
+        System.out.println("Created car was deleted: " + carService.delete(createdCar.getId()));
 
-        Car updatedCar = new Car();
-        updatedCar.setId(1L);
-        updatedCar.setModel("New Tesla");
-        Manufacturer manufacturerForUpdate = manufacturerService.get(7L);
-        updatedCar.setManufacturer(manufacturerForUpdate);
-        List<Driver> driversForUpdate = List.of(driverService.get(2L), driverService.get(4L));
-        updatedCar.setDrivers(driversForUpdate);
+        Manufacturer newTeslaManufacturer = new Manufacturer("Tesla, Inc.", "USA");
+        Manufacturer createdNewManufacturer = manufacturerService.create(newTeslaManufacturer);
+        Car updatedCar = new Car("New Tesla", createdNewManufacturer, List.of(createdDriverMark));
         System.out.println("Updated car: " + carService.update(updatedCar));
 
-        System.out.println("Car before adding a driver: " + carService.get(2L));
-        Car carToAdd = carService.get(2L);
-        Driver addedDriver = driverService.get(2L);
+        System.out.println("Car before adding a driver: " + carService.get(updatedCar.getId()));
+        Car carToAdd = carService.get(updatedCar.getId());
+        Driver addedDriver = driverService.get(createdDriverSem.getId());
         carService.addDriverToCar(addedDriver, carToAdd);
-        System.out.println("Car after adding a driver: " + carService.get(2L));
+        System.out.println("Car after adding a driver: " + carService.get(updatedCar.getId()));
 
-        System.out.println("Car before removing a driver: " + carService.get(3L));
-        Car carForRemove = carService.get(3L);
-        Driver removedDriver = driverService.get(3L);
+        System.out.println("Car before removing a driver: " + carService.get(updatedCar.getId()));
+        Car carForRemove = carService.get(createdDriverMark.getId());
+        Driver removedDriver = driverService.get(createdDriverMark.getId());
         carService.removeDriverFromCar(removedDriver, carForRemove);
-        System.out.println("Car after removing a driver: " + carService.get(3L));
+        System.out.println("Car after removing a driver: " + carService.get(updatedCar.getId()));
 
-        List<Car> allByDriver = carService.getAllByDriver(3L);
+        List<Car> allByDriver = carService.getAllByDriver(createdDriverJohn.getId());
         System.out.println("All about driver with id 4: " + allByDriver);
 
         carService.getAll().forEach(System.out::println);
