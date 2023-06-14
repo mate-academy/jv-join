@@ -143,16 +143,10 @@ public class CarDaoImpl implements CarDao {
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String country = resultSet.getString("country");
         String name = resultSet.getString("name");
-        Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(manufacturerId);
-        manufacturer.setCountry(country);
-        manufacturer.setName(name);
-        Car car = new Car();
+        Manufacturer manufacturer = new Manufacturer(manufacturerId, name, country);
         Long id = resultSet.getObject("id", Long.class);
         String model = resultSet.getString("model");
-        car.setId(id);
-        car.setModel(model);
-        car.setManufacturer(manufacturer);
+        Car car = new Car(id, model, manufacturer);
         return car;
     }
 

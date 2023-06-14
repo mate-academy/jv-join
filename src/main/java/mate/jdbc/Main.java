@@ -40,12 +40,12 @@ public class Main {
         carService.create(first);
         carService.create(second);
         carService.getAll().stream().forEach(System.out::println);
-        carService.getAllByDriver(driverService.get(rick.getId()).getId())
-                .stream().forEach(System.out::println);
+        carService.getAllByDriver(rick.getId())
+                .forEach(System.out::println);
         first.setManufacturer(manufacturerService.get(volvo.getId()));
         carService.update(first);
         System.out.println(carService.get(first.getId()));
         carService.delete(first.getId());
-        System.out.println(carService.getAll());
+        carService.getAll().forEach(System.out::println);
     }
 }
