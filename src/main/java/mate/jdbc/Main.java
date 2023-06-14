@@ -9,7 +9,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-import mate.jdbc.service.impl.ClearAll;
 
 public class Main {
     private static final Injector injector
@@ -22,9 +21,6 @@ public class Main {
             (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
-        ClearAll clearAll = new ClearAll();
-        clearAll.clearAllFromTable();
-
         Manufacturer ford = new Manufacturer("Ford", "USA");
         Manufacturer nissan = new Manufacturer("Nissan", "Japan");
         Manufacturer toyota = new Manufacturer("Toyota", "Japan");
