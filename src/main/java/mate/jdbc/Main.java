@@ -19,6 +19,7 @@ public class Main {
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         manufacturerService.create(ferrari);
         manufacturerService.create(volvo);
+
         DriverService driverService = (
                 DriverService) injector.getInstance(DriverService.class);
         Driver jane = new Driver(4L, "jane","4444");
@@ -27,6 +28,7 @@ public class Main {
         driverService.create(jane);
         driverService.create(lina);
         driverService.create(rick);
+
         Car first = new Car(4L, "universal",
                 manufacturerService.get(ferrari.getId()),
                 List.of(driverService.get(jane.getId()), driverService.get(lina.getId())));
