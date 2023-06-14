@@ -105,7 +105,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Couldn't update "
                     + car + " in carsDB.", e);
         }
-        deleteDriversFromCarsById(car.getId());
+        deleteDriversFromCar(car.getId());
         insertDrivers(car);
         return car;
     }
@@ -169,7 +169,10 @@ public class CarDaoImpl implements CarDao {
 
     private Car getCar(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = getManufacturer(resultSet);
-        Car car = new Car(resultSet.getString("model"), manufacturer, Collections.emptyList());
+        Car car = new Car();
+        car.setModel(resultSet.getString("model"));
+        car.setManufacturer(manufacturer);
+        car.setDrivers(Collections.emptyList());
         car.setId(resultSet.getObject("car_id", Long.class));
         return car;
     }
@@ -186,10 +189,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, id);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Driver driver = new Driver(
-                        resultSet.getLong("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("license_number"));
+                Driver driver = createDriverFromResultSet(resultSet);
                 drivers.add(driver);
             }
             return drivers;
@@ -198,7 +198,7 @@ public class CarDaoImpl implements CarDao {
         }
     }
 
-    private void deleteDriversFromCarsById(Long id) {
+    private void deleteDriversFromCar(Long id) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                   PreparedStatement statement = connection.prepareStatement(query)) {
@@ -213,5 +213,13 @@ public class CarDaoImpl implements CarDao {
     private Manufacturer getManufacturer(ResultSet resultSet) throws SQLException {
         return new Manufacturer(resultSet.getLong("manufacturer_id"),
                 resultSet.getString("name"), resultSet.getString("country"));
+    }
+
+    private Driver createDriverFromResultSet(ResultSet resultSet) throws SQLException {
+        long id = resultSet.getLong("id");
+        String name = resultSet.getString("name");
+        String licenseNumber = resultSet.getString("license_number");
+
+        return new Driver(id, name, licenseNumber);
     }
 }

@@ -15,6 +15,10 @@ public class Car {
         this.drivers = drivers;
     }
 
+    public Car() {
+
+    }
+
     public Long getId() {
         return id;
     }

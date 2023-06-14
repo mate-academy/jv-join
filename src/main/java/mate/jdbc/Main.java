@@ -23,11 +23,14 @@ public class Main {
         manufacturerService.create(manufacturer);
         Driver firstDriver = new Driver("Alex", "123");
         Driver seconfDriver = new Driver("Pavel", "456");
+
         driverService.create(firstDriver);
         driverService.create(seconfDriver);
         System.out.println(driverService.getAll());
+
         Car car = new Car("Mercedes", manufacturer, List.of(firstDriver, seconfDriver));
         car.setModel("Skoda");
+
         car = carService.get(car.getId());
         carService.addDriverToCar(firstDriver,car);
         carService.removeDriverFromCar(seconfDriver, car);
