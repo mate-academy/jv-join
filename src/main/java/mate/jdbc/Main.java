@@ -20,9 +20,9 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("\n-----------------\nCheck creating new car");
-        Manufacturer manufacturer = new Manufacturer(0L, "ZAZ", "Ukraine");
+        Manufacturer manufacturer = new Manufacturer("ZAZ", "Ukraine");
         manufacturerService.create(manufacturer);
-        Car car = new Car(0L, "2023", manufacturer, new ArrayList<>());
+        Car car = new Car("2023", manufacturer, new ArrayList<>());
         carService.create(car);
         carService.getAll().forEach(System.out::println);
 
@@ -44,7 +44,7 @@ public class Main {
         carService.create(car);
 
         System.out.println("\n-----------------\nCheck adding driver to car");
-        Driver driver = new Driver(0L, "Petro Poroshenko", "77777777777");
+        Driver driver = new Driver("Petro Poroshenko", "77777777777");
         driverService.create(driver);
         carService.addDriverToCar(driver, car);
         System.out.println(carService.get(car.getId()));

@@ -43,7 +43,8 @@ public class CarDaoImpl implements CarDao {
     public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS car_id, model, mf.id AS manufacturer_id, mf.name AS "
                 + "manufacturer_name, mf.country AS manufacturer_country "
-                + "FROM cars AS c INNER JOIN manufacturers AS mf ON c.manufacturer_id = mf.id "
+                + "FROM cars AS c "
+                + "JOIN manufacturers AS mf ON c.manufacturer_id = mf.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
@@ -66,7 +67,8 @@ public class CarDaoImpl implements CarDao {
     public List<Car> getAll() {
         String getAllCarsQuery = "SELECT c.id AS car_id, model, mf.id AS manufacturer_id, "
                 + "mf.name AS manufacturer_name, mf.country AS manufacturer_country "
-                + "FROM cars AS c INNER JOIN manufacturers AS mf ON c.manufacturer_id = mf.id "
+                + "FROM cars AS c "
+                + "JOIN manufacturers AS mf ON c.manufacturer_id = mf.id "
                 + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -120,8 +122,8 @@ public class CarDaoImpl implements CarDao {
         String getAllByDriverIdQuery = "SELECT car_id, model, manufacturer_id, "
                 + "mf.name AS manufacturer_name, mf.country AS manufacturer_country "
                 + "FROM cars_drivers AS cd "
-                + "INNER JOIN cars AS c ON cd.car_id = c.id "
-                + "INNER JOIN manufacturers AS mf ON manufacturer_id = mf.id "
+                + "JOIN cars AS c ON cd.car_id = c.id "
+                + "JOIN manufacturers AS mf ON manufacturer_id = mf.id "
                 + "WHERE driver_id = ? AND c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -159,8 +161,8 @@ public class CarDaoImpl implements CarDao {
     private List<Driver> getDriversForCar(Long id) {
         String getAllDriversForCarRequest = "SELECT driver_id, name, license_number "
                 + "FROM cars_drivers AS cd "
-                + "INNER JOIN drivers AS d ON cd.driver_id = d.id "
-                + "INNER JOIN cars AS c ON cd.car_id = c.id "
+                + "JOIN drivers AS d ON cd.driver_id = d.id "
+                + "JOIN cars AS c ON cd.car_id = c.id "
                 + "WHERE c.id = ? AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllDriversForCarStatement =
