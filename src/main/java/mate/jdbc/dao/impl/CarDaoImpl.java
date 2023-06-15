@@ -129,39 +129,38 @@ public class CarDaoImpl implements CarDao {
                 + ") as dc "
                 + "JOIN manufacturers m ON dc.manufacturer_id = m.id "
                 + "WHERE m.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement
                         = connection.prepareStatement(request)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            for (Car car : cars) {
-                car.setDrivers(getDriversByCar(car.getId()));
-            }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't find all cars by driver id: "
                     + driverId, e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCar(car.getId()));
+        }
+        return cars;
     }
 
     private void insertDrivers(Car car) {
         String query = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?);";
-        Long driverId = null;
+
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
             for (Driver driver : car.getDrivers()) {
-                driverId = driver.getId();
-                statement.setLong(2, driverId);
+                statement.setLong(2, driver.getId());
                 statement.executeUpdate();
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't add the driver with id:" + driverId
-                    + " to the car with id:" + car.getId(), e);
+            throw new DataProcessingException("Can't add drivers to the car with id: "
+                    + car.getId(), e);
         }
     }
 
