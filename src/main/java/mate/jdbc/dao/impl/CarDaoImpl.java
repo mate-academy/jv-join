@@ -99,12 +99,16 @@ public class CarDaoImpl implements CarDao {
             statement.setObject(2, car.getManufacturer().getId());
             statement.setObject(3, car.getId());
             statement.executeUpdate();
-            removeDrivers(car);
-            insertDrivers(car);
-            return car;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't update car with id = " + car.getId(), e);
+            throw new DataProcessingException("Can't update car with id: " + car.getId(), e);
         }
+        try {
+            removeDrivers(car);
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't remove car: " + car, e);
+        }
+        insertDrivers(car);
+        return car;
     }
 
     @Override
@@ -138,11 +142,11 @@ public class CarDaoImpl implements CarDao {
             while (resultSet.next()) {
                 cars.add(getCar(resultSet));
             }
-            cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars by driver id: " + driverId, e);
         }
+        cars.forEach(car -> car.setDrivers(getDrivers(car.getId())));
+        return cars;
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
