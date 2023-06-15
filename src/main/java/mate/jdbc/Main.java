@@ -43,14 +43,14 @@ public class Main {
         System.out.println("update successful: " + carService.update(car));
         System.out.println("deletion complete: " + carService.delete(car.getId()));
 
-        Driver driver2 = new Driver();
-        driver2.setName("petya");
-        driver2.setLicenseNumber("101010");
-        carService.addDriverToCar(driver2, car);
-        System.out.println("check if new driver was added: " + car.getDrivers().contains(driver2));
-        carService.removeDriverFromCar(driver2, car);
+        Driver petya = new Driver();
+        petya.setName("petya");
+        petya.setLicenseNumber("101010");
+        carService.addDriverToCar(petya, car);
+        System.out.println("check if new driver was added: " + car.getDrivers().contains(petya));
+        carService.removeDriverFromCar(petya, car);
         System.out.println(
-                "check if new driver was removed: " + !car.getDrivers().contains(driver2));
+                "check if new driver was removed: " + !car.getDrivers().contains(petya));
 
     }
 }
