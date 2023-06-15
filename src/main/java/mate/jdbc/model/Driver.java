@@ -34,7 +34,6 @@ public class Driver {
         return licenseNumber;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

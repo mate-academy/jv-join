@@ -34,7 +34,6 @@ public class Manufacturer {
         return country;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
