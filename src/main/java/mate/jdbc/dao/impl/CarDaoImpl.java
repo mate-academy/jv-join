@@ -66,7 +66,7 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String getAllCarsRequest = "SELECT cars.id, cars.model, manufacturers.name "
-                + "AS manufacturer FROM cars JOIN manufacturers "
+                + "AS manufacturer, manufacturer_id FROM cars JOIN manufacturers "
                 + "ON cars.manufacturer_id = manufacturers.id WHERE cars.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
@@ -96,15 +96,7 @@ public class CarDaoImpl implements CarDao {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             if (resultSet.next()) {
-                Car car = new Car();
-                car.setId(resultSet.getObject("car_id", Long.class));
-                car.setModel(resultSet.getString("model"));
-                Manufacturer manufacturer =
-                        new Manufacturer(resultSet.getLong("manufacturer_id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("country"));
-                car.setManufacturer(manufacturer);
-                cars.add(car);
+                cars.add(getCarWithManufacturerFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException(
@@ -173,7 +165,7 @@ public class CarDaoImpl implements CarDao {
                 resultSet.getString("name"),
                 resultSet.getString("country"));
         car.setManufacturer(manufacturer);
-        car.setId(resultSet.getLong("manufacturer_id"));
+        car.setId(resultSet.getObject("car_id", Long.class));
         return car;
     }
 
