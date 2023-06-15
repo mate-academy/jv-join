@@ -102,11 +102,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car with id: " + car.getId(), e);
         }
-        try {
-            removeDrivers(car);
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can't remove car: " + car, e);
-        }
+        removeDrivers(car);
         insertDrivers(car);
         return car;
     }
@@ -163,13 +159,15 @@ public class CarDaoImpl implements CarDao {
         return new Manufacturer(id, name, country);
     }
 
-    private static void removeDrivers(Car car) throws SQLException {
+    private static void removeDrivers(Car car) {
         String queryDeleteCarsDrivers = "DELETE FROM cars_drivers WHERE car_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement =
                         connection.prepareStatement(queryDeleteCarsDrivers)) {
             deleteStatement.setLong(1, car.getId());
             deleteStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't remove car: " + car, e);
         }
     }
 
