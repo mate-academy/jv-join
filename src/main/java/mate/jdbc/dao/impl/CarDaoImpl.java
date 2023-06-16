@@ -11,7 +11,6 @@ import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
@@ -19,12 +18,9 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-    private static final Injector injector = Injector.getInstance("mate.jdbc");
-
     @Override
     public Car create(Car car) {
         String createQuery = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
-
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement createStatement = connection.prepareStatement(createQuery,
                         Statement.RETURN_GENERATED_KEYS)
@@ -50,18 +46,21 @@ public class CarDaoImpl implements CarDao {
                           + "FROM cars c "
                           + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                           + "WHERE c.is_deleted = FALSE  AND c.id = ?;";
+        Car car = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getStatement = connection.prepareStatement(getQuery)) {
             getStatement.setLong(1, id);
             ResultSet resultSet = getStatement.executeQuery();
-            Car car = null;
             if (resultSet.next()) {
                 car = parseCarFromResultSet(resultSet);
             }
-            return Optional.ofNullable(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get a car with id: " + id, e);
         }
+        if (car != null) {
+            car.setDrivers(getDriversByCarId(car.getId()));
+        }
+        return Optional.ofNullable(car);
     }
 
     @Override
@@ -71,17 +70,20 @@ public class CarDaoImpl implements CarDao {
                              + "FROM cars c "
                              + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                              + "WHERE c.is_deleted = FALSE;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement(getAllQuery)) {
             ResultSet resultSet = getAllStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get all cars", e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCarId(car.getId()));
+        }
+        return cars;
     }
 
     @Override
@@ -126,19 +128,22 @@ public class CarDaoImpl implements CarDao {
                                      + "JOIN manufacturers m ON c.manufacturer_id = m.id "
                                      + "JOIN cars_drivers cd ON cd.car_id = c.id "
                                      + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllByDriverStatement =
                         connection.prepareStatement(getAllByDriverQuery)) {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
-            List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
                 cars.add(parseCarFromResultSet(resultSet));
             }
-            return cars;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars by a driver ID: " + driverId, e);
         }
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCarId(car.getId()));
+        }
+        return cars;
     }
 
     private Car parseCarFromResultSet(ResultSet resultSet) throws SQLException {
@@ -146,7 +151,6 @@ public class CarDaoImpl implements CarDao {
         car.setId(resultSet.getObject("car_id", Long.class));
         car.setModel(resultSet.getString("car_model"));
         car.setManufacturer(parseManufacturer(resultSet));
-        car.setDrivers(getDriversByCar(car.getId()));
         return car;
     }
 
@@ -158,7 +162,7 @@ public class CarDaoImpl implements CarDao {
         return manufacturer;
     }
 
-    private List<Driver> getDriversByCar(Long carId) {
+    private List<Driver> getDriversByCarId(Long carId) {
         String getDriversQuery = "SELECT id, name, license_number "
                                  + "FROM drivers d "
                                  + "JOIN cars_drivers cd ON d.id = cd.driver_id "
@@ -196,22 +200,18 @@ public class CarDaoImpl implements CarDao {
     }
 
     private void insertDriversForCar(Car car) {
-        for (Driver driver : car.getDrivers()) {
-            insertDriver(car.getId(), driver.getId());
-        }
-    }
-
-    private void insertDriver(Long carId, Long driverId) {
         String insertDriversQuery = "INSERT INTO cars_drivers (car_id, driver_id) VALUES(?, ?)";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement insertDriversStatement
                         = connection.prepareStatement(insertDriversQuery)) {
-            insertDriversStatement.setLong(1, carId);
-            insertDriversStatement.setLong(2, driverId);
-            insertDriversStatement.executeUpdate();
+            insertDriversStatement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                insertDriversStatement.setLong(2, driver.getId());
+                insertDriversStatement.executeUpdate();
+            }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't insert driver fom car with id: "
-                                              + carId, e);
+            throw new DataProcessingException("Can't insert driver for car with id: "
+                                              + car.getId(), e);
         }
     }
 }

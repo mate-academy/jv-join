@@ -81,7 +81,6 @@ public class Main {
 
         carService.removeDriverFromCar(ericDriver, dusterCar);
 
-        System.out.println(carService.get(mondeoCar.getId()));
         System.out.println("=====");
         carService.getAllByDriver(johnDriver.getId()).forEach(System.out::println);
         System.out.println("=====");
