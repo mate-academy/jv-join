@@ -119,6 +119,7 @@ public class CarDaoImpl implements CarDao {
                 PreparedStatement deleteStatement =
                         connection.prepareStatement(deleteQuery)) {
             deleteStatement.setLong(1, id);
+            removeDriversFromCar(id);
             return deleteStatement.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete car with id " + id, e);
@@ -142,8 +143,7 @@ public class CarDaoImpl implements CarDao {
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             List<Car> cars = new ArrayList<>();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
             return cars;
         } catch (SQLException e) {
