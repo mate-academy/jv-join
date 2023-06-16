@@ -32,15 +32,15 @@ public class DriverDaoImpl implements DriverDao {
             return driver;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
-                    + driver + ". ", e);
+                                              + driver + ". ", e);
         }
     }
 
     @Override
     public Optional<Driver> get(Long id) {
         String query = "SELECT id, name, license_number "
-                + "FROM drivers "
-                + "WHERE id = ? AND is_deleted = FALSE;";
+                       + "FROM drivers "
+                       + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
@@ -74,8 +74,8 @@ public class DriverDaoImpl implements DriverDao {
     @Override
     public Driver update(Driver driver) {
         String query = "UPDATE drivers "
-                + "SET name = ?, license_number = ? "
-                + "WHERE id = ? AND is_deleted = FALSE;";
+                       + "SET name = ?, license_number = ? "
+                       + "WHERE id = ? AND is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement
                         = connection.prepareStatement(query)) {
@@ -86,7 +86,7 @@ public class DriverDaoImpl implements DriverDao {
             return driver;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update "
-                    + driver + " in driversDB.", e);
+                                              + driver + " in driversDB.", e);
         }
     }
 
