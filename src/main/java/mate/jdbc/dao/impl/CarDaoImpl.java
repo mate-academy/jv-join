@@ -31,11 +31,12 @@ public class CarDaoImpl implements CarDao {
             if (resultSet.next()) {
                 car.setId(resultSet.getObject(1, Long.class));
             }
-            return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create a car "
                     + car, e);
         }
+        insertDriversToCar(car);
+        return car;
     }
 
     @Override
@@ -140,7 +141,9 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException(
                     "Couldn't get a list of cars by driver with id " + driverId, e);
         }
-        cars.forEach(this::insertDriversToCar);
+        for (Car car: cars) {
+            insertDriversToCar(car);
+        }
         return cars;
     }
 
