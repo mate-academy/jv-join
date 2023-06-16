@@ -1,5 +1,12 @@
 package mate.jdbc.dao.impl;
 
+import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
+import mate.jdbc.lib.Dao;
+import mate.jdbc.model.Car;
+import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
+import mate.jdbc.util.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,13 +15,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
-import mate.jdbc.lib.Dao;
-import mate.jdbc.model.Car;
-import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
-import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
@@ -141,9 +141,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException(
                     "Couldn't get a list of cars by driver with id " + driverId, e);
         }
-        for (Car car: cars) {
-            insertDriversToCar(car);
-        }
+        cars.forEach(car -> car.setDrivers(getDriversByCar(car.getId())));
         return cars;
     }
 
