@@ -18,7 +18,6 @@ import mate.jdbc.util.ConnectionUtil;
 
 @Dao
 public class CarDaoImpl implements CarDao {
-
     @Override
     public Car create(Car car) {
         String query = "INSERT INTO cars (model, manufacturer_id) VALUES (?, ?);";
@@ -166,7 +165,6 @@ public class CarDaoImpl implements CarDao {
             return drivers;
         } catch (SQLException e) {
             throw new DataProcessingException("Can't find driver in DB by car id" + carId, e);
-
         }
     }
 
@@ -196,7 +194,7 @@ public class CarDaoImpl implements CarDao {
     private Car getCar(ResultSet resultSet) throws SQLException {
         long carId = resultSet.getLong("car_id");
         String model = resultSet.getString("model");
-        long manufacturerId = resultSet.getLong("manufacturer_id");
+        long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
         Manufacturer manufacturer = new Manufacturer(manufacturerId,

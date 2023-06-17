@@ -47,13 +47,13 @@ public class Main {
         System.out.println("Car deleted with ID: " + carIdToDelete);
 
         List<Driver> drivers = new ArrayList<>();
-        Driver driver1 = new Driver();
-        driver1.setName("John");
-        drivers.add(driver1);
+        Driver john = new Driver();
+        john.setName("John");
+        drivers.add(john);
 
-        Driver driver2 = new Driver();
-        driver2.setName("Alice");
-        drivers.add(driver2);
+        Driver alice = new Driver();
+        alice.setName("Alice");
+        drivers.add(alice);
 
         car.setDrivers(drivers);
 

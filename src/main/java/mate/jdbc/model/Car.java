@@ -13,18 +13,18 @@ public class Car {
     public Car(Long id, String model, List<Driver> drivers) {
         this.id = id;
         this.model = model;
-        this.drivers = new ArrayList<>(drivers); // Initialize the drivers list
+        this.drivers = new ArrayList<>(drivers);
     }
 
     public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.id = id;
         this.model = model;
         this.manufacturer = manufacturer;
-        this.drivers = new ArrayList<>(drivers); // Initialize the drivers list
+        this.drivers = new ArrayList<>(drivers);
     }
 
     public Car() {
-        this.drivers = new ArrayList<>(); // Initialize the drivers list
+        this.drivers = new ArrayList<>();
     }
 
     public Car(Long id, String model, Manufacturer manufacturer) {
