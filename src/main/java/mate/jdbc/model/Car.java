@@ -1,5 +1,6 @@
 package mate.jdbc.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,14 +13,12 @@ public class Car {
     public Car(String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.model = model;
         this.manufacturer = manufacturer;
-        this.drivers = drivers;
+        this.drivers = new ArrayList<>(drivers);
     }
 
-    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
+    public Car(Long id, String model) {
         this.id = id;
         this.model = model;
-        this.manufacturer = manufacturer;
-        this.drivers = drivers;
     }
 
     public Long getId() {
@@ -51,7 +50,7 @@ public class Car {
     }
 
     public void setDrivers(List<Driver> drivers) {
-        this.drivers = drivers;
+        this.drivers = new ArrayList<>(drivers);
     }
 
     @Override
