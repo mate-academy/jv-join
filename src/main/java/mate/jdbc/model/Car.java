@@ -1,24 +1,36 @@
 package mate.jdbc.model;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Car {
     private Long id;
-    private Long manufacturerId;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
     private String model;
 
-    public Car(Long id, String model, Long manufacturerId) {
+    public Car(Long id, String model, Manufacturer manufacturer, List<Driver> drivers) {
         this.id = id;
-        this.manufacturerId = manufacturerId;
+        this.manufacturer = manufacturer;
         this.model = model;
+    }
+
+    public Car(Long id, String model, Manufacturer manufacturer) {
+        this.id = id;
+        this.model = model;
+        this.manufacturer = manufacturer;
+    }
+
+    public Car() {
+        this.drivers = new ArrayList<>();
     }
 
     public Long getId() {
         return id;
     }
 
-    public Long getManufacturerId() {
-        return manufacturerId;
+    public Manufacturer getManufacturer() {
+        return manufacturer;
     }
 
     public String getModel() {
@@ -29,38 +41,28 @@ public class Car {
         this.id = id;
     }
 
-    public void setManufacturerId(Long manufacturerId) {
-        this.manufacturerId = manufacturerId;
+    public void setManufacturer(Manufacturer manufacturer) {
+        this.manufacturer = manufacturer;
     }
 
     public void setModel(String model) {
         this.model = model;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Car)) {
-            return false;
-        }
-        Car car = (Car) o;
-        return getId().equals(car.getId())
-                && getManufacturerId().equals(car.getManufacturerId())
-                && getModel().equals(car.getModel());
+    public List<Driver> getDrivers() {
+        return drivers;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getManufacturerId(), getModel());
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 
     @Override
     public String toString() {
         return "Car{" + "id=" + id
-                + ", manufacturerId=" + manufacturerId
+                + ", manufacturer=" + manufacturer
                 + ", model='" + model + '\''
+                + ", drivers=" + drivers
                 + '}';
     }
 }

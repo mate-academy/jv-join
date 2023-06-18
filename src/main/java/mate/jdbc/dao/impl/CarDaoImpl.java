@@ -12,6 +12,7 @@ import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.util.ConnectionUtil;
 
 @Dao
@@ -24,7 +25,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement
                          = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, car.getModel());
-            statement.setLong(2,car.getManufacturerId());
+            statement.setLong(2,car.getManufacturer().getId());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -81,7 +82,7 @@ public class CarDaoImpl implements CarDao {
                  PreparedStatement statement
                          = connection.prepareStatement(query)) {
             statement.setString(1, car.getModel());
-            statement.setLong(2, car.getManufacturerId());
+            statement.setLong(2, car.getManufacturer().getId());
             statement.setLong(3, car.getId());
             statement.executeUpdate();
             return car;
@@ -106,21 +107,17 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        String query = "SELECT * FROM cars JOIN cars_drivers lf "
-                + "ON id = car_id WHERE driver_id = ?";
-        List<Car> cars = new ArrayList<>();
+        String getAllCarsForDriversRequest = "SELECT id, model, manufacturer_id FROM cars c "
+                + "JOIN cars_drivers cd ON c.id = cd.car_id "
+                + "WHERE cd.driver_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
-                 PreparedStatement statement
-                         = connection.prepareStatement(query)) {
-            statement.setLong(1, driverId);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    Long id = resultSet.getLong("id");
-                    String model = resultSet.getString("model");
-                    Long manufacturerId = resultSet.getLong("manufacturer_id");
-                    Car car = new Car(id, model, manufacturerId);
-                    cars.add(car);
-                }
+                 PreparedStatement getAllDriversStatement =
+                         connection.prepareStatement(getAllCarsForDriversRequest);) {
+            getAllDriversStatement.setLong(1, driverId);
+            ResultSet resultSet = getAllDriversStatement.executeQuery();
+            List<Car> cars = new ArrayList<>();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
             }
             return cars;
         } catch (SQLException e) {
@@ -129,9 +126,14 @@ public class CarDaoImpl implements CarDao {
     }
 
     private Car getCar(ResultSet resultSet) throws SQLException {
-        Long id = resultSet.getObject("id", Long.class);
+        long carId = resultSet.getLong("car_id");
         String model = resultSet.getString("model");
-        Long manufacturerId = resultSet.getLong("manufacturer_id");
-        return new Car(id, model, manufacturerId);
+        long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
+        String manufacturerName = resultSet.getString("manufacturer_name");
+        String manufacturerCountry = resultSet.getString("manufacturer_country");
+        Manufacturer manufacturer = new Manufacturer(manufacturerId,
+                manufacturerName, manufacturerCountry);
+
+        return new Car(carId, model, manufacturer);
     }
 }
