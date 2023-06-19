@@ -127,8 +127,7 @@ public class CarDaoImpl implements CarDao {
             getAllByDriverStatement.setLong(1, driverId);
             ResultSet resultSet = getAllByDriverStatement.executeQuery();
             while (resultSet.next()) {
-                Car car = getCar(resultSet);
-                cars.add(car);
+                cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Couldn't get a list of cars by driver id: " + driverId, e);
