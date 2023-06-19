@@ -129,7 +129,7 @@ public class CarDaoImpl implements CarDao {
                 + "JOIN cars_drivers cd ON c.id = cd.car_id "
                 + "JOIN drivers d ON d.id = cd.driver_id "
                 + "JOIN manufacturers m ON m.id = c.manufacturer_id "
-                + "WHERE d.id = ?;";
+                + "WHERE c.is_deleted = FALSE AND d.id = ?;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
