@@ -2,29 +2,29 @@ package mate.jdbc.dao.impl;
 
 import java.util.List;
 import java.util.Optional;
-import mate.jdbc.dao.CarDao;
+import mate.jdbc.dao.CarsDriversDao;
 import mate.jdbc.lib.Dao;
-import mate.jdbc.model.Car;
+import mate.jdbc.model.CarDriver;
 
 @Dao
-public class CarDaoImpl implements CarDao {
+public class CarDriverDaoImpl implements CarsDriversDao {
     @Override
-    public Car create(Car car) {
+    public CarDriver create(CarDriver driver) {
         return null;
     }
 
     @Override
-    public Optional<Car> get(Long id) {
+    public Optional<CarDriver> get(Long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<Car> getAll() {
+    public List<CarDriver> getAll() {
         return null;
     }
 
     @Override
-    public Car update(Car car) {
+    public CarDriver update(CarDriver driver) {
         return null;
     }
 

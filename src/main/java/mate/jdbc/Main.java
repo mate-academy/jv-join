@@ -47,7 +47,7 @@ public class Main {
         Manufacturer testManufacturer = manufacturerService.create(firstInputManufacturer);
         System.out.print("\n" + firstInputManufacturer + " -> ");
         System.out.println(manufacturerService.get(testManufacturer.getId()));
-        Manufacturer secondInputManufacturer = new Manufacturer(0L,"BMV2","Germany");
+        Manufacturer secondInputManufacturer = new Manufacturer("BMV2","Germany");
         testManufacturer = manufacturerService.create(secondInputManufacturer);
         System.out.print(secondInputManufacturer + " -> ");
         System.out.println(manufacturerService.get(testManufacturer.getId()));
