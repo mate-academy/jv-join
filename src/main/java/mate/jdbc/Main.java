@@ -22,9 +22,10 @@ public class Main {
 
     public static void main(String[] args) {
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(1L);
         manufacturer.setName("BMW");
         manufacturer.setCountry("Germany");
+
+        manufacturerService.create(manufacturer);
 
         Car car = new Car();
         car.setModel("X6");
