@@ -62,24 +62,24 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAll() {
-        List<Car> carList = new ArrayList<>();
+        List<Car> cars = new ArrayList<>();
         String query = "SELECT * FROM cars c JOIN manufacturers m ON "
                 + "c.manufacturer_id = m.id WHERE c.is_deleted = FALSE;";
-        Car car;
+        Car newCar;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement getAllStatement = connection.prepareStatement(query)) {
             ResultSet resultSet = getAllStatement.executeQuery();
             while (resultSet.next()) {
-                car = getCar(resultSet);
-                carList.add(car);
+                newCar = getCar(resultSet);
+                cars.add(newCar);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t get all data from db", e);
         }
-        for (Car carFromList : carList) {
-            carFromList.setDrivers(getDriversByCar(carFromList.getId()));
+        for (Car car : cars) {
+            car.setDrivers(getDriversByCar(car.getId()));
         }
-        return carList;
+        return cars;
     }
 
     @Override
@@ -171,15 +171,15 @@ public class CarDaoImpl implements CarDao {
         return drivers;
     }
 
-    private void deleteDriversFromCar(Long carsId) {
+    private void deleteDriversFromCar(Long carId) {
         String query = "DELETE FROM cars_drivers WHERE car_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement deleteStatement = connection.prepareStatement(query)) {
-            deleteStatement.setLong(1, carsId);
+            deleteStatement.setLong(1, carId);
             deleteStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t delete drivers"
-                    + " from cars_drivers by id " + carsId, e);
+                    + " from cars_drivers by id " + carId, e);
         }
     }
 
