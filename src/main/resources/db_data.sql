@@ -10,8 +10,8 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
+SET FOREIGN_KEY_CHECKS = 0;
+SET GLOBAL FOREIGN_KEY_CHECKS=0;
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -26,6 +26,7 @@ USE `taxi_service`;
 --
 -- Dumping data for table `cars`
 --
+
 
 INSERT INTO `cars` (`id`, `manufacturer_id`, `model`, `is_deleted`) VALUES
     (1, 0, 'TOYOTA', 0);
@@ -55,6 +56,7 @@ INSERT INTO `manufacturers` (`id`, `name`, `country`, `is_deleted`) VALUES
                                                                         (3, 'Jeep', '🇺🇸USA', 0),
                                                                         (4, 'Suzuki', '🇯🇵JAPAN', 0),
                                                                         (5, 'Audi', '🇩🇪Germany', 0);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
