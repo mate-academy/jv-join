@@ -20,7 +20,6 @@ SET GLOBAL FOREIGN_KEY_CHECKS=0;
 --
 -- Database: `taxi_service`
 --
-CREATE DATABASE IF NOT EXISTS `taxi_service` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `taxi_service`;
 
 --

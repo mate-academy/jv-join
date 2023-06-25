@@ -1,9 +1,13 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
 import mate.jdbc.lib.Injector;
+import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
+import mate.jdbc.service.CarDriverService;
+import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
@@ -12,8 +16,8 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("App.start");
-        DriverService driverService =
-                (DriverService) injector.getInstance(DriverService.class);
+        System.out.println("<-----------TEST DRIVER SERVICE----------------->");
+        DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         List<Driver> drivers = driverService.getAll();
         drivers.forEach(System.out::println);
         Driver firstDriver = new Driver("Іванов Іван Іванович","3222233322");
@@ -38,7 +42,7 @@ public class Main {
         }
         drivers = driverService.getAll();
         drivers.forEach(System.out::println);
-        System.out.println("<---------------------------->");
+        System.out.println("<----------TEST MANUFACTURER SERVICE------------------>");
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
         List<Manufacturer> manufacturers = manufacturerService.getAll();
@@ -64,6 +68,46 @@ public class Main {
         }
         manufacturers = manufacturerService.getAll();
         manufacturers.forEach(System.out::println);
+        System.out.println("<--------TEST CAR SERVICE-------------------->");
+        CarService carService = (CarService) injector.getInstance(CarService.class);
+        List<Car> cars = carService.getAll();
+        cars.forEach(System.out::println);
+        Manufacturer newManufacturer = firstInputManufacturer;
+        List<Driver> newListOfDriver = new ArrayList<>();
+        newListOfDriver.add(firstDriver);
+        newListOfDriver.add(secondDriver);
+        Car firstCar = new Car("AUDI",newManufacturer,newListOfDriver);
+        System.out.print(firstCar + " -> ");
+        Car testCar = carService.create(firstCar);
+        System.out.println(testCar);
+        System.out.println(carService.get(testCar.getId()));
+        Manufacturer newSecondManufacturer = secondInputManufacturer;
+        List<Driver> newSecondListOfDriver = new ArrayList<>();
+        newSecondListOfDriver.add(firstDriver);
+        newSecondListOfDriver.add(secondDriver);
+        Car secondCar = new Car("VW",newSecondManufacturer,newSecondListOfDriver);
+        testCar = carService.create(secondCar);
+        System.out.print(secondCar + " -> ");
+        System.out.println(carService.get(testCar.getId()));
+        System.out.print("\nNow update it to -> ");
+        Car updatebleCar = testCar;
+        updatebleCar.setModel("New Model");
+        updatebleCar.setManufacturer(newSecondManufacturer);
+        updatebleCar.setDrivers(newSecondListOfDriver);
+        carService.update(updatebleCar);
+        System.out.println(carService.get(updatebleCar.getId()));
+        System.out.println("\nNow delete Car id = "
+                + testCar.getId() + "  from DB ");
+        if (carService.delete(testCar.getId())) {
+            System.out.println("Car id = " + testCar.getId()
+                    + " deleted successfully");
+        }
+        cars = carService.getAll();
+        cars.forEach(System.out::println);
+        System.out.println("<-------TEST CAR-DRIVER SERVICE--------------------->");
+        CarDriverService carDriverService = (CarDriverService) injector.getInstance(CarDriverService.class);
+ //       carDriverService.addDriverToCar(Driver driver, Car car);
+ //       carDriverService.removeDriverFromCar(Driver driver, Car car);
         System.out.println("App.finish");
     }
 }
