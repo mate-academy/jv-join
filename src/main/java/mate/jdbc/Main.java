@@ -6,7 +6,6 @@ import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.model.Manufacturer;
-import mate.jdbc.service.CarDriverService;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -18,8 +17,7 @@ public class Main {
         System.out.println("App.start");
         System.out.println("<-----------TEST DRIVER SERVICE----------------->");
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        List<Driver> drivers = driverService.getAll();
-        drivers.forEach(System.out::println);
+        driverService.getAll().forEach(System.out::println);
         Driver firstDriver = new Driver("Іванов Іван Іванович","3222233322");
         System.out.print(firstDriver + " -> ");
         Driver testDriver = driverService.create(firstDriver);
@@ -29,7 +27,7 @@ public class Main {
         testDriver = driverService.create(secondDriver);
         System.out.print(secondDriver + " -> ");
         System.out.println(driverService.get(testDriver.getId()));
-        System.out.print("\nNow update it to -> ");
+        System.out.print("Now update it to -> ");
         Driver updatebleDriver = testDriver;
         updatebleDriver.setName("П.Т. Мазепа");
         driverService.update(updatebleDriver);
@@ -40,8 +38,7 @@ public class Main {
             System.out.println("Driver id = " + testDriver.getId()
                     + " deleted successfully");
         }
-        drivers = driverService.getAll();
-        drivers.forEach(System.out::println);
+        driverService.getAll().forEach(System.out::println);
         System.out.println("<----------TEST MANUFACTURER SERVICE------------------>");
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
@@ -55,7 +52,7 @@ public class Main {
         testManufacturer = manufacturerService.create(secondInputManufacturer);
         System.out.print(secondInputManufacturer + " -> ");
         System.out.println(manufacturerService.get(testManufacturer.getId()));
-        System.out.print("\nNow update it to -> ");
+        System.out.print("Now update it to -> ");
         Manufacturer updatebleManufacturer = testManufacturer;
         updatebleManufacturer.setName("VW");
         manufacturerService.update(updatebleManufacturer);
@@ -89,7 +86,7 @@ public class Main {
         testCar = carService.create(secondCar);
         System.out.print(secondCar + " -> ");
         System.out.println(carService.get(testCar.getId()));
-        System.out.print("\nNow update it to -> ");
+        System.out.print("Now update it to -> ");
         Car updatebleCar = testCar;
         updatebleCar.setModel("New Model");
         updatebleCar.setManufacturer(newSecondManufacturer);
@@ -104,10 +101,11 @@ public class Main {
         }
         cars = carService.getAll();
         cars.forEach(System.out::println);
-        System.out.println("<-------TEST CAR-DRIVER SERVICE--------------------->");
-        CarDriverService carDriverService = (CarDriverService) injector.getInstance(CarDriverService.class);
- //       carDriverService.addDriverToCar(Driver driver, Car car);
- //       carDriverService.removeDriverFromCar(Driver driver, Car car);
+
+        carService.addDriverToCar(testDriver, testCar);
+        carService.getAllByDriver(testDriver.getId()).forEach(System.out::println);
+        carService.removeDriverFromCar(testDriver, testCar);
+        carService.getAllByDriver(testDriver.getId()).forEach(System.out::println);
         System.out.println("App.finish");
     }
 }
