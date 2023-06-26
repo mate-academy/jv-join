@@ -10,6 +10,8 @@ import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 
+import static mate.jdbc.util.Tools.NumberLicenseGenerator;
+
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
 
@@ -18,94 +20,80 @@ public class Main {
         System.out.println("<-----------TEST DRIVER SERVICE----------------->");
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
         driverService.getAll().forEach(System.out::println);
-        Driver firstDriver = new Driver("Іванов Іван Іванович","3222233322");
-        System.out.print(firstDriver + " -> ");
-        Driver testDriver = driverService.create(firstDriver);
-        System.out.println(testDriver);
-        System.out.println(driverService.get(testDriver.getId()));
-        Driver secondDriver = new Driver("Мазепа Т.П.","777");
-        testDriver = driverService.create(secondDriver);
-        System.out.print(secondDriver + " -> ");
-        System.out.println(driverService.get(testDriver.getId()));
-        System.out.print("Now update it to -> ");
-        Driver updatebleDriver = testDriver;
-        updatebleDriver.setName("П.Т. Мазепа");
-        driverService.update(updatebleDriver);
-        System.out.println(driverService.get(updatebleDriver.getId()));
-        System.out.println("\nNow delete Driver id = "
-                + testDriver.getId() + "  from DB ");
-        if (driverService.delete(testDriver.getId())) {
-            System.out.println("Driver id = " + testDriver.getId()
+        Driver firstCreatedDriver = new Driver("Іванов Іван Іванович", NumberLicenseGenerator());
+        System.out.print(firstCreatedDriver + " -> ");
+        driverService.create(firstCreatedDriver);
+        System.out.println(firstCreatedDriver);
+        System.out.println("Get by id = " + firstCreatedDriver.getId() + " from DB : "
+                + driverService.get(firstCreatedDriver.getId()));
+        Driver secondCreatedDriver = new Driver("Мазепа Т.П.", NumberLicenseGenerator());
+        driverService.create(secondCreatedDriver);
+        System.out.print(secondCreatedDriver + " -> ");
+        System.out.println(driverService.get(secondCreatedDriver.getId()));
+        System.out.print("Update Driver to -> ");
+        Driver updatebleDriver = secondCreatedDriver;
+        secondCreatedDriver.setName("П.Т. Мазепа");
+        driverService.update(secondCreatedDriver);
+        System.out.println(driverService.get(secondCreatedDriver.getId()));
+        System.out.println("Delete Driver id = "
+                + firstCreatedDriver.getId() + "  from DB ");
+        if (driverService.delete(firstCreatedDriver.getId())) {
+            System.out.println("Driver id = " + firstCreatedDriver.getId()
                     + " deleted successfully");
         }
         driverService.getAll().forEach(System.out::println);
         System.out.println("<----------TEST MANUFACTURER SERVICE------------------>");
         ManufacturerService manufacturerService =
                 (ManufacturerService) injector.getInstance(ManufacturerService.class);
-        List<Manufacturer> manufacturers = manufacturerService.getAll();
-        manufacturers.forEach(System.out::println);
-        Manufacturer firstInputManufacturer = new Manufacturer("IBM2","USA");
-        Manufacturer testManufacturer = manufacturerService.create(firstInputManufacturer);
-        System.out.print("\n" + firstInputManufacturer + " -> ");
-        System.out.println(manufacturerService.get(testManufacturer.getId()));
-        Manufacturer secondInputManufacturer = new Manufacturer("BMV2","Germany");
-        testManufacturer = manufacturerService.create(secondInputManufacturer);
-        System.out.print(secondInputManufacturer + " -> ");
-        System.out.println(manufacturerService.get(testManufacturer.getId()));
-        System.out.print("Now update it to -> ");
-        Manufacturer updatebleManufacturer = testManufacturer;
-        updatebleManufacturer.setName("VW");
-        manufacturerService.update(updatebleManufacturer);
-        System.out.println(manufacturerService.get(updatebleManufacturer.getId()));
-        System.out.println("\nNow delete Manufacturer id = "
-                + testManufacturer.getId() + "  from DB ");
-        if (manufacturerService.delete(testManufacturer.getId())) {
-            System.out.println("Manufacturer id = " + testManufacturer.getId()
+        manufacturerService.getAll().forEach(System.out::println);
+        Manufacturer firstCreatedManufacturer = new Manufacturer("IBM2","USA");
+        System.out.print(firstCreatedManufacturer + " -> ");
+        System.out.println(manufacturerService.create(firstCreatedManufacturer));
+        System.out.println("Get by id = " + firstCreatedManufacturer.getId()
+                + " from DB : " + manufacturerService.get(firstCreatedManufacturer.getId()));
+        Manufacturer secondCreatedManufacturer = new Manufacturer("BMV2","Germany");
+        System.out.print(secondCreatedManufacturer + " -> ");
+        manufacturerService.create(secondCreatedManufacturer);
+        System.out.println(manufacturerService.get(secondCreatedManufacturer.getId()));
+        System.out.print("Update Manufacturer to -> ");
+        secondCreatedManufacturer.setName("VW");
+        manufacturerService.update(secondCreatedManufacturer);
+        System.out.println(manufacturerService.get(secondCreatedManufacturer.getId()));
+        System.out.println("Delete Manufacturer id = "
+                + firstCreatedManufacturer.getId() + "  from DB ");
+        if (manufacturerService.delete(firstCreatedManufacturer.getId())) {
+            System.out.println("Manufacturer id = " + firstCreatedManufacturer.getId()
                     + " deleted successfully");
         }
-        manufacturers = manufacturerService.getAll();
-        manufacturers.forEach(System.out::println);
+        manufacturerService.getAll().forEach(System.out::println);
         System.out.println("<--------TEST CAR SERVICE-------------------->");
         CarService carService = (CarService) injector.getInstance(CarService.class);
-        List<Car> cars = carService.getAll();
-        cars.forEach(System.out::println);
-        Manufacturer newManufacturer = firstInputManufacturer;
-        List<Driver> newListOfDriver = new ArrayList<>();
-        newListOfDriver.add(firstDriver);
-        newListOfDriver.add(secondDriver);
-        Car firstCar = new Car("AUDI",newManufacturer,newListOfDriver);
-        System.out.print(firstCar + " -> ");
-        Car testCar = carService.create(firstCar);
-        System.out.println(testCar);
-        System.out.println(carService.get(testCar.getId()));
-        Manufacturer newSecondManufacturer = secondInputManufacturer;
-        List<Driver> newSecondListOfDriver = new ArrayList<>();
-        newSecondListOfDriver.add(firstDriver);
-        newSecondListOfDriver.add(secondDriver);
-        Car secondCar = new Car("VW",newSecondManufacturer,newSecondListOfDriver);
-        testCar = carService.create(secondCar);
-        System.out.print(secondCar + " -> ");
-        System.out.println(carService.get(testCar.getId()));
-        System.out.print("Now update it to -> ");
-        Car updatebleCar = testCar;
-        updatebleCar.setModel("New Model");
-        updatebleCar.setManufacturer(newSecondManufacturer);
-        updatebleCar.setDrivers(newSecondListOfDriver);
-        carService.update(updatebleCar);
-        System.out.println(carService.get(updatebleCar.getId()));
-        System.out.println("\nNow delete Car id = "
-                + testCar.getId() + "  from DB ");
-        if (carService.delete(testCar.getId())) {
-            System.out.println("Car id = " + testCar.getId()
+        carService.getAll().forEach(System.out::println);
+        List<Driver> firstDriverList = List.of(secondCreatedDriver, firstCreatedDriver);
+        Car firstCreatedCar = new Car("RENO", secondCreatedManufacturer, firstDriverList);
+        System.out.println(firstCreatedCar);
+        System.out.print(" -> ");
+        System.out.println(carService.create(firstCreatedCar));
+        System.out.print("Get by id = " + firstCreatedCar.getId() + " from DB : "
+                + carService.get(firstCreatedCar.getId()));
+        firstCreatedCar.setModel("New Model");
+        firstCreatedCar.setManufacturer(manufacturerService.get(0L));
+        firstCreatedCar.getDrivers()
+                .add(driverService.create(new Driver("Б. Хмельницький",NumberLicenseGenerator())));
+        carService.update(firstCreatedCar);
+        System.out.print("Update it to -> ");
+        System.out.println(carService.get(firstCreatedCar.getId()));
+        carService.addDriverToCar(secondCreatedDriver, firstCreatedCar);
+        carService.getAllByDriver(secondCreatedDriver.getId()).forEach(System.out::println);
+        carService.removeDriverFromCar(secondCreatedDriver, firstCreatedCar);
+        carService.getAllByDriver(secondCreatedDriver.getId()).forEach(System.out::println);
+        System.out.println("Delete Car id = "
+                + firstCreatedCar.getId() + "  from DB ");
+        if (carService.delete(firstCreatedCar.getId())) {
+            System.out.println("Car id = " + firstCreatedCar.getId()
                     + " deleted successfully");
         }
-        cars = carService.getAll();
-        cars.forEach(System.out::println);
-
-        carService.addDriverToCar(testDriver, testCar);
-        carService.getAllByDriver(testDriver.getId()).forEach(System.out::println);
-        carService.removeDriverFromCar(testDriver, testCar);
-        carService.getAllByDriver(testDriver.getId()).forEach(System.out::println);
+        carService.getAll().forEach(System.out::println);
         System.out.println("App.finish");
     }
 }
