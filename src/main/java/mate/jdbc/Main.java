@@ -9,7 +9,6 @@ import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
-
 import static mate.jdbc.util.Tools.NumberLicenseGenerator;
 
 public class Main {
@@ -69,7 +68,9 @@ public class Main {
         System.out.println("<--------TEST CAR SERVICE-------------------->");
         CarService carService = (CarService) injector.getInstance(CarService.class);
         carService.getAll().forEach(System.out::println);
-        List<Driver> firstDriverList = List.of(secondCreatedDriver, firstCreatedDriver);
+        List<Driver> firstDriverList = new ArrayList<>(
+                List.of(secondCreatedDriver,
+                        firstCreatedDriver));
         Car firstCreatedCar = new Car("RENO", secondCreatedManufacturer, firstDriverList);
         System.out.println(firstCreatedCar);
         System.out.print(" -> ");
@@ -78,8 +79,7 @@ public class Main {
                 + carService.get(firstCreatedCar.getId()));
         firstCreatedCar.setModel("New Model");
         firstCreatedCar.setManufacturer(manufacturerService.get(0L));
-        firstCreatedCar.getDrivers()
-                .add(driverService.create(new Driver("Б. Хмельницький",NumberLicenseGenerator())));
+        carService.addDriverToCar(driverService.create(new Driver("Б. Хмельницький", NumberLicenseGenerator())),firstCreatedCar);
         carService.update(firstCreatedCar);
         System.out.print("Update it to -> ");
         System.out.println(carService.get(firstCreatedCar.getId()));
