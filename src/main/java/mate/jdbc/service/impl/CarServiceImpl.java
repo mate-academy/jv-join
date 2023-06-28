@@ -8,15 +8,11 @@ import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.DriverService;
-
 
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
-    @Inject
-    private DriverService driverService;
 
     @Override
     public Car create(Car car) {
@@ -25,31 +21,13 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public Car get(Long id) {
-        Car car = carDao.get(id).orElseThrow(() -> new NoSuchElementException("Could not get car "
+        return carDao.get(id).orElseThrow(() -> new NoSuchElementException("Could not get car "
                 + "by id = " + id));
-        getDriverById(car);
-        return car;
     }
 
     @Override
     public List<Car> getAll() {
-        List<Car> cars = carDao.getAll();
-        return getDriversById(cars);
-    }
-
-    private List<Car> getDriversById(List<Car> cars) {
-        for (Car car : cars) {
-            getDriverById(car);
-        }
-        return cars;
-    }
-
-    private void getDriverById(Car car) {
-        for (Driver driver : car.getDrivers()) {
-            Driver driverGetById = driverService.get(driver.getId());
-            driver.setName(driverGetById.getName());
-            driver.setLicenseNumber(driverGetById.getLicenseNumber());
-        }
+        return carDao.getAll();
     }
 
     @Override
@@ -64,7 +42,12 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        car.getDrivers().add(driver);
+        if (!car.getDrivers().contains(driver)) {
+            car.getDrivers().add(driver);
+        } else {
+            System.out.println("The driver id = " + driver.getId()
+                    + " is already driving this car id = " + car.getId());
+        }
     }
 
     @Override
@@ -74,7 +57,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        List<Car> cars = carDao.getAllByDriver(driverId);
-        return getDriversById(cars);
+        return carDao.getAllByDriver(driverId);
     }
 }

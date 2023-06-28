@@ -22,8 +22,6 @@ public class Driver {
         this.licenseNumber = licenseNumber;
     }
 
-
-
     public Long getId() {
         return id;
     }

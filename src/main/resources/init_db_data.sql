@@ -20,6 +20,26 @@ DROP DATABASE IF EXISTS `taxi_service`;
 CREATE DATABASE IF NOT EXISTS `taxi_service` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `taxi_service`;
 
+
+-- Дамп структуры для таблица taxi_service.manufacturers
+DROP TABLE IF EXISTS `manufacturers`;
+CREATE TABLE IF NOT EXISTS `manufacturers` (
+                                               `id` bigint NOT NULL AUTO_INCREMENT,
+                                               `name` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `country` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+    `is_deleted` tinyint NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Дамп данных таблицы taxi_service.manufacturers: ~0 rows (приблизительно)
+INSERT INTO `manufacturers` (`id`, `name`, `country`, `is_deleted`) VALUES
+                                                                        (0, 'NO NAME', 'NO COUNTRY', 0),
+                                                                        (1, 'Chrysler', '🇺🇸USA', 0),
+                                                                        (2, 'Dodge', '🇺🇸USA', 0),
+                                                                        (3, 'Jeep', '🇺🇸USA', 0),
+                                                                        (4, 'Suzuki', '🇯🇵JAPAN', 0),
+                                                                        (5, 'Audi', '🇩🇪Germany', 0);
+
 -- Дамп структуры для таблица taxi_service.cars
 DROP TABLE IF EXISTS `cars`;
 CREATE TABLE IF NOT EXISTS `cars` (
@@ -35,21 +55,6 @@ CREATE TABLE IF NOT EXISTS `cars` (
 -- Дамп данных таблицы taxi_service.cars: ~0 rows (приблизительно)
 INSERT INTO `cars` (`id`, `manufacturer_id`, `model`, `is_deleted`) VALUES
 	(1, 0, 'TOYOTA', 0);
-
--- Дамп структуры для таблица taxi_service.cars_drivers
-DROP TABLE IF EXISTS `cars_drivers`;
-CREATE TABLE IF NOT EXISTS `cars_drivers` (
-  `driver_id` bigint NOT NULL,
-  `car_id` bigint NOT NULL,
-  UNIQUE KEY `car_driver_UNIQUE` (`car_id`,`driver_id`),
-  KEY `cars_drivers_drivers_fk` (`driver_id`),
-  CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
-  CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Дамп данных таблицы taxi_service.cars_drivers: ~0 rows (приблизительно)
-INSERT INTO `cars_drivers` (`driver_id`, `car_id`) VALUES
-	(1, 1);
 
 -- Дамп структуры для таблица taxi_service.drivers
 DROP TABLE IF EXISTS `drivers`;
@@ -67,24 +72,20 @@ CREATE TABLE IF NOT EXISTS `drivers` (
 INSERT INTO `drivers` (`id`, `name`, `license_number`, `is_deleted`) VALUES
 	(1, 'John Smith', '2222333322', 0);
 
--- Дамп структуры для таблица taxi_service.manufacturers
-DROP TABLE IF EXISTS `manufacturers`;
-CREATE TABLE IF NOT EXISTS `manufacturers` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `name` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `country` varchar(225) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `is_deleted` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- Дамп структуры для таблица taxi_service.cars_drivers
+DROP TABLE IF EXISTS `cars_drivers`;
+CREATE TABLE IF NOT EXISTS `cars_drivers` (
+                                              `driver_id` bigint NOT NULL,
+                                              `car_id` bigint NOT NULL,
+                                              UNIQUE KEY `car_driver_UNIQUE` (`car_id`,`driver_id`),
+    KEY `cars_drivers_drivers_fk` (`driver_id`),
+    CONSTRAINT `cars_drivers_cars_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+    CONSTRAINT `cars_drivers_drivers_fk` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Дамп данных таблицы taxi_service.manufacturers: ~0 rows (приблизительно)
-INSERT INTO `manufacturers` (`id`, `name`, `country`, `is_deleted`) VALUES
-	(0, 'NO NAME', 'NO COUNTRY', 0),
-	(1, 'Chrysler', '🇺🇸USA', 0),
-	(2, 'Dodge', '🇺🇸USA', 0),
-	(3, 'Jeep', '🇺🇸USA', 0),
-	(4, 'Suzuki', '🇯🇵JAPAN', 0),
-	(5, 'Audi', '🇩🇪Germany', 0);
+-- Дамп данных таблицы taxi_service.cars_drivers: ~0 rows (приблизительно)
+INSERT INTO `cars_drivers` (`driver_id`, `car_id`) VALUES
+    (1, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
