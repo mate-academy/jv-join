@@ -217,7 +217,7 @@ public class CarDaoImpl implements CarDao {
                 statement.addBatch();
                 statement.clearParameters();
             }
-            statement.executeBatch();
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t insert drivers to "
                     + car + " cars_drivers", e);
