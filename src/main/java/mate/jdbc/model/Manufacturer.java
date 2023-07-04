@@ -18,14 +18,6 @@ public class Manufacturer {
         this.country = country;
     }
 
-    public Manufacturer(Long id, String country) {
-        this.id = id;
-        this.country = country;
-    }
-
-    public Manufacturer() {
-    }
-
     public Long getId() {
         return id;
     }
