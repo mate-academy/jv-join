@@ -7,6 +7,9 @@ public class Driver {
     private String name;
     private String licenseNumber;
 
+    public Driver() {
+    }
+
     public Driver(Long id, String name, String licenseNumber) {
         this.id = id;
         this.name = name;
@@ -46,8 +49,7 @@ public class Driver {
             return false;
         }
         Driver driver = (Driver) o;
-        return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
+        return Objects.equals(id, driver.id) && Objects.equals(name, driver.name)
                 && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 
@@ -58,10 +60,8 @@ public class Driver {
 
     @Override
     public String toString() {
-        return "Driver{"
-                + "id=" + id
+        return "Driver{" + "id=" + id
                 + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                + ", licenseNumber='" + licenseNumber + '\'' + '}';
     }
 }
