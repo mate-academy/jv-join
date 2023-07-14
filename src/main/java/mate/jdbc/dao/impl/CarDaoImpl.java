@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -39,7 +40,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String selectRequesr = "SELECT c.id as car_id, model, "
                 + "m.id as manufacturer_id, m.name, m.country "
                 + "FROM cars c "
@@ -56,10 +57,11 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get car by id " + id, e);
         }
-        if (car != null) {
+        Optional<Car> carOptional = Optional.ofNullable(car);
+        if (carOptional.isPresent()) {
             car.setDrivers(getDriversForCar(id));
         }
-        return car;
+        return carOptional;
     }
 
     @Override
@@ -81,8 +83,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't get cars from DB", e);
         }
-        for (Car c: cars) {
-            c.setDrivers(getDriversForCar(c.getId()));
+        for (Car car1: cars) {
+            car1.setDrivers(getDriversForCar(car1.getId()));
         }
         return cars;
     }
@@ -136,7 +138,7 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't get cars by driver id " + driverId, e);
         }
         for (Long id: carsId) {
-            cars.add(get(id));
+            cars.add(get(id).get());
         }
         return cars;
     }
