@@ -4,7 +4,6 @@ import java.util.List;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
-
 public interface CarService {
     Car create(Car car);
 

@@ -3,10 +3,10 @@ package mate.jdbc.model;
 import java.util.List;
 
 public class Car {
-    Long id;
-    String model;
-    Manufacturer manufacturer;
-    List<Driver> drivers;
+    private Long id;
+    private String model;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -52,11 +52,11 @@ public class Car {
 
     @Override
     public String toString() {
-        return "Car{" +
-                "id=" + id +
-                ", model='" + model + '\'' +
-                ", manufacturer=" + manufacturer +
-                ", drivers=" + drivers +
-                '}';
+        return "Car{"
+                + "id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers
+                + '}';
     }
 }

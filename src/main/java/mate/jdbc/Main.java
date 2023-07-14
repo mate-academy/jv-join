@@ -1,16 +1,14 @@
 package mate.jdbc;
 
+import java.util.List;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
 import mate.jdbc.service.impl.CarServiceImpl;
 import mate.jdbc.service.impl.DriverServiceImpl;
 import mate.jdbc.service.impl.ManufacturerServiceImpl;
-
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
