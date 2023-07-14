@@ -1,8 +1,8 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import mate.jdbc.dao.ManufacturerDao;
+import mate.jdbc.dao.impl.ManufacturerDaoImpl;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Manufacturer;
@@ -11,7 +11,7 @@ import mate.jdbc.service.ManufacturerService;
 @Service
 public class ManufacturerServiceImpl implements ManufacturerService {
     @Inject
-    private ManufacturerDao manufacturerDao;
+    private ManufacturerDao manufacturerDao = new ManufacturerDaoImpl();
 
     @Override
     public Manufacturer create(Manufacturer manufacturer) {
@@ -20,9 +20,8 @@ public class ManufacturerServiceImpl implements ManufacturerService {
 
     @Override
     public Manufacturer get(Long id) {
-        return manufacturerDao.get(id)
-                .orElseThrow(() -> new NoSuchElementException("Could not get manufacturer "
-                        + "by id = " + id));
+        return manufacturerDao.get(id).orElseThrow(() ->
+                new RuntimeException("Can't find the manufacturer by id: " + id));
     }
 
     @Override
