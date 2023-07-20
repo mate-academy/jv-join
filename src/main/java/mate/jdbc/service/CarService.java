@@ -5,13 +5,13 @@ import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 
 public interface CarService {
-    Car create(Car driver);
+    Car create(Car car);
 
     Car get(Long id);
 
     List<Car> getAll();
 
-    Car update(Car driver);
+    Car update(Car car);
 
     boolean delete(Long id);
 
