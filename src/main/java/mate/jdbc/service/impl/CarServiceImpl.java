@@ -1,19 +1,22 @@
 package mate.jdbc.service.impl;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
-import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
+import mate.jdbc.service.DriverService;
 
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
-
+    @Inject
+    private DriverService driverService;
 
     @Override
     public Car create(Car car) {
@@ -24,7 +27,7 @@ public class CarServiceImpl implements CarService {
     public Car get(Long id) {
         return carDao.get(id)
                      .orElseThrow(
-                             () -> new DataProcessingException("Can not find car by id = " + id));
+                             () -> new NoSuchElementException("Could not find car by id " + id));
     }
 
     @Override
@@ -44,21 +47,22 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void addDriverToCar(Driver driver, Car car) {
-        car.getDrivers()
-           .add(driver);
+        car.getDrivers().add(driver);
         carDao.update(car);
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
-        car.getDrivers()
-           .remove(car);
+        car.getDrivers().remove(driver);
         carDao.update(car);
     }
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        return null;
+        Driver driver = driverService.get(driverId);
+        List<Car> cars = carDao.getAll();
+        return cars.stream()
+                   .filter(car -> car.getDrivers().contains(driver))
+                   .collect(Collectors.toList());
     }
-
 }

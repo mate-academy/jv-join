@@ -48,5 +48,7 @@ CREATE TABLE `drivers_cars`
     CONSTRAINT `drivers_cars_car_id`
         FOREIGN KEY (`car_id`)
             REFERENCES `cars` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION
 );
 
