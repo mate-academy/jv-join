@@ -180,4 +180,28 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can't add driver to car " + car, e);
         }
     }
+
+    @Override
+    public List<Car> getAllByDriver(Long driverId) {
+        String query = "SELECT c.id AS car_id, model, c.manufacturer_id "
+                + "AS manufacturer_id, name, country "
+                + "FROM cars c JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "JOIN cars_drivers cd ON cd.car_id = c.id "
+                + "WHERE c.is_deleted = FALSE AND cd.driver_id = ?;";
+        List<Car> cars = new ArrayList<>();
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                cars.add(getCar(resultSet));
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't get a list of cars from driversDB.", e);
+        }
+        for (Car car : cars) {
+            car.setDrivers(getDrivers(car.getId()));
+        }
+        return cars;
+    }
 }
