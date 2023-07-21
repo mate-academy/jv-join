@@ -13,6 +13,9 @@ public class Driver {
         this.licenseNumber = licenseNumber;
     }
 
+    public Driver() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -47,8 +50,8 @@ public class Driver {
         }
         Driver driver = (Driver) o;
         return Objects.equals(id, driver.id)
-                && Objects.equals(name, driver.name)
-                && Objects.equals(licenseNumber, driver.licenseNumber);
+                       && Objects.equals(name, driver.name)
+                       && Objects.equals(licenseNumber, driver.licenseNumber);
     }
 
     @Override
@@ -59,9 +62,9 @@ public class Driver {
     @Override
     public String toString() {
         return "Driver{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", licenseNumber='" + licenseNumber + '\''
-                + '}';
+                       + "id=" + id
+                       + ", name='" + name + '\''
+                       + ", licenseNumber='" + licenseNumber + '\''
+                       + '}';
     }
 }

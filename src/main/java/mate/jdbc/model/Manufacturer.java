@@ -13,6 +13,9 @@ public class Manufacturer {
         this.country = country;
     }
 
+    public Manufacturer() {
+    }
+
     public Long getId() {
         return id;
     }
@@ -47,8 +50,8 @@ public class Manufacturer {
         }
         Manufacturer that = (Manufacturer) o;
         return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(country, that.country);
+                       && Objects.equals(name, that.name)
+                       && Objects.equals(country, that.country);
     }
 
     @Override
@@ -59,9 +62,9 @@ public class Manufacturer {
     @Override
     public String toString() {
         return "Manufacturer{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + ", country='" + country + '\''
-                + '}';
+                       + "id=" + id
+                       + ", name='" + name + '\''
+                       + ", country='" + country + '\''
+                       + '}';
     }
 }
