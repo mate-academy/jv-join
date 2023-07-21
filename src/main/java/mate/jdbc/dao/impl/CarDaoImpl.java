@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
+import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -31,7 +32,7 @@ public class CarDaoImpl implements CarDao {
                 car.setId(resultSet.getObject(1, Long.class));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not create car", e);
         }
         if (!car.getDrivers().isEmpty()) {
             insertDrivers(car);
@@ -55,7 +56,7 @@ public class CarDaoImpl implements CarDao {
                 car = parseCarWithManufacturer(resultSet);
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not get car by id " + id, e);
         }
         if (car != null) {
             List<Driver> drivers = getDriversForCar(id);
@@ -70,7 +71,7 @@ public class CarDaoImpl implements CarDao {
                 "SELECT c.id AS car_id, c.model,m.id AS manufacturer_id, m.name, m.country "
                         + "FROM cars c "
                         + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                        + "WHERE c.is_deleted = FALSE; ";
+                        + "WHERE c.is_deleted = FALSE";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -79,7 +80,7 @@ public class CarDaoImpl implements CarDao {
                 cars.add(parseCarWithManufacturer(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not get all cars", e);
         }
         if (!cars.isEmpty()) {
             for (Car car : cars) {
@@ -102,7 +103,7 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(3, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not update car by id " + car.getId(), e);
         }
         deleteAllColumnsByCarId(car);
         if (!car.getDrivers().isEmpty()) {
@@ -119,7 +120,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException(
+                    "Can not delete all columns in table by id" + car.getId(), e);
         }
     }
 
@@ -134,7 +136,7 @@ public class CarDaoImpl implements CarDao {
             return statement.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not delete car with id " + id, e);
         }
     }
 
@@ -162,7 +164,7 @@ public class CarDaoImpl implements CarDao {
             }
             return drivers;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Could not get drivers for car with id" + carId, e);
         }
     }
 
@@ -194,7 +196,8 @@ public class CarDaoImpl implements CarDao {
             }
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException(
+                    "Could not insert drivers for car with id" + car.getId(), e);
         }
     }
 }
