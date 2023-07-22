@@ -1,10 +1,10 @@
 package mate.jdbc;
 
 import java.util.ArrayList;
-import java.util.List;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
+import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 import mate.jdbc.service.DriverService;
 import mate.jdbc.service.ManufacturerService;
@@ -16,26 +16,29 @@ public class Main {
         ManufacturerService manufacturerService =
                 (ManufacturerService) INJECTOR.getInstance(ManufacturerService.class);
 
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setName("Honda Japan LTD");
+        manufacturer.setCountry("Japan");
+
+        Manufacturer createdManufacturer = manufacturerService.create(manufacturer);
+
         Car honda = new Car();
         honda.setModel("RCV");
+        honda.setManufacturer(createdManufacturer);
 
-        honda.setManufacturer(manufacturerService.get(26L));
-
-        List<Driver> driverList = new ArrayList<>();
         DriverService driverService = (DriverService) INJECTOR.getInstance(DriverService.class);
-        driverList.add(driverService.get(2L));
-        honda.setDrivers(driverList);
+        Driver driver = new Driver();
+        driver.setName("Anton Uzhva");
+        driver.setLicenseNumber("9001");
+        Driver createdDriver = driverService.create(driver);
 
         CarService carService = (CarService) INJECTOR.getInstance(CarService.class);
-        Car car = carService.create(honda);
+        honda.setDrivers(new ArrayList<>());
+        Car createdCar = carService.create(honda);
 
-        carService.addDriverToCar(driverService.get(3L), car);
-        carService.removeDriverFromCar(driverService.get(3L), car);
+        carService.addDriverToCar(driverService.get(createdDriver.getId()), createdCar);
+        carService.removeDriverFromCar(driverService.get(createdDriver.getId()), createdCar);
 
-        Car car2 = carService.get(2L);
-        carService.addDriverToCar(driverService.get(3L), car2);
-        carService.removeDriverFromCar(driverService.get(3L), car2);
-
-        carService.getAllByDriver(3L);
+        carService.getAllByDriver(createdDriver.getId()).forEach(System.out::println);
     }
 }

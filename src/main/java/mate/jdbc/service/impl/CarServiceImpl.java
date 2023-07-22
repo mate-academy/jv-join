@@ -2,21 +2,17 @@ package mate.jdbc.service.impl;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
 import mate.jdbc.service.CarService;
-import mate.jdbc.service.DriverService;
 
 @Service
 public class CarServiceImpl implements CarService {
     @Inject
     private CarDao carDao;
-    @Inject
-    private DriverService driverService;
 
     @Override
     public Car create(Car car) {
@@ -59,10 +55,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<Car> getAllByDriver(Long driverId) {
-        Driver driver = driverService.get(driverId);
-        List<Car> cars = carDao.getAll();
-        return cars.stream()
-                   .filter(car -> car.getDrivers().contains(driver))
-                   .collect(Collectors.toList());
+        return carDao.getAllByDriver(driverId);
     }
 }

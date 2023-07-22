@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
@@ -34,7 +35,11 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Could not create car", e);
         }
-        if (!car.getDrivers().isEmpty()) {
+        if (car.getDrivers() == null) {
+            car.setDrivers(new ArrayList<>());
+        } else if (car.getDrivers().isEmpty()) {
+            return car;
+        } else {
             insertDrivers(car);
         }
         return car;
@@ -106,23 +111,12 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Could not update car by id " + car.getId(), e);
         }
         deleteAllColumnsByCarId(car);
-        if (!car.getDrivers().isEmpty()) {
+        if (car.getDrivers() == null || car.getDrivers().isEmpty()) {
+            return car;
+        } else {
             insertDrivers(car);
         }
         return car;
-    }
-
-    private void deleteAllColumnsByCarId(Car car) {
-        String query = "DELETE FROM drivers_cars "
-                               + "WHERE car_id = ?;";
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setLong(1, car.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException(
-                    "Can not delete all columns in table by id" + car.getId(), e);
-        }
     }
 
     @Override
@@ -197,7 +191,40 @@ public class CarDaoImpl implements CarDao {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException(
-                    "Could not insert drivers for car with id" + car.getId(), e);
+                    "Could not insert drivers for car with id " + car.getId(), e);
+        }
+    }
+
+    public List<Car> getAllByDriver(Long driverId) {
+        List<Car> cars = new ArrayList<>();
+        String query = "SELECT car_id FROM drivers_cars WHERE driver_id=?";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, driverId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Long retrievedId = resultSet.getObject(1, Long.class);
+                Optional<Car> optionalCar = get(retrievedId);
+                Car car = optionalCar.orElseThrow(() -> new NoSuchElementException(
+                        "Could not find car by id " + retrievedId));
+                cars.add(car);
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Could not get all cars by driver id" + driverId, e);
+        }
+        return cars;
+    }
+
+    private void deleteAllColumnsByCarId(Car car) {
+        String query = "DELETE FROM drivers_cars "
+                               + "WHERE car_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DataProcessingException(
+                    "Can not delete all columns in table by id" + car.getId(), e);
         }
     }
 }
