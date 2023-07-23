@@ -12,52 +12,46 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
-    private static final ManufacturerService manSer =
+    private static final ManufacturerService manufacturerService =
             (ManufacturerService) injector.getInstance(ManufacturerService.class);
-    private static final DriverService drSer =
+    private static final DriverService driverService =
             (DriverService) injector.getInstance(DriverService.class);
-    private static final CarService carSer =
+    private static final CarService carService =
             (CarService) injector.getInstance(CarService.class);
 
     public static void main(String[] args) {
 
-        Driver bob = drSer.get(5L);
-        Driver john = drSer.get(6L);
-        Driver alice = drSer.get(7L);
+        Driver bob = driverService.get(5L);
+        Driver john = driverService.get(6L);
+        Driver alice = driverService.get(7L);
 
         List<Driver> drivers = new ArrayList<>();
         drivers.add(bob);
         drivers.add(john);
         drivers.add(alice);
 
-        Driver ivan = new Driver();
-        ivan.setName("Ivan");
-        ivan.setLicenseNumber("777");
-        drSer.create(ivan);
+        Driver ivan = new Driver("Ivan", "777");
+        driverService.create(ivan);
 
-        Manufacturer rollsRoyce = manSer.get(21L);
-        Car ghost = new Car();
-        ghost.setModel("Ghost");
-        ghost.setManufacturer(rollsRoyce);
-        ghost.setDrivers(drivers);
-
-        carSer.create(ghost);
-        System.out.println("Create test _____\n" + carSer.get(ghost.getId()));
+        Manufacturer rollsRoyce = manufacturerService.get(21L);
+        Car ghost = new Car("Ghost", rollsRoyce, drivers);
+        carService.create(ghost);
+        System.out.println("Create test _____\n" + carService.get(ghost.getId()));
         System.out.println("Get all test_____");
-        carSer.getAll().forEach(System.out::println);
+        carService.getAll().forEach(System.out::println);
 
         ghost.setModel("412");
-        System.out.println("Update test_____\n" + carSer.update(ghost));
+        System.out.println("Update test_____\n" + carService.update(ghost));
 
-        carSer.addDriverToCar(ivan, ghost);
-        System.out.println("Add driver to car test ____\n" + carSer.get(ghost.getId()));
+        carService.addDriverToCar(ivan, ghost);
+        System.out.println("Add driver to car test ____\n" + carService.get(ghost.getId()));
 
-        carSer.removeDriverFromCar(bob, ghost);
-        System.out.println("Remove driver from car test____\n" + carSer.get(ghost.getId()));
+        carService.removeDriverFromCar(bob, ghost);
+        System.out.println("Remove driver from car test____\n" + carService.get(ghost.getId()));
 
-        System.out.println("Get all by driver test");
-        carSer.getAllByDriver(alice.getId()).forEach(System.out::println);
+        System.out.println("Get all by driver test____");
+        carService.getAllByDriver(alice.getId()).forEach(System.out::println);
 
-        System.out.println(carSer.delete(ghost.getId()));
+        System.out.println(carService.delete(ghost.getId()));
     }
 }

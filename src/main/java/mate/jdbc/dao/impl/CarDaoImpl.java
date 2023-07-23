@@ -86,10 +86,8 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can`t get a list of cars from cars table", e);
         }
-        if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversList(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversList(car.getId()));
         }
         return cars;
     }
@@ -150,17 +148,15 @@ public class CarDaoImpl implements CarDao {
             throw new DataProcessingException("Can`t get all cars by driver with id: "
                     + driverId, e);
         }
-        if (!cars.isEmpty()) {
-            for (Car car : cars) {
-                car.setDrivers(getDriversList(car.getId()));
-            }
+        for (Car car : cars) {
+            car.setDrivers(getDriversList(car.getId()));
         }
         return cars;
     }
 
     private Car parseCar(ResultSet resultSet) throws SQLException {
         Manufacturer manufacturer = new Manufacturer();
-        manufacturer.setId(resultSet.getObject(1, Long.class));
+        manufacturer.setId(resultSet.getObject("manufacturer_id", Long.class));
         manufacturer.setName(resultSet.getString("manufacturer_name"));
         manufacturer.setCountry(resultSet.getString("manufacturer_country"));
         Car car = new Car();
