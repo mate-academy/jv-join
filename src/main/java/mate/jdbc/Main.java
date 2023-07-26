@@ -26,9 +26,9 @@ public class Main {
         carService.getAllByDriver(1L).forEach(System.out::println);
         System.out.println();
 
+        System.out.println("Add AND delete MethodTest");
         ManufacturerService manufacturerService = (ManufacturerService) injector
                 .getInstance(ManufacturerService.class);
-        System.out.println("Add AND delete MethodTest");
         Car car = new Car();
         car.setModel("Seat");
         car.setManufacturer(manufacturerService.get(31L));
@@ -43,16 +43,18 @@ public class Main {
         carService.getAll().forEach(System.out::println);
         System.out.println();
 
+        System.out.println("AddDriverToCar AND update MethodTest");
         DriverService driverService = (DriverService) injector
                 .getInstance(DriverService.class);
-        System.out.println("AddDriverToCar AND update MethodTest");
-        System.out.println("Car before add driver" + carService.get(5L));
-        carService.addDriverToCar(driverService.get(5L),carService.get(5L));
-        System.out.println("Car after add driver " + carService.get(5L));
+        System.out.println("Car before add driver" + carService.get(7L));
+        driverService.get(5L);
+        carService.get(7L);
+        carService.addDriverToCar(driverService.get(5L),carService.get(7L));
+        System.out.println("Car after add driver " + carService.get(7L));
         System.out.println();
 
         System.out.println("RemoveDriverFromCar AND update MethodTest");
-        carService.removeDriverFromCar(driverService.get(5L),carService.get(5L));
-        System.out.println("Car after remove driver " + carService.get(5L));
+        carService.removeDriverFromCar(driverService.get(5L),carService.get(7L));
+        System.out.println("Car after remove driver " + carService.get(7L));
     }
 }
