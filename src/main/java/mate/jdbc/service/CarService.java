@@ -1,15 +1,15 @@
 package mate.jdbc.service;
 
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
 
 public interface CarService {
 
     Car create(Car car);
 
-    Car get(Long id);
+    Optional<Car> get(Long id);
 
     List<Car> getAll();
 
@@ -24,6 +24,4 @@ public interface CarService {
     List<Car> getAllByDriver(Long driverId);
 
     List<Driver> getAllDriversByCar(Long carId);
-
-    Car createDefaultCar(Manufacturer manufacturer, Driver driver);
 }

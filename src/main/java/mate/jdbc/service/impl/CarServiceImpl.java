@@ -1,13 +1,12 @@
 package mate.jdbc.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.lib.Inject;
 import mate.jdbc.lib.Service;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
-import mate.jdbc.model.Manufacturer;
 import mate.jdbc.service.CarService;
 
 @Service
@@ -21,7 +20,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         return carDao.get(id);
     }
 
@@ -44,12 +43,14 @@ public class CarServiceImpl implements CarService {
     public void addDriverToCar(Driver driver, Car car) {
         if (car.getDrivers() != null) {
             car.getDrivers().add(driver);
+            carDao.update(car);
         }
     }
 
     @Override
     public void removeDriverFromCar(Driver driver, Car car) {
         car.getDrivers().remove(driver);
+        carDao.update(car);
     }
 
     @Override
@@ -60,16 +61,5 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<Driver> getAllDriversByCar(Long carId) {
         return carDao.getDriversForCar(carId);
-    }
-
-    @Override
-    public Car createDefaultCar(Manufacturer manufacturer, Driver driver) {
-        Car car = new Car();
-        car.setModel("bogdan GTS");
-        car.setManufacturer(manufacturer);
-        List<Driver> drivers = new ArrayList<>();
-        drivers.add(0, driver);
-        car.setDrivers(drivers);
-        return car;
     }
 }

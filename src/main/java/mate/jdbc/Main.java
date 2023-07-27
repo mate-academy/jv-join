@@ -1,6 +1,8 @@
 package mate.jdbc;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.lib.Injector;
 import mate.jdbc.model.Car;
 import mate.jdbc.model.Driver;
@@ -11,6 +13,16 @@ import mate.jdbc.service.ManufacturerService;
 
 public class Main {
     public static final Injector injector = Injector.getInstance("mate.jdbc");
+
+    public static Car createDefaultCar(Manufacturer manufacturer, Driver driver) {
+        Car car = new Car();
+        car.setModel("bogdan GTS");
+        car.setManufacturer(manufacturer);
+        List<Driver> drivers = new ArrayList<>();
+        drivers.add(0, driver);
+        car.setDrivers(drivers);
+        return car;
+    }
 
     public static void main(String[] args) {
 
@@ -27,12 +39,12 @@ public class Main {
         Manufacturer manufacturer = manufacturerService.createDefautManufacturer();
         Manufacturer createdManufacturer = manufacturerService.create(manufacturer);
 
-        Car car = carService.createDefaultCar(createdManufacturer, createdDriver);
+        Car car = createDefaultCar(createdManufacturer, createdDriver);
 
         Car createdCar = carService.create(car);
         System.out.println("Created car: " + createdCar);
 
-        Car getCarById = carService.get(createdCar.getId());
+        Optional<Car> getCarById = carService.get(createdCar.getId());
         System.out.println("car by id: " + getCarById);
 
         System.out.println("All cars:");
@@ -53,7 +65,7 @@ public class Main {
         }
 
         System.out.println("Remove driver from Car:");
-        carService.removeDriverFromCar(driver,car);
+        carService.removeDriverFromCar(driver, car);
         car.getDrivers().forEach(System.out::println);
 
         boolean deletedDriver = carService.delete(driver.getId());
