@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Objects;
 
 public class Car {
-    Long id;
-    String model;
-    Manufacturer manufacturer;
-    List<Driver> drivers;
+    private Long id;
+    private String model;
+    private Manufacturer manufacturer;
+    private List<Driver> drivers;
 
     public Car() {
     }
@@ -79,5 +79,15 @@ public class Car {
         result = 31 * result + (manufacturer != null ? manufacturer.hashCode() : 0);
         result = 31 * result + (drivers != null ? drivers.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{"
+                + "id=" + id
+                + ", model='" + model + '\''
+                + ", manufacturer=" + manufacturer
+                + ", drivers=" + drivers
+                + '}';
     }
 }

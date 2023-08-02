@@ -10,7 +10,9 @@ import mate.jdbc.service.CarService;
 
 public class Main {
     private static final Injector injector = Injector.getInstance("mate.jdbc");
-    private static final CarService carService = (CarService) injector.getInstance(CarService.class);
+    private static final CarService carService =
+            (CarService) injector.getInstance(CarService.class);
+
     public static void main(String[] args) {
         Driver driver1 = new Driver(1L, "Bob", "123");
         Driver driver2 = new Driver(2L, "Andrew", "456");
