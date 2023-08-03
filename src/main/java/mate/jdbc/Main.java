@@ -39,7 +39,6 @@ public class Main {
         driver3.setName("Bill");
         driver3.setLicenseNumber("KI435781");
 
-
         //Created cars
         List<Driver> driversList = new ArrayList<>();
         driversList.add(driver);
