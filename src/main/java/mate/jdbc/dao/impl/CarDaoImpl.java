@@ -39,7 +39,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public Optional<Car> get(Long id) {
         String getQuery = "SELECT c.id AS car_id, model, "
-                + "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country AS manufacturer_country "
+                + "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country "
+                + "AS manufacturer_country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -64,7 +65,8 @@ public class CarDaoImpl implements CarDao {
     @Override
     public List<Car> getAll() {
         String getAllQuery = "SELECT c.id AS car_id, model, "
-                + "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country AS manufacturer_country "
+                + "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country "
+                + "AS manufacturer_country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -117,8 +119,9 @@ public class CarDaoImpl implements CarDao {
 
     @Override
     public List<Car> getAllDriver(Long driverId) {
-        String getAllDriverQuery = "SELECT c.id AS car_id, c.model, " +
-                "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country AS manufacturer_country "
+        String getAllDriverQuery = "SELECT c.id AS car_id, c.model, "
+                + "m.id AS manufacturer_id, m.name AS manufacturer_name, m.country "
+                + "AS manufacturer_country "
                 + "FROM cars c "
                 + "JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -148,12 +151,14 @@ public class CarDaoImpl implements CarDao {
         Long manufacturerId = resultSet.getObject("manufacturer_id", Long.class);
         String manufacturerName = resultSet.getString("manufacturer_name");
         String manufacturerCountry = resultSet.getString("manufacturer_country");
-        Manufacturer manufacturer = new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
+        Manufacturer manufacturer =
+                new Manufacturer(manufacturerId, manufacturerName, manufacturerCountry);
         return new Car(id, model, manufacturer);
     }
 
     private List<Driver> getDriversForCar(Long id) {
-        String getDriversForCarQuery = "SELECT d.id AS driver_id, d.name AS driver_name, licence_number "
+        String getDriversForCarQuery = "SELECT d.id AS driver_id, d.name "
+                + "AS driver_name, licence_number "
                 + "FROM drivers d "
                 + "JOIN cars_drivers cd "
                 + "ON d.id = cd.driver_id "
@@ -200,7 +205,8 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, car.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Can't delete a relation car, driver. Car: " + car, e);
+            throw new DataProcessingException("Can't delete a "
+                    + "relation car, driver. Car: " + car, e);
         }
     }
 }
