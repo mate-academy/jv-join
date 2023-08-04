@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -31,6 +32,7 @@ public class CarDaoImpl implements CarDao {
                 Long id = resultSet.getObject(1, Long.class);
                 car.setId(id);
             }
+            insertDrivers(car);
             return car;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create "
@@ -39,7 +41,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String request = "SELECT c.id AS car_id, c.model, m.id "
                 + "AS manufacturer_id, m.name "
                 + "AS manufacturer_name, m.country "
@@ -62,18 +64,25 @@ public class CarDaoImpl implements CarDao {
         if (car != null) {
             car.setDrivers(getDriversForCar(id));
         }
-        return car;
+        return Optional.ofNullable(car);
     }
 
     @Override
     public List<Car> getAll() {
-        String request = "SELECT * FROM cars WHERE is_deleted = FALSE;";
+        String request = "SELECT c.id AS car_id, c.model, "
+                + "m.id AS manufacturer_id, m.name AS manufacturer_name, "
+                + "m.country AS manufacturer_country FROM cars c "
+                + "JOIN manufacturers m ON c.manufacturer_id = m.id "
+                + "WHERE c.is_deleted = FALSE;";
         List<Car> cars = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(request)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 cars.add(getCarFromResultSet(resultSet));
+            }
+            for (Car car : cars) {
+                car.setDrivers(getDriversForCar(car.getId()));
             }
             return cars;
         } catch (SQLException e) {
@@ -129,7 +138,7 @@ public class CarDaoImpl implements CarDao {
                 + "AS m_name, m.country AS manufacturer_country "
                 + "FROM cars_drivers cd JOIN cars c ON cd.car_id = c.id "
                 + "JOIN manufacturers m ON c.manufacturer_id = m.id "
-                + "WHERE cd.driver_id = ?;";
+                + "WHERE cd.driver_id = ? AND c.is_deleted = FALSE;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(request)) {
             statement.setLong(1, driverId);
@@ -158,7 +167,8 @@ public class CarDaoImpl implements CarDao {
 
     private List<Driver> getDriversForCar(Long id) {
         String request = "SELECT id, name, license_number FROM drivers JOIN cars_drivers"
-                + " ON drivers.id = cars_drivers.driver_id WHERE cars_drivers.car_id = ?";
+                + " ON drivers.id = cars_drivers.driver_id WHERE cars_drivers.car_id = ?"
+                + " AND is_deleted = FALSE;";
         List<Driver> drivers = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(request)) {
@@ -181,4 +191,18 @@ public class CarDaoImpl implements CarDao {
         return new Driver(id, name, licenseNumber);
     }
 
+    private void insertDrivers(Car car) {
+        String query = "INSERT INTO cars_drivers (`car_id`, `driver_id`) VALUES (?, ?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, car.getId());
+            for (Driver driver : car.getDrivers()) {
+                statement.setLong(2, driver.getId());
+                statement.executeUpdate();
+            }
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can't insert driver to car: " + car, e);
+        }
+
+    }
 }

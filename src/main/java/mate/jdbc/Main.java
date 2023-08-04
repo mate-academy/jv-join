@@ -13,7 +13,7 @@ public class Main {
                 injector.getInstance(ManufacturerService.class);
         CarService carService = (CarService) injector.getInstance(CarService.class);
         DriverService driverService = (DriverService) injector.getInstance(DriverService.class);
-        carService.addDriverToCar(driverService.get(3L), carService.get(3L));
+        System.out.println(carService.getAll());
 
     }
 }
