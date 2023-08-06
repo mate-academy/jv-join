@@ -153,7 +153,6 @@ public class CarDaoImpl implements CarDao {
         Long carId = resultSet.getObject("id", Long.class);
         String model = resultSet.getString("model");
         List<Driver> drivers = new ArrayList<>();
-        int currentRow = resultSet.getRow();
         do {
             Long driverID = resultSet.getObject("d.id", Long.class);
             String driverName = resultSet.getString("d.name");
@@ -162,7 +161,7 @@ public class CarDaoImpl implements CarDao {
         } while (resultSet.next()
                 && carId.equals(resultSet.getObject("c.id", Long.class)));
 
-        resultSet.absolute(currentRow);
+        resultSet.previous();
         return new Car(carId, model, manufacturer, drivers);
     }
 
@@ -182,10 +181,6 @@ public class CarDaoImpl implements CarDao {
                         ResultSet.CONCUR_READ_ONLY)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                if (!cars.isEmpty() && cars.get(cars.size() - 1).getId()
-                        .equals(resultSet.getObject("c.id", Long.class))) {
-                    continue;
-                }
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {

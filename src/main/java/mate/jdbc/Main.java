@@ -97,6 +97,5 @@ public class Main {
         System.out.println("\n removeDriverFromCar: ");
         carService.removeDriverFromCar(driverService.get(4L), carService.get(2L));
         carService.getAllByDriver(4L).forEach(System.out::println);
-
     }
 }
