@@ -41,6 +41,7 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't create car: " + car, e);
         }
+
         createCarsDriversRelations(car);
         return car;
     }
@@ -66,9 +67,10 @@ public class CarDaoImpl implements CarDao {
     @Override
     public boolean update(Car car) {
         String query = "UPDATE " + CARS_TABLE
-                + " SET model = ?, manufacturer_id = ? WHERE id = ? AND is_deleted = FALSE;";
+                + " SET model = ?, manufacturer_id = ?"
+                + " WHERE id = ? AND is_deleted = FALSE;";
 
-        boolean isUpdated = false;
+        boolean isUpdated;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement =
                         connection.prepareStatement(query)) {
@@ -79,24 +81,28 @@ public class CarDaoImpl implements CarDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update car: " + car, e);
         }
-        return isUpdated && updateCarsDriversRelations(car);
+
+        updateCarsDriversRelations(car);
+        return isUpdated;
     }
 
-    private boolean updateCarsDriversRelations(Car car) {
+    private void updateCarsDriversRelations(Car car) {
+        deleteCarsDriversRelations(car);
+        createCarsDriversRelations(car);
+    }
+
+    private void deleteCarsDriversRelations(Car car) {
         String query = "DELETE FROM " + CARS_DRIVERS_TABLE
                 + " WHERE car_id = ?;";
 
-        boolean isUpdated = false;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, car.getId());
-            isUpdated = statement.executeUpdate() > 0;
+            statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Can't update relations between car: "
                     + car + " and drivers: " + car.getDrivers(), e);
         }
-        createCarsDriversRelations(car);
-        return isUpdated;
     }
 
     @Override
@@ -212,7 +218,8 @@ public class CarDaoImpl implements CarDao {
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataProcessingException("Can't get a list of cars by driver with id: "
+                    + driverId, e);
         }
         return cars;
     }
