@@ -91,11 +91,11 @@ public class Main {
         carService.getAllByDriver(3L).forEach(System.out::println);
 
         System.out.println("\n addDriverToCar: ");
-        carService.addDriverToCar(driverService.get(4L), carService.get(2L));
+        carService.addDriverToCar(driverService.get(4L), carService.get(3L));
         carService.getAllByDriver(4L).forEach(System.out::println);
 
         System.out.println("\n removeDriverFromCar: ");
-        carService.removeDriverFromCar(driverService.get(4L), carService.get(2L));
+        carService.removeDriverFromCar(driverService.get(4L), carService.get(3L));
         carService.getAllByDriver(4L).forEach(System.out::println);
     }
 }

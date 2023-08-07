@@ -206,10 +206,6 @@ public class CarDaoImpl implements CarDao {
             statement.setLong(1, driverId);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                if (!cars.isEmpty() && cars.get(cars.size() - 1).getId()
-                        .equals(resultSet.getObject("c.id", Long.class))) {
-                    continue;
-                }
                 cars.add(getCar(resultSet));
             }
         } catch (SQLException e) {
