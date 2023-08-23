@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public interface CarDao {
     Car create(Car car);
-    Optional<Car> get(Long id);
+    Car get(Long id);
     List<Car> getAll();
     Car update(Car car);
     boolean delete(Long id);

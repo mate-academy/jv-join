@@ -50,5 +50,13 @@ public class Car {
         this.drivers = drivers;
     }
 
-
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", model='" + model + '\'' +
+                ", manufacturer=" + manufacturer +
+                ", drivers=" + drivers +
+                '}';
+    }
 }
