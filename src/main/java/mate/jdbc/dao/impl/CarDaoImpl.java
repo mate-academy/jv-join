@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import mate.jdbc.dao.CarDao;
 import mate.jdbc.exception.DataProcessingException;
 import mate.jdbc.lib.Dao;
@@ -48,7 +49,7 @@ public class CarDaoImpl implements CarDao {
     }
 
     @Override
-    public Car get(Long id) {
+    public Optional<Car> get(Long id) {
         String query = "SELECT c.id AS car_id, c.manufacturer_id, c.model, m.name, m.country "
                 + "FROM cars c INNER JOIN manufacturers m "
                 + "ON c.manufacturer_id = m.id "
@@ -63,7 +64,7 @@ public class CarDaoImpl implements CarDao {
                 List<Driver> drivers = getDriversFromCar(car.getId());
                 car.setDrivers(drivers); // Додати водіїв до автомобіля
             }
-            return car;
+            return Optional.of(car);
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't get car by id " + id, e);
         }
@@ -187,7 +188,8 @@ public class CarDaoImpl implements CarDao {
     }
 
     private List<Driver> getDriversFromCar(Long carId) {
-        String getAllDriversFromCarRequest = "SELECT id, name, lisense_number "
+        String getAllDriversFromCarRequest =
+                "SELECT d.id AS id, d.name AS name, d.license_number AS license_number "
                 + "FROM drivers d JOIN cars_drivers cd ON d.id = cd.driver_id "
                 + "WHERE cd.car_id = ?;";
         List<Driver> drivers = new ArrayList<>();
@@ -200,7 +202,7 @@ public class CarDaoImpl implements CarDao {
                 Driver driver = new Driver();
                 driver.setId(resultSet.getLong("id"));
                 driver.setName(resultSet.getString("name"));
-                driver.setLicenseNumber(resultSet.getString("lisense_number"));
+                driver.setLicenseNumber(resultSet.getString("license_number"));
                 drivers.add(driver);
             }
             return drivers;
@@ -209,4 +211,3 @@ public class CarDaoImpl implements CarDao {
         }
     }
 }
-
