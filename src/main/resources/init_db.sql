@@ -18,3 +18,21 @@ CREATE TABLE `drivers` (
                                   PRIMARY KEY (`id`),
                                   UNIQUE INDEX `id_UNIQUE` (id ASC) VISIBLE,
                                   UNIQUE INDEX `license_number_UNIQUE` (`license_number` ASC) VISIBLE);
+CREATE TABLE `cars_drivers` (
+  `driver_id` bigint NOT NULL,
+  `car_id` bigint NOT NULL,
+  KEY `car_fk_idx` (`car_id`),
+  KEY `driver_id_idx` (`driver_id`),
+  CONSTRAINT `car_fk` FOREIGN KEY (`car_id`) REFERENCES `cars` (`id`),
+  CONSTRAINT `driver_id` FOREIGN KEY (`driver_id`) REFERENCES `drivers` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+CREATE TABLE `cars` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `manufacturer_id` bigint DEFAULT NULL,
+  `model` varchar(145) DEFAULT NULL,
+  `is_deleted` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `manufacturer_fk_idx` (`manufacturer_id`),
+  CONSTRAINT `manufacturer_fk` FOREIGN KEY (`manufacturer_id`) REFERENCES `manufacturers` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb3;
