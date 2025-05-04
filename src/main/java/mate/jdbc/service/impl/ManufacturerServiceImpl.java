@@ -39,4 +39,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     public boolean delete(Long id) {
         return manufacturerDao.delete(id);
     }
+
+    @Override
+    public Manufacturer createDefautManufacturer() {
+        Manufacturer manufacturer = new Manufacturer();
+        manufacturer.setCountry("Ukraine");
+        manufacturer.setName("Bogdan");
+        manufacturer.setId(3L);
+        return manufacturer;
+    }
 }

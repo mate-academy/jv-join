@@ -39,4 +39,13 @@ public class DriverServiceImpl implements DriverService {
     public boolean delete(Long id) {
         return driverDao.delete(id);
     }
+
+    @Override
+    public Driver createDefaultDriver() {
+        Driver driver = new Driver();
+        driver.setLicenseNumber("3030");
+        driver.setName("Vasyl");
+        driver.setId(3L);
+        return driver;
+    }
 }
