@@ -14,7 +14,7 @@
 
 - Test your solution in the `main` method.
 - Don't forget about a table's and columns' namings.
-- These methods should be only on the service layer: 
+- These methods should be only on the service layer:  
 ```
     - void addDriverToCar(Driver driver, Car car);
     - void removeDriverFromCar(Driver driver, Car car);
